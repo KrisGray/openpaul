@@ -20,8 +20,8 @@ Next phase: UNIFY (after execution completes)
 </required_reading>
 
 <references>
-@src/references/checkpoints.md (if plan has checkpoints)
-@src/references/loop-phases.md
+@~/.claude/paul-framework/references/checkpoints.md (if plan has checkpoints)
+@~/.claude/paul-framework/references/loop-phases.md
 </references>
 
 <process>

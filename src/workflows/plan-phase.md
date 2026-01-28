@@ -23,9 +23,9 @@ Next phase: APPLY (after plan approval)
 </required_reading>
 
 <references>
-@src/references/plan-format.md
-@src/references/checkpoints.md (if plan will have checkpoints)
-@src/templates/PLAN.md
+@~/.claude/paul-framework/references/plan-format.md
+@~/.claude/paul-framework/references/checkpoints.md (if plan will have checkpoints)
+@~/.claude/paul-framework/templates/PLAN.md
 </references>
 
 <process>
@@ -114,15 +114,62 @@ Next phase: APPLY (after plan approval)
    - Not too frequent (avoid checkpoint fatigue)
 </step>
 
-<step name="update_state">
-1. Update STATE.md:
-   - Current Position: Phase X, Plan Y created
-   - Loop Position: PLAN ✓ → APPLY ○ → UNIFY ○
-   - Last activity: timestamp and action
-   - Session Continuity: point to new PLAN.md
-2. Report to user:
-   - "Plan created at: [path]"
-   - "Ready for approval. Execute when you approve."
+<step name="update_state" priority="required">
+**This step is REQUIRED. Do not skip.**
+
+1. **Update STATE.md** with exact content:
+
+   ```markdown
+   ## Current Position
+
+   Milestone: v0.1 [Milestone Name]
+   Phase: [N] of [total] ([Phase Name]) — Planning
+   Plan: [NN-PP] created, awaiting approval
+   Status: PLAN created, ready for APPLY
+   Last activity: [timestamp] — Created [plan-path]
+
+   Progress:
+   - Milestone: [░░░░░░░░░░] X%
+   - Phase [N]: [░░░░░░░░░░] 0%
+
+   ## Loop Position
+
+   Current loop state:
+   ```
+   PLAN ──▶ APPLY ──▶ UNIFY
+     ✓        ○        ○     [Plan created, awaiting approval]
+   ```
+
+   ## Session Continuity
+
+   Last session: [timestamp]
+   Stopped at: Plan [NN-PP] created
+   Next action: Review and approve plan, then run /paul:apply [plan-path]
+   Resume file: [plan-path]
+   ```
+
+2. **Update ROADMAP.md** milestone status:
+   - If first plan of milestone: Change "Not started" → "In progress"
+   - Update phase status: "Not started" → "Planning"
+
+3. **Report to user** with ONE next action:
+   ```
+   ════════════════════════════════════════
+   PLAN CREATED
+   ════════════════════════════════════════
+
+   Plan: [plan-path]
+   Phase: [N] — [Phase Name]
+
+   Review the plan above, then:
+
+   ────────────────────────────────────────
+   ▶ NEXT: /paul:apply [plan-path]
+     Execute the approved plan.
+   ────────────────────────────────────────
+
+   Type "approved" to proceed, or ask questions first.
+   ```
 </step>
 
 </process>

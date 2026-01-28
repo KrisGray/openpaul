@@ -20,8 +20,8 @@ Next phase: PLAN (next plan or next phase)
 </required_reading>
 
 <references>
-@src/references/loop-phases.md
-@src/templates/SUMMARY.md
+@~/.claude/paul-framework/references/loop-phases.md
+@~/.claude/paul-framework/templates/SUMMARY.md
 </references>
 
 <process>

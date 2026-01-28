@@ -19,8 +19,8 @@ This workflow figures out where we are, not assumes it.
 </required_reading>
 
 <references>
-@src/references/context-management.md
-@src/references/loop-phases.md
+@~/.claude/paul-framework/references/context-management.md
+@~/.claude/paul-framework/references/loop-phases.md
 </references>
 
 <process>
