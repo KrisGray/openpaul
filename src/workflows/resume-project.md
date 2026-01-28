@@ -1,5 +1,5 @@
 <purpose>
-Resume PAUL work after a session break. Reads STATE.md to restore context, determines current loop position, and guides continuation of work.
+Resume PAUL work after a session break. Reads STATE.md to restore context, determines current loop position, and routes to exactly ONE next action.
 </purpose>
 
 <when_to_use>
@@ -13,6 +13,11 @@ Resume PAUL work after a session break. Reads STATE.md to restore context, deter
 Determined dynamically by reading STATE.md.
 This workflow figures out where we are, not assumes it.
 </loop_context>
+
+<philosophy>
+**Single next action:** Resume determines state and suggests exactly ONE action.
+No multiple options. Prevents decision fatigue. User can redirect if needed.
+</philosophy>
 
 <required_reading>
 @.paul/STATE.md
@@ -31,8 +36,8 @@ This workflow figures out where we are, not assumes it.
    ls .paul/STATE.md 2>/dev/null
    ```
 2. If not found:
-   - "No PAUL project found. Run init-project first."
-   - Offer to initialize
+   - "No PAUL project found. Run /paul:init first."
+   - Exit workflow
 3. If found: proceed with resume
 </step>
 
@@ -61,31 +66,22 @@ This workflow figures out where we are, not assumes it.
    - What's next
 </step>
 
-<step name="determine_action">
-Based on loop position:
+<step name="determine_single_action">
+Based on loop position, determine **exactly ONE** next action:
 
-**If PLAN ○ (no plan yet):**
-- Next action: Create PLAN.md for current phase
-- "Ready to create Plan [NN]-01. Starting plan-phase workflow."
+| Loop State | Single Next Action |
+|------------|-------------------|
+| PLAN ○ (no plan yet) | `/paul:plan` |
+| PLAN ✓, APPLY ○ (plan awaiting approval) | `/paul:apply [plan-path]` |
+| PLAN ✓, APPLY ✓, UNIFY ○ (executed, not reconciled) | `/paul:unify [plan-path]` |
+| All ✓ (loop complete) | `/paul:plan` (next phase) |
+| Blocked | "Address blocker: [specific issue]" |
 
-**If PLAN ✓, APPLY ○ (plan exists, not executed):**
-- Read the PLAN.md
-- "Plan exists at [path]. Awaiting approval to execute."
-- Present plan summary
-- Wait for approval
-
-**If PLAN ✓, APPLY ✓, UNIFY ○ (executed, not reconciled):**
-- "APPLY complete but loop not closed. Running UNIFY."
-- Trigger unify-phase workflow
-
-**If all ✓ (loop complete):**
-- "Previous loop complete. Ready for next PLAN."
-- Check if more plans in phase or next phase
-- Trigger plan-phase workflow
+**Do NOT offer multiple options.** Pick the ONE correct action.
 </step>
 
-<step name="report_position">
-Display to user:
+<step name="report_and_route">
+Display to user with ONE next action:
 
 ```
 ════════════════════════════════════════
@@ -94,42 +90,42 @@ PAUL PROJECT RESUMED
 
 Project: [from PROJECT.md]
 Phase: [N] of [M] - [Phase Name]
-Plan: [NN]-[plan] or "None yet"
+Plan: [NN-PP] - [plan description]
 
 Loop Position:
-PLAN ──▶ APPLY ──▶ UNIFY
-  [✓/○]   [✓/○]   [✓/○]
+┌─────────────────────────────────────┐
+│  PLAN ──▶ APPLY ──▶ UNIFY          │
+│   [✓/○]    [✓/○]    [✓/○]          │
+└─────────────────────────────────────┘
 
-Last Activity: [timestamp] - [description]
+Last Session: [timestamp]
+Stopped at: [what was happening]
 
-Next Action: [what to do]
-════════════════════════════════════════
+────────────────────────────────────────
+▶ NEXT: [single command with path]
+  [brief description of what it does]
+────────────────────────────────────────
+
+Type "yes" to proceed, or provide context for a different action.
 ```
-</step>
 
-<step name="offer_options">
-Present options to user:
-
-1. **Continue** - Proceed with determined next action
-2. **Review state** - Show full STATE.md
-3. **Review plan** - Show current/recent PLAN.md
-4. **Adjust** - Override determined action
-
-Wait for user direction before proceeding.
+**IMPORTANT:** Do NOT show numbered options (1, 2, 3, 4).
+Show exactly ONE suggested action with the standard PAUL routing format.
 </step>
 
 </process>
 
 <output>
-- Context restored
+- Context restored from STATE.md
 - User informed of current position
-- Ready to continue appropriate workflow
+- Exactly ONE next action suggested
+- User can proceed or redirect
 </output>
 
 <error_handling>
 **STATE.md corrupted or incomplete:**
 - Report what's missing
-- Offer to reconstruct from ROADMAP + phases/
+- Suggest: `/paul:init` to reinitialize (destructive) or manual repair
 
 **Conflicting information:**
 - STATE.md says X, but files suggest Y
@@ -139,24 +135,9 @@ Wait for user direction before proceeding.
 **No resume context:**
 - If SESSION CONTINUITY section empty:
 - Fall back to loop position
-- Ask user what they remember
+- Suggest based on what files exist
 
 **Stale handoff:**
 - If handoff older than STATE.md modifications
 - Trust STATE.md, note handoff may be outdated
 </error_handling>
-
-<bootstrap_without_commands>
-When commands don't exist yet (pre-Phase 5), this workflow
-provides the entry point for PAUL methodology.
-
-**Manual bootstrap sequence:**
-1. Read this workflow's process
-2. Execute steps manually
-3. Based on determined action, read appropriate workflow:
-   - Need PLAN? → plan-phase.md
-   - Need APPLY? → apply-phase.md
-   - Need UNIFY? → unify-phase.md
-
-This section will be deprecated once /paul:resume command exists.
-</bootstrap_without_commands>
