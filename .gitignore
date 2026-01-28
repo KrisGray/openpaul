@@ -14,5 +14,5 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Handoff files (session-specific, not part of distribution)
-HANDOFF*.md
+# Handoff files in root (session-specific, not part of distribution)
+/HANDOFF*.md

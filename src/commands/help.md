@@ -43,6 +43,8 @@ Every unit of work follows this cycle:
 
 ## Commands
 
+### Core Loop
+
 ### `/paul:init`
 Initialize PAUL in a project.
 
@@ -100,6 +102,45 @@ Show current loop position and progress.
 Usage: `/paul:status`
 
 ---
+
+### Session Continuity (v0.2)
+
+### `/paul:pause [reason]`
+Create handoff file and prepare for session break.
+
+- Creates HANDOFF.md with complete context
+- Updates STATE.md session continuity section
+- Designed for context limits or multi-session work
+
+Usage: `/paul:pause`
+Usage: `/paul:pause "switching to other project"`
+
+---
+
+### `/paul:resume`
+Restore context from handoff and continue work.
+
+- Reads STATE.md and any HANDOFF files
+- Determines current loop position
+- Suggests exact next action
+
+Usage: `/paul:resume`
+
+---
+
+### `/paul:progress`
+Smart status with routing - suggests exact next action.
+
+- Shows milestone and phase progress visually
+- Displays current loop position
+- Routes to correct next command
+- Warns about context limits
+
+Usage: `/paul:progress`
+
+---
+
+### Utility
 
 ### `/paul:help`
 Show this command reference.
@@ -175,15 +216,18 @@ Completion checks
 
 **Checking where you are:**
 ```
-/paul:status
+/paul:status     # Current state
+/paul:progress   # State + what to do next
 ```
 
-**Resuming work:**
+**Resuming work (new session):**
 ```
-/paul:status           # See loop position
-# If PLAN needed: /paul:plan
-# If APPLY needed: /paul:apply <path>
-# If UNIFY needed: /paul:unify <path>
+/paul:resume     # Restores context, suggests next action
+```
+
+**Pausing work (before break):**
+```
+/paul:pause      # Creates handoff, updates state
 ```
 
 ## Key Principles
