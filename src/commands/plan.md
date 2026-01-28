@@ -12,9 +12,9 @@ Create or continue a PLAN for the specified phase.
 </objective>
 
 <execution_context>
-@src/workflows/plan-phase.md
-@src/templates/PLAN.md
-@src/references/plan-format.md
+@~/.claude/paul-framework/workflows/plan-phase.md
+@~/.claude/paul-framework/templates/PLAN.md
+@~/.claude/paul-framework/references/plan-format.md
 </execution_context>
 
 <context>
@@ -26,7 +26,7 @@ $ARGUMENTS
 </context>
 
 <process>
-Follow workflow: @src/workflows/plan-phase.md
+Follow workflow: @~/.claude/paul-framework/workflows/plan-phase.md
 </process>
 
 <success_criteria>

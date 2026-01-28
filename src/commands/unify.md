@@ -14,8 +14,8 @@ Creates SUMMARY.md documenting what was built, decisions made, and any deferred 
 </objective>
 
 <execution_context>
-@src/workflows/unify-phase.md
-@src/templates/SUMMARY.md
+@~/.claude/paul-framework/workflows/unify-phase.md
+@~/.claude/paul-framework/templates/SUMMARY.md
 </execution_context>
 
 <context>
@@ -34,7 +34,7 @@ Plan path: $ARGUMENTS
 </step>
 
 <step name="reconcile">
-Follow workflow: @src/workflows/unify-phase.md
+Follow workflow: @~/.claude/paul-framework/workflows/unify-phase.md
 
 Compare plan to actual:
 - Which tasks completed as planned?

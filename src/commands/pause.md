@@ -12,7 +12,7 @@ Create a HANDOFF.md file capturing current context and update STATE.md for sessi
 </objective>
 
 <execution_context>
-@src/workflows/pause-work.md
+@~/.claude/paul-framework/workflows/pause-work.md
 </execution_context>
 
 <context>
@@ -23,7 +23,7 @@ $ARGUMENTS
 </context>
 
 <process>
-**Follow the pause-work workflow** from `@src/workflows/pause-work.md`.
+**Follow the pause-work workflow** from `@~/.claude/paul-framework/workflows/pause-work.md`.
 
 The workflow handles:
 1. Detecting current position

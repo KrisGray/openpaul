@@ -16,7 +16,7 @@ Restore PAUL context after a session break, determine current position, and guid
 
 <context>
 @.paul/STATE.md
-@src/workflows/resume-project.md
+@~/.claude/paul-framework/workflows/resume-project.md
 </context>
 
 <process>

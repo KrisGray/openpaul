@@ -14,8 +14,8 @@ Executes tasks in sequence, pauses at checkpoints for user input, reports comple
 </objective>
 
 <execution_context>
-@src/workflows/apply-phase.md
-@src/references/checkpoints.md
+@~/.claude/paul-framework/workflows/apply-phase.md
+@~/.claude/paul-framework/references/checkpoints.md
 </execution_context>
 
 <context>
@@ -35,7 +35,7 @@ Plan path: $ARGUMENTS
 </step>
 
 <step name="execute">
-Follow workflow: @src/workflows/apply-phase.md
+Follow workflow: @~/.claude/paul-framework/workflows/apply-phase.md
 
 Execute tasks sequentially. For each task:
 - Read task definition
