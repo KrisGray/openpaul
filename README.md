@@ -6,15 +6,16 @@
 
 ## Philosophy
 
-PAUL is **not another task runner**. It's a loop-first development framework that ensures every unit of work completes properly.
+PAUL prioritizes **quality over speed-for-speed's-sake** and **in-session context efficiency**.
 
 | Principle | Description |
 |-----------|-------------|
-| **Loop Integrity** | Every plan closes with UNIFY — never skip |
-| **Acceptance-Driven** | Define acceptance criteria before tasks |
-| **Minimal Surface** | 13 commands max, not 26 |
-| **Composable** | Core loop + optional extensions |
-| **One Context** | One loop at a time, no parallel complexity |
+| **Loop Integrity** | Every plan closes with UNIFY — mandatory closure, no orphan plans |
+| **A.D.D.** | Acceptance-Driven Development: AC first, tasks reference AC-N, BDD format |
+| **In-Session Context** | Minimize subagents for dev work; maximize in-session context quality |
+| **CARL Symbiosis** | PAUL rules live in CARL domains, dynamically loaded by intent |
+| **Modular Integrations** | Extensible architecture (SonarQube, future: linting, CI, etc.) |
+| **Comprehensive** | A workflow for each dev situation — quality, not quantity trade-offs |
 
 ## Installation
 
@@ -91,7 +92,12 @@ Run `/paul:help` for the complete command reference.
 
 **vs. ad-hoc AI coding:** PAUL adds structure without bureaucracy. You get traceability and quality gates while maintaining velocity.
 
-**vs. GSD:** PAUL is simpler (6 core commands vs 26), focuses on loop integrity, and uses acceptance-driven development. GSD is feature-rich; PAUL is focused.
+**vs. GSD:** PAUL takes a different approach:
+- **In-session context** over parallel subagents (subagents = ~70% quality for dev work)
+- **Mandatory UNIFY** closes every loop (no orphan plans)
+- **A.D.D.** elevates acceptance criteria to first-class citizens
+- **CARL integration** for dynamic rule loading
+- Same comprehensive coverage, different execution philosophy
 
 **vs. traditional planning:** PAUL is designed for AI-assisted development. Plans are executable prompts, not documentation.
 
@@ -99,10 +105,10 @@ Run `/paul:help` for the complete command reference.
 
 See [ROADMAP.md](.paul/ROADMAP.md) for the version plan.
 
-- **v0.1** — Core Loop (current)
-- **v0.2** — Session Continuity
-- **v0.3** — Roadmap Management
-- **v0.4** — Pre-Planning
+- **v0.1** — Core Loop (complete)
+- **v0.2** — Session Continuity (complete)
+- **v0.3** — Roadmap & Milestone Management (next)
+- **v0.4** — Pre-Planning & Research
 - **v1.0** — Production Release
 
 ## License
