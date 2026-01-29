@@ -6,6 +6,16 @@ Template for `.paul/ROADMAP.md` — the project's phase structure.
 
 ---
 
+## Milestone Status Legend
+
+| Emoji | Status | Meaning |
+|-------|--------|---------|
+| ✅ | Shipped | Milestone complete and archived |
+| 🚧 | In Progress | Active development |
+| 📋 | Planned | Defined but not started |
+
+---
+
 ## File Template (Initial v1.0)
 
 ```markdown
@@ -122,14 +132,15 @@ After completing first milestone, reorganize with milestone groupings:
 
 | Version | Name | Phases | Status | Completed |
 |---------|------|--------|--------|-----------|
-| v1.0 | MVP | 1-4 | Complete | YYYY-MM-DD |
-| v1.1 | [Name] | 5-6 | In progress | - |
-| v2.0 | [Name] | 7-10 | Planned | - |
+| v1.0 | MVP | 1-4 | ✅ Shipped | YYYY-MM-DD |
+| v1.1 | [Name] | 5-6 | 🚧 In Progress | - |
+| v2.0 | [Name] | 7-10 | 📋 Planned | - |
 
-## Active Milestone: v1.1 [Name]
+## 🚧 Active Milestone: v1.1 [Name]
 
 **Goal:** [What v1.1 delivers]
 **Status:** Phase [X] of [Y]
+**Progress:** [██████░░░░] 60%
 
 ### Phase 5: [Name]
 
@@ -137,8 +148,8 @@ After completing first milestone, reorganize with milestone groupings:
 **Depends on:** Phase 4
 
 **Plans:**
-- [ ] 05-01: [Brief description]
-- [ ] 05-02: [Brief description]
+- [x] 05-01: [Completed plan]
+- [ ] 05-02: [In progress or pending]
 
 ### Phase 6: [Name]
 
@@ -148,17 +159,25 @@ After completing first milestone, reorganize with milestone groupings:
 **Plans:**
 - [ ] 06-01: [Brief description]
 
-## Planned Milestone: v2.0 [Name]
+## 📋 Planned Milestone: v2.0 [Name]
 
 **Goal:** [What v2.0 delivers]
 **Prerequisite:** v1.1 complete
+**Estimated phases:** [N]
 
-[Phase outlines without detailed plans]
+[Phase outlines without detailed plans — detail added when milestone begins]
 
-## Completed Milestones
+| Phase | Focus | Research |
+|-------|-------|----------|
+| 7 | [Focus] | Unlikely |
+| 8 | [Focus] | Likely |
+| 9 | [Focus] | Unlikely |
+| 10 | [Focus] | Unlikely |
+
+## ✅ Completed Milestones
 
 <details>
-<summary>v1.0 MVP (Phases 1-4) - Shipped YYYY-MM-DD</summary>
+<summary>v1.0 MVP (Phases 1-4) — Shipped YYYY-MM-DD</summary>
 
 ### Phase 1: [Name]
 **Goal:** [What was delivered]
@@ -168,7 +187,26 @@ After completing first milestone, reorganize with milestone groupings:
 - [x] 01-02: [Description]
 - [x] 01-03: [Description]
 
-[... remaining v1.0 phases ...]
+### Phase 2: [Name]
+**Goal:** [What was delivered]
+**Plans:** 2 complete
+
+- [x] 02-01: [Description]
+- [x] 02-02: [Description]
+
+### Phase 3: [Name]
+**Goal:** [What was delivered]
+**Plans:** 1 complete
+
+- [x] 03-01: [Description]
+
+### Phase 4: [Name]
+**Goal:** [What was delivered]
+**Plans:** 1 complete
+
+- [x] 04-01: [Description]
+
+**Milestone archive:** See [milestones/v1.0-mvp.md](milestones/v1.0-mvp.md)
 
 </details>
 
@@ -263,6 +301,34 @@ When `Research: Likely`:
 
 ---
 
+## Milestone Sections
+
+### Active Milestone
+**Purpose:** Currently executing milestone with full phase details.
+**Contains:**
+- Goal and status summary
+- Progress bar visualization
+- All phases with plan checklists
+- Research flags where applicable
+
+### Planned Milestone
+**Purpose:** Defined but not started milestone.
+**Contains:**
+- Goal and prerequisites
+- Phase table (focus areas, research likelihood)
+- NOT detailed plans (added when milestone begins)
+
+### Completed Milestones
+**Purpose:** Historical record in collapsible sections.
+**Contains:**
+- Summary header with ship date
+- Phase details (collapsed by default)
+- Link to full milestone archive
+
+**Key principle:** Completed work should not consume visual space — collapse it.
+
+---
+
 ## GSD Parity Documentation
 
 ### Source Reference
@@ -279,10 +345,18 @@ When `Research: Likely`:
 - Plan checklist format
 
 ### PAUL Innovations Beyond GSD
-- **Current Milestone section** - Quick reference at top for active focus. GSD includes this info but not as prominently.
-- **Scope section per phase** - Explicit deliverables list beyond just plans. GSD mentions scope in Goal but doesn't separate.
-- **Milestone table in multi-version** - Tabular overview when multiple milestones exist.
+- **Status emoji legend** — Visual indicators (✅ 🚧 📋) for quick status scanning
+- **Progress bar visualization** — ASCII progress bar in active milestone
+- **Milestone sections specification** — Explicit documentation of Active/Planned/Completed sections
+- **Planned milestone table** — Tabular phase overview before detail is added
+- **Archive link** — Reference to detailed milestone archive file
+- **Current Milestone section** — Quick reference at top for active focus
+- **Scope section per phase** — Explicit deliverables list beyond just plans
+- **Milestone table in multi-version** — Tabular overview when multiple milestones exist
 
 ### Sources for PAUL Additions
+- Status emoji: Modern documentation convention for scannable status
+- Progress bar: Terminal/CLI convention for completion visualization
+- Archive link: Separation of active vs historical documentation
 - Scope separation: Standard PRD practice for clear deliverable tracking
 - Milestone table: Dashboard pattern for quick progress visibility
