@@ -19,7 +19,7 @@ PAUL_RULE_7=Use BDD acceptance criteria: Given [precondition] / When [action] / 
 
 # MAY (patterns)
 PAUL_RULE_8=Size tasks for single session (~50% context). Split larger tasks during planning.
-PAUL_RULE_9=One task = one atomic commit. Format: {type}({phase}-{plan}): {description}
+PAUL_RULE_9=One commit per phase at transition. Format: {type}({phase}): {description}. WIP commits optional at pause. Version alignment required at milestone.
 PAUL_RULE_10=Urgent work uses decimal phases (2.1, 2.2). Integers = planned, decimals = interruptions.
 
 # PARITY

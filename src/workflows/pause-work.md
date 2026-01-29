@@ -158,14 +158,60 @@ Resume context:
 </step>
 
 <step name="optional_commit">
-**If git repo, offer to commit as WIP:**
+**If git repo, offer WIP commit with explicit two-question flow:**
 
-```bash
-git add .paul/HANDOFF-*.md .paul/STATE.md
-git commit -m "wip: paused at [phase]-[plan]"
+**Question 1 — Commit WIP?**
+```
+────────────────────────────────────────
+Would you like to commit your work-in-progress?
+
+This saves a checkpoint you can return to.
+────────────────────────────────────────
+[yes] / [no]
 ```
 
-Ask user before committing.
+**If no:** Skip to confirm step.
+
+**If yes — Question 2 — Branch choice:**
+```
+────────────────────────────────────────
+Where should this WIP commit go?
+
+[1] main — Commit directly to main branch
+[2] feature branch — Create feature/{phase-name} branch first
+
+Note: Feature branch is useful if work isn't ready for main.
+────────────────────────────────────────
+```
+
+**If main (option 1):**
+```bash
+git add .paul/ src/
+git commit -m "wip({phase}): paused at {plan}
+
+Co-Authored-By: Claude <noreply@anthropic.com>"
+```
+
+**If feature branch (option 2):**
+```bash
+# Create and switch to feature branch
+git checkout -b feature/{phase-name}
+
+# Commit to feature branch
+git add .paul/ src/
+git commit -m "wip({phase}): paused at {plan}
+
+Co-Authored-By: Claude <noreply@anthropic.com>"
+
+# Record branch strategy in STATE.md for transition-phase
+```
+
+**Update STATE.md Session Continuity with branch info:**
+```markdown
+Git strategy: {main|feature/{phase-name}}
+```
+
+This enables transition-phase.md to know the branch strategy when reconciling.
 </step>
 
 <step name="confirm">
@@ -195,7 +241,8 @@ To resume later:
 <output>
 - HANDOFF-{date}.md created in .paul/
 - STATE.md updated with session continuity
-- Optional WIP commit
+- Optional WIP commit with branch choice (main or feature/{phase})
+- Git strategy recorded in STATE.md for transition-phase
 - User knows how to resume
 </output>
 

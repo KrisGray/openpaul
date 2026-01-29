@@ -149,6 +149,90 @@ Update ROADMAP.md:
    - Calculate percentage
 </step>
 
+<step name="commit_phase">
+**Git commit for completed phase:**
+
+**1. Check for feature branches from this phase:**
+```bash
+git branch --list "feature/{phase}*"
+```
+
+**2. If feature branch exists:**
+```
+────────────────────────────────────────
+Feature branch detected: feature/{phase-name}
+
+Checking for conflicts with main...
+────────────────────────────────────────
+```
+
+Check for conflicts:
+```bash
+git fetch origin main 2>/dev/null || true
+git diff main...feature/{phase-name} --stat
+```
+
+**If no conflicts:**
+```
+No conflicts detected.
+
+Merge feature/{phase-name} to main? [yes/no]
+```
+
+If yes:
+```bash
+git checkout main
+git merge feature/{phase-name} --no-ff -m "Merge feature/{phase-name} into main"
+git branch -d feature/{phase-name}
+```
+
+**If conflicts exist:**
+```
+⚠️ Conflicts detected between feature/{phase-name} and main.
+
+Cannot auto-merge. Options:
+[1] Resolve conflicts manually, then re-run transition
+[2] Keep on feature branch (do not merge)
+[3] Force merge anyway (not recommended)
+```
+
+**3. Stage phase files:**
+```bash
+git add .paul/phases/{phase}/ .paul/STATE.md .paul/PROJECT.md .paul/ROADMAP.md
+git add src/  # If source files were modified
+```
+
+**4. Create phase commit:**
+```bash
+git commit -m "$(cat <<'EOF'
+feat({phase}): {phase-description}
+
+Phase {N} complete:
+- {plan-01 summary}
+- {plan-02 summary}
+- {plan-03 summary}
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+EOF
+)"
+```
+
+**5. Record git state for complete-milestone:**
+Update STATE.md Accumulated Context:
+```markdown
+### Git State
+Last commit: {short-hash}
+Branch: main
+Feature branches merged: {list or "none"}
+```
+
+Display:
+```
+Git commit created: {short-hash}
+  feat({phase}): {phase-description}
+```
+</step>
+
 <step name="route_next">
 **Check if milestone complete:**
 
@@ -210,6 +294,8 @@ What's next?
 - STATE.md updated for new phase
 - ROADMAP.md marked complete
 - Stale handoffs cleaned
+- Git commit created for phase: feat({phase}): {description}
+- Feature branches merged if applicable
 - User routed to next phase or milestone
 </output>
 
@@ -219,6 +305,8 @@ What's next?
 - [ ] PROJECT.md evolved (requirements, decisions)
 - [ ] STATE.md updated (position, context, session)
 - [ ] ROADMAP.md marked complete
+- [ ] Feature branches merged (if any)
+- [ ] Git commit created for phase
 - [ ] User knows next steps with quick continuation
 </success_criteria>
 
