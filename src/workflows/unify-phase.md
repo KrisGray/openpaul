@@ -166,19 +166,32 @@ Continue to next plan?
 ```
 
 **Accept:** "1", "yes", "continue" → run `/paul:plan` for next plan in same phase
+</step>
 
----
+<step name="execute_transition" priority="required" gate="blocking">
+**If last plan in phase — TRANSITION IS MANDATORY:**
 
-**If last plan in phase (transition triggered):**
+⚠️ **NEVER skip this step. This is what makes PAUL a system, not random loops.**
 
-1. Announce: "Phase {N} complete. Running transition..."
-2. **Load and execute:** @~/.claude/paul-framework/workflows/transition-phase.md
-3. Transition workflow handles:
-   - Evolve PROJECT.md
-   - Verify phase completion
+1. Announce clearly:
+   ```
+   ════════════════════════════════════════
+   PHASE {N} COMPLETE — TRANSITION REQUIRED
+   ════════════════════════════════════════
+   ```
+
+2. **MUST read and execute:** @~/.claude/paul-framework/workflows/transition-phase.md
+
+3. Transition handles (do not skip any):
+   - Evolve PROJECT.md (requirements validated → shipped)
+   - Update ROADMAP.md (phase status → complete)
+   - Git commit for phase: `feat({phase}): {description}`
    - Clean stale handoffs
-   - Route to next phase or milestone
+   - Route to next phase or milestone completion
 
+4. **Only after transition completes** → offer next phase routing
+
+**Anti-pattern:** Closing UNIFY and immediately offering `/paul:plan` for next phase WITHOUT running transition. This breaks system cohesion and skips git commits.
 </step>
 
 </process>
