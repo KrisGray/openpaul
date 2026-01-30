@@ -6,7 +6,7 @@
 
 [![npm version](https://img.shields.io/npm/v/paul-framework?style=for-the-badge&logo=npm&logoColor=white&color=CB3837)](https://www.npmjs.com/package/paul-framework)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/chriskahler/paul-framework?style=for-the-badge&logo=github&color=181717)](https://github.com/chriskahler/paul-framework)
+[![GitHub stars](https://img.shields.io/github/stars/ChristopherKahler/paul?style=for-the-badge&logo=github&color=181717)](https://github.com/ChristopherKahler/paul)
 
 <br>
 
@@ -460,7 +460,7 @@ MIT License. See [LICENSE](LICENSE) for details.
 
 ## Author
 
-**Chris Kahler** — [Chris AI Systems](https://github.com/chriskahler)
+**Chris Kahler** — [Chris AI Systems](https://github.com/ChristopherKahler)
 
 Building tools for AI-assisted development.
 
