@@ -1,6 +1,6 @@
 <div align="center">
 
-# PAUL Framework
+# PAUL
 
 **Plan-Apply-Unify Loop** — Structured AI-assisted development for Claude Code.
 
