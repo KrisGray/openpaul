@@ -8,7 +8,8 @@ import type { Plugin } from '@opencode-ai/plugin'
  */
 import { paulInit } from './commands/init'
 import { paulPlan } from './commands/plan'
-import { paulPlan } from './commands/plan'
+import { paulProgress } from './commands/progress'
+import { paulHelp } from './commands/help'
 
 export const PaulPlugin: Plugin = async ({ project, client, directory, worktree }) => {
   // Plugin initialization
@@ -29,6 +30,8 @@ export const PaulPlugin: Plugin = async ({ project, client, directory, worktree 
     tool: {
       'paul:init': paulInit,
       'paul:plan': paulPlan,
+      'paul:progress': paulProgress,
+      'paul:help': paulHelp,
     },
   }
 }
