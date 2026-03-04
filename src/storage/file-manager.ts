@@ -6,6 +6,8 @@ import type { State } from '../types/state'
 import { StateSchema } from '../types/state'
 import type { ModelConfigFile } from '../types/model-config'
 import { ModelConfigFileSchema } from '../types/model-config'
+import type { Plan } from '../types/plan'
+import { PlanSchema } from '../types/plan'
 
 /**
  * File Manager
@@ -15,9 +17,11 @@ import { ModelConfigFileSchema } from '../types/model-config'
  */
 export class FileManager {
   private paulDir: string
+  private phasesDir: string
   
   constructor(projectRoot: string) {
     this.paulDir = join(projectRoot, '.paul')
+    this.phasesDir = join(this.paulDir, 'phases')
   }
   
   /**
@@ -113,5 +117,47 @@ export class FileManager {
   async writeModelConfig(config: ModelConfigFile): Promise<void> {
     const filePath = this.getModelConfigPath()
     await this.writeJSON(filePath, config, ModelConfigFileSchema)
+  }
+  
+  /**
+   * Get plan file path
+   * 
+   * Pattern: .paul/phases/{phaseNumber}-{planId}-PLAN.json
+   */
+  private getPlanPath(phaseNumber: number, planId: string): string {
+    return join(this.phasesDir, `${phaseNumber}-${planId}-PLAN.json`)
+  }
+  
+  /**
+   * Read plan
+   */
+  readPlan(phaseNumber: number, planId: string): Plan | null {
+    const filePath = this.getPlanPath(phaseNumber, planId)
+    return this.readJSON(filePath, PlanSchema)
+  }
+  
+  /**
+   * Write plan with atomic writes
+   */
+  async writePlan(phaseNumber: number, planId: string, plan: Plan): Promise<void> {
+    const filePath = this.getPlanPath(phaseNumber, planId)
+    await this.writeJSON(filePath, plan, PlanSchema)
+  }
+  
+  /**
+   * Check if plan exists
+   */
+  planExists(phaseNumber: number, planId: string): boolean {
+    const filePath = this.getPlanPath(phaseNumber, planId)
+    return existsSync(filePath)
+  }
+  
+  /**
+   * Ensure .paul/phases directory exists
+   */
+  ensurePhasesDir(): void {
+    if (!existsSync(this.phasesDir)) {
+      mkdirSync(this.phasesDir, { recursive: true })
+    }
   }
 }
