@@ -33,6 +33,55 @@ export const TaskSchema = z.object({
 })
 
 /**
+ * Artifact - File artifact for goal-backward verification
+ */
+export interface Artifact {
+  path: string
+  provides: string
+  must_contain?: string[]
+  min_lines?: number
+}
+
+export const ArtifactSchema = z.object({
+  path: z.string(),
+  provides: z.string(),
+  must_contain: z.array(z.string()).optional(),
+  min_lines: z.number().int().positive().optional(),
+})
+
+/**
+ * KeyLink - Reference between files for verification
+ */
+export interface KeyLink {
+  from: string
+  to: string
+  via: string
+  pattern: string
+}
+
+export const KeyLinkSchema = z.object({
+  from: z.string(),
+  to: z.string(),
+  via: z.string(),
+  pattern: z.string(),
+})
+
+/**
+ * Must-Haves - Goal-backward verification criteria
+ */
+export interface MustHaves {
+  truths: string[]
+  artifacts: Artifact[]
+  key_links: KeyLink[]
+}
+
+export const MustHavesSchema = z.object({
+  truths: z.array(z.string()).min(1),
+  artifacts: z.array(ArtifactSchema).min(1),
+  key_links: z.array(KeyLinkSchema),
+})
+
+/**
  * Plan - Executable plan with tasks
  * 
  * Plans contain:
@@ -69,47 +118,4 @@ export const PlanSchema = z.object({
   requirements: z.array(z.string()).min(1),
   tasks: z.array(TaskSchema).min(1).max(5),
   must_haves: MustHavesSchema,
-})
-
-/**
- * Must-Haves - Goal-backward verification criteria
- */
-export interface MustHaves {
-  truths: string[]
-  artifacts: Artifact[]
-  key_links: KeyLink[]
-}
-
-export const MustHavesSchema = z.object({
-  truths: z.array(z.string()).min(1),
-  artifacts: z.array(ArtifactSchema).min(1),
-  key_links: z.array(KeyLinkSchema),
-})
-
-export interface Artifact {
-  path: string
-  provides: string
-  must_contain?: string[]
-  min_lines?: number
-}
-
-export const ArtifactSchema = z.object({
-  path: z.string(),
-  provides: z.string(),
-  must_contain: z.array(z.string()).optional(),
-  min_lines: z.number().int().positive().optional(),
-})
-
-export interface KeyLink {
-  from: string
-  to: string
-  via: string
-  pattern: string
-}
-
-export const KeyLinkSchema = z.object({
-  from: z.string(),
-  to: z.string(),
-  via: z.string(),
-  pattern: z.string(),
 })
