@@ -58,14 +58,14 @@ Plans:
   4. User can close loops and generate summaries comparing plan vs actual
   5. User can check current loop position and next action
   6. User can view reference documentation for all commands
-**Plans**: TBD
+**Plans**: 5 plans
 
 Plans:
-- [ ] 02-01: `/paul:init` command implementation
-- [ ] 02-02: `/paul:plan` command implementation
-- [ ] 02-03: `/paul:apply` command implementation
-- [ ] 02-04: `/paul:unify` command implementation
-- [ ] 02-05: `/paul:progress` and `/paul:help` commands
+- [ ] 02-01: Output formatting utilities + /paul:init command
+- [ ] 02-02: /paul:plan command implementation
+- [ ] 02-03: /paul:apply command implementation
+- [ ] 02-04: /paul:unify command implementation
+- [ ] 02-05: /paul:progress and /paul:help commands
 
 ### Phase 3: Session Management
 **Goal**: Users can pause work and seamlessly resume or handoff to future sessions
@@ -171,8 +171,8 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Core Infrastructure | 0/5 | Not started | - |
-| 2. Core Loop Commands | 0/5 | Not started | - |
+| 1. Core Infrastructure | 9/9 | Complete | 2026-03-04 |
+| 2. Core Loop Commands | 0/5 | Ready for execution | - |
 | 3. Session Management | 0/3 | Not started | - |
 | 4. Project Management | 0/3 | Not started | - |
 | 5. Planning Support | 0/3 | Not started | - |
