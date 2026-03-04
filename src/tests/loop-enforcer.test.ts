@@ -1,5 +1,5 @@
-import { LoopEnforcer } from '../../state/loop-enforcer'
-import type { LoopPhase } from '../../types'
+import { LoopEnforcer } from '../state/loop-enforcer'
+import type { LoopPhase } from '../types'
 
 describe('LoopEnforcer', () => {
   let enforcer: LoopEnforcer
