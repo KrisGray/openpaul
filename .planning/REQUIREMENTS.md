@@ -10,7 +10,7 @@ Requirements for initial release (all 26 commands). Each maps to roadmap phases.
 ### Phase 1: Core Infrastructure
 
 - [x] **INFR-01**: Plugin loads in <500ms with zero data loss
-- [ ] **INFR-02**: TypeScript types defined for State, Plan, Command interfaces
+- [x] **INFR-02**: TypeScript types defined for State, Plan, Command interfaces
 - [ ] **INFR-03**: File-based JSON storage layer with atomic writes
 - [ ] **INFR-04**: State manager loads/saves STATE.json reliably
 - [ ] **INFR-05**: Loop enforcer validates PLAN → APPLY → UNIFY transitions
@@ -76,7 +76,7 @@ Requirements for initial release (all 26 commands). Each maps to roadmap phases.
 - [ ] **NFR-03**: TSDoc for all public functions, comprehensive README, consistent code style
 - [x] **NFR-04**: Jest testing with 80%+ coverage, TDD approach, mock file system operations
 - [x] **NFR-05**: Node.js >=16.7.0, OpenCode plugin API >=1.2.0, TypeScript >=5.0.0
-- [ ] **NFR-06**: Input validation with Zod schemas, path traversal protection, secure file permissions
+- [x] **NFR-06**: Input validation with Zod schemas, path traversal protection, secure file permissions
 
 ## v2 Requirements
 
@@ -108,7 +108,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | INFR-01 | Phase 1 | Complete |
-| INFR-02 | Phase 1 | Pending |
+| INFR-02 | Phase 1 | Complete |
 | INFR-03 | Phase 1 | Pending |
 | INFR-04 | Phase 1 | Pending |
 | INFR-05 | Phase 1 | Pending |
@@ -150,7 +150,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | NFR-03 | Phase 8 | Pending |
 | NFR-04 | Phase 1 | Complete |
 | NFR-05 | Phase 1 | Complete |
-| NFR-06 | Phase 1 | Pending |
+| NFR-06 | Phase 1 | Complete |
 
 **Coverage:**
 - v1 requirements: 38 total
