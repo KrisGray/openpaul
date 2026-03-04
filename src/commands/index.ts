@@ -6,9 +6,9 @@
 
 // Core loop commands
 export { paulInit } from './init'
+export { paulPlan } from './plan'
 
 // Placeholder exports for commands not yet implemented
-// export { paulPlan } from './plan'
 // export { paulApply } from './apply'
 // export { paulUnify } from './unify'
 // export { paulProgress } from './progress'
