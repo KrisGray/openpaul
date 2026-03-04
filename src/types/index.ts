@@ -22,5 +22,11 @@ export * from './plan'
 // Command types
 export * from './command'
 
+// Sub-stage types
+export * from './sub-stage'
+
+// Model configuration types
+export * from './model-config'
+
 // OpenCode plugin types
 export type { Plugin } from '@opencode-ai/plugin'
