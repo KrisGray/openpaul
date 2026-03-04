@@ -4,6 +4,8 @@ import { z } from 'zod'
 import { atomicWrite } from './atomic-writes'
 import type { State } from '../types/state'
 import { StateSchema } from '../types/state'
+import type { ModelConfigFile } from '../types/model-config'
+import { ModelConfigFileSchema } from '../types/model-config'
 
 /**
  * File Manager
@@ -86,5 +88,30 @@ export class FileManager {
     if (!existsSync(this.paulDir)) {
       mkdirSync(this.paulDir, { recursive: true })
     }
+  }
+  
+  /**
+   * Get model config file path
+   * 
+   * Pattern: .paul/model-config.json
+   */
+  private getModelConfigPath(): string {
+    return join(this.paulDir, 'model-config.json')
+  }
+  
+  /**
+   * Read model configuration
+   */
+  readModelConfig(): ModelConfigFile | null {
+    const filePath = this.getModelConfigPath()
+    return this.readJSON(filePath, ModelConfigFileSchema)
+  }
+  
+  /**
+   * Write model configuration with atomic writes
+   */
+  async writeModelConfig(config: ModelConfigFile): Promise<void> {
+    const filePath = this.getModelConfigPath()
+    await this.writeJSON(filePath, config, ModelConfigFileSchema)
   }
 }
