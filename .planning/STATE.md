@@ -42,6 +42,7 @@ Progress: [██████████] 100%
 | Phase 01-03 P03 | 2 min | 3 tasks | 3 files |
 | Phase 01 P04 | 4 min | 4 tasks | 4 files |
 | Phase 01-05 P05 | 3 min | 1 task | 1 file |
+| Phase 01-core-infrastructure P01-06 | 1 | 3 tasks | 4 files |
 
 ## Accumulated Context
 
