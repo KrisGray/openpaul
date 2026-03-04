@@ -34,7 +34,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. Loop enforcer prevents invalid PLAN → APPLY → UNIFY transitions
   5. Jest test framework is configured with 80%+ coverage target
   6. Model configuration system enables sub-stage model specialization
-**Plans**: 6 plans
+**Plans**: 9 plans (6 standard + 3 gap closure)
 
 Plans:
 - [ ] 01-01: Plugin initialization and TypeScript configuration
@@ -43,6 +43,9 @@ Plans:
 - [ ] 01-04: State manager implementation
 - [ ] 01-05: Loop enforcer and validation
 - [ ] 01-06: Model configuration system for sub-stage specialization
+- [ ] 01-07: [GAP] Error handling tests for atomic-writes.ts
+- [ ] 01-08: [GAP] Edge case tests for state-manager and sub-stage
+- [ ] 01-09: [GAP] Boundary tests for loop-enforcer and loop types
 
 ### Phase 2: Core Loop Commands
 **Goal**: Users can execute the complete PLAN → APPLY → UNIFY workflow
