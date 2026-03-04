@@ -15,8 +15,10 @@ import type { LoopPhase } from '../types'
  */
 export class StateManager {
   private fileManager: FileManager
+  private projectRoot: string
   
   constructor(projectRoot: string) {
+    this.projectRoot = projectRoot
     this.fileManager = new FileManager(projectRoot)
   }
   
@@ -49,7 +51,7 @@ export class StateManager {
     // Find all phase state files
     const fs = require('fs')
     const path = require('path')
-    const paulDir = path.join(process.cwd(), '.paul')
+    const paulDir = path.join(this.projectRoot, '.paul')
     
     if (!fs.existsSync(paulDir)) {
       return undefined
@@ -57,7 +59,7 @@ export class StateManager {
     
     // Get all state-phase-N.json files
     const files = fs.readdirSync(paulDir)
-      .filter(f => f.match(/state-phase-\d+\.json/))
+      .filter((f: string) => f.match(/state-phase-\d+\.json/))
       .sort()
     
     if (files.length === 0) {
