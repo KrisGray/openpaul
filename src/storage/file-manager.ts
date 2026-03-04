@@ -10,6 +10,50 @@ import type { Plan } from '../types/plan'
 import { PlanSchema } from '../types/plan'
 
 /**
+ * Summary Task - Individual task summary
+ */
+export interface SummaryTask {
+  name: string
+  status: 'completed' | 'skipped' | 'failed'
+  notes?: string
+}
+
+/**
+ * Summary - Plan execution summary
+ */
+export interface Summary {
+  phaseNumber: number
+  planId: string
+  completed: number
+  total: number
+  status: 'success' | 'partial' | 'failed'
+  tasks: SummaryTask[]
+  createdAt: number
+}
+
+/**
+ * Zod schema for SummaryTask validation
+ */
+export const SummaryTaskSchema = z.object({
+  name: z.string().min(1),
+  status: z.enum(['completed', 'skipped', 'failed']),
+  notes: z.string().optional(),
+})
+
+/**
+ * Zod schema for Summary validation
+ */
+export const SummarySchema = z.object({
+  phaseNumber: z.number().int().positive(),
+  planId: z.string().min(1),
+  completed: z.number().int().nonnegative(),
+  total: z.number().int().nonnegative(),
+  status: z.enum(['success', 'partial', 'failed']),
+  tasks: z.array(SummaryTaskSchema),
+  createdAt: z.number(),
+})
+
+/**
  * File Manager
  * 
  * Manages PAUL state files with per-phase organization.
@@ -159,5 +203,30 @@ export class FileManager {
     if (!existsSync(this.phasesDir)) {
       mkdirSync(this.phasesDir, { recursive: true })
     }
+  }
+  
+  /**
+   * Get summary file path
+   * 
+   * Pattern: .paul/phases/{phaseNumber}-{planId}-SUMMARY.json
+   */
+  private getSummaryPath(phaseNumber: number, planId: string): string {
+    return join(this.phasesDir, `${phaseNumber}-${planId}-SUMMARY.json`)
+  }
+  
+  /**
+   * Read summary
+   */
+  readSummary(phaseNumber: number, planId: string): Summary | null {
+    const filePath = this.getSummaryPath(phaseNumber, planId)
+    return this.readJSON(filePath, SummarySchema)
+  }
+  
+  /**
+   * Write summary with atomic writes
+   */
+  async writeSummary(phaseNumber: number, planId: string, summary: Summary): Promise<void> {
+    const filePath = this.getSummaryPath(phaseNumber, planId)
+    await this.writeJSON(filePath, summary, SummarySchema)
   }
 }
