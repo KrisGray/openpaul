@@ -1,11 +1,15 @@
 {
-  "name": "paul-framework",
-  "version": "1.0.3",
-  "description": "Plan-Apply-Unify Loop - A structured AI-assisted development framework for Claude Code",
+  "name": "@krisgray/openpaul",
+  "version": "1.0.0",
+  "description": "PAUL - Plan-Apply-Unify Loop plugin for OpenCode",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "bin": {
     "paul-framework": "bin/install.js"
   },
   "files": [
+    "dist",
+    "README.md",
     "bin",
     "src/commands",
     "src/templates",
@@ -14,13 +18,16 @@
     "src/rules"
   ],
   "keywords": [
+    "opencode",
+    "plugin",
+    "paul",
+    "plan-apply-unify",
+    "ai",
+    "development",
     "claude",
     "claude-code",
-    "ai",
     "planning",
-    "structured-development",
-    "paul",
-    "plan-apply-unify"
+    "structured-development"
   ],
   "author": "Chris Kahler",
   "license": "MIT",
@@ -34,5 +41,22 @@
   "homepage": "https://github.com/ChristopherKahler/paul#readme",
   "engines": {
     "node": ">=16.7.0"
+  },
+  "dependencies": {
+    "@opencode-ai/plugin": "^1.2.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "jest": "^29.0.0",
+    "@types/node": "^20.0.0",
+    "@types/jest": "^29.0.0",
+    "ts-jest": "^29.0.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "prepublishOnly": "npm run build"
   }
 }
