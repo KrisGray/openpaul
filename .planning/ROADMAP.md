@@ -33,7 +33,8 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. State can be saved to and loaded from JSON files reliably with atomic writes
   4. Loop enforcer prevents invalid PLAN → APPLY → UNIFY transitions
   5. Jest test framework is configured with 80%+ coverage target
-**Plans**: TBD
+  6. Model configuration system enables sub-stage model specialization
+**Plans**: 6 plans
 
 Plans:
 - [ ] 01-01: Plugin initialization and TypeScript configuration
@@ -41,6 +42,7 @@ Plans:
 - [ ] 01-03: File-based storage layer
 - [ ] 01-04: State manager implementation
 - [ ] 01-05: Loop enforcer and validation
+- [ ] 01-06: Model configuration system for sub-stage specialization
 
 ### Phase 2: Core Loop Commands
 **Goal**: Users can execute the complete PLAN → APPLY → UNIFY workflow
