@@ -1,6 +1,20 @@
 /**
- * Type definitions for PAUL plugin
+ * PAUL Framework Type Exports
+ *
+ * This file exports all types for external use.
+ * Users can import from '@krisgray/openpaul' and get:
+ * - LoopPhase and state machine utilities
+ * - State and PhaseState types
+ * - Plan and Task types
+ * - Command types and handlers
+ * - Zod schemas for runtime validation
  */
-export {};
-// Additional PAUL-specific types will be added in subsequent plans
+// Loop types
+export * from './loop';
+// State types
+export * from './state';
+// Plan types
+export * from './plan';
+// Command types
+export * from './command';
 //# sourceMappingURL=index.js.map
