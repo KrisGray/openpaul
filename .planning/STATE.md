@@ -41,6 +41,7 @@ Progress: [██░░░░░░░░] 20%
 - Trend: Just started
 
 *Updated after each plan completion*
+| Phase 01-02 P02 | 0 | 5 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -51,6 +52,7 @@ Recent decisions affecting current work:
 
 1. **ES Module Architecture** - Use ES modules (type: module) for compatibility with @opencode-ai/plugin,2. **TypeScript Module Resolution** - Use bundler moduleResolution for modern ES module support
 3. **Project Property Access** - Use project.id instead of project.name based on @opencode-ai/sdk types
+- [Phase 01]: Core TypeScript types defined with matching Zod schemas for runtime validation
 
 ### Pending Todos
 
