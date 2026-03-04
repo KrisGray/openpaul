@@ -12,8 +12,8 @@ Requirements for initial release (all 26 commands). Each maps to roadmap phases.
 - [x] **INFR-01**: Plugin loads in <500ms with zero data loss
 - [x] **INFR-02**: TypeScript types defined for State, Plan, Command interfaces
 - [x] **INFR-03**: File-based JSON storage layer with atomic writes
-- [ ] **INFR-04**: State manager loads/saves STATE.json reliably
-- [ ] **INFR-05**: Loop enforcer validates PLAN → APPLY → UNIFY transitions
+- [x] **INFR-04**: State manager loads/saves STATE.json reliably
+- [x] **INFR-05**: Loop enforcer validates PLAN → APPLY → UNIFY transitions
 - [x] **INFR-06**: Jest test framework configured with 80%+ coverage target
 
 ### Phase 2: Core Loop Commands
@@ -110,8 +110,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INFR-01 | Phase 1 | Complete |
 | INFR-02 | Phase 1 | Complete |
 | INFR-03 | Phase 1 | Complete |
-| INFR-04 | Phase 1 | Pending |
-| INFR-05 | Phase 1 | Pending |
+| INFR-04 | Phase 1 | Complete |
+| INFR-05 | Phase 1 | Complete |
 | INFR-06 | Phase 1 | Complete |
 | CORE-01 | Phase 2 | Pending |
 | CORE-02 | Phase 2 | Pending |
