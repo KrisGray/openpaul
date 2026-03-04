@@ -105,3 +105,13 @@ None - no external service configuration required.
 ---
 *Phase: 01-core-infrastructure*
 *Completed: 2026-03-04*
+
+## Self-Check: PASSED
+
+- ✅ src/tests/state/state-manager.test.ts exists
+- ✅ src/tests/types/sub-stage.test.ts exists
+- ✅ .planning/phases/01-core-infrastructure/01-08-SUMMARY.md exists
+- ✅ 3 commits found with "01-08" in message
+  - e52e947: test(01-08): add edge case tests for state-manager getCurrentPosition
+  - 4def147: test(01-08): add tests for sub-stage helper functions
+  - 3b84752: docs(01-08): complete gap closure tests plan
