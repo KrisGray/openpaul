@@ -9,12 +9,12 @@ Requirements for initial release (all 26 commands). Each maps to roadmap phases.
 
 ### Phase 1: Core Infrastructure
 
-- [ ] **INFR-01**: Plugin loads in <500ms with zero data loss
+- [x] **INFR-01**: Plugin loads in <500ms with zero data loss
 - [ ] **INFR-02**: TypeScript types defined for State, Plan, Command interfaces
 - [ ] **INFR-03**: File-based JSON storage layer with atomic writes
 - [ ] **INFR-04**: State manager loads/saves STATE.json reliably
 - [ ] **INFR-05**: Loop enforcer validates PLAN → APPLY → UNIFY transitions
-- [ ] **INFR-06**: Jest test framework configured with 80%+ coverage target
+- [x] **INFR-06**: Jest test framework configured with 80%+ coverage target
 
 ### Phase 2: Core Loop Commands
 
@@ -72,10 +72,10 @@ Requirements for initial release (all 26 commands). Each maps to roadmap phases.
 ### Non-Functional Requirements
 
 - [ ] **NFR-01**: Plugin loads in <500ms, commands execute in <100ms (except research/apply)
-- [ ] **NFR-02**: Zero data loss with atomic file writes (temp file + rename)
+- [x] **NFR-02**: Zero data loss with atomic file writes (temp file + rename)
 - [ ] **NFR-03**: TSDoc for all public functions, comprehensive README, consistent code style
-- [ ] **NFR-04**: Jest testing with 80%+ coverage, TDD approach, mock file system operations
-- [ ] **NFR-05**: Node.js >=16.7.0, OpenCode plugin API >=1.2.0, TypeScript >=5.0.0
+- [x] **NFR-04**: Jest testing with 80%+ coverage, TDD approach, mock file system operations
+- [x] **NFR-05**: Node.js >=16.7.0, OpenCode plugin API >=1.2.0, TypeScript >=5.0.0
 - [ ] **NFR-06**: Input validation with Zod schemas, path traversal protection, secure file permissions
 
 ## v2 Requirements
@@ -107,12 +107,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFR-01 | Phase 1 | Pending |
+| INFR-01 | Phase 1 | Complete |
 | INFR-02 | Phase 1 | Pending |
 | INFR-03 | Phase 1 | Pending |
 | INFR-04 | Phase 1 | Pending |
 | INFR-05 | Phase 1 | Pending |
-| INFR-06 | Phase 1 | Pending |
+| INFR-06 | Phase 1 | Complete |
 | CORE-01 | Phase 2 | Pending |
 | CORE-02 | Phase 2 | Pending |
 | CORE-03 | Phase 2 | Pending |
@@ -146,10 +146,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | RULE-05 | Phase 8 | Pending |
 | RULE-06 | Phase 8 | Pending |
 | NFR-01 | Phase 8 | Pending |
-| NFR-02 | Phase 1 | Pending |
+| NFR-02 | Phase 1 | Complete |
 | NFR-03 | Phase 8 | Pending |
-| NFR-04 | Phase 1 | Pending |
-| NFR-05 | Phase 1 | Pending |
+| NFR-04 | Phase 1 | Complete |
+| NFR-05 | Phase 1 | Complete |
 | NFR-06 | Phase 1 | Pending |
 
 **Coverage:**
