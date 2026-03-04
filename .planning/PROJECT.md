@@ -26,8 +26,8 @@ Enforce the PLAN → APPLY → UNIFY loop with mandatory reconciliation, ensurin
   - Milestone Management (3): milestone, complete-milestone, discuss-milestone
   - Pre-Planning (4): discuss, assumptions, discover, consider-issues
   - Research (2): research, research-phase
-  - Quality (2): verify, plan-fix
-  - Configuration (3): flows, config, map-codebase
+  - Quality (2): verify. plan-fix
+  - Configuration (3): flows. config. map-codebase
 - [ ] PAUL-specific rules bundled and injected dynamically (like CARL domains)
 - [ ] File-based JSON storage for project state (.paul/ directory structure)
 - [ ] TypeScript object templates for PLAN, SUMMARY, STATE, ROADMAP, etc.
@@ -108,4 +108,4 @@ Based on OpenCode plugin documentation:
 | 8-week implementation | Comprehensive coverage, TDD approach, proper testing and documentation | — Pending |
 
 ---
-*Last updated: 2025-03-03 after initialization*
+*Last updated: 2025-03-04 after initialization*
