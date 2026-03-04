@@ -6,6 +6,8 @@ import type { Plugin } from '@opencode-ai/plugin'
  * This plugin enforces the PLAN → APPLY → UNIFY loop with mandatory reconciliation,
  * ensuring every plan closes properly with full traceability and context preservation.
  */
+import { paulInit } from './commands/init'
+
 export const PaulPlugin: Plugin = async ({ project, client, directory, worktree }) => {
   // Plugin initialization
   await client.app.log({
@@ -21,7 +23,10 @@ export const PaulPlugin: Plugin = async ({ project, client, directory, worktree 
   })
   
   return {
-    // Event hooks will be added in subsequent plans
+    // Register commands
+    tool: {
+      'paul:init': paulInit,
+    },
   }
 }
 

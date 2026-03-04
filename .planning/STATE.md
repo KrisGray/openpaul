@@ -44,6 +44,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01 P07 | 4 min | 3 tasks | 3 files |
 | Phase 01 P08 | 5 min | 2 tasks | 2 files |
 | Phase 01 P09 | 3 min | 2 tasks | 2 files |
+| Phase 02-01 P01 | 7 | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -82,3 +83,6 @@ None yet.
 Last session: 2026-03-04 (context gathering)
 Stopped at: Phase 2 context gathered
 Resume file: .planning/phases/02-core-loop-commands/02-CONTEXT.md
+: Phase 2 context gathered
+Resume file: .planning/phases/02-core-loop-commands/02-CONTEXT.md
+2-core-loop-commands/02-CONTEXT.md
