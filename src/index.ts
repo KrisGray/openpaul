@@ -7,6 +7,8 @@ import type { Plugin } from '@opencode-ai/plugin'
  * ensuring every plan closes properly with full traceability and context preservation.
  */
 import { paulInit } from './commands/init'
+import { paulPlan } from './commands/plan'
+import { paulPlan } from './commands/plan'
 
 export const PaulPlugin: Plugin = async ({ project, client, directory, worktree }) => {
   // Plugin initialization
@@ -26,6 +28,7 @@ export const PaulPlugin: Plugin = async ({ project, client, directory, worktree 
     // Register commands
     tool: {
       'paul:init': paulInit,
+      'paul:plan': paulPlan,
     },
   }
 }
