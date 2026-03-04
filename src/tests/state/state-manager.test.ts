@@ -99,6 +99,27 @@ describe('StateManager', () => {
       expect(position).toBeUndefined()
     })
     
+    it('should return undefined when .paul directory exists but has no state files', () => {
+      // Create .paul directory with files that don't match the pattern
+      const paulDir = join(testDir, '.paul')
+      mkdirSync(paulDir)
+      writeFileSync(join(paulDir, 'other.json'), '{}')
+      writeFileSync(join(paulDir, 'config.json'), '{}')
+      
+      const position = stateManager.getCurrentPosition()
+      expect(position).toBeUndefined()
+    })
+    
+    it('should return undefined when state file is corrupted', () => {
+      // Create .paul directory with corrupted state file
+      const paulDir = join(testDir, '.paul')
+      mkdirSync(paulDir)
+      writeFileSync(join(paulDir, 'state-phase-1.json'), 'invalid json')
+      
+      const position = stateManager.getCurrentPosition()
+      expect(position).toBeUndefined()
+    })
+    
     it('should return latest phase position', async () => {
       // Create multiple phase states
       await stateManager.savePhaseState(1, {
