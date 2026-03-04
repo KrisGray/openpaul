@@ -10,6 +10,4 @@ export { paulPlan } from './plan'
 export { paulProgress } from './progress'
 export { paulHelp } from './help'
 
-// Placeholder exports for commands not yet implemented
-// export { paulApply } from './apply'
-// export { paulUnify } from './unify'
+export { paulApply } from './apply'
