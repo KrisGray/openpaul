@@ -102,5 +102,32 @@ describe('LoopEnforcer', () => {
       expect(() => enforcer.enforceCanStartNewLoop('PLAN')).toThrow(/Cannot start a new loop/)
       expect(() => enforcer.enforceCanStartNewLoop('APPLY')).toThrow(/complete the current loop first/)
     })
+    
+    it('should include currentPhase in error message when called with PLAN', () => {
+      try {
+        enforcer.enforceCanStartNewLoop('PLAN')
+        fail('Should have thrown')
+      } catch (error) {
+        expect((error as Error).message).toContain('PLAN')
+        expect((error as Error).message).toContain('Current state: PLAN')
+        expect((error as Error).message).toContain('Run /paul:apply')
+      }
+    })
+    
+    it('should not throw when called with undefined (can start new loop)', () => {
+      // undefined is a valid state to start a new loop - no error should be thrown
+      expect(() => enforcer.enforceCanStartNewLoop(undefined)).not.toThrow()
+    })
+    
+    it('should include APPLY in error message when called with APPLY', () => {
+      try {
+        enforcer.enforceCanStartNewLoop('APPLY')
+        fail('Should have thrown')
+      } catch (error) {
+        expect((error as Error).message).toContain('APPLY')
+        expect((error as Error).message).toContain('Current state: APPLY')
+        expect((error as Error).message).toContain('Run /paul:unify')
+      }
+    })
   })
 })
