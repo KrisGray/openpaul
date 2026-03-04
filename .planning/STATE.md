@@ -47,10 +47,6 @@ Progress: [██████████] 100%
 ## Accumulated Context
 
 ### Decisions
-
-Decisions are logged in PROJECT.md Key Decisions table.
-Recent decisions affecting current work:
-
 1. **ES Module Architecture** - Use ES modules (type: module) for compatibility with @opencode-ai/plugin,2. **TypeScript Module Resolution** - Use bundler moduleResolution for modern ES module support
 3. **Project Property Access** - Use project.id instead of project.name based on @opencode-ai/sdk types
 - [Phase 01]: Core TypeScript types defined with matching Zod schemas for runtime validation
@@ -62,6 +58,8 @@ Recent decisions affecting current work:
 - [Phase 01]: Loop enforcer throws informative errors with next action guidance — User-friendly error messages reduce confusion and guide users to correct actions
 - [Phase 01]: Users must always start with PLAN phase (forced entry point) — Ensures proper loop cycle and prevents invalid state transitions
 - [Phase 01-05]: Move test file from src/tests/state/ to src/tests/ to match plan specification — Plan specified src/tests/loop-enforcer.test.ts as the test file location, ensuring consistency with plan documentation
+- [Phase 01-06]: Sub-stage types with flat string literal union for simpler validation - Flat structure easier to reason than nested enums
+- [Phase 01-core-infrastructure]: Model configuration system for specialization across 9 sub-stages
 
 ### Pending Todos
 
