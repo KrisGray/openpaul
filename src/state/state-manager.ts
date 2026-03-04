@@ -68,11 +68,8 @@ export class StateManager {
     
     // Load the latest phase state
     const latestFile = files[files.length - 1]
-    const match = latestFile.match(/state-phase-(\d+)\.json/)
-    if (!match) {
-      return undefined
-    }
-    
+    // Files are filtered by the same regex pattern above, so match is guaranteed
+    const match = latestFile.match(/state-phase-(\d+)\.json/)!
     const phaseNumber = parseInt(match[1], 10)
     const state = this.loadPhaseState(phaseNumber)
     
