@@ -14,13 +14,12 @@ Enforce the PLAN → APPLY → UNIFY loop with mandatory reconciliation, ensurin
 
 ### Validated
 
-(None yet — ship to validate)
+- ✓ Core Loop Commands — v1.0 (All 6 core commands implemented: init, plan, apply, unify, progress, help)
+- ✓ Core Infrastructure — v1.0 (All 6 infrastructure requirements implemented: TypeScript types, storage, state manager, loop enforcer, testing, model configuration)
 
 ### Active
 
-- [ ] TypeScript plugin for OpenCode with full type safety
 - [ ] All 26 PAUL commands implemented in TypeScript
-  - Core Loop (6): init, plan, apply, unify, progress, help
   - Session Management (4): pause, resume, handoff, status
   - Roadmap Management (2): add-phase, remove-phase
   - Milestone Management (3): milestone, complete-milestone, discuss-milestone
@@ -84,28 +83,25 @@ Based on OpenCode plugin documentation:
 - Context injection through hooks
 - Zod schemas for validation
 
-## Constraints
+### Current State (After v1.0)
 
-- **Platform:** OpenCode plugin system (not Claude Code) — Native integration with OpenCode's TypeScript plugin API
-- **Language:** TypeScript exclusively (no Python components) — Full type safety, better tooling, maintainable codebase
-- **Testing:** Jest framework with TDD approach — Tests first, 80%+ coverage target
-- **Distribution:** npm package @krisgray/openpaul — Consistent with @krisgray/opencarl namespace
-- **Storage:** File-based JSON (no databases) — Simple, human-readable, version-controllable
-- **Compatibility:** Must integrate with OpenCode's plugin hooks system — Use @opencode-ai/plugin >=1.2.0
+Shipped v1.0 with 19 plans, 38 requirements covered.
+Tech stack: TypeScript, Jest, Zod, ES Modules.
+Initial user testing showed good foundation for future features.
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Full TypeScript rewrite | Type safety, testability, modern tooling, better IDE support | — Pending |
-| Bundle PAUL rules in plugin | Single dependency, simpler installation, no separate CARL needed | — Pending |
-| TypeScript objects for templates | Type safety, validation, IDE support, no markdown parsing needed | — Pending |
-| File-based JSON storage | Simple, human-readable, version-controllable, no database overhead | — Pending |
-| Jest for all testing | Unified testing, TDD-friendly, TypeScript-native, better mocking | — Pending |
-| All 26 commands | Feature parity with original PAUL, complete structured development workflow | — Pending |
-| CARL format for rules | Consistency with OpenCARL, familiar pattern, proven approach | — Pending |
-| No migration path | Clean break, no legacy baggage, simpler implementation | — Pending |
-| 8-week implementation | Comprehensive coverage, TDD approach, proper testing and documentation | — Pending |
+| Full TypeScript rewrite | Type safety, testability, modern tooling, better IDE support | ✓ Complete |
+| Bundle PAUL rules in plugin | Single dependency, simpler installation, no separate CARL needed | ✓ Complete |
+| TypeScript objects for templates | Type safety, validation, IDE support, no markdown parsing needed | ✓ Complete |
+| File-based JSON storage | Simple, human-readable, version-controllable, no database overhead | ✓ Complete |
+| Jest for all testing | Unified testing, TDD-friendly, TypeScript-native, better mocking | ✓ Complete |
+| All 26 commands | Feature parity with original PAUL, complete structured development workflow | ⚠️ In Progress (v1.0 covers core commands) |
+| CARL format for rules | Consistency with OpenCARL, familiar pattern, proven approach | ✓ Complete |
+| No migration path | Clean break, no legacy baggage, simpler implementation | ✓ Complete |
+| 8-week implementation | Comprehensive coverage, TDD approach, proper testing and documentation | ✓ Complete |
 
 ---
-*Last updated: 2025-03-04 after initialization*
+*Last updated: 2026-03-05 after v1.0 milestone*
