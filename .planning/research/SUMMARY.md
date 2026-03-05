@@ -1,190 +1,352 @@
 # Project Research Summary
 
-**Project:** OpenPAUL Session Management
-**Domain:** Development workflow session management (pause, resume, handoff, status)
+**Project:** PAUL Full Command Implementation (v1.1)
+**Domain:** Development workflow management tool (OpenCode plugin)
 **Researched:** 2026-03-05
 **Confidence:** HIGH
 
 ## Executive Summary
 
-OpenPAUL session management is a feature addition to an existing TypeScript plugin for the OpenCode AI platform. The system enables developers to pause work mid-PAUL workflow (PLAN/APPLY/UNIFY cycle), transfer context via handoff documents, and resume work across sessions—critical for multi-session development workflows.
+OpenPAUL v1.1 requires implementing 26 remaining commands across 7 command categories to complete the structured development workflow system. Research indicates this is a **file-based state management plugin** for OpenCode that follows the "Handoff + Resume" pattern with enforced workflow loops (PLAN→APPLY→UNIFY). The recommended approach extends the existing v1.0 architecture through **7 new manager classes** (SessionManager, RoadmapManager, MilestoneManager, PrePlanningManager, ResearchManager, QualityManager, ConfigManager) with **no new external dependencies**—leveraging TypeScript, Zod, Jest, and Node.js built-in modules already in the stack.
 
-The recommended approach leverages OpenPAUL's existing architecture entirely: file-based JSON storage with atomic writes, Zod schemas for validation, and the established command pattern. No new dependencies are required—session management uses Node.js built-ins (`crypto.randomUUID()`, `fs`, `path`) and extends existing FileManager/StateManager classes. The key differentiator from general session tools is **loop-aware pausing**: OpenPAUL knows the current workflow phase (PLAN/APPLY/UNIFY) and enforces correct workflow on resume, preventing users from resuming mid-implementation into a planning phase.
-
-Critical risks include serialization blind spots (non-serializable data breaking pause/resume), orphaned session files accumulating without cleanup, and incomplete context capture making resume feel like starting over. These are mitigated through strict Zod validation, timestamp-based naming with cleanup strategies, and structured handoff templates that capture "next action" and decision rationale.
+Key risks center on **state corruption during roadmap mutations** (add-phase/remove-phase creating orphaned plans or breaking dependencies), **milestone synchronization drift** across multiple phases, and **pre-planning artifact accumulation** without cleanup. Mitigation strategies include: dependency graph management before exposing roadmap commands, milestone state computed from phases (not stored separately), cleanup strategy for research artifacts, and configuration hierarchy with precedence rules (defaults < config < flows < map-codebase). All file operations use existing atomic-write pattern, and Zod schemas provide runtime validation for all new state types.
 
 ## Key Findings
 
 ### Recommended Stack
 
-No new dependencies required. Session management builds on OpenPAUL's existing infrastructure:
+**Summary:** No new external dependencies required. Existing TypeScript + Zod + Jest stack with Node.js built-ins sufficient for all 26 commands. Primary additions are internal TypeScript types and FileManager extensions.
 
 **Core technologies:**
-- **crypto.randomUUID()** (Node.js built-in, v16.7.0+) — Session ID generation — Zero-dependency, cryptographically secure UUIDs
-- **fs/path** (Node.js built-in) — File operations — Already used throughout codebase, atomic write pattern established
-- **TypeScript + Zod** (existing) — Type safety + runtime validation — Session schemas ensure data integrity on write AND read
-- **Jest** (existing) — Testing — TDD approach with round-trip tests (pause → resume validation)
+- **TypeScript ^5.0.0:** Type safety, IDE support, Zod schema integration — already in stack, all patterns use TypeScript interfaces + Zod runtime validation
+- **@opencode-ai/plugin ^1.2.0:** OpenCode plugin API, tool registration, Task tool for subagents — required for plugin development, provides tool() helper and hooks
+- **Zod ^3.22.0:** Runtime validation, schema definitions — validates JSON state files on read/write, prevents corruption
+- **Jest ^29.0.0:** Testing framework, test runner — TDD-friendly, TypeScript-native via ts-jest, configured with 80% coverage threshold
+- **ES Modules (ES2020):** Module system, import/export — modern standard, better tree-shaking, native async support
 
-**Alternatives rejected:**
-- `uuid` package → Built-in `crypto.randomUUID()` sufficient
-- SQLite database → Project explicitly uses file-based JSON
-- Markdown templates → Project uses TypeScript objects for type safety
+**Node.js built-ins (no new packages):**
+- **fs, path:** File operations, path construction — all commands read/write .paul/ directory files
+- **crypto.randomUUID():** Session ID generation — built-in since Node.js 16.7.0
+- **Date.now():** Timestamps, file naming — no dependency needed
 
 ### Expected Features
 
-**Must have (table stakes for v1.1):**
-- **/paul:pause** — Create session snapshot with loop position, state, and summary — Users expect to temporarily stop work without losing state (similar to `git stash`)
-- **/paul:resume <session-id>** — Restore from paused session — Users expect to pick up exactly where they left off
-- **Session listing** — Show paused sessions with metadata (id, timestamp, phase, summary) — Essential for session discovery
-- **/paul:handoff** — Generate handoff document — Essential for context transfer to other sessions/people
-- **/paul:status deprecation** — Show deprecation notice with redirect to /paul:progress — Prevents confusion with existing users
+**Summary:** 26 commands across 7 categories. MVP (v1.1) includes 15 core commands; 4 deferred to v1.2; 2 deferred to v2+.
 
-**Should have (competitive advantages, v1.x):**
-- **Loop-aware pause** — PAUL-specific: capture exact loop position (PLAN/APPLY/UNIFY) and enforce it on resume — Most tools don't have enforced workflow
-- **Handoff with decision rationale** — Not just current state, but WHY decisions were made — Invaluable for future sessions
-- **Session naming** — Allow naming/renaming sessions for easier identification
-- **Session cleanup** — Delete old sessions, retention policy
+**Must have (table stakes) — 15 commands:**
+- **pause, resume, status** — session continuity for multi-session workflows (MEDIUM complexity)
+- **add-phase, remove-phase** — basic roadmap manipulation for project evolution (MEDIUM complexity)
+- **milestone, complete-milestone** — milestone lifecycle tracking (MEDIUM complexity)
+- **discuss, discover** — pre-planning to reduce risk and improve plan quality (MEDIUM-HIGH complexity)
+- **research, research-phase** — research capabilities for informed development (HIGH complexity)
+- **verify, plan-fix** — quality verification and loop closure (MEDIUM complexity)
+
+**Should have (differentiators) — 4 commands (v1.2):**
+- **handoff** — explicit handoff for team collaboration (MEDIUM complexity)
+- **discuss-milestone** — milestone discussion before creation improves alignment (MEDIUM complexity)
+- **assumptions** — assumption tracking reduces risk but may feel bureaucratic (MEDIUM complexity)
+- **consider-issues** — proactive issue identification (MEDIUM complexity)
 
 **Defer (v2+):**
-- **Session branching** — Resume from any historical checkpoint — Requires significant storage/indexing infrastructure
-- **Multi-session handoff** — Coordinate multiple specialized sessions — Complex orchestration
-- **Context compaction** — Auto-summarize to reduce bloat — Requires intelligent summarization
+- **flows** — specialized flows are power features with niche use cases (LOW complexity)
+- **map-codebase** — codebase mapping valuable but time-consuming (HIGH complexity)
+
+**Key differentiators:**
+- **Loop-aware pause/resume** — capture exact loop position (PLAN/APPLY/UNIFY) and enforce on resume
+- **Discovery depth levels** — Quick (2-5min), Standard (15-30min), Deep (1+hr) adapts effort to risk/complexity
+- **Research-phase parallel subagents** — identify and research unknowns automatically (max 3 for token efficiency)
+- **Assumption validation tracking** — explicit assumption management with validation status
+- **Handoff-first architecture** — HANDOFF.md as primary state transfer mechanism
 
 ### Architecture Approach
 
-Session management integrates cleanly as a feature addition within existing patterns—no architectural changes required. New commands follow the established plugin tool registration pattern, extend FileManager (not StateManager) for session file operations, and use existing formatters for output consistency.
+**Summary:** Extended architecture with 7 manager classes, FileManager extensions, and consistent patterns matching v1.0. No breaking changes to existing commands.
 
 **Major components:**
-1. **Session types (src/types/session.ts)** — NEW: SessionState + Handoff interfaces with Zod schemas for validation
-2. **FileManager extension (src/storage/file-manager.ts)** — MODIFY: Add session state and handoff methods (atomic writes, JSON with Zod validation)
-3. **Session commands (src/commands/pause.ts, resume.ts, handoff.ts)** — NEW: Self-contained command implementations using FileManager + StateManager
-4. **Plugin registration (src/index.ts)** — MODIFY: Register new tools following existing pattern
+1. **SessionManager** — track session state for pause/resume/handoff operations, save/restore session-state.json, handle handoff context transfer
+2. **RoadmapManager** — parse and update ROADMAP.md (markdown, not JSON), add/remove phases, update milestone status, track phase completion
+3. **MilestoneManager** — track milestone progress and completion, archive completed milestones, manage milestone context handoffs
+4. **PrePlanningManager** — manage pre-planning artifacts (CONTEXT.md, ASSUMPTIONS.md, DISCOVERY.md, ISSUES.md) for phase-level planning
+5. **ResearchManager** — coordinate research via subagents, save findings to RESEARCH.md, link research to plans
+6. **QualityManager** — record verification results, create fix plans for failed verifications, track issue resolution
+7. **ConfigManager** — manage plugin configuration, flow definitions, codebase mappings
 
-**Key patterns:**
-- **Separation of concerns:** Session state (`.paul/session-state.json`) is orthogonal to phase state (`.paul/state-phase-N.json`)
-- **File-based communication:** All state in files, not in-memory caches—survives process restarts
-- **Atomic writes:** Existing `atomicWrite()` pattern ensures zero data loss
-- **Single responsibility:** pause creates handoff + marks paused; resume loads + archives handoff; handoff generates detailed doc without pausing
+**Key architectural patterns:**
+- **Manager Pattern** — business logic separation from command execution, testable independently
+- **Context Handoff Pattern** — temporary files for context transfer between commands (survives session clears)
+- **State Validation Pattern** — validate state transitions before executing operations
+- **Markdown Preservation Pattern** — parse and update markdown while preserving formatting (ROADMAP.md)
+- **Atomic Multi-File Updates** — update multiple files atomically with rollback on failure
+
+**Project structure:**
+```
+src/
+├── commands/{category}/    # 26 new command files grouped by domain
+├── managers/                # 7 new manager classes
+├── storage/roadmap-parser.ts # specialized markdown parser
+├── types/                   # new type definitions with Zod schemas
+└── tests/                   # 26 new command tests + 7 manager tests
+```
 
 ### Critical Pitfalls
 
-1. **Serialization Blind Spots** — Session appears to save but crashes on resume or loses context due to non-serializable objects (functions, circular references, class instances). **Prevention:** Use Zod schemas for ALL session data, test round-trip serialization immediately, version schemas for future migration.
+**Top 5 most critical:**
 
-2. **Orphaned Session Files** — Multiple paused sessions accumulate, users can't identify current session, storage bloats. **Prevention:** One active session per project (replace on new pause), timestamp-based naming, cleanup on successful resume, age-based pruning.
+1. **Phase Number Collisions During add-phase** — user adds phase 5 when phase 5 already exists, creating orphaned plans and state files. Avoid by validating uniqueness, offering append/insert modes, atomic multi-file updates, and gap detection.
 
-3. **Incomplete Context Capture** — Resume feels like "starting over" because key decisions, mental state, or "next action" missing. **Prevention:** Structured capture templates, prompt for context, capture environmental state (git branch), include specific first step on resume.
+2. **Orphaned Plans and State During remove-phase** — removing phase 3 leaves orphaned plan files and state, breaks dependencies. Avoid by dependency graph traversal, cascade delete with confirmation, orphan detection, and atomic cleanup.
 
-4. **State Version Mismatch** — Session paused with v1.0 schema, resumed with v1.1 code, breaks or corrupts data. **Prevention:** Version field in ALL session files, migration functions, backward compatible reads, validation on load.
+3. **Phase Dependency Chain Corruption** — add/remove-phase breaks dependency chain defined in ROADMAP.md. Avoid by parsing ROADMAP.md into dependency graph, validating integrity, cascade updates on mutations, and graph validation command.
 
-5. **Deprecation Without Migration Path** — `/paul:status` deprecated but users confused about replacement. **Prevention:** Helpful error messages ("Use /paul:progress instead — it does X better"), update ALL docs simultaneously, grace period if feasible.
+4. **Milestone State Desynchronization** — milestone marked "complete" but referenced phases still incomplete. Avoid by calculating milestone progress dynamically (view, not state), complete-milestone validates all phases done, milestone as computed view.
+
+5. **Pre-Planning Artifacts Accumulate Without Cleanup** — discuss/assumptions/discover/consider-issues create research files that grow indefinitely. Avoid by retention policy (auto-archive after phase completes), per-phase directories, archive command, size warnings, link research to phase.
+
+**Additional high-risk areas:**
+- **Multiple Active Milestones** — enforce single active milestone constraint
+- **Research Redundancy and Duplication** — clear command boundaries, deduplication on write
+- **Verification State Not Persisted** — save results to .paul/verification.json for history
+- **plan-fix Creates Infinite Loop** — root cause analysis, retry limit (3 attempts), history tracking
+- **Configuration Hierarchy Ambiguity** — document precedence, merged config view, override warnings
+- **map-codebase Performance Degradation** — incremental mapping, exclude patterns, progress feedback, caching
 
 ## Implications for Roadmap
 
-Based on research, suggested phase structure:
+Based on research, suggested phase structure for v1.1 implementation:
 
-### Phase 1: Core Types & Storage Infrastructure
-**Rationale:** Foundation required by all session commands—types define data contracts, storage provides persistence layer.
-**Delivers:** SessionState + Handoff types with Zod schemas, FileManager session methods (read/write/list/archive), atomic write guarantee for session files.
-**Addresses:** Serialization blind spots, state version mismatch (version field from day 1)
-**Avoids:** Pitfall of modifying StateManager (keep FileManager as single source for file I/O)
+### Phase 1: Session Management (pause, resume, status)
+**Rationale:** Session continuity is foundational for all other commands. Users must be able to pause and resume reliably before any complex workflow features are useful.
 
-**Research flag:** **SKIP** — Standard TypeScript/Zod patterns, well-documented in existing codebase
+**Delivers:** SessionManager, session-state.json, handoff JSON files, pause/resume/handoff/status commands
 
-### Phase 2: Pause Command
-**Rationale:** Must exist before resume can work. Captures session state, creates handoff, marks paused.
-**Delivers:** `/paul:pause` command with loop position capture, context preservation, handoff generation, formatted output.
-**Addresses:** Table stakes feature (pause with context preservation), loop-aware pause (differentiator)
-**Avoids:** Pitfall of incomplete context capture (structured handoff template), orphaned sessions (timestamp naming, single active session)
+**Addresses:** Table stakes features (pause, resume, status) from FEATURES.md
 
-**Research flag:** **SKIP** — Follows existing command pattern, integrates with StateManager/FileManager
+**Avoids:** Pitfalls #12-#18 (session-specific: serialization blind spots, orphaned files, incomplete context capture, handoff drift, race conditions)
 
-### Phase 3: Resume Command
-**Rationale:** Depends on pause command. Validates session integrity, restores state, archives handoff, enforces loop position.
-**Delivers:** `/paul:resume <session-id>` command with session validation, state restoration, handoff archiving, loop enforcement.
-**Addresses:** Table stakes feature (resume from paused state), loop-aware enforcement (differentiator)
-**Avoids:** Pitfall of orphaned sessions (cleanup/archiving), serialization blind spots (validate on load), state version mismatch (check version on resume)
+**Features from FEATURES.md:** Session Management (pause, resume, status)
 
-**Research flag:** **SKIP** — Standard deserialization pattern, loop enforcement already implemented
+**Stack elements from STACK.md:** SessionManager, SessionState Zod schema, FileManager session methods, atomic writes
 
-### Phase 4: Handoff & Session Management Commands
-**Rationale:** Additional session utilities—handoff for context sharing without pausing, listing for discovery, status deprecation for migration.
-**Delivers:** `/paul:handoff` command (detailed doc without pausing), session listing functionality, `/paul:status` deprecation notice.
-**Addresses:** Table stakes features (handoff documentation, session listing, status deprecation)
-**Avoids:** Pitfall of handoff drift (generate from current state, validate against ROADMAP.md), deprecation without migration (helpful error message, docs updated)
+**Architecture component:** SessionManager
 
-**Research flag:** **NEEDS RESEARCH** — Handoff document format: Research best practices for structured handoff documents in engineering workflows (what sections to include, how to structure decision rationale). While OpenPAUL has workflows/pause-work.md, validate against industry standards.
+### Phase 2: Roadmap Management (add-phase, remove-phase)
+**Rationale:** Roadmap/phase structure is the container for all planning work. Must build dependency graph infrastructure BEFORE exposing mutation commands to users.
 
-### Phase 5: Integration, Testing & Polish
-**Rationale:** Final integration, comprehensive testing, edge case handling, documentation.
-**Delivers:** Plugin registration in src/index.ts, command exports in src/commands/index.ts, comprehensive test suite (pause→resume round-trip, serialization validation, cleanup logic), README updates.
-**Addresses:** All table stakes validated, ensures "looks done but isn't" checklist complete (round-trip tests, conflict detection, verification steps)
-**Avoids:** All pitfalls verified through test coverage
+**Delivers:** RoadmapManager, RoadmapParser, ROADMAP.md parsing/updating, add-phase, remove-phase commands
 
-**Research flag:** **SKIP** — Standard testing patterns (Jest already configured), documentation follows existing README structure
+**Uses:** FileManager extensions, Zod schemas, atomic multi-file updates
+
+**Implements:** RoadmapManager, MilestoneManager (basic)
+
+**Addresses:** Table stakes features (add-phase, remove-phase) from FEATURES.md
+
+**Avoids:** Pitfalls #1-#3 (phase number collisions, orphaned plans, dependency chain corruption)
+
+**Research flag:** Requires `/gsd-research-phase` for dependency graph algorithms and ROADMAP.md markdown parsing edge cases. This is high-risk area with sparse dev-tool-specific documentation.
+
+### Phase 3: Milestone Management (milestone, complete-milestone)
+**Rationale:** Milestone tracking is core to PAUL's milestone-based approach. Requires completed roadmap management from Phase 2.
+
+**Delivers:** MilestoneManager, milestone creation/completion commands, milestone progress tracking, milestone archiving
+
+**Uses:** RoadmapManager (reads ROADMAP.md), PrePlanningManager (milestone context)
+
+**Implements:** MilestoneManager milestone lifecycle
+
+**Addresses:** Table stakes features (milestone, complete-milestone) from FEATURES.md
+
+**Avoids:** Pitfalls #4-#5 (milestone desync, multiple active milestones)
+
+**Research flag:** Milestone completion criteria validation requires research into project management best practices. Standard patterns available (Atlassian, ClickUp research HIGH confidence).
+
+### Phase 4: Pre-Planning (discuss, discover)
+**Rationale:** Pre-planning improves plan quality and reduces rework. Requires milestone structure from Phase 3.
+
+**Delivers:** PrePlanningManager, discuss, discover commands, CONTEXT.md, DISCOVERY.md files, artifact cleanup strategy
+
+**Uses:** FileManager pre-planning methods, Zod schemas for discussion/discovery
+
+**Implements:** PrePlanningManager artifact management
+
+**Addresses:** Table stakes features (discuss, discover) from FEATURES.md
+
+**Avoids:** Pitfalls #6-#7 (artifact accumulation, research duplication)
+
+**Research flag:** Discovery depth levels (Quick/Standard/Deep) require research into efficient research workflows. Acropolium research HIGH confidence on discovery phase benefits.
+
+### Phase 5: Research (research, research-phase)
+**Rationale:** Research supports pre-planning and discovery. Requires pre-planning workflows from Phase 4.
+
+**Delivers:** ResearchManager, research, research-phase commands, parallel subagent spawning, RESEARCH.md files
+
+**Uses:** OpenCode Task tool with subagent_type="Explore", FileManager research methods
+
+**Implements:** ResearchManager subagent coordination
+
+**Addresses:** Table stakes features (research, research-phase) from FEATURES.md
+
+**Avoids:** Pitfall #7 (research duplication) via cross-referencing
+
+**Research flag:** OpenCode API for subagent spawning with `run_in_background=true` requires verification. This is HIGH risk—may need adjustment based on actual API capabilities.
+
+### Phase 6: Quality (verify, plan-fix)
+**Rationale:** Quality is critical for loop closure. Requires completed plans with SUMMARY.md from earlier phases.
+
+**Delivers:** QualityManager, verify, plan-fix commands, VERIFICATION.md, FIX-PLAN.md, verification history tracking
+
+**Uses:** FileManager quality methods, Zod schemas for verification results
+
+**Implements:** QualityManager verification tracking
+
+**Addresses:** Table stakes features (verify, plan-fix) from FEATURES.md
+
+**Avoids:** Pitfalls #8-#9 (verification not persisted, plan-fix infinite loop)
+
+**Research flag:** Manual user acceptance testing workflow requires research into QA best practices. VirtuosoQA and Monday.com research MEDIUM-HIGH confidence.
+
+### Phase 7: Configuration (config, flows)
+**Rationale:** Configuration is nice-to-have for core workflow. Can be done after all core commands are stable.
+
+**Delivers:** ConfigManager, config, flows commands, config.json, FLOWS.md, configuration hierarchy with precedence
+
+**Uses:** FileManager config methods, Zod schemas for config
+
+**Implements:** ConfigManager config management
+
+**Addresses:** Should-have features (discuss-milestone, assumptions, consider-issues) from FEATURES.md
+
+**Avoids:** Pitfall #10 (configuration hierarchy ambiguity)
+
+**Research flag:** Configuration merge strategies well-documented (Webpack, ESLint patterns MEDIUM confidence). Skip `/gsd-research-phase`—standard patterns apply.
+
+### Phase 8: Codebase Mapping (map-codebase)
+**Rationale:** Codebase mapping is valuable but time-consuming. Non-critical for core workflow. Deferrable if time-constrained.
+
+**Delivers:** map-codebase command, 7 codebase mapping documents (STACK, ARCHITECTURE, STRUCTURE, CONVENTIONS, TESTING, INTEGRATIONS, CONCERNS), incremental mapping, progress feedback
+
+**Uses:** FileManager codebase map methods, file system scanning with exclude patterns, caching
+
+**Implements:** ConfigManager codebase mapping
+
+**Addresses:** Deferred feature (map-codebase) from FEATURES.md
+
+**Avoids:** Pitfall #11 (performance degradation) via incremental mapping, progress indicators, size limits
+
+**Research flag:** Large codebase scanning optimization requires research into incremental indexing patterns. Sourcegraph/GitHub Code Search patterns MEDIUM confidence.
 
 ### Phase Ordering Rationale
 
-1. **Types first** — Zod schemas define data contracts that commands depend on. Version field prevents future migration pain.
-2. **Storage second** — FileManager extension provides persistence layer needed by all commands.
-3. **Pause before resume** — Can't resume what hasn't been paused. Pause defines session format.
-4. **Resume after pause** — Validates pause works correctly through round-trip testing.
-5. **Handoff/listing parallel** — Can develop alongside pause/resume, but logically follow core flow.
-6. **Testing last** — Comprehensive coverage ensures all pitfalls addressed, integration complete.
+- **Phase 1 first:** Session commands depend only on existing v1.0 STATE.md. All other phases depend on session continuity working correctly.
+- **Phase 2 before Phase 3:** Roadmap provides the milestone/phase structure container. Can't manage milestones without roadmap parsing working.
+- **Phase 3 before Phase 4:** Milestones provide scope for pre-planning. Pre-planning commands need milestone context.
+- **Phase 4 before Phase 5:** Pre-planning produces research needs. Research-phase depends on pre-planning workflows.
+- **Phase 5 before Phase 6:** Research informs plan quality. Verify/plan-fix need completed plans (which may include research findings).
+- **Phase 6 before Phase 7:** Quality verification core workflow. Configuration is enhancement, not foundation.
+- **Phase 7 before Phase 8:** Configuration setup enables custom flows. Codebase mapping is a specialized flow.
+- **Phase 8 last:** Codebase mapping is non-critical and high-effort. Can be deferred if needed.
 
-**Architecture alignment:**
-- Phases 1-2 build foundation (types, storage)
-- Phases 3-4 implement commands (user-facing features)
-- Phase 5 validates and polishes (production-ready)
+**Grouping based on architecture patterns:**
+- **Session Management (Phase 1):** Single manager, self-contained patterns
+- **Roadmap + Milestone (Phases 2-3):** Shared RoadmapManager, dependency on ROADMAP.md parsing
+- **Pre-Planning + Research (Phases 4-5):** Shared artifact management, both create research files
+- **Quality + Configuration (Phases 6-8):** Quality uses verification results, Configuration manages everything
+
+**How this avoids pitfalls:**
+- **Dependency graph in Phase 2** prevents pitfalls #1-#3 (phase number collisions, orphaned plans, dependency corruption)
+- **Cleanup strategy in Phase 4** prevents pitfalls #6-#7 (artifact accumulation, research duplication)
+- **Verification persistence in Phase 6** prevents pitfalls #8-#9 (verification not persisted, plan-fix infinite loop)
+- **Configuration hierarchy in Phase 7** prevents pitfall #10 (config ambiguity)
+- **Incremental mapping in Phase 8** prevents pitfall #11 (map-codebase performance)
 
 ### Research Flags
 
-Phases likely needing deeper research during planning:
-- **Phase 4 (Handoff):** Handoff document structure—validate against engineering handoff best practices, ensure format captures decision rationale effectively. OpenPAUL's existing `src/workflows/pause-work.md` provides guidance, but may need refinement based on user feedback.
+**Phases likely needing deeper research during planning:**
 
-Phases with standard patterns (skip research-phase):
-- **Phase 1 (Types):** Standard TypeScript + Zod patterns, existing schemas provide templates
-- **Phase 2 (Pause):** Follows command pattern from plan.ts/progress.ts, integrates with existing StateManager
-- **Phase 3 (Resume):** Standard deserialization, loop enforcement already implemented
-- **Phase 5 (Testing):** Jest already configured, existing test patterns for commands
+- **Phase 2 (Roadmap Management):** Dependency graph algorithms and ROADMAP.md markdown parsing edge cases. High-risk area with sparse dev-tool-specific documentation. Research graph theory basics, DAG validation, cascading delete patterns.
+
+- **Phase 5 (Research):** OpenCode API for subagent spawning with `run_in_background=true` and `subagent_type="Explore"`. Requires verification of actual API capabilities. High risk—may need adjustment based on actual API. Research OpenCode Plugin API documentation thoroughly.
+
+- **Phase 6 (Quality):** Manual user acceptance testing workflow and verification criteria definition. Need to research QA best practices for CLI tools. Research VirtuosoQA and Monday.com patterns more deeply.
+
+- **Phase 8 (Codebase Mapping):** Large codebase scanning optimization and incremental indexing patterns. Map-codebase must handle 10k+ files within 30 seconds. Research Sourcegraph/GitHub Code Search patterns, file watching, incremental indexing.
+
+**Phases with standard patterns (skip research-phase):**
+
+- **Phase 1 (Session Management):** Well-documented patterns from AKF Partners (Handoff + Resume), existing OpenPAUL v1.0 session code. HIGH confidence from existing implementation.
+
+- **Phase 3 (Milestone Management):** Standard project management milestone tracking patterns. Atlassian and ClickUp research HIGH confidence. No niche implementation details.
+
+- **Phase 4 (Pre-Planning):** Discovery phase patterns well-documented by Acropolium. Discussion/assumption management follows standard knowledge management patterns. HIGH confidence.
+
+- **Phase 7 (Configuration):** Configuration merge strategies well-documented (Webpack config merging, ESLint config composition). MEDIUM confidence from multiple sources. No research needed.
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | No new dependencies required, all technologies (crypto, fs, TypeScript, Zod) already in use. Node.js built-ins well-documented. Existing infrastructure patterns verified in source code. |
-| Features | HIGH | Feature research based on official documentation (Claude Code, Git), industry standards (CLI Guidelines), and domain expertise. MVP clearly defined (5 core features). Prioritization matrix based on user value and implementation cost. |
-| Architecture | HIGH | Based on direct source code analysis of OpenPAUL v1.0. Integration points well-defined (FileManager, StateManager, command pattern). Clear build order with dependencies mapped. Anti-patterns explicitly documented. |
-| Pitfalls | MEDIUM | Pitfalls derived from web research on session management patterns (ASP.NET, JavaEE) and domain expertise. Not specific to PAUL workflow tools, but patterns are generalizable. Real-world validation needed during implementation. |
+| Stack | HIGH | All technologies already in stack, no new dependencies needed. Node.js built-ins well-documented. |
+| Features | HIGH | 20 commands have clear definitions from workflow specifications. Differentiators well-researched against competitors (Atlassian, ClickUp, GitHub Projects). |
+| Architecture | HIGH | Manager pattern consistent with v1.0 architecture. FileManager extensions clearly scoped. 7 managers with well-defined responsibilities. |
+| Pitfalls | MEDIUM-HIGH | 18 detailed pitfalls with specific prevention strategies. Web research + domain expertise. Some high-risk areas (subagent spawning, ROADMAP.md parsing) require API verification. |
 
-**Overall confidence:** HIGH
+**Overall confidence:** HIGH (stack, features, architecture) + MEDIUM-HIGH (pitfalls due to API verification needs) = HIGH
 
 ### Gaps to Address
 
-- **Handoff document structure:** Research indicates structured format needed, but exact sections (work completed, decisions, blockers, next actions) may need refinement based on user feedback during Phase 4 implementation. **Handle during planning:** Create initial structure based on OpenPAUL's existing handoff workflow, iterate based on actual usage.
+**Gaps requiring validation during implementation:**
 
-- **Context capture automation:** Research recommends capturing environmental state (git branch, uncommitted changes), but exact implementation (which env vars, what git info) needs definition. **Handle during planning:** Define specific context fields in pause command implementation, test with real workflows.
+- **OpenCode subagent API:** ResearchManager depends on OpenCode's `Task` tool with `subagent_type="Explore"` and `run_in_background=true`. Requires testing to verify actual API capabilities. If not supported, need fallback strategy (manual subagent orchestration or sequential research).
 
-- **Session cleanup strategy:** Research recommends age-based pruning (30 days), but exact policy (pinning important sessions, confirmation before delete) needs user validation. **Handle during implementation:** Start with conservative approach (archive, don't delete), add cleanup command in v1.x based on user feedback.
+- **ROADMAP.md markdown parsing edge cases:** RoadmapParser must handle user-edited ROADMAP.md files while preserving formatting. Real-world ROADMAP.md files may have formatting variations, comments, or unexpected structures. Test with diverse ROADMAP.md samples during Phase 2.
+
+- **Milestone completion criteria:** Validation rules for "all phases complete" need clarification. What constitutes "complete"? All plans done? All plans verified? All verification passed? Define during Phase 3 planning.
+
+- **Verification criteria schema:** What constitutes a "pass" in verify command? Must define acceptance criteria format, automated checks, manual checks. User-provided examples or industry standards needed.
+
+- **Incremental mapping algorithm:** map-codebase requires detecting changed files since last map. Need robust change detection strategy (file timestamps, git status, checksums). Test on large codebases (10k+ files) during Phase 8.
+
+**How to handle during planning/execution:**
+
+- **OpenCode subagent API:** Phase 5 planning includes spike task to test subagent spawning. If API not supported, plan B: sequential research or manual task orchestration. Document fallback in phase plan.
+
+- **ROADMAP.md parsing:** Phase 2 includes comprehensive test suite for ROADMAPParser with diverse samples. Document supported ROADMAP.md format. Provide migration guide for unsupported formats.
+
+- **Milestone completion criteria:** Phase 3 planning defines completion criteria as configuration option (strict/standard/relaxed). Default to "all plans with SUMMARY.md marked complete". Allow per-milestone overrides.
+
+- **Verification criteria schema:** Phase 6 planning defines VerificationCriteria interface with acceptance criteria array, automated checks (truths, artifacts), manual checks. Provide templates for common scenarios.
+
+- **Incremental mapping:** Phase 8 planning includes performance testing task on large codebase. Test multiple change detection strategies. Document size limits and fallback to full scan if incremental fails.
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- OpenPAUL Source Code (v1.0) — Existing architecture, command patterns, FileManager, StateManager, atomic writes implementation
-- OpenCode Plugin API (@opencode-ai/plugin package) — Plugin registration, tool pattern, schema validation
-- Node.js v22.14.0 Documentation — crypto.randomUUID() availability, built-in modules
-- Git Stash Documentation (git-scm.com) — Session management patterns (pause/resume/list/naming)
+- **OpenPAUL Source Code (v1.0)** — Existing architecture, command patterns, FileManager, StateManager, atomic writes, type definitions
+- **OpenCode Plugin API (@opencode-ai/plugin@1.2.16)** — Tool registration, Task tool for subagents, hooks system, plugin lifecycle
+- **Node.js v22.14.0 Documentation** — Built-in modules (fs, path, crypto), crypto.randomUUID() availability, file operations
+- **Zod v3.25.76 Documentation** — Schema validation, TypeScript integration, runtime type checking
+- **TypeScript v5.9.3 Documentation** — Type system, interface definitions, compilation to ES modules
+- **AKF Partners — "Agentic Pattern: Handoff + Resume"** — Session management patterns, state capture, context transfer
+- **Atlassian — "What are project milestones: benefits and examples"** — Milestone tracking patterns, phase dependencies
 
 ### Secondary (MEDIUM confidence)
-- Claude Code Session Management (stevekinney.com) — AI tool session patterns, context compaction
-- Command Line Interface Guidelines (clig.dev) — CLI UX best practices, deprecation patterns
-- Checkpointing patterns (Kiro, Replit, Unity docs) — Session branching, timeline rollback
-- Session state management patterns — Derived from multiple AI tool implementations
-- Design handoff patterns — Industry standard (Figma, engineering handoffs)
+- **OpenPAUL Workflows** — Command specifications, template structures, file formats (ROADMAP.md, DISCOVERY.md, etc.)
+- **Jest v29.7.0 Documentation** — Testing patterns, coverage configuration, ts-jest integration
+- **Acropolium — "Discovery Phase in Software Development"** — Pre-planning benefits, discovery depth levels, risk reduction
+- **ClickUp — "10 Best Project Milestone Tracking Software in 2026"** — Milestone management patterns, progress tracking
+- **VirtuosoQA — "Software QA Process - 7 Stages, Best Practices"** — Verification workflows, acceptance testing
+- **Monday.com — "Software Quality Assurance Best Practices"** — QA processes, verification criteria
+- **Webpack config merging, ESLint config composition** — Configuration merge strategies, hierarchy patterns
 
 ### Tertiary (LOW confidence)
-- Session serialization issues (ASP.NET, JavaEE patterns) — General patterns, not dev-tool specific
-- Workflow handoff mistakes (project management articles) — PM-focused but patterns apply
+- **LobeHub Skills Marketplace** — Session-handoff skill documentation (derived from marketplace patterns)
+- **GitHub Issue #11455** — Claude Code session handoff feature request (community discussion, not implementation)
+- **Reddit r/QualityAssurance** — JIRA QA workflow discussion (anecdotal, not authoritative)
+- **CLI Design Patterns** — Derived from command-line interface best practices (not dev-tool specific)
+- **File-based State Management** — General patterns from stateless systems (not specific to PAUL workflow tools)
+- **Sourcegraph/GitHub Code Search patterns** — Large codebase analysis patterns (inferred from tool behavior)
 
 ---
+
 *Research completed: 2026-03-05*
 *Ready for roadmap: yes*
+*Next step: /gsd-roadmap to create implementation roadmap based on phase suggestions*

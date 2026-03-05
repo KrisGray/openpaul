@@ -1,177 +1,317 @@
-# Feature Research: Session Management
+# Feature Landscape
 
-**Domain:** Development tool session management (pause, resume, handoff, status)
+**Domain:** Structured Development Workflow Management
 **Researched:** 2026-03-05
 **Confidence:** HIGH
 
-## Feature Landscape
+## Executive Summary
 
-### Table Stakes (Users Expect These)
+Based on research of structured development tools, project management platforms, and the existing PAUL v1.0 core commands, I've identified the feature landscape for implementing the remaining 20 PAUL commands. These commands fall into 7 categories: Session Management, Roadmap Management, Milestone Management, Pre-Planning, Research, Quality, and Configuration.
 
-Features users assume exist. Missing these = product feels incomplete.
+Key findings:
+
+1. **Session management** follows the "Handoff + Resume" pattern with comprehensive state capture (MEDIUM-HIGH confidence from AKF Partners and LobeHub research)
+2. **Milestone tracking** is standard practice in project management with clear phase dependencies (HIGH confidence from Atlassian and ClickUp research)
+3. **Pre-planning** workflows (discuss, assumptions, discover, consider-issues) are critical for reducing project risks (HIGH confidence from Acropolium discovery phase research)
+4. **Research workflows** distinguish between information gathering (research) and decision-making (discover) with subagent parallelization (HIGH confidence from existing PAUL workflow patterns)
+5. **Quality verification** emphasizes manual user testing guided by Claude with systematic issue capture (MEDIUM-HIGH confidence from QA process research)
+6. **Configuration** focuses on project settings and integrations rather than complex workflow management (MEDIUM confidence from existing command patterns)
+
+## Table Stakes
+
+Features users expect in structured development tools. Missing these = product feels incomplete.
+
+### Session Management
 
 | Feature | Why Expected | Complexity | Notes |
-|---------|--------------|------------|-------|
-| **Pause with context preservation** | Users expect to temporarily stop work without losing state | MEDIUM | Must capture loop position, current phase, files modified, decisions made. Similar to git stash or Ctrl+Z in terminals. |
-| **Resume from paused state** | Users expect to pick up exactly where they left off | MEDIUM | Must restore all context: conversation history, open files, current plan, loop position. Pattern: `claude --continue`, `claude --resume <id>`. |
-| **Session listing** | Users need to see available paused sessions | LOW | List sessions with metadata (name, timestamp, phase, summary). Pattern: `git stash list`, `claude --resume` (interactive picker). |
-| **Named sessions** | Users want to identify sessions meaningfully | LOW | Allow session naming/rename for easier retrieval. Pattern: `/rename <name>`, `git stash push -m "message"`. |
-| **Session cleanup** | Users don't want stale sessions accumulating | LOW | Provide delete/drop command. Pattern: `git stash drop`, auto-cleanup old sessions. |
-| **Handoff documentation** | Users need to transfer context to another session/person | MEDIUM | Generate comprehensive doc with: what was done, current state, decisions, next steps, blockers. Pattern: design handoff docs, engineering handoffs. |
+|-----------|---------------|--------------|-------|
+| **pause** - Create handoff file | Users need to stop mid-session and resume later | MEDIUM | HANDOFF.md structure: Current State, What Was Done, What's In Progress, What's Next, Resume Instructions. Follows "Handoff + Resume" pattern from AKF Partners: Capture State → Monitor for Return → Re-activate Context → Prompt Next Step |
+| **resume** - Restore from handoff | Seamless session continuation without context loss | MEDIUM | Reads HANDOFF.md, loads STATE.md, restores context. Critical for multi-session workflows |
+| **status** - Show current position | Users expect visibility into loop position and progress | LOW | Visual display: PLAN/APPLY/UNIFY loop with markers, current phase, plan status. Table stakes for any workflow tool |
+| **handoff** - Explicit handoff creation | For team collaboration or explicit context saves | MEDIUM | Similar to pause but for user-requested handoffs (e.g., before passing work to another developer) |
 
-### Differentiators (Competitive Advantage)
+### Roadmap Management
 
-Features that set the product apart. Not required, but valuable.
+| Feature | Why Expected | Complexity | Notes |
+|-----------|---------------|--------------|-------|
+| **add-phase** - Add phase to roadmap | Projects evolve; new phases get added | MEDIUM | Adds phase to ROADMAP.md table, creates phase directory, updates STATE.md. Must handle phase numbering and dependencies |
+| **remove-phase** - Remove phase from roadmap | Mistakes happen; scope changes | MEDIUM | Removes phase, renumbers subsequent phases, cleanup phase directory. Must warn about completed phases or dependencies |
+
+### Milestone Management
+
+| Feature | Why Expected | Complexity | Notes |
+|-----------|---------------|--------------|-------|
+| **milestone** - Create new milestone | Projects have natural breaks/deliverables | MEDIUM | Defines milestone with scope, phases, theme. Creates milestone section in ROADMAP.md, updates STATE.md. Standard practice per Atlassian research |
+| **complete-milestone** - Mark milestone complete | Milestone closure is required milestone tracking | MEDIUM | Archives milestone to MILESTONE-ARCHIVE.md, updates ROADMAP.md progress. Includes summary of what was delivered |
+| **discuss-milestone** - Plan upcoming milestone | Team alignment before starting work | MEDIUM | Creates MILESTONE-CONTEXT.md with Features, Scope, Phase Mapping, Constraints. Consumed by /paul:milestone command |
+
+### Pre-Planning
+
+| Feature | Why Expected | Complexity | Notes |
+|-----------|---------------|--------------|-------|
+| **discuss** - Explore phase goals | Users need to define "what" before "how" | MEDIUM | Creates CONTEXT.md with Goals, Approach, Constraints, Open Questions. Informative for /paul:plan. Critical for reducing misunderstandings per Acropolium research |
+| **assumptions** - Capture and validate assumptions | Assumptions are major risk sources if unvalidated | MEDIUM | Creates ASSUMPTIONS.md listing assumptions with validation status (validated/unvalidated/pending). Reduces rework risk |
+| **discover** - Research technical options | Pre-planning research before committing to implementation | HIGH | 3 depth levels: Quick (verbal, 2-5min), Standard (DISCOVERY.md, 15-30min), Deep (comprehensive, 1+hr). Distinct from /paul:research - Discovery makes decisions, Research gathers info |
+| **consider-issues** - Identify potential blockers | Proactive issue identification reduces surprises | MEDIUM | Creates ISSUES.md with categorized risks (technical/dependency/scope) and mitigation strategies |
+
+### Research
+
+| Feature | Why Expected | Complexity | Notes |
+|-----------|---------------|--------------|-------|
+| **research** - User-specified topic research | Users need to investigate specific topics | HIGH | User specifies what to research, Claude executes research with proper verification. Returns findings with confidence levels |
+| **research-phase** - Auto-detect and research phase unknowns | Users don't always know what needs researching | HIGH | Analyzes phase description, identifies unknowns, spawns parallel research agents (max 3 for token efficiency), consolidates into phase RESEARCH.md. Distinct from /paul:research - research-phase identifies unknowns, research investigates known topics |
+
+### Quality
+
+| Feature | Why Expected | Complexity | Notes |
+|-----------|---------------|--------------|-------|
+| **verify** - Manual user acceptance testing | Manual testing is table stakes for delivery | MEDIUM | USER performs all testing. Claude generates test checklist from SUMMARY.md acceptance criteria, guides through each test via AskUserQuestion, captures results in phase UAT-ISSUES.md. Anti-pattern: Don't run automated tests, don't make assumptions about results |
+| **plan-fix** - Fix plan based on verification issues | Failed tests require plan fixes before closing loop | MEDIUM | Reads UAT-ISSUES.md, identifies issues that require plan updates, creates new plan or modifies existing plan, re-runs /paul:apply after fixes. Critical for loop closure integrity |
+
+### Configuration
+
+| Feature | Why Expected | Complexity | Notes |
+|-----------|---------------|--------------|-------|
+| **config** - Manage project configuration | Projects need configurable settings | MEDIUM | Manage integrations (SonarQube), project settings, preferences. YAML config in .paul/config.md. Can be run at any project lifecycle point |
+| **flows** - Configure specialized flows | Some projects need custom workflows | LOW | Enable/disable specialized flows defined in SPECIAL-FLOWS.md. Simple toggle-based configuration |
+| **map-codebase** - Document codebase structure | Understanding existing code is critical for onboarding | HIGH | Creates CODEBASE.md with structure, stack, conventions, concerns, integrations, architecture. Uses discovery approach to analyze codebase |
+
+## Differentiators
+
+Features that set PAUL apart from generic project management tools.
 
 | Feature | Value Proposition | Complexity | Notes |
 |---------|-------------------|------------|-------|
-| **Loop-aware pause** | PAUL-specific: capture exact loop position (PLAN/APPLY/UNIFY) and enforce it on resume | MEDIUM | Differentiator: most tools don't have enforced workflow. Must prevent resuming mid-loop in wrong phase. |
-| **Context compaction on pause** | Automatically summarize session to essential info, reducing bloat | HIGH | Pattern: Claude Code's `/compact`. Value: keeps sessions focused and fast to restore. |
-| **Handoff with decision rationale** | Not just current state, but WHY decisions were made | MEDIUM | Captures exploration paths tried, alternatives rejected. Invaluable for future sessions. |
-| **Session branching** | Resume from any historical session checkpoint, not just most recent | HIGH | Pattern: git stash's reflog (`stash@{0}`, `stash@{1}`), rewind/checkpoints in AI tools. |
-| **Auto-pause on context limits** | Automatically pause before context fills, preventing loss | HIGH | Proactive session management. Pattern: Claude Code's auto-compact at 95% capacity. |
-| **Multi-session handoff** | Split work across multiple specialized sessions | MEDIUM | Pattern: Claude's subagents, agent teams. Value: parallel development with shared state. |
-| **Session export/import** | Share sessions across machines or team members | MEDIUM | Pattern: `git stash export/import`. Value: collaboration and backup. |
+| **Loop-aware pause/resume** | PAUL-specific: capture exact loop position (PLAN/APPLY/UNIFY) and enforce it on resume | MEDIUM | Most tools don't have enforced workflow. Must prevent resuming mid-loop in wrong phase |
+| **Discovery depth levels** | Adapt research effort to risk/complexity | MEDIUM | Quick (2-5min), Standard (15-30min), Deep (1+hr). Most tools don't offer granular depth control. Enables efficient use of Claude's capabilities |
+| **Research-phase parallel subagents** | Identify and research unknowns automatically | HIGH | Analyzes phase, spawns up to 3 parallel research agents, consolidates findings. Reduces user cognitive load - they don't need to know what needs researching |
+| **Assumption validation tracking** | Explicit assumption management reduces risk | MEDIUM | Most PM tools don't track assumptions as first-class citizens. PAUL treats assumptions with validation status, preventing silent failures |
+| **Handoff-first architecture** | Session continuity as core feature | MEDIUM | HANDOFF.md as primary state transfer mechanism, not just an afterthought. Enables seamless multi-session and multi-developer workflows |
+| **Milestone context handoffs** | Milestone discussion separate from creation | MEDIUM | /paul:discuss-milestone creates MILESTONE-CONTEXT.md that /paul:milestone consumes. Separates "what we're building" from "when/how we're building it" |
 
-### Anti-Features (Commonly Requested, Often Problematic)
+## Anti-Features
 
-Features that seem good but create problems.
+Features to explicitly NOT build.
 
-| Feature | Why Requested | Why Problematic | Alternative |
-|---------|---------------|-----------------|-------------|
-| **Unlimited session history** | "I might need it later" | Storage bloat, slow listing, overwhelming choices | Implement retention policy (e.g., keep last 30 days, allow pinning important sessions) |
-| **Auto-resume on startup** | "Always continue where I left off" | Confusing when intentionally starting fresh work, hides errors | Explicit `--continue` flag gives user control |
-| **Complex session metadata** | "Capture everything" | Overhead slows pause/resume, bloats storage, most metadata unused | Capture essential: phase, summary, timestamp. Optional detailed export. |
-| **Session merging** | "Combine two sessions" | Context conflicts, loop position ambiguity, decisions may contradict | Better: handoff document to read context from another session |
-| **Real-time session sync** | "Live collaboration on same session" | Race conditions, merge conflicts, architectural complexity | Use handoff for context transfer, or multi-agent pattern with shared files |
+| Anti-Feature | Why Avoid | What to Do Instead |
+|--------------|-----------|-------------------|
+| **Automated testing in verify command** | Verify is for manual user acceptance testing, not automated test suites | Use existing CI/test infrastructure. Verify focuses on user perspective, not unit/integration tests |
+| **Real-time collaboration** | PAUL is designed for structured, async workflows, not real-time collaboration | Use pause/handoff for async handoffs. Real-time collaboration increases complexity without clear benefit for PAUL's use case |
+| **Complex dependency graphs** | Visual dependency management is complex and error-prone. Simple phase dependencies in ROADMAP.md sufficient | Maintain phase dependencies in ROADMAP.md. Avoid visual graph complexity that breaks when changes occur |
+| **Built-in time tracking** | Time tracking is orthogonal to PAUL's core value of structured workflow | Use external time tracking if needed. PAUL focuses on what and how, not how long |
+| **Web-based project views** | PAUL is CLI-first for developer ergonomics. Web UI adds deployment complexity | Keep CLI-first with markdown-based human-readable files. Export to web tools if needed, but don't build web UI |
 
 ## Feature Dependencies
 
 ```
-/paul:pause
-    └──requires──> State manager (exists)
-    └──requires──> Storage layer (exists)
-    └──requires──> Loop position tracking (exists)
+[pause]
+    └──requires──> [existing project with STATE.md]
 
-/paul:resume
-    └──requires──> /paul:pause (must have sessions to resume)
-    └──requires──> State manager (exists)
-    └──requires──> Loop enforcer (exists, ensures workflow compliance)
+[resume]
+    └──requires──> [pause/handoff files]
 
-/paul:handoff
-    └──requires──> State manager (to read current state)
-    └──requires──> /paul:progress (to summarize current phase)
-    └──enhances──> /paul:pause (handoff doc can be auto-generated on pause)
+[handoff]
+    └──requires──> [existing project with STATE.md]
+    └──enhances──> [pause] (explicit version)
 
-/paul:status (deprecation)
-    └──requires──> /paul:progress (redirect target, already exists)
-    └──conflicts──> New status functionality (don't add features to deprecated command)
+[status]
+    └──requires──> [existing project with STATE.md]
 
-Session naming
-    └──requires──> /paul:pause (sessions must exist to name)
+[add-phase]
+    └──requires──> [existing milestone in ROADMAP.md]
 
-Session listing
-    └──requires──> /paul:pause (sessions must exist to list)
+[remove-phase]
+    └──requires──> [existing milestone with phases]
+
+[milestone]
+    └──requires──> [existing project]
+    └──enhanced by──> [discuss-milestone]
+
+[complete-milestone]
+    └──requires──> [existing milestone with completed phases]
+
+[discuss-milestone]
+    └──requires──> [existing project]
+
+[discuss]
+    └──requires──> [existing phase in ROADMAP.md]
+    └──informs──> [plan]
+
+[assumptions]
+    └──requires──> [existing phase or project context]
+    └──informs──> [plan]
+
+[discover]
+    └──requires──> [existing phase or project scope]
+    └──informs──> [plan]
+
+[consider-issues]
+    └──requires──> [existing phase or project context]
+    └──informs──> [plan]
+
+[research]
+    └──requires──> [existing project context]
+
+[research-phase]
+    └──requires──> [existing phase in ROADMAP.md]
+    └──informs──> [plan]
+
+[verify]
+    └──requires──> [completed plan with SUMMARY.md]
+    └──informs──> [plan-fix]
+
+[plan-fix]
+    └──requires──> [verify with issues in UAT-ISSUES.md]
+
+[config]
+    └──requires──> [existing project]
+
+[flows]
+    └──requires──> [existing project with SPECIAL-FLOWS.md]
+
+[map-codebase]
+    └──requires──> [existing codebase to map]
+    └──informs──> [all planning and implementation]
 ```
-
-### Dependency Notes
-
-- **/paul:pause requires State manager:** Must serialize and store session state (loop position, current plan, modified files, decisions). Already implemented in v1.0.
-- **/paul:resume requires /paul:pause:** Can't resume what hasn't been paused. Resume validates session integrity and restores all context.
-- **/paul:resume requires Loop enforcer:** Critical differentiator - ensures resumed session maintains PAUL workflow discipline (can't resume mid-APPLY into PLAN phase).
-- **/paul:handoff enhances /paul:pause:** Handoff document can be auto-generated as part of pause, providing both snapshot and narrative for future sessions.
-- **/paul:status conflicts with new functionality:** Deprecated command should only show deprecation notice and redirect. Adding features would undermine deprecation.
 
 ## MVP Definition
 
-### Launch With (v1.1)
+### Launch With (v1.1 - Full Command Implementation)
 
-Minimum viable product — what's needed to validate session management works for PAUL workflows.
+Minimum viable product — what's needed to validate the complete PAUL workflow.
 
-- [x] **/paul:pause** — Create session snapshot with loop position, state, and summary. Essential for multi-session workflows.
-- [x] **/paul:resume <session-id>** — Restore from paused session. Essential for continuing work across sessions.
-- [x] **Session listing** — Show paused sessions with metadata (id, timestamp, phase, summary). Essential for session discovery.
-- [x] **/paul:handoff** — Generate handoff document. Essential for context transfer to other sessions/people.
-- [x] **/paul:status deprecation** — Show deprecation notice with redirect to /paul:progress. Prevents confusion with existing users.
+- [ ] **Session Management** (pause, resume, status) — Core session continuity is table stakes for multi-session workflows
+- [ ] **Roadmap Management** (add-phase, remove-phase) — Basic roadmap manipulation is required for project evolution
+- [ ] **Milestone Management** (milestone, complete-milestone) — Milestone lifecycle is core to PAUL's milestone-based approach
+- [ ] **Pre-Planning** (discuss, discover) — Basic pre-planning reduces risk and improves plan quality
+- [ ] **Research** (research, research-phase) — Research capabilities are table stakes for informed development
+- [ ] **Quality** (verify, plan-fix) — Quality verification and plan fixes are required for loop closure
 
-### Add After Validation (v1.x)
+### Add After Validation (v1.2)
 
-Features to add once core session management is working and validated with real usage.
+Features to add once core is working.
 
-- [ ] **Session naming** — Allow naming/renaming sessions for easier identification. Trigger: users struggle to find right session in list.
-- [ ] **Session cleanup** — Delete old sessions, retention policy. Trigger: session list grows unwieldy.
-- [ ] **Handoff with decision rationale** — Enhanced handoff including why decisions were made. Trigger: users lose context between sessions despite handoff.
-- [ ] **Auto-pause on context limits** — Proactive pause before hitting limits. Trigger: users lose work due to context overflow.
+- [ ] **discuss-milestone** — Milestone discussion before creation improves alignment (defer: requires teams to find value in explicit milestone planning)
+- [ ] **assumptions** — Assumption tracking reduces risk but may feel bureaucratic (defer: wait for user feedback on workflow overhead)
+- [ ] **consider-issues** — Proactive issue identification is valuable but not critical (defer: verify users actually use it before investing)
 
 ### Future Consideration (v2+)
 
-Features to defer until session management is proven and product-market fit is established.
+Features to defer until product-market fit is established.
 
-- [ ] **Session branching** — Resume from any historical checkpoint. Requires significant storage and indexing infrastructure. Defer until session usage patterns understood.
-- [ ] **Multi-session handoff** — Coordinate multiple specialized sessions. Complex orchestration, defer until single-session handoff validated.
-- [ ] **Session export/import** — Share sessions across machines. Requires serialization format and validation. Defer until users request collaboration features.
-- [ ] **Context compaction on pause** — Auto-summarize to reduce bloat. Requires intelligent summarization. Defer until session storage becomes a problem.
+- [ ] **flows** — Specialized flows are power features with niche use cases (defer: needs concrete user scenarios)
+- [ ] **map-codebase** — Codebase mapping is valuable but time-consuming (defer: verify users actually use it for onboarding)
 
 ## Feature Prioritization Matrix
 
 | Feature | User Value | Implementation Cost | Priority |
 |---------|------------|---------------------|----------|
-| /paul:pause | HIGH - essential for multi-session workflows | MEDIUM - requires state serialization, storage format | P1 |
-| /paul:resume | HIGH - essential for continuing work | MEDIUM - requires state deserialization, validation | P1 |
-| Session listing | HIGH - essential for session discovery | LOW - simple read from storage | P1 |
-| /paul:handoff | HIGH - essential for context transfer | MEDIUM - requires state analysis, formatting | P1 |
-| /paul:status deprecation | HIGH - prevents user confusion | LOW - simple deprecation notice | P1 |
-| Session naming | MEDIUM - improves usability | LOW - add name field to session metadata | P2 |
-| Session cleanup | MEDIUM - prevents bloat | LOW - delete command + optional retention policy | P2 |
-| Handoff with rationale | MEDIUM - improves context preservation | MEDIUM - capture decision history during session | P2 |
-| Auto-pause on limits | MEDIUM - prevents data loss | HIGH - requires context monitoring, trigger logic | P2 |
-| Session branching | LOW - niche use case | HIGH - requires checkpoint history, reflog pattern | P3 |
-| Multi-session handoff | LOW - complex orchestration | HIGH - requires session coordination protocol | P3 |
-| Session export/import | LOW - collaboration feature | MEDIUM - requires serialization, validation | P3 |
-| Context compaction | LOW - optimization | HIGH - requires intelligent summarization | P3 |
+| pause | HIGH | MEDIUM | P1 |
+| resume | HIGH | MEDIUM | P1 |
+| status | HIGH | LOW | P1 |
+| add-phase | HIGH | MEDIUM | P1 |
+| remove-phase | MEDIUM | MEDIUM | P2 |
+| milestone | HIGH | MEDIUM | P1 |
+| complete-milestone | HIGH | MEDIUM | P1 |
+| discuss-milestone | MEDIUM | MEDIUM | P2 |
+| discuss | HIGH | MEDIUM | P1 |
+| discover | HIGH | HIGH | P1 |
+| assumptions | MEDIUM | MEDIUM | P2 |
+| consider-issues | MEDIUM | MEDIUM | P2 |
+| research | HIGH | HIGH | P1 |
+| research-phase | HIGH | HIGH | P1 |
+| verify | HIGH | MEDIUM | P1 |
+| plan-fix | HIGH | MEDIUM | P1 |
+| config | MEDIUM | MEDIUM | P2 |
+| flows | LOW | LOW | P3 |
+| map-codebase | MEDIUM | HIGH | P2 |
 
 **Priority key:**
-- P1: Must have for v1.1 launch
-- P2: Should have, add when possible (v1.x)
-- P3: Nice to have, future consideration (v2+)
+- P1: Must have for v1.1 complete workflow
+- P2: Should have for v1.2 or early v1.1.x
+- P3: Nice to have, future consideration
 
 ## Competitor Feature Analysis
 
-| Feature | Claude Code | Git Stash | Kiro/Replit | OpenPAUL Approach |
-|---------|-------------|-----------|-------------|-------------------|
-| **Pause/Save** | Implicit (auto-saved), `--continue` | `git stash push` | Checkpoints | Explicit `/paul:pause` with loop position |
-| **Resume/Restore** | `--continue`, `--resume <id>` | `git stash pop/apply` | Rollback to checkpoint | `/paul:resume <id>` with loop enforcement |
-| **Session List** | `--resume` (interactive) | `git stash list` | Checkpoint history | Session listing with phase/summary |
-| **Session Naming** | `/rename` command | `-m "message"` | Named checkpoints | Optional: session naming (P2) |
-| **Context Preservation** | Full conversation, auto-compact | File diffs only | Workspace + AI context | State + loop position + decisions |
-| **Handoff** | `/compact` with instructions | N/A | N/A | `/paul:handoff` with structured format |
-| **Branching/Rollback** | Checkpoints, `/rewind` | Reflog (`stash@{n}`) | Timeline rollback | Future: session branching (P3) |
-| **Workflow Awareness** | None | None | None | Loop position tracking (unique) |
+| Feature | Atlassian Jira | ClickUp | GitHub Projects | PAUL |
+|---------|---------------|---------|----------------|------|
+| **Session Management** | No (third-party apps) | No (third-party apps) | No | Native handoff/resume |
+| **Milestone Tracking** | Yes (full-featured) | Yes (with goals) | Basic | Yes (milestone + phase hierarchy) |
+| **Pre-Planning** | Issue templates only | Custom fields only | Issues/Wiki | Native discuss/discover/assumptions commands |
+| **Research Integration** | No | AI research features | No | Native research with subagent parallelization |
+| **Quality Verification** | QA workflows | Manual checklists | CI/CD integration | Native verify with user-guided UAT |
+| **Configuration** | Extensive | Extensive | Minimal (actions) | Simple config with integrations |
 
-**OpenPAUL differentiator:** Loop-aware session management. Unlike general tools, PAUL knows you're in PLAN/APPLY/UNIFY phase and enforces correct workflow on resume. This prevents resuming mid-implementation into planning phase, which would break the PAUL methodology.
+**PAUL Differentiator:**
+- Native session continuity (not a plugin)
+- Research-first architecture (decision-making built into workflow)
+- CLI-first design for developers
+- Lightweight, human-readable markdown storage
+- Structured loop enforcement (PLAN→APPLY→UNIFY)
+
+## Phase Implementation Recommendations
+
+### Phase A: Session Management (pause, resume, status, handoff)
+**Why first:** Session continuity is foundational for all other commands. Users must be able to pause and resume reliably.
+**Dependencies:** Requires existing STATE.md structure (from v1.0)
+**Complexity:** MEDIUM - Handoff file structure, state restoration logic
+**Risk:** Low - Follows established "Handoff + Resume" pattern
+
+### Phase B: Roadmap & Milestone Management (add-phase, remove-phase, milestone, complete-milestone)
+**Why second:** Milestone/phase structure is the container for all planning work.
+**Dependencies:** ROADMAP.md structure from v1.0, Session Management
+**Complexity:** MEDIUM - Phase numbering, dependencies, archiving
+**Risk:** Low - Standard project management patterns
+
+### Phase C: Pre-Planning (discuss, discover, assumptions, consider-issues)
+**Why third:** Pre-planning improves plan quality and reduces rework.
+**Dependencies:** Roadmap/Milestone structure
+**Complexity:** HIGH - Discovery has 3 depth levels, assumption validation logic
+**Risk:** MEDIUM - Discovery depth can be misused (too much or too little research)
+
+### Phase D: Research (research, research-phase)
+**Why fourth:** Research supports pre-planning and discovery.
+**Dependencies:** Pre-planning workflows (to feed into)
+**Complexity:** HIGH - Subagent orchestration, parallel research, consolidation
+**Risk:** HIGH - Subagent orchestration is complex, token efficiency concerns
+
+### Phase E: Quality (verify, plan-fix)
+**Why fifth:** Quality is critical for loop closure.
+**Dependencies:** Completed plans with SUMMARY.md
+**Complexity:** MEDIUM - User-guided testing, issue capture, plan modification
+**Risk:** MEDIUM - User compliance with manual testing
+
+### Phase F: Configuration (config, flows, map-codebase)
+**Why last:** Configuration is nice-to-have for core workflow.
+**Dependencies:** None (standalone)
+**Complexity:** LOW-MEDIUM - Config is simple, map-codebase is high effort
+**Risk:** Low - Low risk if deferred
 
 ## Sources
 
-**HIGH Confidence Sources (Official documentation, authoritative guides):**
-- Claude Code Session Management - Steve Kinney (https://stevekinney.com/courses/ai-development/claude-code-session-management)
-- Claude Code Best Practices - Official docs (https://code.claude.com/docs/en/best-practices)
-- Git Stash Documentation - Official (https://git-scm.com/docs/git-stash)
-- Command Line Interface Guidelines - clig.dev (https://clig.dev/)
+**Session Management:**
+- AKF Partners - "Agentic Pattern: Handoff + Resume" (https://akfpartners.com/growth-blog/agentic-pattern-handoff-resume) - HIGH confidence, 2025
+- LobeHub Skills Marketplace - session-handoff skill documentation (https://lobehub.com/skills/itsar-vr-goatedskills-session-handoff) - MEDIUM confidence, 2026
+- GitHub Issue #11455 - Claude Code session handoff feature request (https://github.com/anthropics/claude-code/issues/11455) - MEDIUM confidence, 2025
 
-**MEDIUM Confidence Sources (Community patterns, derived from multiple sources):**
-- Checkpointing patterns from Kiro, Replit, Unity docs - consistent across AI tools
-- Design handoff patterns - industry standard (Figma, design systems)
-- Session state management patterns - derived from multiple AI tool implementations
-- CLI deprecation patterns - Docker, Node.js, industry standards
+**Milestone Management:**
+- Atlassian - "What are project milestones: benefits and examples" (https://www.atlassian.com/blog/project-management/project-milestones) - HIGH confidence, 2023
+- ClickUp - "10 Best Project Milestone Tracking Software in 2026" (https://clickup.com/blog/milestone-tracking-software/) - MEDIUM confidence, 2025
 
-**Research methodology:**
-- Analyzed 3+ tools with session management (Claude Code, Git, AI assistants)
-- Identified common patterns (pause/resume/list/naming)
-- Identified PAUL-specific needs (loop position, workflow enforcement)
-- Categorized features by necessity (table stakes) vs. advantage (differentiators)
-- Documented anti-patterns based on common pitfalls (unlimited history, auto-resume)
+**Pre-Planning:**
+- Acropolium - "Discovery Phase in Software Development: Benefits, Steps, and Team Members" (https://acropolium.com/blog/discovery-phase-in-software-development-benefits-steps-and-team-members/) - HIGH confidence, 2024
+
+**Quality Verification:**
+- VirtuosoQA - "Software QA Process - 7 Stages, Best Practices, & Examples" (https://www.virtuosoqa.com/post/software-qa-process) - MEDIUM confidence, date unknown
+- Monday.com - "Software Quality Assurance Best Practices: The 2026 Guide" (https://monday.com/blog/rnd/software-quality-assurance/) - MEDIUM confidence, 2025
+- Reddit r/QualityAssurance - JIRA QA workflow discussion (https://www.reddit.com/r/QualityAssurance/comments/ixlry1/jira_qa_workflow/) - LOW confidence, 2020
+
+**Existing PAUL Patterns:**
+- OpenPAUL source code - Command and workflow implementations (/Users/kris/Repos/openpaul/src/commands/, /Users/kris/Repos/openpaul/src/workflows/) - HIGH confidence, internal
+- OpenPAUL templates (/Users/kris/Repos/openpaul/src/templates/) - HIGH confidence, internal
 
 ---
 
-*Feature research for: Session management in development tools*
+*Feature research for: OpenPAUL - Remaining 20 Commands*
 *Researched: 2026-03-05*
+*Confidence: HIGH (based on external research + internal pattern analysis)*
