@@ -2,6 +2,8 @@ import { FileManager } from '../../storage/file-manager'
 import { StateManager } from '../../state/state-manager'
 import { LoopEnforcer } from '../../state/loop-enforcer'
 import { paulUnify } from '../../commands/unify'
+import { readFileSync } from 'fs'
+import { join } from 'path'
 
 jest.mock('../../storage/file-manager')
 jest.mock('../../state/state-manager')
@@ -62,6 +64,13 @@ describe('paulUnify command', () => {
     ;(FileManager as jest.Mock).mockImplementation(() => mockFileManager)
     ;(StateManager as jest.Mock).mockImplementation(() => mockStateManager)
     ;(LoopEnforcer as jest.Mock).mockImplementation(() => mockLoopEnforcer)
+  })
+
+  it('registers paul:unify in the plugin tool map', () => {
+    const pluginPath = join(__dirname, '../../index.ts')
+    const pluginSource = readFileSync(pluginPath, 'utf-8')
+
+    expect(pluginSource).toContain("'paul:unify'")
   })
 
   describe('error handling', () => {
@@ -191,6 +200,29 @@ describe('paulUnify command', () => {
           status: 'partial',
         })
       )
+    })
+
+    it('should include reconciliation and criteria results when provided', async () => {
+      mockFileManager.readPlan.mockReturnValue(plan)
+
+      const result = await paulUnify.execute(
+        {
+          actuals: ['Task 1', { name: 'Extra Task', status: 'completed' }],
+          criteriaResults: [
+            { criteria: 'Test truth', status: 'pass' },
+            { criteria: 'Second criteria', status: 'fail', notes: 'Missing evidence' },
+          ],
+        },
+        toolContext
+      )
+
+      expect(result).toContain('Reconciliation')
+      expect(result).toContain('Plan vs Actual')
+      expect(result).toContain('Missing tasks')
+      expect(result).toContain('Extra tasks')
+      expect(result).toContain('Criteria Results')
+      expect(result).toContain('✅ Test truth')
+      expect(result).toContain('❌ Second criteria')
     })
   })
 })
