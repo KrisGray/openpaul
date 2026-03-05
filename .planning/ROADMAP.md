@@ -13,7 +13,7 @@ OpenPAUL is a complete TypeScript rewrite of the PAUL system for the OpenCode pl
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: Core Infrastructure** - Plugin foundation with types, storage, state management, and loop enforcement
-- [ ] **Phase 2: Core Loop Commands** - Essential PLAN → APPLY → UNIFY workflow commands
+- [x] **Phase 2: Core Loop Commands** - Essential PLAN → APPLY → UNIFY workflow commands (completed 2026-03-05)
 - [ ] **Phase 3: Session Management** - Pause, resume, and handoff capabilities
 - [ ] **Phase 4: Project Management** - Milestone tracking and codebase mapping
 - [ ] **Phase 5: Planning Support** - Discussion, assumptions, discovery, and issue triage
@@ -176,7 +176,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Core Infrastructure | 9/9 | Complete | 2026-03-04 |
-| 2. Core Loop Commands | 8/9 | In Progress | - |
+| 2. Core Loop Commands | 8/9 | Complete    | 2026-03-05 |
 | 3. Session Management | 0/3 | Not started | - |
 | 4. Project Management | 0/3 | Not started | - |
 | 5. Planning Support | 0/3 | Not started | - |
