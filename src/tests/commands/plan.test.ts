@@ -1,20 +1,22 @@
-/**
- * Plan Command Tests
- * 
- * Tests for the plan creation functionality
- */
-
 import { FileManager } from '../../storage/file-manager'
 import { StateManager } from '../../state/state-manager'
 import { LoopEnforcer } from '../../state/loop-enforcer'
+import { paulPlan } from '../../commands/plan'
 
-// Mock dependencies
 jest.mock('../../storage/file-manager')
 jest.mock('../../state/state-manager')
 jest.mock('../../state/loop-enforcer')
+jest.mock(
+  '@opencode-ai/plugin',
+  () => ({
+    tool: (input: any) => input,
+  }),
+  { virtual: true }
+)
 
-describe('Plan Command Functionality', () => {
+describe('paulPlan command', () => {
   const mockDirectory = '/test/project'
+  const toolContext = { directory: mockDirectory } as any
 
   let mockFileManager: {
     planExists: jest.Mock
@@ -25,6 +27,10 @@ describe('Plan Command Functionality', () => {
     getCurrentPosition: jest.Mock
     savePhaseState: jest.Mock
   }
+  let mockLoopEnforcer: {
+    enforceCanStartNewLoop: jest.Mock
+    getRequiredNextAction: jest.Mock
+  }
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -34,143 +40,109 @@ describe('Plan Command Functionality', () => {
       ensurePhasesDir: jest.fn(),
       writePlan: jest.fn().mockResolvedValue(undefined),
     }
+
     mockStateManager = {
-      getCurrentPosition: jest.fn().mockReturnValue({
-        phaseNumber: 1,
-        phase: 'UNIFY',
-      }),
+      getCurrentPosition: jest.fn().mockReturnValue({ phaseNumber: 2, phase: 'UNIFY' }),
       savePhaseState: jest.fn().mockResolvedValue(undefined),
+    }
+
+    mockLoopEnforcer = {
+      enforceCanStartNewLoop: jest.fn(),
+      getRequiredNextAction: jest.fn().mockReturnValue('Run /paul:apply to execute the plan'),
     }
 
     ;(FileManager as jest.Mock).mockImplementation(() => mockFileManager)
     ;(StateManager as jest.Mock).mockImplementation(() => mockStateManager)
+    ;(LoopEnforcer as jest.Mock).mockImplementation(() => mockLoopEnforcer)
   })
 
-  describe('plan creation', () => {
-    it('should create plan with valid inputs', async () => {
-      // Create a fileManager instance and check initial state
-      const fileManager = new FileManager(mockDirectory)
-      expect(fileManager.planExists(2, '01')).toBe(false)
-      
-      // Ensure the phases directory is created
-      fileManager.ensurePhasesDir()
-      expect(fileManager.ensurePhasesDir).toHaveBeenCalled()
-      
-      // Create the plan
-      const planObject = {
-        phase: '2',
-        plan: '01',
-        type: 'execute' as const,
-        wave: 1,
-        depends_on: [],
-        files_modified: [],
-        autonomous: true,
-        requirements: [],
-        tasks: [
-          {
-            type: 'auto' as const,
-            name: 'Test task',
-            action: 'Do something',
-            verify: 'Check it works',
-            done: 'Task complete',
-          },
-        ],
-        must_haves: {
-          truths: [],
-          artifacts: [],
-          key_links: [],
+  it('persists criteria, boundaries, and dependency graph', async () => {
+    const result = await paulPlan.execute({
+      phase: 2,
+      plan: '01',
+      criteria: ['Must include execution graph'],
+      boundaries: 'Do not change unrelated commands',
+      tasks: [
+        {
+          name: 'Task 1',
+          files: ['src/alpha.ts'],
+          action: 'Do task 1',
+          verify: 'Verify task 1',
+          done: 'Task 1 done',
         },
-      }
-      
-      await fileManager.writePlan(5, '01', planObject)
-      expect(fileManager.writePlan).toHaveBeenCalledWith(
-        5,
-        '01',
-        expect.objectContaining({
-          phase: '2',
-          plan: '01',
-        })
-      )
+        {
+          name: 'Task 2',
+          files: ['src/alpha.ts', 'src/bravo.ts'],
+          action: 'Do task 2',
+          verify: 'Verify task 2',
+          done: 'Task 2 done',
+        },
+        {
+          name: 'Task 3',
+          files: ['src/charlie.ts'],
+          action: 'Do task 3',
+          verify: 'Verify task 3',
+          done: 'Task 3 done',
+        },
+      ],
+    }, toolContext)
+
+    expect(mockFileManager.writePlan).toHaveBeenCalledWith(
+      2,
+      '01',
+      expect.objectContaining({
+        criteria: ['Must include execution graph'],
+        boundaries: ['Do not change unrelated commands'],
+        taskDependencies: { '1': [], '2': [1], '3': [] },
+        executionGraph: [[1, 3], [2]],
+      })
+    )
+
+    expect(result).toContain('Execution Graph')
+    expect(result).toContain('[1, 3] → [2]')
+  })
+
+  it('formats guided error when not initialized', async () => {
+    mockStateManager.getCurrentPosition.mockReturnValue(undefined)
+
+    const result = await paulPlan.execute({
+      phase: 2,
+      plan: '01',
+      tasks: [
+        {
+          name: 'Task 1',
+          action: 'Do task',
+          verify: 'Verify task',
+          done: 'Task done',
+        },
+      ],
+    }, toolContext)
+
+    expect(result).toContain('Suggested Fix')
+    expect(result).toContain('Next Steps')
+    expect(result).toContain('Not Initialized')
+  })
+
+  it('formats guided error on invalid loop state', async () => {
+    mockLoopEnforcer.enforceCanStartNewLoop.mockImplementation(() => {
+      throw new Error('Cannot start new loop from APPLY')
     })
 
-    it('should detect when plan already exists', () => {
-        mockFileManager.planExists = jest.fn().mockReturnValue(true)
-        
-        const fileManager = new FileManager(mockDirectory)
-        const exists = fileManager.planExists(2, '01')
-        
-        expect(exists).toBe(true)
-      })
+    const result = await paulPlan.execute({
+      phase: 2,
+      plan: '02',
+      tasks: [
+        {
+          name: 'Task 1',
+          action: 'Do task',
+          verify: 'Verify task',
+          done: 'Task done',
+        },
+      ],
+    }, toolContext)
 
-    it('should ensure phases directory exists', () => {
-        const fileManager = new FileManager(mockDirectory)
-        fileManager.ensurePhasesDir()
-        
-        expect(fileManager.ensurePhasesDir).toHaveBeenCalled()
-      })
-  })
-
-  describe('state management', () => {
-    it('should update state to PLAN phase', async () => {
-        const stateManager = new StateManager(mockDirectory)
-        
-        await stateManager.savePhaseState(2, {
-          phase: 'PLAN',
-          phaseNumber: 2,
-          currentPlanId: '01',
-          lastUpdated: Date.now(),
-          metadata: {},
-        })
-        
-        expect(stateManager.savePhaseState).toHaveBeenCalledWith(
-          2,
-          expect.objectContaining({
-            phase: 'PLAN',
-            phaseNumber: 2,
-          })
-        )
-      })
-
-    it('should get current position', () => {
-        const stateManager = new StateManager(mockDirectory)
-        const position = stateManager.getCurrentPosition()
-        
-        expect(position).toEqual({
-          phaseNumber: 1,
-          phase: 'UNIFY',
-        })
-      })
-
-    it('should handle no position', () => {
-        mockStateManager.getCurrentPosition = jest.fn().mockReturnValue(undefined)
-        
-        const stateManager = new StateManager(mockDirectory)
-        const position = stateManager.getCurrentPosition()
-        
-        expect(position).toBeUndefined()
-      })
-  })
-
-  describe('loop transitions', () => {
-    it('should allow starting new loop from UNIFY', () => {
-        const loopEnforcer = new LoopEnforcer()
-        
-        // Should not throw - UNIFY can start new loop
-        expect(() => loopEnforcer.enforceCanStartNewLoop('UNIFY')).not.toThrow()
-      })
-
-    it('should allow starting new loop from APPLY', () => {
-        const loopEnforcer = new LoopEnforcer()
-        
-        // Should not throw - APPLY can transition
-        expect(() => loopEnforcer.enforceCanStartNewLoop('APPLY')).not.toThrow()
-      })
-
-    it('should allow starting new loop from PLAN', () => {
-        const loopEnforcer = new LoopEnforcer()
-        
-        // Should not throw - PLAN can start new loop (allows re-planning)
-        expect(() => loopEnforcer.enforceCanStartNewLoop('PLAN')).not.toThrow()
-      })
+    expect(result).toContain('Cannot Create Plan')
+    expect(result).toContain('Suggested Fix')
+    expect(result).toContain('Next Steps')
   })
 })

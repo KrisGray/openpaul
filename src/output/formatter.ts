@@ -112,6 +112,21 @@ export function formatList(items: string[], ordered: boolean = false): string {
 }
 
 /**
+ * Format an execution graph (waves) into a readable string
+ *
+ * @param graph - Execution graph waves (e.g., [[1, 3], [2]])
+ * @returns Formatted execution graph string
+ */
+export function formatExecutionGraph(graph: number[][]): string {
+  if (!graph || graph.length === 0) {
+    return 'No execution graph available'
+  }
+
+  const waves = graph.map(wave => `[${wave.join(', ')}]`)
+  return waves.join(' → ')
+}
+
+/**
  * Format key-value pairs
  * 
  * @param pairs - Object with key-value pairs
