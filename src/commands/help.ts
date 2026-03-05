@@ -186,6 +186,15 @@ export const paulHelp = tool({
       })
       .join('\n')
     output += coreCommands
+    // Core loop commands (Phase 2)
+    output += '\n' + formatHeader(2, 'Core Loop Commands (Phase 2)') + '\n'
+    const phase2Commands = Object.entries(COMMAND_REFERENCE)
+      .filter(([, cmd]) => cmd.phase === '2')
+      .map(([name, { description, usage }]) => {
+        return `- **/${name}** — ${description}\n  - Usage: \`${usage}\``
+      })
+      .join('\n')
+    output += phase2Commands
     // Session Management commands (Phase 3)
     output += '\n' + formatHeader(2, 'Session Management (Phase 3)') + '\n'
     const sessionCommands = Object.entries(COMMAND_REFERENCE)
