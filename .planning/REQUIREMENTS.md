@@ -20,8 +20,8 @@ Requirements for initial release (all 26 commands). Each maps to roadmap phases.
 
 - [x] **CORE-01**: User can initialize OpenPAUL with `/paul:init` (creates .paul/ directory)
 - [x] **CORE-02**: User can create executable plans with `/paul:plan` (PLAN.json with tasks, criteria, boundaries)
-- [ ] **CORE-03**: User can execute approved plans with `/paul:apply` (sequential task execution with verification)
-- [ ] **CORE-04**: User can close loops with `/paul:unify` (SUMMARY.json, plan vs actual comparison)
+- [x] **CORE-03**: User can execute approved plans with `/paul:apply` (sequential task execution with verification)
+- [x] **CORE-04**: User can close loops with `/paul:unify` (SUMMARY.json, plan vs actual comparison)
 - [ ] **CORE-05**: User can view current status with `/paul:progress` (loop position, next action, blockers)
 - [ ] **CORE-06**: User can view command reference with `/paul:help` (all 26 commands with descriptions)
 
@@ -115,8 +115,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INFR-06 | Phase 1 | Complete |
 | CORE-01 | Phase 2 | Complete |
 | CORE-02 | Phase 2 | Complete |
-| CORE-03 | Phase 2 | Pending |
-| CORE-04 | Phase 2 | Pending |
+| CORE-03 | Phase 2 | Complete |
+| CORE-04 | Phase 2 | Complete |
 | CORE-05 | Phase 2 | Pending |
 | CORE-06 | Phase 2 | Pending |
 | SESS-01 | Phase 3 | Pending |
