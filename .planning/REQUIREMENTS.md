@@ -1,93 +1,63 @@
 # Requirements: OpenPAUL
 
-**Defined:** 2025-03-04
+**Defined:** 2026-03-05
 **Core Value:** Enforce the PLAN → APPLY → UNIFY loop with mandatory reconciliation, ensuring every plan closes properly with full traceability and context preservation.
 
-## v1 Requirements
+## v1.1 Requirements
 
-Requirements for initial release (all 26 commands). Each maps to roadmap phases.
+Requirements for full command implementation. Each maps to roadmap phases.
 
-### Phase 1: Core Infrastructure
+### Session Management
 
-- [x] **INFR-01**: Plugin loads in <500ms with zero data loss
-- [x] **INFR-02**: TypeScript types defined for State, Plan, Command interfaces
-- [x] **INFR-03**: File-based JSON storage layer with atomic writes
-- [x] **INFR-04**: State manager loads/saves STATE.json reliably
-- [x] **INFR-05**: Loop enforcer validates PLAN → APPLY → UNIFY transitions
-- [x] **INFR-06**: Jest test framework configured with 80%+ coverage target
+- [ ] **SESS-01**: User can create session handoff with `/openpaul:pause` that captures current state, what was done, what's in progress, what's next, and resume instructions
+- [ ] **SESS-02**: User can restore session with `/openpaul:resume` that reads HANDOFF.md, loads STATE.md, and restores context
+- [ ] **SESS-03**: User can view current position with `/openpaul:status` that displays PLAN/APPLY/UNIFY loop with markers, current phase, and plan status
+- [ ] **SESS-04**: User can create explicit handoff with `/openpaul:handoff` for team collaboration or context saves
 
-### Phase 2: Core Loop Commands
+### Roadmap Management
 
-- [x] **CORE-01**: User can initialize OpenPAUL with `/paul:init` (creates .paul/ directory)
-- [x] **CORE-02**: User can create executable plans with `/paul:plan` (PLAN.json with tasks, criteria, boundaries)
-- [x] **CORE-03**: User can execute approved plans with `/paul:apply` (sequential task execution with verification)
-- [x] **CORE-04**: User can close loops with `/paul:unify` (SUMMARY.json, plan vs actual comparison)
-- [x] **CORE-05**: User can view current status with `/paul:progress` (loop position, next action, blockers)
-- [x] **CORE-06**: User can view command reference with `/paul:help` (all 26 commands with descriptions)
+- [ ] **ROAD-01**: User can add phase to roadmap with `/openpaul:add-phase` that adds phase to ROADMAP.md table, creates phase directory, updates STATE.md
+- [ ] **ROAD-02**: User can remove phase from roadmap with `/openpaul:remove-phase` that removes phase, renumbers subsequent phases, cleans up phase directory
 
-### Phase 3: Session Management
+### Milestone Management
 
-- [ ] **SESS-01**: User can create session handoffs with `/paul:pause` (HANDOFF-{date}.json with context)
-- [ ] **SESS-02**: User can restore context with `/paul:resume` (seamless continuation)
-- [ ] **SESS-03**: User can generate comprehensive handoffs with `/paul:handoff` (full context capture)
-- [ ] **SESS-04**: User can view loop position with `/paul:status` (deprecated, shows notice)
+- [ ] **MILE-01**: User can create new milestone with `/openpaul:milestone` that defines milestone with scope, phases, theme, creates milestone section in ROADMAP.md
+- [ ] **MILE-02**: User can mark milestone complete with `/openpaul:complete-milestone` that archives milestone to MILESTONE-ARCHIVE.md, updates ROADMAP.md progress
+- [ ] **MILE-03**: User can plan upcoming milestone with `/openpaul:discuss-milestone` that creates MILESTONE-CONTEXT.md with features, scope, phase mapping, constraints
 
-### Phase 4: Project Management
+### Pre-Planning
 
-- [ ] **PROJ-01**: User can create milestones with `/paul:milestone` (MILESTONE.json, phase association)
-- [ ] **PROJ-02**: User can complete milestones with `/paul:complete-milestone` (archive, tag, state update)
-- [ ] **PROJ-03**: User can articulate milestone vision with `/paul:discuss-milestone` (CONTEXT.json creation)
-- [ ] **PROJ-04**: User can generate codebase overview with `/paul:map-codebase` (structure analysis)
+- [ ] **PLAN-01**: User can explore phase goals with `/openpaul:discuss` that creates CONTEXT.md with goals, approach, constraints, open questions
+- [ ] **PLAN-02**: User can capture and validate assumptions with `/openpaul:assumptions` that creates ASSUMPTIONS.md listing assumptions with validation status
+- [ ] **PLAN-03**: User can research technical options with `/openpaul:discover` that supports 3 depth levels: Quick (verbal, 2-5min), Standard (DISCOVERY.md, 15-30min), Deep (comprehensive, 1+hr)
+- [ ] **PLAN-04**: User can identify potential blockers with `/openpaul:consider-issues` that creates ISSUES.md with categorized risks and mitigation strategies
 
-### Phase 5: Planning Support
+### Research
 
-- [ ] **PLAN-01**: User can capture decisions with `/paul:discuss` (CONTEXT.json in phase directory)
-- [ ] **PLAN-02**: User can review approach with `/paul:assumptions` (shows intended approach)
-- [ ] **PLAN-03**: User can explore options with `/paul:discover` (research presentation)
-- [ ] **PLAN-04**: User can triage deferred issues with `/paul:consider-issues` (effort-based triage)
+- [ ] **RSCH-01**: User can research user-specified topics with `/openpaul:research` that executes research with proper verification and returns findings with confidence levels
+- [ ] **RSCH-02**: User can auto-detect and research phase unknowns with `/openpaul:research-phase` that analyzes phase description, identifies unknowns, spawns parallel research agents
 
-### Phase 6: Research & Quality
+### Quality
 
-- [ ] **RESQ-01**: User can deploy research agents with `/paul:research` (RESEARCH.json creation)
-- [ ] **RESQ-02**: User can research phase unknowns with `/paul:research-phase` (unknowns resolution)
-- [ ] **RESQ-03**: User can verify acceptance criteria with `/paul:verify` (pass/fail logging)
-- [ ] **RESQ-04**: User can plan UAT fixes with `/paul:plan-fix` (systematic issue addressing)
+- [ ] **QUAL-01**: User can perform manual acceptance testing with `/openpaul:verify` that generates test checklist from SUMMARY.md, guides through each test, captures results in phase UAT-ISSUES.md
+- [ ] **QUAL-02**: User can fix plans based on verification issues with `/openpaul:plan-fix` that reads UAT-ISSUES.md, identifies issues requiring plan updates, creates new or modifies existing plan
 
-### Phase 7: Roadmap & Configuration
+### Configuration
 
-- [ ] **ROAD-01**: User can append phases with `/paul:add-phase` (phase N+1 to ROADMAP.json)
-- [ ] **ROAD-02**: User can remove future phases with `/paul:remove-phase` (delete phase N)
-- [ ] **ROAD-03**: User can configure skill requirements with `/paul:flows` (SPECIAL-FLOWS.json)
-- [ ] **ROAD-04**: User can view/modify settings with `/paul:config` (display and edit configuration)
+- [ ] **CONF-01**: User can manage project configuration with `/openpaul:config` that manages integrations (SonarQube), project settings, preferences via YAML config in .openpaul/config.md
+- [ ] **CONF-02**: User can configure specialized flows with `/openpaul:flows` that enables/disables specialized workflows defined in SPECIAL-FLOWS.md
+- [ ] **CONF-03**: User can document codebase structure with `/openpaul:map-codebase` that creates CODEBASE.md with structure, stack, conventions, concerns, integrations, architecture
 
-### Phase 8: Rule Integration & Polish
+### Branding
 
-- [ ] **RULE-01**: PAUL domain rules bundled in plugin using CARL format
-- [ ] **RULE-02**: Plugin integrates with OpenCode hooks system (session.created, tool.execute.before/after)
-- [ ] **RULE-03**: All functions have TSDoc documentation with examples
-- [ ] **RULE-04**: README.md includes overview, installation, quick start, commands, configuration
-- [ ] **RULE-05**: npm package published as @krisgray/openpaul
-- [ ] **RULE-06**: Plugin compiles without TypeScript errors
-
-### Non-Functional Requirements
-
-- [ ] **NFR-01**: Plugin loads in <500ms, commands execute in <100ms (except research/apply)
-- [x] **NFR-02**: Zero data loss with atomic file writes (temp file + rename)
-- [ ] **NFR-03**: TSDoc for all public functions, comprehensive README, consistent code style
-- [x] **NFR-04**: Jest testing with 80%+ coverage, TDD approach, mock file system operations
-- [x] **NFR-05**: Node.js >=16.7.0, OpenCode plugin API >=1.2.0, TypeScript >=5.0.0
-- [x] **NFR-06**: Input validation with Zod schemas, path traversal protection, secure file permissions
+- [ ] **BRND-01**: All instances of "PAUL" replaced with "OpenPAUL" in documentation, command names, and user-facing text
+- [ ] **BRND-02**: All instances of "paul" replaced with "openpaul" in command names, file paths, and configuration
 
 ## v2 Requirements
 
-Deferred to future release. Not in current roadmap.
+Deferred to future release. Tracked but not in current roadmap.
 
-### Nice-to-Have Features
-
-- **NICE-01**: VS Code extension for .paul/ files
-- **NICE-02**: Interactive command wizard
-- **NICE-03**: Dashboard UI for state visualization
-- **NICE-04**: Plugin marketplace listing
+(None yet - all v1.1 requirements are in scope)
 
 ## Out of Scope
 
@@ -95,11 +65,11 @@ Explicitly excluded. Documented to prevent scope creep.
 
 | Feature | Reason |
 |---------|--------|
-| Migration support | Fresh start only, no backward compatibility needed |
-| Python components | Using TypeScript/Jest exclusively |
-| Database storage | File-based JSON only for simplicity |
-| Markdown templates | Using TypeScript objects for type safety |
-| Claude Code support | OpenCode only, no backward compatibility |
+| Automated testing in verify command | Verify is for manual user acceptance testing, not automated test suites |
+| Real-time collaboration | OpenPAUL is designed for structured, async workflows, not real-time collaboration |
+| Complex dependency graphs | Visual dependency management is complex and error-prone. Simple phase dependencies sufficient |
+| Built-in time tracking | Time tracking is orthogonal to OpenPAUL's core value of structured workflow |
+| Web-based project views | OpenPAUL is CLI-first for developer ergonomics. Web UI adds deployment complexity |
 
 ## Traceability
 
@@ -107,56 +77,34 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFR-01 | Phase 1 | Complete |
-| INFR-02 | Phase 1 | Complete |
-| INFR-03 | Phase 1 | Complete |
-| INFR-04 | Phase 1 | Complete |
-| INFR-05 | Phase 1 | Complete |
-| INFR-06 | Phase 1 | Complete |
-| CORE-01 | Phase 2 | Complete |
-| CORE-02 | Phase 2 | Complete |
-| CORE-03 | Phase 2 | Complete |
-| CORE-04 | Phase 2 | Complete |
-| CORE-05 | Phase 2 | Complete |
-| CORE-06 | Phase 2 | Complete |
-| SESS-01 | Phase 3 | Pending |
-| SESS-02 | Phase 3 | Pending |
-| SESS-03 | Phase 3 | Pending |
-| SESS-04 | Phase 3 | Pending |
-| PROJ-01 | Phase 4 | Pending |
-| PROJ-02 | Phase 4 | Pending |
-| PROJ-03 | Phase 4 | Pending |
-| PROJ-04 | Phase 4 | Pending |
-| PLAN-01 | Phase 5 | Pending |
-| PLAN-02 | Phase 5 | Pending |
-| PLAN-03 | Phase 5 | Pending |
-| PLAN-04 | Phase 5 | Pending |
-| RESQ-01 | Phase 6 | Pending |
-| RESQ-02 | Phase 6 | Pending |
-| RESQ-03 | Phase 6 | Pending |
-| RESQ-04 | Phase 6 | Pending |
-| ROAD-01 | Phase 7 | Pending |
-| ROAD-02 | Phase 7 | Pending |
-| ROAD-03 | Phase 7 | Pending |
-| ROAD-04 | Phase 7 | Pending |
-| RULE-01 | Phase 8 | Pending |
-| RULE-02 | Phase 8 | Pending |
-| RULE-03 | Phase 8 | Pending |
-| RULE-04 | Phase 8 | Pending |
-| RULE-05 | Phase 8 | Pending |
-| RULE-06 | Phase 8 | Pending |
-| NFR-01 | Phase 8 | Pending |
-| NFR-02 | Phase 1 | Complete |
-| NFR-03 | Phase 8 | Pending |
-| NFR-04 | Phase 1 | Complete |
-| NFR-05 | Phase 1 | Complete |
-| NFR-06 | Phase 1 | Complete |
+| SESS-01 | Phase TBD | Pending |
+| SESS-02 | Phase TBD | Pending |
+| SESS-03 | Phase TBD | Pending |
+| SESS-04 | Phase TBD | Pending |
+| ROAD-01 | Phase TBD | Pending |
+| ROAD-02 | Phase TBD | Pending |
+| MILE-01 | Phase TBD | Pending |
+| MILE-02 | Phase TBD | Pending |
+| MILE-03 | Phase TBD | Pending |
+| PLAN-01 | Phase TBD | Pending |
+| PLAN-02 | Phase TBD | Pending |
+| PLAN-03 | Phase TBD | Pending |
+| PLAN-04 | Phase TBD | Pending |
+| RSCH-01 | Phase TBD | Pending |
+| RSCH-02 | Phase TBD | Pending |
+| QUAL-01 | Phase TBD | Pending |
+| QUAL-02 | Phase TBD | Pending |
+| CONF-01 | Phase TBD | Pending |
+| CONF-02 | Phase TBD | Pending |
+| CONF-03 | Phase TBD | Pending |
+| BRND-01 | Phase TBD | Pending |
+| BRND-02 | Phase TBD | Pending |
 
 **Coverage:**
-- v1 requirements: 38 total
-- Mapped to phases: 38
-- Unmapped: 0 ✓
+- v1.1 requirements: 22 total
+- Mapped to phases: 0
+- Unmapped: 22 ⚠️
 
 ---
-*Requirements defined: 2025-03-04*
-*Last updated: 2026-03-04 after roadmap creation*
+*Requirements defined: 2026-03-05*
+*Last updated: 2026-03-05 after initial definition*
