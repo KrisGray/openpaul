@@ -77,33 +77,34 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SESS-01 | Phase TBD | Pending |
-| SESS-02 | Phase TBD | Pending |
-| SESS-03 | Phase TBD | Pending |
-| SESS-04 | Phase TBD | Pending |
-| ROAD-01 | Phase TBD | Pending |
-| ROAD-02 | Phase TBD | Pending |
-| MILE-01 | Phase TBD | Pending |
-| MILE-02 | Phase TBD | Pending |
-| MILE-03 | Phase TBD | Pending |
-| PLAN-01 | Phase TBD | Pending |
-| PLAN-02 | Phase TBD | Pending |
-| PLAN-03 | Phase TBD | Pending |
-| PLAN-04 | Phase TBD | Pending |
-| RSCH-01 | Phase TBD | Pending |
-| RSCH-02 | Phase TBD | Pending |
-| QUAL-01 | Phase TBD | Pending |
-| QUAL-02 | Phase TBD | Pending |
-| CONF-01 | Phase TBD | Pending |
-| CONF-02 | Phase TBD | Pending |
-| CONF-03 | Phase TBD | Pending |
-| BRND-01 | Phase TBD | Pending |
-| BRND-02 | Phase TBD | Pending |
+| SESS-01 | Phase 3 | Pending |
+| SESS-02 | Phase 3 | Pending |
+| SESS-03 | Phase 3 | Pending |
+| SESS-04 | Phase 3 | Pending |
+| ROAD-01 | Phase 4 | Pending |
+| ROAD-02 | Phase 4 | Pending |
+| MILE-01 | Phase 5 | Pending |
+| MILE-02 | Phase 5 | Pending |
+| MILE-03 | Phase 5 | Pending |
+| PLAN-01 | Phase 6 | Pending |
+| PLAN-02 | Phase 6 | Pending |
+| PLAN-03 | Phase 6 | Pending |
+| PLAN-04 | Phase 6 | Pending |
+| RSCH-01 | Phase 6 | Pending |
+| RSCH-02 | Phase 6 | Pending |
+| QUAL-01 | Phase 7 | Pending |
+| QUAL-02 | Phase 7 | Pending |
+| CONF-01 | Phase 8 | Pending |
+| CONF-02 | Phase 8 | Pending |
+| CONF-03 | Phase 8 | Pending |
+| BRND-01 | Phase 9 | Pending |
+| BRND-02 | Phase 6 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 22 total
-- Mapped to phases: 0
-- Unmapped: 22 ⚠️
+- Mapped to phases: 22
+- Unmapped: 0
+- Mapped for v1.1: 22/22 ✓
 
 ---
 *Requirements defined: 2026-03-05*
