@@ -89,6 +89,16 @@ Shipped v1.0 with 19 plans, 38 requirements covered.
 Tech stack: TypeScript, Jest, Zod, ES Modules.
 Initial user testing showed good foundation for future features.
 
+## Current Milestone: v1.1 Session Management
+
+**Goal:** Enable session pause, resume, and handoff capabilities for multi-session workflows
+
+**Target features:**
+- `/paul:pause` command — create session handoff with current context
+- `/paul:resume` command — restore from a paused session
+- `/paul:handoff` command — generate comprehensive handoff documents
+- `/paul:status` deprecation — show deprecation notice, redirect to `/paul:progress`
+
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
