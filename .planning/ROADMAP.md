@@ -176,7 +176,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Core Infrastructure | 9/9 | Complete | 2026-03-04 |
-| 2. Core Loop Commands | 0/5 | Ready for execution | - |
+| 2. Core Loop Commands | 8/9 | In Progress | - |
 | 3. Session Management | 0/3 | Not started | - |
 | 4. Project Management | 0/3 | Not started | - |
 | 5. Planning Support | 0/3 | Not started | - |
