@@ -58,7 +58,7 @@ Plans:
   4. User can close loops and generate summaries comparing plan vs actual
   5. User can check current loop position and next action
   6. User can view reference documentation for all commands
-**Plans**: 5 plans
+**Plans**: 9 plans (5 standard + 4 gap closure)
 
 Plans:
 - [ ] 02-01: Output formatting utilities + /paul:init command
@@ -66,6 +66,10 @@ Plans:
 - [ ] 02-03: /paul:apply command implementation
 - [ ] 02-04: /paul:unify command implementation
 - [ ] 02-05: /paul:progress and /paul:help commands
+- [ ] 02-06: [GAP] Apply/unify test repairs for UAT compilation
+- [ ] 02-07: [GAP] Plan schema + dependency graph + guided errors
+- [ ] 02-08: [GAP] Unify registration + reconciliation output
+- [ ] 02-09: [GAP] Progress task context + help listing fixes
 
 ### Phase 3: Session Management
 **Goal**: Users can pause work and seamlessly resume or handoff to future sessions
