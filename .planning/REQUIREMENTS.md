@@ -22,8 +22,8 @@ Requirements for initial release (all 26 commands). Each maps to roadmap phases.
 - [x] **CORE-02**: User can create executable plans with `/paul:plan` (PLAN.json with tasks, criteria, boundaries)
 - [x] **CORE-03**: User can execute approved plans with `/paul:apply` (sequential task execution with verification)
 - [x] **CORE-04**: User can close loops with `/paul:unify` (SUMMARY.json, plan vs actual comparison)
-- [ ] **CORE-05**: User can view current status with `/paul:progress` (loop position, next action, blockers)
-- [ ] **CORE-06**: User can view command reference with `/paul:help` (all 26 commands with descriptions)
+- [x] **CORE-05**: User can view current status with `/paul:progress` (loop position, next action, blockers)
+- [x] **CORE-06**: User can view command reference with `/paul:help` (all 26 commands with descriptions)
 
 ### Phase 3: Session Management
 
@@ -117,8 +117,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CORE-02 | Phase 2 | Complete |
 | CORE-03 | Phase 2 | Complete |
 | CORE-04 | Phase 2 | Complete |
-| CORE-05 | Phase 2 | Pending |
-| CORE-06 | Phase 2 | Pending |
+| CORE-05 | Phase 2 | Complete |
+| CORE-06 | Phase 2 | Complete |
 | SESS-01 | Phase 3 | Pending |
 | SESS-02 | Phase 3 | Pending |
 | SESS-03 | Phase 3 | Pending |
