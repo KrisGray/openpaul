@@ -3,7 +3,12 @@ import { z } from 'zod'
 import { FileManager, type Summary, type SummaryTask } from '../storage/file-manager'
 import { StateManager } from '../state/state-manager'
 import { LoopEnforcer } from '../state/loop-enforcer'
-import { formatHeader, formatBold, formatList, formatStatus } from '../output/formatter'
+import {
+  formatHeader,
+  formatBold,
+  formatComparisonItems,
+  formatCriteriaResults,
+} from '../output/formatter'
 import { progressBar } from '../output/progress-bar'
 import type { Plan } from '../types/plan'
 
@@ -18,6 +23,38 @@ type UnifyArgs = {
   plan?: string
   notes?: string
   status?: 'success' | 'partial' | 'failed'
+  actuals?: ActualTaskInput[]
+  criteriaResults?: CriteriaResultInput[]
+}
+
+type ActualTaskStatus = 'completed' | 'skipped' | 'failed'
+
+type ActualTaskInput =
+  | string
+  | {
+      name: string
+      status?: ActualTaskStatus
+      notes?: string
+    }
+
+type CriteriaResultInput =
+  | string
+  | {
+      criteria: string
+      status?: 'pass' | 'fail'
+      notes?: string
+    }
+
+type NormalizedActualTask = {
+  name: string
+  status: ActualTaskStatus
+  notes?: string
+}
+
+type NormalizedCriteriaResult = {
+  criteria: string
+  status: 'pass' | 'fail'
+  notes?: string
 }
 
 const toolFactory = tool as unknown as (input: any) => any
@@ -30,6 +67,32 @@ export const paulUnify = toolFactory({
     plan: z.string().optional().describe('Plan identifier (defaults to current plan)'),
     notes: z.string().optional().describe('Additional notes for summary'),
     status: z.enum(['success', 'partial', 'failed']).optional().describe('Override status (defaults to success)'),
+    actuals: z
+      .array(
+        z.union([
+          z.string(),
+          z.object({
+            name: z.string().min(1),
+            status: z.enum(['completed', 'skipped', 'failed']).optional(),
+            notes: z.string().optional(),
+          }),
+        ])
+      )
+      .optional()
+      .describe('Actual tasks executed (string names or {name,status,notes})'),
+    criteriaResults: z
+      .array(
+        z.union([
+          z.string(),
+          z.object({
+            criteria: z.string().min(1),
+            status: z.enum(['pass', 'fail']).optional(),
+            notes: z.string().optional(),
+          }),
+        ])
+      )
+      .optional()
+      .describe('Criteria results (string criteria or {criteria,status,notes})'),
   }),
   execute: async (args: UnifyArgs, context: ToolContext) => {
     try {
@@ -101,18 +164,34 @@ ${formatBold('Error:')} Run /paul:init first to initialize PAUL.`
         ].join('\n')
       }
       
+      const parsedActuals = parseActuals(args.actuals)
+      if (parsedActuals.error) {
+        return formatArgumentError('actuals', parsedActuals.error)
+      }
+
+      const parsedCriteriaResults = parseCriteriaResults(args.criteriaResults)
+      if (parsedCriteriaResults.error) {
+        return formatArgumentError('criteriaResults', parsedCriteriaResults.error)
+      }
+
+      const hasActuals = parsedActuals.items.length > 0
+
       // Build summary
-      const summaryStatus = args.status || 'success'
-      const tasks: SummaryTask[] = plan.tasks.map(task => ({
-        name: task.name,
-        status: 'completed' as const,
-        notes: undefined,
-      }))
-      
+      const tasks: SummaryTask[] = hasActuals
+        ? buildSummaryTasks(plan, parsedActuals.items)
+        : plan.tasks.map(task => ({
+            name: task.name,
+            status: 'completed' as const,
+            notes: undefined,
+          }))
+
+      const summaryStatus = args.status || deriveSummaryStatus(tasks, hasActuals)
+      const completedTasks = tasks.filter(task => task.status === 'completed').length
+
       const summary: Summary = {
         phaseNumber,
         planId,
-        completed: plan.tasks.length,
+        completed: completedTasks,
         total: plan.tasks.length,
         status: summaryStatus,
         tasks,
@@ -144,7 +223,13 @@ ${formatBold('Error:')} Run /paul:init first to initialize PAUL.`
       })
       
       // Format output
-      return formatUnifyOutput(plan, summary, args.notes)
+      return formatUnifyOutput(
+        plan,
+        summary,
+        args.notes,
+        parsedActuals.items,
+        parsedCriteriaResults.items
+      )
       
     } catch (error) {
       return [
@@ -164,7 +249,13 @@ ${formatBold('Error:')} Run /paul:init first to initialize PAUL.`
 /**
  * Format the unify output with summary and completion status
  */
-function formatUnifyOutput(plan: Plan, summary: Summary, notes?: string): string {
+function formatUnifyOutput(
+  plan: Plan,
+  summary: Summary,
+  notes: string | undefined,
+  actuals: NormalizedActualTask[],
+  criteriaResults: NormalizedCriteriaResult[]
+): string {
   const planId = `${plan.phase}-${plan.plan}`
   
   // Status emoji mapping
@@ -207,6 +298,35 @@ function formatUnifyOutput(plan: Plan, summary: Summary, notes?: string): string
     output.push(notes)
     output.push('')
   }
+
+  const shouldShowReconciliation = actuals.length > 0 || criteriaResults.length > 0
+  if (shouldShowReconciliation) {
+    const reconciliation = buildReconciliation(plan, actuals)
+
+    output.push(formatHeader(2, 'Reconciliation'))
+    output.push('')
+
+    if (actuals.length > 0) {
+      output.push(formatHeader(3, 'Plan vs Actual'))
+      output.push('')
+      output.push(`${formatBold('Missing tasks:')}`)
+      output.push(formatComparisonItems(reconciliation.missing, 'None'))
+      output.push('')
+      output.push(`${formatBold('Extra tasks:')}`)
+      output.push(formatComparisonItems(reconciliation.extra, 'None'))
+      output.push('')
+      output.push(`${formatBold('Status overrides:')}`)
+      output.push(formatComparisonItems(reconciliation.overrides, 'None'))
+      output.push('')
+    }
+
+    if (criteriaResults.length > 0) {
+      output.push(formatHeader(3, 'Criteria Results'))
+      output.push('')
+      output.push(formatCriteriaResults(criteriaResults))
+      output.push('')
+    }
+  }
   
   // Next steps
   output.push(formatHeader(2, 'Next Steps'))
@@ -218,4 +338,182 @@ function formatUnifyOutput(plan: Plan, summary: Summary, notes?: string): string
   output.push(formatBold('🎉 Great work completing this loop!'))
   
   return output.join('\n')
+}
+
+function normalizeTaskName(name: string): string {
+  return name.trim().toLowerCase()
+}
+
+function parseActuals(actuals: ActualTaskInput[] | undefined): {
+  items: NormalizedActualTask[]
+  error?: string
+} {
+  if (!actuals) {
+    return { items: [] }
+  }
+
+  if (!Array.isArray(actuals)) {
+    return { items: [], error: 'Expected an array of actual tasks.' }
+  }
+
+  const items: NormalizedActualTask[] = []
+
+  for (const entry of actuals) {
+    if (typeof entry === 'string') {
+      const trimmed = entry.trim()
+      if (!trimmed) {
+        return { items: [], error: 'Actual task names must be non-empty strings.' }
+      }
+      items.push({ name: trimmed, status: 'completed' })
+      continue
+    }
+
+    if (entry && typeof entry === 'object') {
+      const name = typeof entry.name === 'string' ? entry.name.trim() : ''
+      if (!name) {
+        return { items: [], error: 'Actual task objects must include a non-empty name.' }
+      }
+      const status = entry.status ?? 'completed'
+      if (!['completed', 'skipped', 'failed'].includes(status)) {
+        return { items: [], error: 'Actual task status must be completed, skipped, or failed.' }
+      }
+      if (entry.notes && typeof entry.notes !== 'string') {
+        return { items: [], error: 'Actual task notes must be a string.' }
+      }
+      items.push({ name, status, notes: entry.notes })
+      continue
+    }
+
+    return { items: [], error: 'Actuals must be strings or objects with name/status.' }
+  }
+
+  return { items }
+}
+
+function parseCriteriaResults(criteriaResults: CriteriaResultInput[] | undefined): {
+  items: NormalizedCriteriaResult[]
+  error?: string
+} {
+  if (!criteriaResults) {
+    return { items: [] }
+  }
+
+  if (!Array.isArray(criteriaResults)) {
+    return { items: [], error: 'Expected an array of criteria results.' }
+  }
+
+  const items: NormalizedCriteriaResult[] = []
+
+  for (const entry of criteriaResults) {
+    if (typeof entry === 'string') {
+      const trimmed = entry.trim()
+      if (!trimmed) {
+        return { items: [], error: 'Criteria result strings must be non-empty.' }
+      }
+      items.push({ criteria: trimmed, status: 'pass' })
+      continue
+    }
+
+    if (entry && typeof entry === 'object') {
+      const criteria = typeof entry.criteria === 'string' ? entry.criteria.trim() : ''
+      if (!criteria) {
+        return { items: [], error: 'Criteria result objects must include a non-empty criteria.' }
+      }
+      const status = entry.status ?? 'pass'
+      if (!['pass', 'fail'].includes(status)) {
+        return { items: [], error: 'Criteria result status must be pass or fail.' }
+      }
+      if (entry.notes && typeof entry.notes !== 'string') {
+        return { items: [], error: 'Criteria result notes must be a string.' }
+      }
+      items.push({ criteria, status, notes: entry.notes })
+      continue
+    }
+
+    return { items: [], error: 'Criteria results must be strings or objects with criteria/status.' }
+  }
+
+  return { items }
+}
+
+function buildSummaryTasks(plan: Plan, actuals: NormalizedActualTask[]): SummaryTask[] {
+  const actualMap = new Map<string, NormalizedActualTask>()
+  actuals.forEach(actual => {
+    actualMap.set(normalizeTaskName(actual.name), actual)
+  })
+
+  return plan.tasks.map(task => {
+    const actual = actualMap.get(normalizeTaskName(task.name))
+    if (!actual) {
+      return {
+        name: task.name,
+        status: 'skipped',
+        notes: 'Not reported in actuals',
+      }
+    }
+    return {
+      name: task.name,
+      status: actual.status,
+      notes: actual.notes,
+    }
+  })
+}
+
+function deriveSummaryStatus(tasks: SummaryTask[], hasActuals: boolean): 'success' | 'partial' | 'failed' {
+  if (!hasActuals) {
+    return 'success'
+  }
+
+  if (tasks.some(task => task.status === 'failed')) {
+    return 'failed'
+  }
+
+  if (tasks.some(task => task.status === 'skipped')) {
+    return 'partial'
+  }
+
+  return 'success'
+}
+
+function buildReconciliation(plan: Plan, actuals: NormalizedActualTask[]): {
+  missing: string[]
+  extra: string[]
+  overrides: string[]
+} {
+  const planMap = new Map<string, string>()
+  plan.tasks.forEach(task => {
+    planMap.set(normalizeTaskName(task.name), task.name)
+  })
+
+  const actualMap = new Map<string, NormalizedActualTask>()
+  actuals.forEach(actual => {
+    actualMap.set(normalizeTaskName(actual.name), actual)
+  })
+
+  const missing = plan.tasks
+    .filter(task => !actualMap.has(normalizeTaskName(task.name)))
+    .map(task => task.name)
+
+  const extra = actuals
+    .filter(actual => !planMap.has(normalizeTaskName(actual.name)))
+    .map(actual => actual.name)
+
+  const overrides = actuals
+    .filter(actual => planMap.has(normalizeTaskName(actual.name)))
+    .filter(actual => actual.status !== 'completed' || Boolean(actual.notes))
+    .map(actual => {
+      const notes = actual.notes ? ` — ${actual.notes}` : ''
+      return `${actual.name} (${actual.status})${notes}`
+    })
+
+  return { missing, extra, overrides }
+}
+
+function formatArgumentError(argumentName: string, errorMessage: string): string {
+  return [
+    formatHeader(1, '❌ Invalid Arguments'),
+    '',
+    `${formatBold('Argument:')} ${argumentName}`,
+    `${formatBold('Issue:')} ${errorMessage}`,
+  ].join('\n')
 }

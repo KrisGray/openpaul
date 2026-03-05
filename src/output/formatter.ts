@@ -10,6 +10,20 @@
 export type Status = 'success' | 'in-progress' | 'paused' | 'failed'
 
 /**
+ * Criteria result status for reconciliation output
+ */
+export type CriteriaResultStatus = 'pass' | 'fail'
+
+/**
+ * Criteria result entry
+ */
+export interface CriteriaResult {
+  criteria: string
+  status: CriteriaResultStatus
+  notes?: string
+}
+
+/**
  * Header level (1-3)
  */
 export type HeaderLevel = 1 | 2 | 3
@@ -163,4 +177,32 @@ export function formatStatus(status: Status): string {
   }
   
   return statusMap[status]
+}
+
+/**
+ * Format comparison items with a default fallback when empty
+ */
+export function formatComparisonItems(items: string[], emptyMessage: string = 'None'): string {
+  if (!items.length) {
+    return `- ${emptyMessage}`
+  }
+
+  return formatList(items)
+}
+
+/**
+ * Format criteria results with pass/fail markers
+ */
+export function formatCriteriaResults(results: CriteriaResult[]): string {
+  if (!results.length) {
+    return '- None'
+  }
+
+  return results
+    .map(result => {
+      const marker = result.status === 'pass' ? '✅' : '❌'
+      const notes = result.notes ? ` — ${result.notes}` : ''
+      return `- ${marker} ${result.criteria}${notes}`
+    })
+    .join('\n')
 }
