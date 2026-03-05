@@ -1,4 +1,4 @@
-import { tool } from '@opencode-ai/plugin'
+import { tool, type ToolContext } from '@opencode-ai/plugin'
 import { z } from 'zod'
 import { FileManager, type Summary, type SummaryTask } from '../storage/file-manager'
 import { StateManager } from '../state/state-manager'
@@ -13,7 +13,16 @@ import type { Plan } from '../types/plan'
  * Closes the loop after plan execution, generating summaries comparing plan vs actual.
  * Transitions state from APPLY → UNIFY → PLAN for the next loop iteration.
  */
-export const paulUnify = tool({
+type UnifyArgs = {
+  phase?: number
+  plan?: string
+  notes?: string
+  status?: 'success' | 'partial' | 'failed'
+}
+
+const toolFactory = tool as unknown as (input: any) => any
+
+export const paulUnify = toolFactory({
   name: 'paul:unify',
   description: 'Close the loop with reconciliation and summary generation',
   parameters: z.object({
@@ -22,7 +31,7 @@ export const paulUnify = tool({
     notes: z.string().optional().describe('Additional notes for summary'),
     status: z.enum(['success', 'partial', 'failed']).optional().describe('Override status (defaults to success)'),
   }),
-  execute: async (args, context) => {
+  execute: async (args: UnifyArgs, context: ToolContext) => {
     try {
       const fileManager = new FileManager(context.directory)
       const stateManager = new StateManager(context.directory)
@@ -39,17 +48,19 @@ ${formatBold('Error:')} Run /paul:init first to initialize PAUL.`
       }
       
       // Determine phase and plan
-      const phaseNumber = args.phase || currentPosition.phaseNumber
+      const phaseNumber = Number(args.phase ?? currentPosition.phaseNumber)
       let planId = args.plan || ''
       
       // If no plan specified, try to get current plan from state
       if (!planId) {
         const phaseState = stateManager.loadPhaseState(phaseNumber)
         if (!phaseState || !phaseState.currentPlanId) {
-          return `${formatHeader(1, '❌ No Plan Found')}
-
-${formatBold('Error:')} No current plan found.
-Run /paul:plan first to create a plan.`
+          return [
+            formatHeader(1, '❌ No Plan Found'),
+            '',
+            `${formatBold('Error:')} No current plan found.`,
+            'Run /paul:plan first to create a plan.',
+          ].join('\n')
         }
         planId = phaseState.currentPlanId
       }
@@ -57,31 +68,37 @@ Run /paul:plan first to create a plan.`
       // Check if currently in APPLY phase
       const currentPhase = currentPosition.phase
       if (currentPhase !== 'APPLY') {
-        return `${formatHeader(1, '❌ Invalid State')
-
-${formatBold('Error:')} Must be in APPLY phase to run /paul:unify.
-Current phase: ${currentPhase}
-
-${formatBold('Next action:')} ${loopEnforcer.getRequiredNextAction(currentPhase)}`
+        return [
+          formatHeader(1, '❌ Invalid State'),
+          '',
+          `${formatBold('Error:')} Must be in APPLY phase to run /paul:unify.`,
+          `Current phase: ${currentPhase}`,
+          '',
+          `${formatBold('Next action:')} ${loopEnforcer.getRequiredNextAction(currentPhase)}`,
+        ].join('\n')
       }
       
       // Load plan
       const plan = fileManager.readPlan(phaseNumber, planId)
       
       if (!plan) {
-        return `${formatHeader(1, '❌ No Plan Found')}
-
-${formatBold('Error:')} No plan found for phase ${phaseNumber}, plan ${planId}.
-Run /paul:plan first to create a plan.`
+        return [
+          formatHeader(1, '❌ No Plan Found'),
+          '',
+          `${formatBold('Error:')} No plan found for phase ${phaseNumber}, plan ${planId}.`,
+          'Run /paul:plan first to create a plan.',
+        ].join('\n')
       }
       
       // Enforce loop transition
       try {
         loopEnforcer.enforceTransition('APPLY', 'UNIFY')
       } catch (error) {
-        return `${formatHeader(1, '❌ Invalid State Transition')}
-
-${formatBold('Error:')} ${error instanceof Error ? error.message : 'Unknown error'}`
+        return [
+          formatHeader(1, '❌ Invalid State Transition'),
+          '',
+          `${formatBold('Error:')} ${error instanceof Error ? error.message : 'Unknown error'}`,
+        ].join('\n')
       }
       
       // Build summary
@@ -130,14 +147,16 @@ ${formatBold('Error:')} ${error instanceof Error ? error.message : 'Unknown erro
       return formatUnifyOutput(plan, summary, args.notes)
       
     } catch (error) {
-      return `${formatHeader(1, '❌ Error Closing Loop')}
-
-${formatBold('Error:')} ${error instanceof Error ? error.message : 'Unknown error'}
-
-${formatBold('Next steps:')}
-- Check that the plan exists and was executed
-- Verify your current state with /paul:progress
-- Try again with valid parameters`
+      return [
+        formatHeader(1, '❌ Error Closing Loop'),
+        '',
+        `${formatBold('Error:')} ${error instanceof Error ? error.message : 'Unknown error'}`,
+        '',
+        formatBold('Next steps:'),
+        '- Check that the plan exists and was executed',
+        '- Verify your current state with /paul:progress',
+        '- Try again with valid parameters',
+      ].join('\n')
     }
   },
 })
