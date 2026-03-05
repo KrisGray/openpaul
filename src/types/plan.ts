@@ -70,16 +70,26 @@ export const KeyLinkSchema = z.object({
  * Must-Haves - Goal-backward verification criteria
  */
 export interface MustHaves {
-  truths: string[]
-  artifacts: Artifact[]
-  key_links: KeyLink[]
+  truths?: string[]
+  artifacts?: Artifact[]
+  key_links?: KeyLink[]
 }
 
 export const MustHavesSchema = z.object({
-  truths: z.array(z.string()).min(1),
-  artifacts: z.array(ArtifactSchema).min(1),
-  key_links: z.array(KeyLinkSchema),
+  truths: z.array(z.string()).default([]),
+  artifacts: z.array(ArtifactSchema).default([]),
+  key_links: z.array(KeyLinkSchema).default([]),
 })
+
+/**
+ * Task Dependencies - Mapping of task number to dependencies
+ */
+export type TaskDependencies = Record<string, number[]>
+
+/**
+ * Execution Graph - Ordered waves of task execution
+ */
+export type ExecutionGraph = number[][]
 
 /**
  * Plan - Executable plan with tasks
@@ -102,9 +112,13 @@ export interface Plan {
   depends_on: string[]
   files_modified: string[]
   autonomous: boolean
-  requirements: string[]
+  requirements?: string[]
+  criteria?: string[]
+  boundaries?: string[]
   tasks: Task[]
-  must_haves: MustHaves
+  must_haves?: MustHaves
+  taskDependencies?: TaskDependencies
+  executionGraph?: ExecutionGraph
 }
 
 export const PlanSchema = z.object({
@@ -115,7 +129,15 @@ export const PlanSchema = z.object({
   depends_on: z.array(z.string()),
   files_modified: z.array(z.string()),
   autonomous: z.boolean(),
-  requirements: z.array(z.string()).min(1),
+  requirements: z.array(z.string()).default([]),
+  criteria: z.array(z.string()).default([]),
+  boundaries: z.array(z.string()).default([]),
   tasks: z.array(TaskSchema).min(1).max(5),
-  must_haves: MustHavesSchema,
+  must_haves: MustHavesSchema.optional().default({
+    truths: [],
+    artifacts: [],
+    key_links: [],
+  }),
+  taskDependencies: z.record(z.string(), z.array(z.number().int().positive())).default({}),
+  executionGraph: z.array(z.array(z.number().int().positive())).default([]),
 })
