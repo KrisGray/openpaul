@@ -1,5 +1,5 @@
 ---
-status: diagnosed
+status: complete
 phase: 02-core-loop-commands
 source:
   - 02-01-SUMMARY.md
@@ -82,3 +82,18 @@ skipped: 0
     - "Repair malformed expect blocks and remove appended markdown/text"
     - "Ensure test file compiles under ts-jest"
   debug_session: ".planning/debug/phase-02-unify-tests.md"
+
+## Fix Plans
+
+I've created a fix plan to resolve these compilation issues:
+
+- **Plan 02-10: Fix TypeScript compilation errors in apply/unify tests**
+  - Fixes syntax errors in apply.test.ts 
+  - Fixes syntax errors in unify.test.ts
+  - Ensures both test files compile properly under ts-jest
+
+## Next Steps
+
+Execute the fix plan to resolve the compilation issues:
+
+`/new` then `/gsd-execute-phase 02 --gaps-only`
