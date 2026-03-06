@@ -9,10 +9,10 @@ Requirements for full command implementation. Each maps to roadmap phases.
 
 ### Session Management
 
-- [ ] **SESS-01**: User can create session handoff with `/openpaul:pause` that captures current state, what was done, what's in progress, what's next, and resume instructions
-- [ ] **SESS-02**: User can restore session with `/openpaul:resume` that reads HANDOFF.md, loads STATE.md, and restores context
-- [ ] **SESS-03**: User can view current position with `/openpaul:status` that displays PLAN/APPLY/UNIFY loop with markers, current phase, and plan status
-- [ ] **SESS-04**: User can create explicit handoff with `/openpaul:handoff` for team collaboration or context saves
+- [x] **SESS-01**: User can create session handoff with `/openpaul:pause` that captures current state, what was done, what's in progress, what's next, and resume instructions
+- [x] **SESS-02**: User can restore session with `/openpaul:resume` that reads HANDOFF.md, loads STATE.md, and restores context
+- [x] **SESS-03**: User can view current position with `/openpaul:status` that displays PLAN/APPLY/UNIFY loop with markers, current phase, and plan status
+- [x] **SESS-04**: User can create explicit handoff with `/openpaul:handoff` for team collaboration or context saves
 
 ### Roadmap Management
 
@@ -77,10 +77,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SESS-01 | Phase 3 | Pending |
-| SESS-02 | Phase 3 | Pending |
-| SESS-03 | Phase 3 | Pending |
-| SESS-04 | Phase 3 | Pending |
+| SESS-01 | Phase 3 | Complete |
+| SESS-02 | Phase 3 | Complete |
+| SESS-03 | Phase 3 | Complete |
+| SESS-04 | Phase 3 | Complete |
 | ROAD-01 | Phase 4 | Pending |
 | ROAD-02 | Phase 4 | Pending |
 | MILE-01 | Phase 5 | Pending |
