@@ -95,13 +95,13 @@ export declare const KeyLinkSchema: z.ZodObject<{
  * Must-Haves - Goal-backward verification criteria
  */
 export interface MustHaves {
-    truths: string[];
-    artifacts: Artifact[];
-    key_links: KeyLink[];
+    truths?: string[];
+    artifacts?: Artifact[];
+    key_links?: KeyLink[];
 }
 export declare const MustHavesSchema: z.ZodObject<{
-    truths: z.ZodArray<z.ZodString, "many">;
-    artifacts: z.ZodArray<z.ZodObject<{
+    truths: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+    artifacts: z.ZodDefault<z.ZodArray<z.ZodObject<{
         path: z.ZodString;
         provides: z.ZodString;
         must_contain: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
@@ -116,8 +116,8 @@ export declare const MustHavesSchema: z.ZodObject<{
         provides: string;
         must_contain?: string[] | undefined;
         min_lines?: number | undefined;
-    }>, "many">;
-    key_links: z.ZodArray<z.ZodObject<{
+    }>, "many">>;
+    key_links: z.ZodDefault<z.ZodArray<z.ZodObject<{
         from: z.ZodString;
         to: z.ZodString;
         via: z.ZodString;
@@ -132,7 +132,7 @@ export declare const MustHavesSchema: z.ZodObject<{
         to: string;
         via: string;
         pattern: string;
-    }>, "many">;
+    }>, "many">>;
 }, "strip", z.ZodTypeAny, {
     truths: string[];
     artifacts: {
@@ -148,20 +148,28 @@ export declare const MustHavesSchema: z.ZodObject<{
         pattern: string;
     }[];
 }, {
-    truths: string[];
-    artifacts: {
+    truths?: string[] | undefined;
+    artifacts?: {
         path: string;
         provides: string;
         must_contain?: string[] | undefined;
         min_lines?: number | undefined;
-    }[];
-    key_links: {
+    }[] | undefined;
+    key_links?: {
         from: string;
         to: string;
         via: string;
         pattern: string;
-    }[];
+    }[] | undefined;
 }>;
+/**
+ * Task Dependencies - Mapping of task number to dependencies
+ */
+export type TaskDependencies = Record<string, number[]>;
+/**
+ * Execution Graph - Ordered waves of task execution
+ */
+export type ExecutionGraph = number[][];
 /**
  * Plan - Executable plan with tasks
  *
@@ -183,9 +191,13 @@ export interface Plan {
     depends_on: string[];
     files_modified: string[];
     autonomous: boolean;
-    requirements: string[];
+    requirements?: string[];
+    criteria?: string[];
+    boundaries?: string[];
     tasks: Task[];
-    must_haves: MustHaves;
+    must_haves?: MustHaves;
+    taskDependencies?: TaskDependencies;
+    executionGraph?: ExecutionGraph;
 }
 export declare const PlanSchema: z.ZodObject<{
     phase: z.ZodString;
@@ -195,7 +207,9 @@ export declare const PlanSchema: z.ZodObject<{
     depends_on: z.ZodArray<z.ZodString, "many">;
     files_modified: z.ZodArray<z.ZodString, "many">;
     autonomous: z.ZodBoolean;
-    requirements: z.ZodArray<z.ZodString, "many">;
+    requirements: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+    criteria: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+    boundaries: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
     tasks: z.ZodArray<z.ZodObject<{
         type: z.ZodEnum<["auto", "checkpoint:human-verify", "checkpoint:decision", "checkpoint:human-action"]>;
         name: z.ZodString;
@@ -218,9 +232,9 @@ export declare const PlanSchema: z.ZodObject<{
         done: string;
         files?: string[] | undefined;
     }>, "many">;
-    must_haves: z.ZodObject<{
-        truths: z.ZodArray<z.ZodString, "many">;
-        artifacts: z.ZodArray<z.ZodObject<{
+    must_haves: z.ZodDefault<z.ZodOptional<z.ZodObject<{
+        truths: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+        artifacts: z.ZodDefault<z.ZodArray<z.ZodObject<{
             path: z.ZodString;
             provides: z.ZodString;
             must_contain: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
@@ -235,8 +249,8 @@ export declare const PlanSchema: z.ZodObject<{
             provides: string;
             must_contain?: string[] | undefined;
             min_lines?: number | undefined;
-        }>, "many">;
-        key_links: z.ZodArray<z.ZodObject<{
+        }>, "many">>;
+        key_links: z.ZodDefault<z.ZodArray<z.ZodObject<{
             from: z.ZodString;
             to: z.ZodString;
             via: z.ZodString;
@@ -251,7 +265,7 @@ export declare const PlanSchema: z.ZodObject<{
             to: string;
             via: string;
             pattern: string;
-        }>, "many">;
+        }>, "many">>;
     }, "strip", z.ZodTypeAny, {
         truths: string[];
         artifacts: {
@@ -267,20 +281,22 @@ export declare const PlanSchema: z.ZodObject<{
             pattern: string;
         }[];
     }, {
-        truths: string[];
-        artifacts: {
+        truths?: string[] | undefined;
+        artifacts?: {
             path: string;
             provides: string;
             must_contain?: string[] | undefined;
             min_lines?: number | undefined;
-        }[];
-        key_links: {
+        }[] | undefined;
+        key_links?: {
             from: string;
             to: string;
             via: string;
             pattern: string;
-        }[];
-    }>;
+        }[] | undefined;
+    }>>>;
+    taskDependencies: z.ZodDefault<z.ZodRecord<z.ZodString, z.ZodArray<z.ZodNumber, "many">>>;
+    executionGraph: z.ZodDefault<z.ZodArray<z.ZodArray<z.ZodNumber, "many">, "many">>;
 }, "strip", z.ZodTypeAny, {
     phase: string;
     type: "execute" | "tdd";
@@ -290,6 +306,8 @@ export declare const PlanSchema: z.ZodObject<{
     files_modified: string[];
     autonomous: boolean;
     requirements: string[];
+    criteria: string[];
+    boundaries: string[];
     tasks: {
         type: "auto" | "checkpoint:human-verify" | "checkpoint:decision" | "checkpoint:human-action";
         name: string;
@@ -313,6 +331,8 @@ export declare const PlanSchema: z.ZodObject<{
             pattern: string;
         }[];
     };
+    taskDependencies: Record<string, number[]>;
+    executionGraph: number[][];
 }, {
     phase: string;
     type: "execute" | "tdd";
@@ -321,7 +341,6 @@ export declare const PlanSchema: z.ZodObject<{
     depends_on: string[];
     files_modified: string[];
     autonomous: boolean;
-    requirements: string[];
     tasks: {
         type: "auto" | "checkpoint:human-verify" | "checkpoint:decision" | "checkpoint:human-action";
         name: string;
@@ -330,20 +349,25 @@ export declare const PlanSchema: z.ZodObject<{
         done: string;
         files?: string[] | undefined;
     }[];
-    must_haves: {
-        truths: string[];
-        artifacts: {
+    requirements?: string[] | undefined;
+    criteria?: string[] | undefined;
+    boundaries?: string[] | undefined;
+    must_haves?: {
+        truths?: string[] | undefined;
+        artifacts?: {
             path: string;
             provides: string;
             must_contain?: string[] | undefined;
             min_lines?: number | undefined;
-        }[];
-        key_links: {
+        }[] | undefined;
+        key_links?: {
             from: string;
             to: string;
             via: string;
             pattern: string;
-        }[];
-    };
+        }[] | undefined;
+    } | undefined;
+    taskDependencies?: Record<string, number[]> | undefined;
+    executionGraph?: number[][] | undefined;
 }>;
 //# sourceMappingURL=plan.d.ts.map

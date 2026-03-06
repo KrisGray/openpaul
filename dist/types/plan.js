@@ -20,9 +20,9 @@ export const KeyLinkSchema = z.object({
     pattern: z.string(),
 });
 export const MustHavesSchema = z.object({
-    truths: z.array(z.string()).min(1),
-    artifacts: z.array(ArtifactSchema).min(1),
-    key_links: z.array(KeyLinkSchema),
+    truths: z.array(z.string()).default([]),
+    artifacts: z.array(ArtifactSchema).default([]),
+    key_links: z.array(KeyLinkSchema).default([]),
 });
 export const PlanSchema = z.object({
     phase: z.string(),
@@ -32,8 +32,16 @@ export const PlanSchema = z.object({
     depends_on: z.array(z.string()),
     files_modified: z.array(z.string()),
     autonomous: z.boolean(),
-    requirements: z.array(z.string()).min(1),
+    requirements: z.array(z.string()).default([]),
+    criteria: z.array(z.string()).default([]),
+    boundaries: z.array(z.string()).default([]),
     tasks: z.array(TaskSchema).min(1).max(5),
-    must_haves: MustHavesSchema,
+    must_haves: MustHavesSchema.optional().default({
+        truths: [],
+        artifacts: [],
+        key_links: [],
+    }),
+    taskDependencies: z.record(z.string(), z.array(z.number().int().positive())).default({}),
+    executionGraph: z.array(z.array(z.number().int().positive())).default([]),
 });
 //# sourceMappingURL=plan.js.map

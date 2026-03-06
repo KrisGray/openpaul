@@ -7,6 +7,7 @@ import { SessionManager } from '../storage/session-manager'
 import { atomicWrite } from '../storage/atomic-writes'
 import type { SessionState } from '../types/session'
 import { formatHeader, formatList, formatBold } from '../output/formatter'
+import { detectUncommittedChanges, detectModifiedFiles } from '../utils/change-detector'
 
 /**
  * /paul:pause Command
@@ -61,6 +62,23 @@ export const paulPause = tool({
 
       // Compute file checksums for diff generation
       const fileChecksums = computeFileChecksums(context.directory)
+
+      // Check for uncommitted changes
+      const gitStatus = await detectUncommittedChanges(context.directory)
+      const fileStatus = await detectModifiedFiles(context.directory, fileChecksums)
+      
+      if (gitStatus.hasChanges || fileStatus.hasModifications) {
+        const changeSummary = formatChangeSummary(gitStatus, fileStatus)
+        return formatHeader(2, '⚠️ Unsaved Changes Detected') + '\n\n' +
+          changeSummary + '\n\n' +
+          formatBold('Options:') + '\n' +
+          formatList([
+            'Commit your changes: `git add . && git commit -m "message"`',
+            'Save specific files manually before pausing',
+            'Run `/paul:pause` again to proceed anyway (changes will be noted in HANDOFF)',
+            'Run `/paul:status` to see current session info',
+          ])
+      }
 
       // Capture session state
       const sessionState: SessionState = {
@@ -245,6 +263,52 @@ function extractPhaseName(roadmapPath: string, phaseNumber: number): string {
   } catch {
     return 'Unknown'
   }
+}
+
+/**
+ * Format change summary for display
+ */
+function formatChangeSummary(
+  gitStatus: { hasChanges: boolean; files: Array<{ path: string; status: string }> },
+  fileStatus: { hasModifications: boolean; files: Array<{ path: string }> }
+): string {
+  const parts: string[] = []
+
+  if (gitStatus.hasChanges) {
+    const modified = gitStatus.files.filter(f => f.status === 'modified').length
+    const added = gitStatus.files.filter(f => f.status === 'added').length
+    const deleted = gitStatus.files.filter(f => f.status === 'deleted').length
+    const untracked = gitStatus.files.filter(f => f.status === 'untracked').length
+
+    const counts: string[] = []
+    if (modified > 0) counts.push(`${modified} modified`)
+    if (added > 0) counts.push(`${added} added`)
+    if (deleted > 0) counts.push(`${deleted} deleted`)
+    if (untracked > 0) counts.push(`${untracked} untracked`)
+
+    parts.push(`Git changes: ${counts.join(', ')}`)
+
+    const filesToShow = gitStatus.files.slice(0, 10)
+    filesToShow.forEach(f => {
+      parts.push(`  - ${f.path} (${f.status})`)
+    })
+    if (gitStatus.files.length > 10) {
+      parts.push(`  ... and ${gitStatus.files.length - 10} more`)
+    }
+  }
+
+  if (fileStatus.hasModifications) {
+    parts.push(`Modified files: ${fileStatus.files.length} file(s) changed`)
+    const filesToShow = fileStatus.files.slice(0, 10)
+    filesToShow.forEach(f => {
+      parts.push(`  - ${f.path}`)
+    })
+    if (fileStatus.files.length > 10) {
+      parts.push(`  ... and ${fileStatus.files.length - 10} more`)
+    }
+  }
+
+  return parts.join('\n')
 }
 
 /**

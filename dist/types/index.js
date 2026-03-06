@@ -17,4 +17,8 @@ export * from './state';
 export * from './plan';
 // Command types
 export * from './command';
+// Sub-stage types
+export * from './sub-stage';
+// Model configuration types
+export * from './model-config';
 //# sourceMappingURL=index.js.map

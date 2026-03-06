@@ -26,11 +26,11 @@ export declare const CommandInputSchema: z.ZodObject<{
     args: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
     flags: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnknown>>;
 }, "strip", z.ZodTypeAny, {
-    type: "config" | "status" | "verify" | "plan" | "init" | "apply" | "unify" | "progress" | "help" | "pause" | "resume" | "handoff" | "milestone" | "complete-milestone" | "discuss-milestone" | "map-codebase" | "discuss" | "assumptions" | "discover" | "consider-issues" | "research" | "research-phase" | "plan-fix" | "add-phase" | "remove-phase" | "flows";
+    type: "status" | "verify" | "plan" | "init" | "apply" | "unify" | "progress" | "help" | "pause" | "resume" | "handoff" | "milestone" | "complete-milestone" | "discuss-milestone" | "map-codebase" | "discuss" | "assumptions" | "discover" | "consider-issues" | "research" | "research-phase" | "plan-fix" | "add-phase" | "remove-phase" | "flows" | "config";
     args?: string[] | undefined;
     flags?: Record<string, unknown> | undefined;
 }, {
-    type: "config" | "status" | "verify" | "plan" | "init" | "apply" | "unify" | "progress" | "help" | "pause" | "resume" | "handoff" | "milestone" | "complete-milestone" | "discuss-milestone" | "map-codebase" | "discuss" | "assumptions" | "discover" | "consider-issues" | "research" | "research-phase" | "plan-fix" | "add-phase" | "remove-phase" | "flows";
+    type: "status" | "verify" | "plan" | "init" | "apply" | "unify" | "progress" | "help" | "pause" | "resume" | "handoff" | "milestone" | "complete-milestone" | "discuss-milestone" | "map-codebase" | "discuss" | "assumptions" | "discover" | "consider-issues" | "research" | "research-phase" | "plan-fix" | "add-phase" | "remove-phase" | "flows" | "config";
     args?: string[] | undefined;
     flags?: Record<string, unknown> | undefined;
 }>;
