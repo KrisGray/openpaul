@@ -63,18 +63,18 @@ Plans:
 **Requirements**: SESS-01, SESS-02, SESS-03, SESS-04
 **Success Criteria** (what must be TRUE):
   1. User can pause session with `/openpaul:pause` that captures current state, work done, work in progress, next steps, and resume instructions
-  2. User can resume session with `/openpaul:resume` that loads HANDOFF.md and STATE.md, restores context to exact PAUL loop position (PLAN/APPLY/UNIFY)
-  3. User can view current position with `/openpaul:status` that displays PAUL loop with position markers, current phase/plan, and plan completion status
+  2. User can resume session with `/openpaul:resume` that loads HANDOFF.md and STATE.md, restores context to exact PAUL loop position
+  3. User can view current position with `/openpaul:status` that displays PAUL loop with position markers, current phase, and plan completion status
   4. User can create explicit handoff with `/openpaul:handoff` for team collaboration that captures complete context transfer information
-**Plans**: TBD
+**Plans**: 6 plans
 
 Plans:
-- [ ] 03-01: Implement SessionManager for session state tracking
-- [ ] 03-02: Build /openpaul:pause command
-- [ ] 03-03: Build /openpaul:resume command
-- [ ] 03-04: Build /openpaul:status command (enhanced version)
-- [ ] 03-05: Build /openpaul:handoff command
-- [ ] 03-06: Add tests for session management operations
+- [x] 03-01: Implement SessionManager for session state tracking
+- [x] 03-02: Build /openpaul:pause command
+- [x] 03-03: Build /openpaul:resume command
+- [x] 03-04: Build /openpaul:status command (enhanced version)
+- [x] 03-05: Build /openpaul:handoff command
+- [x] 03-06: Add tests for session management operations
 
 #### Phase 4: Roadmap Management
 **Goal**: Users can modify project roadmap by adding and removing phases
