@@ -13,5 +13,7 @@ export * from './loop';
 export * from './state';
 export * from './plan';
 export * from './command';
+export * from './sub-stage';
+export * from './model-config';
 export type { Plugin } from '@opencode-ai/plugin';
 //# sourceMappingURL=index.d.ts.map

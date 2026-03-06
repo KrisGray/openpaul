@@ -4,6 +4,16 @@
  * This plugin enforces the PLAN → APPLY → UNIFY loop with mandatory reconciliation,
  * ensuring every plan closes properly with full traceability and context preservation.
  */
+import { paulInit } from './commands/init';
+import { paulPlan } from './commands/plan';
+import { paulApply } from './commands/apply';
+import { paulUnify } from './commands/unify';
+import { paulProgress } from './commands/progress';
+import { paulStatus } from './commands/status';
+import { paulHelp } from './commands/help';
+import { paulPause } from './commands/pause';
+import { paulResume } from './commands/resume';
+import { paulHandoff } from './commands/handoff';
 export const PaulPlugin = async ({ project, client, directory, worktree }) => {
     // Plugin initialization
     await client.app.log({
@@ -18,7 +28,19 @@ export const PaulPlugin = async ({ project, client, directory, worktree }) => {
         },
     });
     return {
-    // Event hooks will be added in subsequent plans
+        // Register commands
+        tool: {
+            'paul:init': paulInit,
+            'paul:plan': paulPlan,
+            'paul:apply': paulApply,
+            'paul:unify': paulUnify,
+            'paul:progress': paulProgress,
+            'paul:status': paulStatus,
+            'paul:help': paulHelp,
+            'paul:pause': paulPause,
+            'paul:resume': paulResume,
+            'paul:handoff': paulHandoff,
+        }
     };
 };
 // Export types for external use
