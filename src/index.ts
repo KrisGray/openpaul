@@ -12,6 +12,15 @@ import { paulApply } from './commands/apply'
 import { paulUnify } from './commands/unify'
 import { paulProgress } from './commands/progress'
 import { paulHelp } from './commands/help'
+import { paulPause } from './commands/pause'
+
+import { paulInit } from './commands/init'
+import { paulPlan } from './commands/plan'
+import { paulApply } from './commands/apply'
+import { paulUnify } from './commands/unify'
+import { paulProgress } from './commands/progress'
+            paulHelp from './commands/help',
+            paulPause from './commands/pause'
 
 export const PaulPlugin: Plugin = async ({ project, client, directory, worktree }) => {
   // Plugin initialization
