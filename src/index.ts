@@ -11,16 +11,10 @@ import { paulPlan } from './commands/plan'
 import { paulApply } from './commands/apply'
 import { paulUnify } from './commands/unify'
 import { paulProgress } from './commands/progress'
+import { paulStatus } from './commands/status'
 import { paulHelp } from './commands/help'
 import { paulPause } from './commands/pause'
-
-import { paulInit } from './commands/init'
-import { paulPlan } from './commands/plan'
-import { paulApply } from './commands/apply'
-import { paulUnify } from './commands/unify'
-import { paulProgress } from './commands/progress'
-            paulHelp from './commands/help',
-            paulPause from './commands/pause'
+import { paulResume } from './commands/resume'
 
 export const PaulPlugin: Plugin = async ({ project, client, directory, worktree }) => {
   // Plugin initialization
@@ -44,7 +38,10 @@ export const PaulPlugin: Plugin = async ({ project, client, directory, worktree 
       'paul:apply': paulApply,
       'paul:unify': paulUnify,
       'paul:progress': paulProgress,
+      'paul:status': paulStatus,
       'paul:help': paulHelp,
+      'paul:pause': paulPause,
+      'paul:resume': paulResume,
     }
   }
 }
