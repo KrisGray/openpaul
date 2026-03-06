@@ -15,6 +15,7 @@ import { paulStatus } from './commands/status'
 import { paulHelp } from './commands/help'
 import { paulPause } from './commands/pause'
 import { paulResume } from './commands/resume'
+import { paulHandoff } from './commands/handoff'
 
 export const PaulPlugin: Plugin = async ({ project, client, directory, worktree }) => {
   // Plugin initialization
@@ -42,6 +43,7 @@ export const PaulPlugin: Plugin = async ({ project, client, directory, worktree 
       'paul:help': paulHelp,
       'paul:pause': paulPause,
       'paul:resume': paulResume,
+      'paul:handoff': paulHandoff,
     }
   }
 }
