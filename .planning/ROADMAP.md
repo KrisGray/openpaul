@@ -66,16 +66,20 @@ Plans:
   2. User can resume session with `/openpaul:resume` that loads HANDOFF.md and STATE.md, restores context to exact PAUL loop position
   3. User can view current position with `/openpaul:status` that displays PAUL loop with position markers, current phase, and plan completion status
   4. User can create explicit handoff with `/openpaul:handoff` for team collaboration that captures complete context transfer information
-**Plans**: 7 plans
+**Plans**: 9 plans
 
 Plans:
-- [x] 03-00: Create test scaffolds for session management
+- [x] 03-00a: Create test scaffolds for SessionState and SessionManager
+- [x] 03-00b: Create test scaffolds for diff-formatter, pause, resume
+- [x] 03-00c: Create test scaffolds for status and handoff
 - [x] 03-01: Implement SessionManager for session state tracking
 - [x] 03-02: Build /openpaul:pause command
 - [x] 03-03: Build /openpaul:resume command
 - [x] 03-04: Build /openpaul:status command (enhanced version)
 - [x] 03-05: Build /openpaul:handoff command
-- [x] 03-06: Implement tests for session management operations
+- [x] 03-06a: Implement tests for SessionState and SessionManager
+- [x] 03-06b: Implement tests for diff-formatter, pause, resume
+- [x] 03-06c: Implement tests for status and handoff
 
 #### Phase 4: Roadmap Management
 **Goal**: Users can modify project roadmap by adding and removing phases
@@ -203,7 +207,7 @@ Phases execute in numeric order: 3 → 4 → 5 → 6 → 7 → 8 → 9
 |-------|-----------|----------------|--------|-----------|
 | 1. Core Loop Infrastructure | v1.0 | 11/11 | Complete | 2026-03-05 |
 | 2. Advanced Loop Features | v1.0 | 8/8 | Complete | 2026-03-05 |
-| 3. Session Management | v1.1 | 0/7 | Not started | - |
+| 3. Session Management | v1.1 | 0/9 | Not started | - |
 | 4. Roadmap Management | v1.1 | 0/4 | Not started | - |
 | 5. Milestone Management | v1.1 | 0/5 | Not started | - |
 | 6. Pre-Planning + Research | v1.1 | 0/12 | Not started | - |
@@ -211,7 +215,7 @@ Phases execute in numeric order: 3 → 4 → 5 → 6 → 7 → 8 → 9
 | 8. Configuration | v1.1 | 0/7 | Not started | - |
 | 9. Documentation | v1.1 | 0/4 | Not started | - |
 
-**Overall v1.1 Progress:** 0/45 plans (0%)
+**Overall v1.1 Progress:** 0/46 plans (0%)
 
 ## Dependencies
 
@@ -234,7 +238,7 @@ Phase 3 (Session Management)
 **Completion criteria:**
 - [ ] All 7 phases complete (3-9)
 - [ ] All 22 requirements verified and passing
-- [ ] All 45 plans implemented
+- [ ] All 46 plans implemented
 - [ ] All commands tested with comprehensive Jest coverage
 - [ ] Documentation updated with OpenPAUL branding
 - [ ] npm package updated and published
