@@ -1,16 +1,12 @@
 import { tool } from '@opencode-ai/plugin'
-import { readFileSync, readdirSync, statSync, existsSync, mkdirSync, writeFileSync } from 'fs'
-import { join, from 'path'
+import { readFileSync, readdirSync, statSync, existsSync, mkdirSync } from 'fs'
+import { join, relative } from 'path'
 import { createHash } from 'crypto'
 import { StateManager } from '../state/state-manager'
 import { SessionManager } from '../storage/session-manager'
 import { atomicWrite } from '../storage/atomic-writes'
 import type { SessionState } from '../types/session'
 import { formatHeader, formatList, formatBold } from '../output/formatter'
-
-import { readFileSync } from 'fs'
-import { join } from 'path'
-import { existsSync, mkdirSync } from 'fs'
 
 /**
  * /paul:pause Command
