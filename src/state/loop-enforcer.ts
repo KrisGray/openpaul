@@ -54,7 +54,7 @@ export class LoopEnforcer {
    * 
    * From CONTEXT.md: Force PLAN as entry point, users must always start with PLAN
    */
-  canStartNewLoop(currentPhase: LoopPhase): boolean {
+  canStartNewLoop(currentPhase: LoopPhase | undefined): boolean {
     return currentPhase === 'UNIFY' || currentPhase === undefined
   }
   
@@ -62,7 +62,7 @@ export class LoopEnforcer {
    * Enforce that we can start a new loop - throws error if not
    */
   enforceCanStartNewLoop(currentPhase: LoopPhase | undefined): void {
-    if (!this.canStartNewLoop(currentPhase as LoopPhase)) {
+    if (!this.canStartNewLoop(currentPhase)) {
       throw new Error(
         `Cannot start a new loop from ${currentPhase || 'initial state'}.\n` +
         `You must complete the current loop first.\n` +
