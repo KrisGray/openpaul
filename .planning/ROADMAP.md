@@ -13,20 +13,22 @@
 
 ### Phase 1: Core Loop Infrastructure
 **Goal**: Implement PAUL loop commands and storage infrastructure
-**Plans**: 11 plans
+**Plans**: 13 plans
 
 Plans:
-- [x] 01-01: Define TypeScript types for all PAUL state objects
-- [x] 01-02: Implement file-based JSON storage manager
-- [x] 01-03: Create state manager for .paul/ directory operations
-- [x] 01-04: Implement PLAN/APPLY/UNIFY loop enforcer
-- [x] 01-05: Build /openpaul:init command for project initialization
-- [x] 01-06: Build /openpaul:plan command for creating plans
-- [x] 01-07: Build /openpaul:apply command for executing plans
-- [x] 01-08: Build /openpaul:unify command for reconciling state
-- [x] 01-09: Build /openpaul:progress command for tracking progress
-- [x] 01-10: Build /openpaul:help command for documentation
-- [x] 01-11: Set up Jest testing framework and initial tests
+- [x] 01-01: Initialize project config (package.json, tsconfig)
+- [x] 01-02: Define core loop/state/plan types
+- [x] 01-03: Implement atomic writes and file manager
+- [x] 01-04: Implement state manager for per-phase state
+- [x] 01-05: Add loop enforcer test suite
+- [x] 01-06: Implement model config system and sub-stage types
+- [x] 01-07: Add atomic writes error handling tests
+- [x] 01-08: Add state-manager edge case + sub-stage tests
+- [x] 01-09: Add loop and loop-enforcer branch coverage tests
+- [x] 01-10: Close remaining coverage gaps with defensive tests
+- [x] 01-11: Define command types and exports
+- [ ] 01-12: Configure Jest and plugin entry point
+- [ ] 01-13: Implement loop enforcer logic
 
 ### Phase 2: Advanced Loop Features
 **Goal**: Implement roadmapping and state visualization features
@@ -206,7 +208,7 @@ Phases execute in numeric order: 3 → 4 → 5 → 6 → 7 → 8 → 9
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 1. Core Loop Infrastructure | v1.0 | 11/11 | Complete | 2026-03-05 |
+| 1. Core Loop Infrastructure | 9/13 | In Progress|  | 2026-03-05 |
 | 2. Advanced Loop Features | v1.0 | 8/8 | Complete | 2026-03-05 |
 | 3. Session Management | v1.1 | 0/12 | Not started | - |
 | 4. Roadmap Management | v1.1 | 0/4 | Not started | - |
