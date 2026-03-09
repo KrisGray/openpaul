@@ -1,5 +1,6 @@
-import { LoopEnforcer } from '../state/loop-enforcer'
-import type { LoopPhase } from '../types'
+import { LoopEnforcer } from '../../state/loop-enforcer'
+import { isValidTransition } from '../../types'
+import type { LoopPhase } from '../../types'
 
 describe('LoopEnforcer', () => {
   let enforcer: LoopEnforcer
@@ -31,6 +32,21 @@ describe('LoopEnforcer', () => {
     
     it('should reject UNIFY → APPLY', () => {
       expect(enforcer.canTransition('UNIFY', 'APPLY')).toBe(false)
+    })
+
+    it('should mirror isValidTransition helper', () => {
+      const cases: Array<[LoopPhase, LoopPhase]> = [
+        ['PLAN', 'APPLY'],
+        ['PLAN', 'UNIFY'],
+        ['APPLY', 'UNIFY'],
+        ['APPLY', 'PLAN'],
+        ['UNIFY', 'PLAN'],
+        ['UNIFY', 'APPLY'],
+      ]
+
+      cases.forEach(([from, to]) => {
+        expect(enforcer.canTransition(from, to)).toBe(isValidTransition(from, to))
+      })
     })
   })
   
