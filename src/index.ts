@@ -49,4 +49,4 @@ export const PaulPlugin: Plugin = async ({ project, client, directory, worktree 
 }
 
 // Export types for external use
-// export * from './types'  // Will be added in subsequent plans
+export * from './types'
