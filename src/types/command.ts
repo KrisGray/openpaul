@@ -46,8 +46,8 @@ export type CommandType =
  */
 export interface CommandInput {
   type: CommandType
-  args?: string[]
-  flags?: Record<string, unknown>
+  args: string[]
+  flags: Record<string, unknown>
 }
 
 export const CommandInputSchema = z.object({
@@ -59,8 +59,8 @@ export const CommandInputSchema = z.object({
     'research', 'research-phase', 'verify', 'plan-fix',
     'add-phase', 'remove-phase', 'flows', 'config',
   ]),
-  args: z.array(z.string()).optional(),
-  flags: z.record(z.string(), z.unknown()).optional(),
+  args: z.array(z.string()),
+  flags: z.record(z.string(), z.unknown()),
 })
 
 /**
@@ -69,15 +69,15 @@ export const CommandInputSchema = z.object({
 export interface CommandResult {
   success: boolean
   message: string
-  data?: unknown
-  nextAction?: string
+  data: unknown | null
+  nextAction: string | null
 }
 
 export const CommandResultSchema = z.object({
   success: z.boolean(),
   message: z.string(),
-  data: z.unknown().optional(),
-  nextAction: z.string().optional(),
+  data: z.unknown().nullable(),
+  nextAction: z.string().nullable(),
 })
 
 /**
