@@ -58,7 +58,7 @@ Each task was committed atomically:
 
 1. **task 1: Create command types with required fields and export them** - `34c9c68` (feat)
 
-**Plan metadata:** pending
+**Plan metadata:** `6b616ec` (docs: complete plan)
 
 _Note: TDD tasks may have multiple commits (test → feat → refactor)_
 
