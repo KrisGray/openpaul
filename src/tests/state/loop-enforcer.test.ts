@@ -74,6 +74,12 @@ describe('LoopEnforcer', () => {
         expect((error as Error).message).toContain('Run /paul:unify')
       }
     })
+
+    it('should report no valid next states for invalid from phase', () => {
+      expect(() =>
+        enforcer.enforceTransition('INVALID' as LoopPhase, 'PLAN')
+      ).toThrow(/Valid next states: none/)
+    })
   })
   
   describe('getRequiredNextAction', () => {
@@ -143,6 +149,17 @@ describe('LoopEnforcer', () => {
         expect((error as Error).message).toContain('APPLY')
         expect((error as Error).message).toContain('Current state: APPLY')
         expect((error as Error).message).toContain('Run /paul:unify')
+      }
+    })
+
+    it('should include initial state guidance when called with null', () => {
+      try {
+        enforcer.enforceCanStartNewLoop(null as unknown as LoopPhase)
+        fail('Should have thrown')
+      } catch (error) {
+        expect((error as Error).message).toContain('initial state')
+        expect((error as Error).message).toContain('no state')
+        expect((error as Error).message).toContain('Run /paul:plan to initialize PAUL')
       }
     })
   })

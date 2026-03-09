@@ -37,6 +37,14 @@ describe('loop types', () => {
     it('should return false for invalid transition UNIFY → UNIFY', () => {
       expect(isValidTransition('UNIFY', 'UNIFY')).toBe(false)
     })
+
+    it('should return false when from phase is not in VALID_TRANSITIONS', () => {
+      expect(isValidTransition('INVALID' as any, 'PLAN')).toBe(false)
+    })
+
+    it('should return false when to phase is not in allowed list', () => {
+      expect(isValidTransition('PLAN', 'INVALID' as any)).toBe(false)
+    })
   })
   
   describe('VALID_TRANSITIONS', () => {
