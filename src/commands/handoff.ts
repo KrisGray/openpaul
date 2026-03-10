@@ -1,11 +1,13 @@
 import { tool } from '@opencode-ai/plugin'
-import { readFileSync, existsSync, mkdirSync } from 'fs'
+import { existsSync, mkdirSync, readFileSync } from 'fs'
 import { join } from 'path'
 import { StateManager } from '../state/state-manager'
 import { SessionManager } from '../storage/session-manager'
 import { atomicWrite } from '../storage/atomic-writes'
 import type { SessionState } from '../types/session'
 import { formatHeader, formatList, formatBold } from '../output/formatter'
+import { buildSessionContext } from '../utils/session-context'
+import { renderHandoffTemplate } from '../utils/handoff-template'
 
 /**
  * /paul:handoff Command
@@ -70,62 +72,25 @@ export const paulHandoff = tool({
       const totalPhases = getTotalPhases(context.directory)
       const version = getVersion(context.directory)
 
-      // Read template
-      const templatePath = join(__dirname, '../../templates/HANDOFF.md')
-      let template: string
-      
-      if (!existsSync(templatePath)) {
-        return formatHeader(2, '❌ Handoff Template Missing') + '\n\n' +
-          `Template not found: ${templatePath}\n\n` +
-          formatBold('Troubleshooting:') + '\n' +
-          formatList([
-            'Ensure the templates directory exists',
-            'Check that HANDOFF.md template is in place',
-          ])
+      const sessionContext = buildSessionContext(stateManager, position)
+      const resolvedSessionState: SessionState = {
+        ...sessionState,
+        currentPlanId: sessionState.currentPlanId ?? sessionContext.currentPlanId,
+        workInProgress: sessionContext.workInProgress,
+        nextSteps: sessionContext.nextSteps,
       }
 
-      template = readFileSync(templatePath, 'utf-8')
-
-      // Determine loop position markers
-      const planMark = sessionState.phase === 'PLAN' ? '●' : '○'
-      const applyMark = sessionState.phase === 'APPLY' ? '●' : sessionState.phase === 'PLAN' ? '○' : '○'
-      const unifyMark = sessionState.phase === 'UNIFY' ? '●' : sessionState.phase === 'APPLY' ? '○' : '○'
-
-      // Format current plan path
-      const currentPlanPath = sessionState.currentPlanId
-        ? `.paul/phases/${sessionState.phaseNumber}-${sessionState.currentPlanId}-PLAN.json`
-        : 'none'
-
-      // Create replacement object
-      const replacements: Record<string, string> = {
-        timestamp: new Date().toISOString(),
-        session_id: sessionState.sessionId,
-        status: status,
-        project_name: projectName,
-        core_value: 'Enforce the PLAN → APPLY → UNIFY loop with mandatory reconciliation',
-        version: version,
-        phase_number: String(sessionState.phaseNumber),
-        total_phases: String(totalPhases),
-        phase_name: phaseName,
-        plan_id: sessionState.currentPlanId || 'none',
-        plan_status: sessionState.phase,
-        accomplished_list: formatHandoffList([]),
-        in_progress_list: formatHandoffList(sessionState.workInProgress),
-        next_action: sessionState.nextSteps[0] || 'No next step',
-        following_action: 'Continue with next plan',
-        current_plan_path: currentPlanPath,
-        plan_purpose: sessionState.currentPlanId ? 'Current active plan' : 'No active plan',
-        plan_mark: planMark,
-        apply_mark: applyMark,
-        unify_mark: unifyMark,
-      }
-
-      // Replace all template variables
-      let handoffContent = template
-      for (const [key, value] of Object.entries(replacements)) {
-        const regex = new RegExp(`{{${key}}}`, 'g')
-        handoffContent = handoffContent.replace(regex, value)
-      }
+      const handoffContent = renderHandoffTemplate({
+        sessionState: resolvedSessionState,
+        status,
+        projectName,
+        phaseName,
+        totalPhases,
+        version,
+        accomplished: sessionContext.accomplished,
+        workInProgress: sessionContext.workInProgress,
+        nextSteps: sessionContext.nextSteps,
+      })
 
       // Write HANDOFF.md using atomic write
       const handoffDir = join(context.directory, '.openpaul')
@@ -162,16 +127,6 @@ export const paulHandoff = tool({
     }
   },
 })
-
-/**
- * Format list for handoff document
- */
-function formatHandoffList(items: string[]): string {
-  if (items.length === 0) {
-    return '- None'
-  }
-  return items.map(item => `- ${item}`).join('\n')
-}
 
 /**
  * Get project name from model-config.json
