@@ -30,6 +30,7 @@ describe('Handoff Command Functionality', () => {
   let mockStateManager: {
     getCurrentPosition: jest.Mock
     getRequiredNextAction: jest.Mock<any, any>
+    loadPhaseState: jest.Mock
   }
   let mockSessionManager: {
     loadCurrentSession: jest.Mock
@@ -42,6 +43,11 @@ describe('Handoff Command Functionality', () => {
     mockStateManager = {
       getCurrentPosition: jest.fn(),
       getRequiredNextAction: jest.fn().mockReturnValue('Run /openpaul:apply to execute the plan'),
+      loadPhaseState: jest.fn().mockReturnValue({
+        currentPlanId: '01',
+        completedPlans: [],
+        plans: [],
+      }),
     }
 
     mockSessionManager = {
