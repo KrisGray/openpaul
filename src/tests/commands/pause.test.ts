@@ -7,7 +7,7 @@
 import { paulPause } from '../../commands/pause'
 import { StateManager } from '../../state/state-manager'
 import { SessionManager } from '../../storage/session-manager'
-import { existsSync, readFileSync, readdirSync, statSync, mkdirSync } from 'fs'
+import { existsSync, readFileSync, readdirSync, statSync, mkdirSync, writeFileSync } from 'fs'
 
 // Mock dependencies
 jest.mock('../../state/state-manager')
@@ -78,6 +78,7 @@ describe('paulPause command', () => {
     ;(readdirSync as jest.Mock).mockReturnValue([])
     ;(statSync as jest.Mock).mockReturnValue({ isFile: () => false, isDirectory: () => true })
     ;(mkdirSync as jest.Mock).mockReturnValue(undefined)
+    ;(writeFileSync as jest.Mock).mockReturnValue(undefined)
   })
 
   describe('successful pause', () => {
@@ -93,6 +94,9 @@ describe('paulPause command', () => {
           pausedAt: expect.any(Number),
           nextSteps: expect.arrayContaining(['Run /paul:apply']),
           fileChecksums: expect.any(Object),
+          metadata: expect.objectContaining({
+            snapshotRoot: expect.stringContaining('snapshots'),
+          }),
         })
       )
     })
