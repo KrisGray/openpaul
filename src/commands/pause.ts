@@ -1,7 +1,7 @@
 import { tool } from '@opencode-ai/plugin'
 import { z } from 'zod'
 import { readFileSync, readdirSync, statSync, existsSync, mkdirSync } from 'fs'
-import { join, relative } from 'path'
+import { join, relative, sep } from 'path'
 import { createHash } from 'crypto'
 import { StateManager } from '../state/state-manager'
 import { SessionManager } from '../storage/session-manager'
@@ -11,6 +11,7 @@ import { formatHeader, formatList, formatBold } from '../output/formatter'
 import { detectUncommittedChanges, detectModifiedFiles } from '../utils/change-detector'
 import { buildSessionContext } from '../utils/session-context'
 import { renderHandoffTemplate } from '../utils/handoff-template'
+import { captureSessionSnapshots } from '../utils/session-snapshots'
 
 /**
  * /paul:pause Command
@@ -112,9 +113,13 @@ export const paulPause = toolFactory({
         metadata.unsavedChangesAction = onUnsavedChanges
       }
 
+      const sessionId = sessionManager.generateSessionId()
+      const snapshotResult = captureSessionSnapshots(context.directory, sessionId, fileChecksums)
+      metadata.snapshotRoot = snapshotResult.snapshotRoot
+
       // Capture session state
       const sessionState: SessionState = {
-        sessionId: sessionManager.generateSessionId(),
+        sessionId,
         createdAt: Date.now(),
         pausedAt: Date.now(),
         phase: position.phase,
@@ -239,12 +244,25 @@ function collectChecksums(
     const stat = statSync(fullPath)
 
     if (stat.isDirectory()) {
-      collectChecksums(fullPath, projectRoot, checksums)
+      const relPath = relative(projectRoot, fullPath)
+      if (!isSnapshotPath(relPath)) {
+        collectChecksums(fullPath, projectRoot, checksums)
+      }
     } else if (stat.isFile()) {
       const relPath = relative(projectRoot, fullPath)
-      checksums[relPath] = computeFileChecksum(fullPath)
+      if (!isSnapshotPath(relPath)) {
+        checksums[relPath] = computeFileChecksum(fullPath)
+      }
     }
   }
+}
+
+function isSnapshotPath(relPath: string): boolean {
+  const parts = relPath.split(sep)
+  const openIndex = parts.indexOf('.openpaul')
+  const sessionsIndex = parts.indexOf('SESSIONS')
+  const snapshotsIndex = parts.indexOf('snapshots')
+  return openIndex !== -1 && sessionsIndex === openIndex + 1 && snapshotsIndex > sessionsIndex
 }
 
 /**
