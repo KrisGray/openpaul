@@ -29,6 +29,7 @@ describe('paulPause command', () => {
   let mockStateManager: {
     getCurrentPosition: jest.Mock
     getRequiredNextAction: jest.Mock
+    loadPhaseState: jest.Mock
   }
   let mockSessionManager: {
     getCurrentSessionId: jest.Mock
@@ -46,6 +47,11 @@ describe('paulPause command', () => {
         phaseNumber: 2,
       }),
       getRequiredNextAction: jest.fn().mockReturnValue('Run /paul:apply'),
+      loadPhaseState: jest.fn().mockReturnValue({
+        currentPlanId: '02',
+        completedPlans: [],
+        plans: [],
+      }),
     }
 
     mockSessionManager = {

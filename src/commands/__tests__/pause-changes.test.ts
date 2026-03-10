@@ -24,6 +24,7 @@ describe('paulPause command - change detection', () => {
   let mockStateManager: {
     getCurrentPosition: jest.Mock
     getRequiredNextAction: jest.Mock
+    loadPhaseState: jest.Mock
   }
   let mockSessionManager: {
     getCurrentSessionId: jest.Mock
@@ -41,6 +42,11 @@ describe('paulPause command - change detection', () => {
         phaseNumber: 2,
       }),
       getRequiredNextAction: jest.fn().mockReturnValue('Run /paul:apply'),
+      loadPhaseState: jest.fn().mockReturnValue({
+        currentPlanId: '02',
+        completedPlans: [],
+        plans: [],
+      }),
     }
 
     mockSessionManager = {
@@ -89,6 +95,7 @@ describe('paulPause command - change detection', () => {
       expect(result).toContain('Unsaved Changes Detected')
       expect(result).toContain('Git changes: 1 modified')
       expect(result).toContain('src/test.ts')
+      expect(result).toContain('onUnsavedChanges="commit"')
       expect(mockSessionManager.saveSession).not.toHaveBeenCalled()
     })
 
@@ -103,6 +110,7 @@ describe('paulPause command - change detection', () => {
       expect(result).toContain('Unsaved Changes Detected')
       expect(result).toContain('Modified files: 1 file(s) changed')
       expect(result).toContain('src/test.ts')
+      expect(result).toContain('onUnsavedChanges="save"')
       expect(mockSessionManager.saveSession).not.toHaveBeenCalled()
     })
 
@@ -128,10 +136,10 @@ describe('paulPause command - change detection', () => {
 
       const result = await paulPause.execute({}, toolContext)
 
-      expect(result).toContain('Commit your changes')
-      expect(result).toContain('Save specific files manually')
-      expect(result).toContain('Run `/paul:pause` again to proceed anyway')
-      expect(result).toContain('Run `/paul:status`')
+      expect(result).toContain('onUnsavedChanges="commit"')
+      expect(result).toContain('onUnsavedChanges="save"')
+      expect(result).toContain('onUnsavedChanges="discard"')
+      expect(result).toContain('onUnsavedChanges="abort"')
     })
 
     it('should handle both git and file changes simultaneously', async () => {
@@ -151,6 +159,35 @@ describe('paulPause command - change detection', () => {
 
       expect(result).toContain('Git changes: 1 modified, 1 added')
       expect(result).toContain('Modified files: 1 file(s) changed')
+    })
+
+    it('should proceed when onUnsavedChanges is provided', async () => {
+      ;(changeDetector.detectUncommittedChanges as jest.Mock).mockResolvedValue({
+        hasChanges: true,
+        files: [{ path: 'src/test.ts', status: 'modified' }],
+      })
+
+      await paulPause.execute({ onUnsavedChanges: 'save' }, toolContext)
+
+      expect(mockSessionManager.saveSession).toHaveBeenCalledWith(
+        expect.objectContaining({
+          metadata: expect.objectContaining({
+            unsavedChangesAction: 'save',
+          }),
+        })
+      )
+    })
+
+    it('should abort when onUnsavedChanges is abort', async () => {
+      ;(changeDetector.detectUncommittedChanges as jest.Mock).mockResolvedValue({
+        hasChanges: true,
+        files: [{ path: 'src/test.ts', status: 'modified' }],
+      })
+
+      const result = await paulPause.execute({ onUnsavedChanges: 'abort' }, toolContext)
+
+      expect(result).toContain('Pause Aborted')
+      expect(mockSessionManager.saveSession).not.toHaveBeenCalled()
     })
 
     it('should limit file list display to 10 files', async () => {

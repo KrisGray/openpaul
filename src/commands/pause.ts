@@ -1,4 +1,5 @@
 import { tool } from '@opencode-ai/plugin'
+import { z } from 'zod'
 import { readFileSync, readdirSync, statSync, existsSync, mkdirSync } from 'fs'
 import { join, relative } from 'path'
 import { createHash } from 'crypto'
@@ -8,6 +9,8 @@ import { atomicWrite } from '../storage/atomic-writes'
 import type { SessionState } from '../types/session'
 import { formatHeader, formatList, formatBold } from '../output/formatter'
 import { detectUncommittedChanges, detectModifiedFiles } from '../utils/change-detector'
+import { buildSessionContext } from '../utils/session-context'
+import { renderHandoffTemplate } from '../utils/handoff-template'
 
 /**
  * /paul:pause Command
@@ -21,10 +24,22 @@ import { detectUncommittedChanges, detectModifiedFiles } from '../utils/change-d
  * - Warns before overwriting recent sessions (< 24 hours)
  * - Returns formatted success message with next steps
  */
-export const paulPause = tool({
+type PauseArgs = {
+  onUnsavedChanges?: 'commit' | 'save' | 'discard' | 'abort'
+}
+
+const toolFactory = tool as unknown as (input: any) => any
+
+export const paulPause = toolFactory({
+  name: 'paul:pause',
   description: 'Pause current development session and save context',
-  args: {},
-  execute: async (_args, context) => {
+  parameters: z.object({
+    onUnsavedChanges: z
+      .enum(['commit', 'save', 'discard', 'abort'])
+      .optional()
+      .describe('How to proceed when unsaved changes are detected'),
+  }),
+  execute: async ({ onUnsavedChanges }: PauseArgs, context: { directory: string }) => {
     try {
       const stateManager = new StateManager(context.directory)
       const sessionManager = new SessionManager(context.directory)
@@ -67,17 +82,34 @@ export const paulPause = tool({
       const gitStatus = await detectUncommittedChanges(context.directory)
       const fileStatus = await detectModifiedFiles(context.directory, fileChecksums)
       
-      if (gitStatus.hasChanges || fileStatus.hasModifications) {
+      const hasUnsavedChanges = gitStatus.hasChanges || fileStatus.hasModifications
+      if (hasUnsavedChanges && !onUnsavedChanges) {
         const changeSummary = formatChangeSummary(gitStatus, fileStatus)
         return formatHeader(2, '⚠️ Unsaved Changes Detected') + '\n\n' +
           changeSummary + '\n\n' +
-          formatBold('Options:') + '\n' +
+          formatBold('Next Steps:') + '\n' +
           formatList([
-            'Commit your changes: `git add . && git commit -m "message"`',
-            'Save specific files manually before pausing',
-            'Run `/paul:pause` again to proceed anyway (changes will be noted in HANDOFF)',
-            'Run `/paul:status` to see current session info',
+            'Re-run `/openpaul:pause` with onUnsavedChanges="commit" after committing your work',
+            'Re-run `/openpaul:pause` with onUnsavedChanges="save" after saving your work',
+            'Re-run `/openpaul:pause` with onUnsavedChanges="discard" to continue without saving',
+            'Re-run `/openpaul:pause` with onUnsavedChanges="abort" to cancel pausing',
           ])
+      }
+
+      if (hasUnsavedChanges && onUnsavedChanges === 'abort') {
+        return formatHeader(2, '⏹ Pause Aborted') + '\n\n' +
+          'Pause was canceled. No session data was saved.\n\n' +
+          formatBold('Next Steps:') + '\n' +
+          formatList([
+            'Resolve your changes and re-run `/openpaul:pause` when ready',
+            'Run `/openpaul:status` to check your current position',
+          ])
+      }
+
+      const sessionContext = buildSessionContext(stateManager, position)
+      const metadata: Record<string, unknown> = {}
+      if (hasUnsavedChanges && onUnsavedChanges) {
+        metadata.unsavedChangesAction = onUnsavedChanges
       }
 
       // Capture session state
@@ -87,10 +119,10 @@ export const paulPause = tool({
         pausedAt: Date.now(),
         phase: position.phase,
         phaseNumber: position.phaseNumber,
-        currentPlanId: undefined, // Will be extracted from state metadata in future enhancement
-        workInProgress: [], // Empty for now, will be extracted in later enhancement
-        nextSteps: [stateManager.getRequiredNextAction(position.phase)],
-        metadata: {},
+        currentPlanId: sessionContext.currentPlanId,
+        workInProgress: sessionContext.workInProgress,
+        nextSteps: sessionContext.nextSteps,
+        metadata,
         fileChecksums,
       }
 
@@ -114,11 +146,16 @@ export const paulPause = tool({
 
       // Generate HANDOFF.md
       const handoffPath = join(context.directory, '.openpaul', 'HANDOFF.md')
-      const handoffContent = generateHandoffMd({
+      const handoffContent = renderHandoffTemplate({
         sessionState,
+        status: 'paused',
         projectName,
         phaseName,
-        totalPhases: 9, // Hardcoded for now, could be extracted from ROADMAP.md
+        totalPhases: 9,
+        version: getVersion(context.directory),
+        accomplished: sessionContext.accomplished,
+        workInProgress: sessionContext.workInProgress,
+        nextSteps: sessionContext.nextSteps,
       })
 
       // Write HANDOFF.md using atomic write
@@ -312,112 +349,17 @@ function formatChangeSummary(
 }
 
 /**
- * Generate HANDOFF.md content from template
+ * Get version from package.json
  */
-function generateHandoffMd(params: {
-  sessionState: SessionState
-  projectName: string
-  phaseName: string
-  totalPhases: number
-}): string {
-  const { sessionState, projectName, phaseName, totalPhases } = params
-
-  // Determine loop position markers
-  const planMark = sessionState.phase === 'PLAN' ? '●' : '○'
-  const applyMark = sessionState.phase === 'APPLY' ? '●' : sessionState.phase === 'PLAN' ? '○' : '○'
-  const unifyMark = sessionState.phase === 'UNIFY' ? '●' : sessionState.phase === 'APPLY' ? '○' : '○'
-
-  // Format current plan path
-  const currentPlanPath = sessionState.currentPlanId
-    ? `.paul/phases/${sessionState.phaseNumber}-${sessionState.currentPlanId}-PLAN.json`
-    : 'none'
-
-  // Format accomplished list (empty for now)
-  const accomplishedList = '- None (session captured before execution)'
-
-  // Format in-progress list
-  const inProgressList = sessionState.workInProgress.length > 0
-    ? sessionState.workInProgress.map(item => `- ${item}`).join('\n')
-    : '- None'
-
-  const timestamp = new Date().toISOString()
-
-  return `# PAUL Handoff
-
-**Date:** ${timestamp}
-**Session:** ${sessionState.sessionId}
-**Status:** paused
-
----
-
-## READ THIS FIRST
-
-You have no prior context. This document tells you everything.
-
-**Project:** ${projectName}
-**Core value:** Enforce the PLAN → APPLY → UNIFY loop with mandatory reconciliation
-
----
-
-## Current State
-
-**Version:** 1.0.0
-**Phase:** ${sessionState.phaseNumber} of ${totalPhases} — ${phaseName}
-**Plan:** ${sessionState.currentPlanId || 'none'} — ${sessionState.phase}
-
-**Loop Position:**
-\`\`\`
-PLAN ──▶ APPLY ──▶ UNIFY
-  ${planMark}        ${applyMark}        ${unifyMark}
-\`\`\`
-
----
-
-## What Was Done
-
-${accomplishedList}
-
----
-
-## What's In Progress
-
-${inProgressList}
-
----
-
-## What's Next
-
-**Immediate:** ${sessionState.nextSteps[0] || 'No next step'}
-
-**After that:** Continue with next plan
-
----
-
-## Key Files
-
-| File | Purpose |
-|------|---------|
-| \`.paul/STATE.md\` | Live project state |
-| \`.paul/ROADMAP.md\` | Phase overview |
-| ${currentPlanPath} | Current active plan |
-
----
-
-## Resume Instructions
-
-1. Read \`.paul/STATE.md\` for latest position
-2. Check if PLAN exists for current phase
-3. Based on loop position:
-   - \`○○○\` (fresh) → Run \`/paul:plan\`
-   - \`✓○○\` (planned) → Review plan, then \`/paul:apply\`
-   - \`✓✓○\` (applied) → Run \`/paul:unify\`
-   - \`✓✓✓\` (complete) → Ready for next phase
-
-**Or simply run:** \`/paul:resume\`
-
----
-
-*Handoff created: ${timestamp}*
-*This file is the single entry point for fresh sessions*
-`
+function getVersion(projectRoot: string): string {
+  const packagePath = join(projectRoot, 'package.json')
+  if (existsSync(packagePath)) {
+    try {
+      const pkg = JSON.parse(readFileSync(packagePath, 'utf-8'))
+      return pkg.version || '1.0.0'
+    } catch {
+      // Fall through to default
+    }
+  }
+  return '1.0.0'
 }
