@@ -1,4 +1,4 @@
-import { tool } from '@opencode-ai/plugin'
+import { tool, type ToolDefinition } from '@opencode-ai/plugin'
 import { StateManager } from '../state/state-manager'
 import { FileManager } from '../storage/file-manager'
 import { SessionManager } from '../storage/session-manager'
@@ -20,7 +20,7 @@ import { join } from 'path'
  * - Shows session info if paused
  * - Detects and warns about stale sessions
  */
-export const paulStatus = tool({
+export const paulStatus: ToolDefinition = tool({
   description: 'View current project status and loop position',
   args: {
     verbose: tool.schema.boolean().optional().describe('Show detailed status'),
@@ -56,7 +56,7 @@ export const paulStatus = tool({
       }
 
       const { phaseNumber, phase } = position
-      const nextAction = stateManager.getRequiredNextAction(phase)
+      const nextAction = normalizeNextAction(stateManager.getRequiredNextAction(phase))
       const phaseState = stateManager.loadPhaseState(phaseNumber)
 
       // Format loop visual
@@ -82,11 +82,11 @@ export const paulStatus = tool({
       if (session) {
         // Calculate hours since pause
         const hoursAgo = (Date.now() - session.pausedAt) / (1000 * 60 * 60)
-        const roundedHours = Math.round(hoursAgo * 10) / 10 // One decimal place
+        const roundedHours = Math.round(hoursAgo)
         
         // Show staleness warning if > 24 hours
         if (hoursAgo > 24) {
-          output += `⚠️ Session is ${Math.round(hoursAgo)}h old\n`
+          output += `⚠️ ${roundedHours}h old\n`
         }
         
         output += formatBold('Session ID:') + ` ${session.sessionId}\n`
@@ -96,27 +96,28 @@ export const paulStatus = tool({
       }
 
       // Show plan progress if in APPLY phase
-      if (phase === 'APPLY' && phaseState?.currentPlanId) {
-        const plan = fileManager.readPlan(phaseNumber, phaseState.currentPlanId)
-        
+      if (phase === 'APPLY') {
         output += '\n' + formatHeader(3, 'Plan Progress') + '\n'
-        
-        if (plan) {
-          const totalTasks = plan.tasks.length
-          // Get completed tasks from phase state metadata
-          const completedTasks = getCompletedTaskCount(phaseState.metadata)
-          const progress = progressBar(completedTasks, totalTasks)
-          
-          output += progress + '\n'
-          
-          // Show plan count for phase
-          if (phaseState.metadata?.totalPlans) {
-            const completedPlans = phaseState.metadata.completedPlans as number ?? 0
-            const totalPlans = phaseState.metadata.totalPlans as number
-            output += formatBold('Plans complete:') + ` ${completedPlans}/${totalPlans}\n`
+
+        if (phaseState?.currentPlanId) {
+          const plan = fileManager.readPlan(phaseNumber, phaseState.currentPlanId)
+
+          if (plan) {
+            const totalTasks = plan.tasks.length
+            const completedTasks = getCompletedTaskCount(phaseState.metadata)
+            const progress = progressBar(completedTasks, totalTasks)
+
+            output += progress + '\n'
+          } else {
+            output += 'No active plan\n'
           }
         } else {
           output += 'No active plan\n'
+        }
+
+        const planCounts = resolvePlanCounts(phaseState)
+        if (planCounts) {
+          output += formatBold('Plans complete:') + ` ${planCounts.completed}/${planCounts.total}\n`
         }
       }
 
@@ -205,4 +206,48 @@ function getCompletedTaskCount(metadata?: Record<string, unknown>): number {
                 0
 
   return typeof value === 'number' ? value : 0
+}
+
+function resolvePlanCounts(
+  phaseState: { metadata?: Record<string, unknown> } | null | undefined
+): { completed: number; total: number } | null {
+  if (!phaseState) {
+    return null
+  }
+
+  const metadata = phaseState.metadata ?? {}
+  const totalPlans = getNumberValue(metadata.totalPlans)
+  const completedPlans = getNumberValue(
+    metadata.completedPlans,
+    metadata.plansCompleted,
+    metadata.completedPlanCount
+  )
+
+  if (totalPlans !== null && completedPlans !== null) {
+    return { completed: completedPlans, total: totalPlans }
+  }
+
+  const plans = (phaseState as { plans?: unknown }).plans
+  const completedPlanIds = (phaseState as { completedPlans?: unknown }).completedPlans
+
+  if (Array.isArray(plans)) {
+    const completed = Array.isArray(completedPlanIds) ? completedPlanIds.length : 0
+    return { completed, total: plans.length }
+  }
+
+  return null
+}
+
+function getNumberValue(...values: Array<unknown>): number | null {
+  for (const value of values) {
+    if (typeof value === 'number' && Number.isFinite(value)) {
+      return value
+    }
+  }
+
+  return null
+}
+
+function normalizeNextAction(action: string): string {
+  return action.replace(/\/paul:/g, '/openpaul:')
 }

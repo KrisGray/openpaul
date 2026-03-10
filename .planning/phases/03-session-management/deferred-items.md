@@ -19,3 +19,19 @@
 
 *Created: 2026-03-06*
 *Phase: 03-session-management*
+
+---
+
+## Pre-existing Build Errors (Out of Scope)
+
+**Discovered during:** Plan 03-04 (status command enhancements)
+
+**Issue:** `npm run build` fails with TypeScript errors in unrelated command files:
+- `src/commands/apply.ts` - Tool type inference and argument type errors
+- `src/commands/help.ts` - Tool type inference error
+- `src/commands/init.ts` - Tool type inference error
+- `src/commands/progress.ts` - Tool type inference error
+
+**Status:** Not fixed - out of scope for this plan
+
+**Note:** These errors predate the current plan. Fixing them requires a dedicated TypeScript cleanup plan.
