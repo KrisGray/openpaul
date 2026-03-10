@@ -1,12 +1,17 @@
-import { tool } from '@opencode-ai/plugin'
-import { readFileSync, existsSync } from 'fs'
-import { join } from 'path'
+import { tool, type ToolContext } from '@opencode-ai/plugin'
+import { z } from 'zod'
+import { readFileSync, existsSync, readdirSync, statSync } from 'fs'
+import { join, relative, sep } from 'path'
+import { createHash } from 'crypto'
 import { SessionManager } from '../storage/session-manager'
 import { StateManager } from '../state/state-manager'
+import { FileManager } from '../storage/file-manager'
 import { formatHeader, formatBold, formatList } from '../output/formatter'
-import { formatDiff, formatStalenessWarning, type FileChange } from '../output/diff-formatter'
-import { createHash } from 'crypto'
+import { formatDiff, formatStalenessWarning, formatFileDiff, type FileChange } from '../output/diff-formatter'
+import { loadSnapshotContent } from '../utils/session-snapshots'
 import type { LoopPhase } from '../types/loop'
+import type { PhaseState } from '../types/state'
+import type { SessionState } from '../types/session'
 
 /**
  * /paul:resume Command
@@ -20,13 +25,23 @@ import type { LoopPhase } from '../types/loop'
  * - Computes file checksums and shows changes since pause
  * - Displays next action for current phase
  */
-export const paulResume = tool({
+type ResumeArgs = {
+  confirm?: boolean
+}
+
+const toolFactory = tool as unknown as (input: any) => any
+
+export const paulResume = toolFactory({
+  name: 'paul:resume',
   description: 'Resume paused development session',
-  args: {},
-  execute: async (_args, context) => {
+  parameters: z.object({
+    confirm: z.boolean().optional().describe('Confirm restoring session state'),
+  }),
+  execute: async ({ confirm }: ResumeArgs, context: ToolContext) => {
     try {
       const sessionManager = new SessionManager(context.directory)
       const stateManager = new StateManager(context.directory)
+      const fileManager = new FileManager(context.directory)
       
       // Load current session
       const session = sessionManager.loadCurrentSession()
@@ -39,6 +54,10 @@ export const paulResume = tool({
             'Run `/paul:init` to start a new session',
             'Run `/paul:progress` to check current status',
           ])
+      }
+
+      if (!confirm) {
+        return formatResumeConfirmation(session, context.directory)
       }
       
       // Validate session
@@ -53,6 +72,30 @@ export const paulResume = tool({
             'Check .openpaul/SESSIONS/ for session files',
           ])
       }
+
+      const preconditions = validateResumePreconditions(context.directory, session, stateManager, fileManager)
+      if (!preconditions.valid) {
+        return formatHeader(2, '❌ Resume Preconditions Failed') + '\n\n' +
+          formatBold('Issues:') + '\n' +
+          formatList(preconditions.errors) + '\n\n' +
+          formatHeader(3, 'What to do') + '\n' +
+          formatList([
+            'Resolve the issues above and retry `/paul:resume --confirm`',
+            'Run `/paul:status` to inspect project state',
+          ])
+      }
+
+      const restoredState: PhaseState = {
+        ...preconditions.phaseState,
+        phase: session.phase,
+        currentPlanId: session.currentPlanId,
+        lastUpdated: Date.now(),
+        metadata: {
+          ...preconditions.phaseState.metadata,
+          resumedFromSession: session.sessionId,
+        },
+      }
+      await stateManager.savePhaseState(session.phaseNumber, restoredState)
       
       // Calculate staleness
       const hoursAgo = (Date.now() - session.pausedAt) / (1000 * 60 * 60)
@@ -76,7 +119,7 @@ export const paulResume = tool({
       }
       
       // Check for file changes
-      const changes = detectFileChanges(context.directory, session.fileChecksums)
+      const changes = detectFileChanges(context.directory, session.fileChecksums, preconditions.snapshotRoot)
       
       if (changes.length > 0) {
         output += '\n' + formatDiff(changes) + '\n'
@@ -118,6 +161,150 @@ export const paulResume = tool({
   },
 })
 
+type ContextSource = {
+  label: string
+  path: string
+  status: 'found' | 'missing'
+  preview?: string
+}
+
+function formatResumeConfirmation(session: SessionState, projectRoot: string): string {
+  const sources = buildContextSources(projectRoot)
+  let output = formatHeader(2, '📋 Session Resume') + '\n\n'
+  output += formatBold('Status:') + ' Confirmation required before restoring session\n\n'
+  output += formatBold('Session ID:') + ` ${session.sessionId}\n`
+  output += formatBold('Paused:') + ` ${new Date(session.pausedAt).toISOString()}\n`
+  output += formatBold('Current Phase:') + ` ${session.phaseNumber} - ${session.phase}\n\n`
+
+  output += formatHeader(3, 'Context Sources') + '\n'
+  output += formatList(sources.map((source) => {
+    const preview = source.preview ? ` — ${source.preview}` : ''
+    return `${source.label}: ${source.status} (${source.path})${preview}`
+  }))
+  output += '\n\n' + formatBold('Next Steps:') + '\n'
+  output += formatList([
+    'Review the context sources above',
+    'Re-run `/paul:resume --confirm` to restore session state',
+  ])
+
+  return output
+}
+
+function buildContextSources(projectRoot: string): ContextSource[] {
+  const handoffPath = join(projectRoot, '.openpaul', 'HANDOFF.md')
+  const primaryStatePath = join(projectRoot, '.paul', 'STATE.md')
+  const fallbackStatePath = join(projectRoot, '.openpaul', 'STATE.md')
+  const statePath = existsSync(primaryStatePath) ? primaryStatePath : fallbackStatePath
+
+  return [
+    readContextSource('HANDOFF.md', handoffPath),
+    readContextSource('STATE.md', statePath),
+  ]
+}
+
+function readContextSource(label: string, filePath: string): ContextSource {
+  if (!existsSync(filePath)) {
+    return { label, path: filePath, status: 'missing' }
+  }
+
+  try {
+    const content = readFileSync(filePath, 'utf-8')
+    return {
+      label,
+      path: filePath,
+      status: 'found',
+      preview: buildPreview(content),
+    }
+  } catch {
+    return { label, path: filePath, status: 'missing' }
+  }
+}
+
+function buildPreview(content: string): string {
+  const lines = content
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .slice(0, 2)
+  if (lines.length === 0) {
+    return 'No preview available'
+  }
+  const preview = lines.join(' | ')
+  return preview.length > 140 ? `${preview.slice(0, 140)}...` : preview
+}
+
+function validateResumePreconditions(
+  projectRoot: string,
+  session: SessionState,
+  stateManager: StateManager,
+  fileManager: FileManager
+): { valid: boolean; errors: string[]; snapshotRoot: string; phaseState: PhaseState } {
+  const errors: string[] = []
+
+  const snapshotRoot = typeof session.metadata?.snapshotRoot === 'string'
+    ? session.metadata.snapshotRoot
+    : ''
+  if (!snapshotRoot) {
+    errors.push('Session snapshot metadata missing (metadata.snapshotRoot)')
+  } else if (!existsSync(join(projectRoot, snapshotRoot))) {
+    errors.push(`Snapshot directory missing: ${snapshotRoot}`)
+  }
+
+  const phaseState = stateManager.loadPhaseState(session.phaseNumber) as PhaseState | null
+  if (!phaseState) {
+    errors.push(`Phase state not found for phase ${session.phaseNumber}`)
+  }
+
+  const roadmapPath = resolveRoadmapPath(projectRoot)
+  if (!roadmapPath) {
+    errors.push('ROADMAP.md not found in .paul or .openpaul')
+  } else if (!phaseExistsInRoadmap(roadmapPath, session.phaseNumber)) {
+    errors.push(`Phase ${session.phaseNumber} not found in ROADMAP.md`)
+  }
+
+  if (session.currentPlanId && !fileManager.planExists(session.phaseNumber, session.currentPlanId)) {
+    errors.push(`Plan ${session.phaseNumber}-${session.currentPlanId} not found in .paul/phases`) 
+  }
+
+  return {
+    valid: errors.length === 0,
+    errors,
+    snapshotRoot,
+    phaseState: phaseState ?? ({
+      phase: session.phase,
+      phaseNumber: session.phaseNumber,
+      currentPlanId: session.currentPlanId,
+      lastUpdated: Date.now(),
+      metadata: {},
+      plans: [],
+      completedPlans: [],
+    } as PhaseState),
+  }
+}
+
+function resolveRoadmapPath(projectRoot: string): string | null {
+  const primaryPath = join(projectRoot, '.paul', 'ROADMAP.md')
+  if (existsSync(primaryPath)) {
+    return primaryPath
+  }
+  const fallbackPath = join(projectRoot, '.openpaul', 'ROADMAP.md')
+  if (existsSync(fallbackPath)) {
+    return fallbackPath
+  }
+  return null
+}
+
+function phaseExistsInRoadmap(roadmapPath: string, phaseNumber: number): boolean {
+  try {
+    const content = readFileSync(roadmapPath, 'utf-8')
+    const phaseRegex = new RegExp(`Phase\s+${phaseNumber}[:\s]`, 'i')
+    const tableRegex = new RegExp(`\|\s*${phaseNumber}\.\s`, 'i')
+    return phaseRegex.test(content) || tableRegex.test(content)
+  } catch {
+    return false
+  }
+}
+
 /**
  * Compute SHA256 checksums for tracked files
  * 
@@ -126,38 +313,23 @@ export const paulResume = tool({
  */
 function computeFileChecksums(projectRoot: string): Record<string, string> {
   const checksums: Record<string, string> = {}
-  
-  // Define tracked files/directories
-  const trackedPaths = [
-    '.openpaul',
-    'src',
-    'package.json',
-    'tsconfig.json',
-  ]
-  
-  for (const trackedPath of trackedPaths) {
-    const fullPath = join(projectRoot, trackedPath)
-    
-    if (!existsSync(fullPath)) {
-      continue
-    }
-    
-    // For now, we only checksum files, not directories
-    // A more sophisticated implementation would recursively walk directories
-    try {
-      const stat = require('fs').statSync(fullPath)
-      
-      if (stat.isFile()) {
-        const content = readFileSync(fullPath, 'utf-8')
-        const hash = createHash('sha256').update(content).digest('hex')
-        checksums[trackedPath] = hash
-      }
-    } catch (error) {
-      // Skip files that can't be read
-      continue
+  const trackedDirs = ['.openpaul', 'src']
+  const trackedFiles = ['package.json', 'tsconfig.json']
+
+  for (const dir of trackedDirs) {
+    const dirPath = join(projectRoot, dir)
+    if (existsSync(dirPath)) {
+      collectChecksums(dirPath, projectRoot, checksums)
     }
   }
-  
+
+  for (const file of trackedFiles) {
+    const filePath = join(projectRoot, file)
+    if (existsSync(filePath)) {
+      checksums[file] = computeFileChecksum(filePath)
+    }
+  }
+
   return checksums
 }
 
@@ -170,7 +342,8 @@ function computeFileChecksums(projectRoot: string): Record<string, string> {
  */
 function detectFileChanges(
   projectRoot: string,
-  savedChecksums: Record<string, string>
+  savedChecksums: Record<string, string>,
+  snapshotRoot: string
 ): FileChange[] {
   const currentChecksums = computeFileChecksums(projectRoot)
   const changes: FileChange[] = []
@@ -180,44 +353,88 @@ function detectFileChanges(
     const newChecksum = currentChecksums[filePath]
     
     if (!newChecksum) {
-      // File was deleted
+      const oldContent = loadSnapshotContent(projectRoot, snapshotRoot, filePath) ?? ''
       changes.push({
         type: 'deleted',
         filePath,
+        diff: formatFileDiff(oldContent, ''),
       })
     } else if (newChecksum !== oldChecksum) {
-      // File was modified
-      try {
-        const fullPath = join(projectRoot, filePath)
-        const content = readFileSync(fullPath, 'utf-8')
-        
-        // We don't have old content in the session state
-        // So we show a placeholder diff
-        changes.push({
-          type: 'modified',
-          filePath,
-          diff: `File modified (checksum: ${oldChecksum.substring(0, 8)}... → ${newChecksum.substring(0, 8)}...)`,
-        })
-      } catch (error) {
-        changes.push({
-          type: 'modified',
-          filePath,
-        })
-      }
+      const oldContent = loadSnapshotContent(projectRoot, snapshotRoot, filePath) ?? ''
+      const newContent = readTextFile(join(projectRoot, filePath)) ?? ''
+      changes.push({
+        type: 'modified',
+        filePath,
+        diff: formatFileDiff(oldContent, newContent),
+      })
     }
   }
   
   // Check for added files
   for (const filePath of Object.keys(currentChecksums)) {
     if (!savedChecksums[filePath]) {
+      const newContent = readTextFile(join(projectRoot, filePath)) ?? ''
       changes.push({
         type: 'added',
         filePath,
+        diff: formatFileDiff('', newContent),
       })
     }
   }
   
   return changes
+}
+
+/**
+ * Recursively collect checksums for all files in a directory
+ */
+function collectChecksums(
+  dirPath: string,
+  projectRoot: string,
+  checksums: Record<string, string>
+): void {
+  const entries = readdirSync(dirPath)
+
+  for (const entry of entries) {
+    const fullPath = join(dirPath, entry)
+    const stat = statSync(fullPath)
+
+    if (stat.isDirectory()) {
+      const relPath = relative(projectRoot, fullPath)
+      if (!isSnapshotPath(relPath)) {
+        collectChecksums(fullPath, projectRoot, checksums)
+      }
+    } else if (stat.isFile()) {
+      const relPath = relative(projectRoot, fullPath)
+      if (!isSnapshotPath(relPath)) {
+        checksums[relPath] = computeFileChecksum(fullPath)
+      }
+    }
+  }
+}
+
+function isSnapshotPath(relPath: string): boolean {
+  const parts = relPath.split(sep)
+  const openIndex = parts.indexOf('.openpaul')
+  const sessionsIndex = parts.indexOf('SESSIONS')
+  const snapshotsIndex = parts.indexOf('snapshots')
+  return openIndex !== -1 && sessionsIndex === openIndex + 1 && snapshotsIndex > sessionsIndex
+}
+
+/**
+ * Compute SHA256 checksum for a single file
+ */
+function computeFileChecksum(filePath: string): string {
+  const content = readFileSync(filePath)
+  return createHash('sha256').update(content).digest('hex')
+}
+
+function readTextFile(filePath: string): string | null {
+  try {
+    return readFileSync(filePath, 'utf-8')
+  } catch {
+    return null
+  }
 }
 
 /**
