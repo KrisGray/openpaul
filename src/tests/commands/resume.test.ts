@@ -7,11 +7,13 @@
 import { paulResume } from '../../commands/resume'
 import { StateManager } from '../../state/state-manager'
 import { SessionManager } from '../../storage/session-manager'
-import { existsSync, readFileSync } from 'fs'
+import { FileManager } from '../../storage/file-manager'
+import { existsSync, readFileSync, readdirSync, statSync } from 'fs'
 
 // Mock dependencies
 jest.mock('../../state/state-manager')
 jest.mock('../../storage/session-manager')
+jest.mock('../../storage/file-manager')
 jest.mock('fs')
 jest.mock(
   '@opencode-ai/plugin',
@@ -27,10 +29,15 @@ describe('paulResume command', () => {
 
   let mockStateManager: {
     getRequiredNextAction: jest.Mock
+    loadPhaseState: jest.Mock
+    savePhaseState: jest.Mock
   }
   let mockSessionManager: {
     loadCurrentSession: jest.Mock
     validateSessionState: jest.Mock
+  }
+  let mockFileManager: {
+    planExists: jest.Mock
   }
 
   beforeEach(() => {
@@ -38,6 +45,16 @@ describe('paulResume command', () => {
 
     mockStateManager = {
       getRequiredNextAction: jest.fn().mockReturnValue('Run /paul:apply'),
+      loadPhaseState: jest.fn().mockReturnValue({
+        phase: 'PLAN',
+        phaseNumber: 2,
+        currentPlanId: '01',
+        lastUpdated: Date.now(),
+        metadata: {},
+        plans: [],
+        completedPlans: [],
+      }),
+      savePhaseState: jest.fn().mockResolvedValue(undefined),
     }
 
     mockSessionManager = {
@@ -50,37 +67,57 @@ describe('paulResume command', () => {
         currentPlanId: '01',
         workInProgress: ['Task 1 in progress'],
         nextSteps: ['Run /paul:apply'],
-        metadata: {},
+        metadata: { snapshotRoot: '.openpaul/SESSIONS/session-123/snapshots' },
         fileChecksums: {},
       }),
       validateSessionState: jest.fn().mockReturnValue({ valid: true, errors: [] }),
     }
 
+    mockFileManager = {
+      planExists: jest.fn().mockReturnValue(true),
+    }
+
     ;(StateManager as jest.Mock).mockImplementation(() => mockStateManager)
     ;(SessionManager as jest.Mock).mockImplementation(() => mockSessionManager)
+    ;(FileManager as jest.Mock).mockImplementation(() => mockFileManager)
 
     // Mock file system operations
-    ;(existsSync as jest.Mock).mockReturnValue(true)
+    ;(existsSync as jest.Mock).mockImplementation((path: string) => {
+      if (path.includes('ROADMAP.md')) return true
+      if (path.includes('HANDOFF.md')) return true
+      if (path.includes('STATE.md')) return true
+      if (path.includes('snapshots')) return true
+      if (path.includes('state-phase-')) return true
+      if (path.includes('.paul/phases')) return true
+      if (path.includes('package.json')) return true
+      if (path.includes('tsconfig.json')) return true
+      return true
+    })
     ;(readFileSync as jest.Mock).mockImplementation((path: string) => {
+      if (path.includes('ROADMAP.md')) {
+        return '### Phase 2: Test Phase'
+      }
       return 'test content'
     })
+    ;(readdirSync as jest.Mock).mockReturnValue([])
+    ;(statSync as jest.Mock).mockReturnValue({ isFile: () => false, isDirectory: () => true })
   })
 
   describe('successful resume', () => {
     it('should load session from SessionManager.loadCurrentSession', async () => {
-      await paulResume.execute({}, toolContext)
+      await paulResume.execute({ confirm: true }, toolContext)
 
       expect(mockSessionManager.loadCurrentSession).toHaveBeenCalled()
     })
 
     it('should validate session state', async () => {
-      await paulResume.execute({}, toolContext)
+      await paulResume.execute({ confirm: true }, toolContext)
 
       expect(mockSessionManager.validateSessionState).toHaveBeenCalledWith('session-123')
     })
 
     it('should show session summary with loop position', async () => {
-      const result = await paulResume.execute({}, toolContext)
+      const result = await paulResume.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('📋 Session Resume')
       expect(result).toContain('session-123')
@@ -89,7 +126,7 @@ describe('paulResume command', () => {
     })
 
     it('should return formatted success message', async () => {
-      const result = await paulResume.execute({}, toolContext)
+      const result = await paulResume.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('Session ID')
       expect(result).toContain('Paused')
@@ -100,14 +137,14 @@ describe('paulResume command', () => {
     it('should show next action based on current phase', async () => {
       mockStateManager.getRequiredNextAction = jest.fn().mockReturnValue('Run custom action')
 
-      const result = await paulResume.execute({}, toolContext)
+      const result = await paulResume.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('Next Action')
       expect(result).toContain('Run custom action')
     })
 
     it('should format work in progress and next steps correctly', async () => {
-      const result = await paulResume.execute({}, toolContext)
+      const result = await paulResume.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('Work in Progress')
       expect(result).toContain('Task 1 in progress')
@@ -125,14 +162,24 @@ describe('paulResume command', () => {
         currentPlanId: '02',
         workInProgress: [],
         nextSteps: [],
-        metadata: { customKey: 'customValue' },
+        metadata: { customKey: 'customValue', snapshotRoot: '.openpaul/SESSIONS/session-456/snapshots' },
         fileChecksums: {},
       })
 
-      const result = await paulResume.execute({}, toolContext)
+      const result = await paulResume.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('session-456')
       expect(result).toContain('APPLY')
+    })
+  })
+
+  describe('confirmation gate', () => {
+    it('should require confirmation before restoring session', async () => {
+      const result = await paulResume.execute({}, toolContext)
+
+      expect(result).toContain('Confirmation required')
+      expect(result).toContain('Context Sources')
+      expect(result).toContain('/paul:resume --confirm')
     })
   })
 
@@ -148,11 +195,11 @@ describe('paulResume command', () => {
         phaseNumber: 2,
         workInProgress: [],
         nextSteps: [],
-        metadata: {},
+        metadata: { snapshotRoot: '.openpaul/SESSIONS/session-old/snapshots' },
         fileChecksums: {},
       })
 
-      const result = await paulResume.execute({}, toolContext)
+      const result = await paulResume.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('⚠️')
       expect(result).toContain('hours ago')
@@ -169,11 +216,11 @@ describe('paulResume command', () => {
         phaseNumber: 2,
         workInProgress: [],
         nextSteps: [],
-        metadata: {},
+        metadata: { snapshotRoot: '.openpaul/SESSIONS/session-fresh/snapshots' },
         fileChecksums: {},
       })
 
-      const result = await paulResume.execute({}, toolContext)
+      const result = await paulResume.execute({ confirm: true }, toolContext)
 
       expect(result).not.toContain('⚠️')
     })
@@ -197,7 +244,7 @@ describe('paulResume command', () => {
         errors: ['Invalid session structure', 'Missing required fields'],
       })
 
-      const result = await paulResume.execute({}, toolContext)
+      const result = await paulResume.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('❌ Session Validation Failed')
       expect(result).toContain('Errors')
@@ -210,7 +257,7 @@ describe('paulResume command', () => {
         throw new Error('Failed to read session file')
       })
 
-      const result = await paulResume.execute({}, toolContext)
+      const result = await paulResume.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('❌ Resume Failed')
       expect(result).toContain('Failed to read session file')
@@ -228,7 +275,7 @@ describe('paulResume command', () => {
         phaseNumber: 2,
         workInProgress: [],
         nextSteps: [],
-        metadata: {},
+        metadata: { snapshotRoot: '.openpaul/SESSIONS/session-changes/snapshots' },
         fileChecksums: {
           'package.json': 'old-checksum',
         },
@@ -238,14 +285,12 @@ describe('paulResume command', () => {
         return 'new content'
       })
 
-      const result = await paulResume.execute({}, toolContext)
+      const result = await paulResume.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('Changes since pause')
     })
 
     it('should show no changes when files unchanged', async () => {
-      const checksum = 'abc123'
-
       mockSessionManager.loadCurrentSession.mockReturnValue({
         sessionId: 'session-unchanged',
         createdAt: Date.now(),
@@ -254,11 +299,25 @@ describe('paulResume command', () => {
         phaseNumber: 2,
         workInProgress: [],
         nextSteps: [],
-        metadata: {},
+        metadata: { snapshotRoot: '.openpaul/SESSIONS/session-unchanged/snapshots' },
         fileChecksums: {},
       })
 
-      const result = await paulResume.execute({}, toolContext)
+      ;(existsSync as jest.Mock).mockImplementation((path: string) => {
+        if (path.includes('ROADMAP.md')) return true
+        if (path.includes('HANDOFF.md')) return true
+        if (path.includes('STATE.md')) return true
+        if (path.includes('snapshots')) return true
+        if (path.includes('state-phase-')) return true
+        if (path.includes('.paul/phases')) return true
+        if (path.endsWith('/.openpaul')) return false
+        if (path.endsWith('/src')) return false
+        if (path.includes('package.json')) return false
+        if (path.includes('tsconfig.json')) return false
+        return true
+      })
+
+      const result = await paulResume.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('No changes since pause')
     })
