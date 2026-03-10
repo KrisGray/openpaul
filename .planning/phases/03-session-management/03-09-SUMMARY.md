@@ -65,7 +65,7 @@ Each task was committed atomically:
 1. **task 1: Capture file snapshots on pause** - `7961134` (feat)
 2. **task 2: Resume reads handoff/state, confirms restore, and renders real diffs** - `0cac38b` (feat)
 
-**Plan metadata:** `TBD` (docs: complete plan)
+**Plan metadata:** `ca27653` (docs: complete plan)
 
 _Note: TDD tasks may have multiple commits (test → feat → refactor)_
 
