@@ -151,15 +151,13 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. User can perform manual acceptance testing with `/openpaul:verify` that generates test checklist from SUMMARY.md, guides through each test, and captures results in phase UAT-ISSUES.md
   2. User can fix plans based on verification issues with `/openpaul:plan-fix` that reads UAT-ISSUES.md, identifies issues requiring plan updates, and creates new or modifies existing plan
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 07-01: Implement QualityManager for verification tracking
-- [ ] 07-02: Build /openpaul:verify command
-- [ ] 07-03: Build /openpaul:plan-fix command
-- [ ] 07-04: Add verification history persistence
-- [ ] 07-05: Add infinite loop prevention in plan-fix workflow
-- [ ] 07-06: Add tests for quality verification operations
+- [ ] 07-01: Create quality types and QualityManager (Wave 1)
+- [ ] 07-02: Build /openpaul:verify command (Wave 2, QUAL-01)
+- [ ] 07-03: Build /openpaul:plan-fix command (Wave 2, QUAL-02)
+- [ ] 07-04: Add tests for quality commands (Wave 3)
 
 #### Phase 8: Configuration
 **Goal**: Users can manage project configuration, specialized flows, and codebase documentation
