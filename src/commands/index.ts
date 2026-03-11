@@ -26,3 +26,6 @@ export { paulConsiderIssues } from './consider-issues'
 // Research commands
 export { paulResearch } from './research'
 export { paulResearchPhase } from './research-phase'
+
+// Quality commands
+export { paulVerify } from './verify'
