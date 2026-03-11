@@ -16,6 +16,7 @@ import { paulHelp } from './commands/help'
 import { paulPause } from './commands/pause'
 import { paulResume } from './commands/resume'
 import { paulHandoff } from './commands/handoff'
+import { paulMilestone } from './commands/milestone'
 
 export const PaulPlugin: Plugin = async ({ project, client, directory, worktree }) => {
   // Plugin initialization
@@ -54,6 +55,7 @@ export const PaulPlugin: Plugin = async ({ project, client, directory, worktree 
       'openpaul:pause': paulPause,
       'openpaul:resume': paulResume,
       'openpaul:handoff': paulHandoff,
+      'openpaul:milestone': paulMilestone,
     }
   }
 }
