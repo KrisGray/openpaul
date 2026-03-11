@@ -12,5 +12,6 @@ export { paulApply } from './apply';
 export { paulUnify } from './unify';
 export { paulPause } from './pause';
 export { paulResume } from './resume';
-export { paulHandoff } from './handoff';
+export { paulAddPhase } from './add-phase';
+export { paulRemovePhase } from './remove-phase';
 //# sourceMappingURL=index.d.ts.map

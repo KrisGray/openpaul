@@ -48,7 +48,7 @@ export const paulStatus = tool({
                     ]);
             }
             const { phaseNumber, phase } = position;
-            const nextAction = stateManager.getRequiredNextAction(phase);
+            const nextAction = normalizeNextAction(stateManager.getRequiredNextAction(phase));
             const phaseState = stateManager.loadPhaseState(phaseNumber);
             // Format loop visual
             const loopVisual = formatLoopVisual(phase);
@@ -69,10 +69,10 @@ export const paulStatus = tool({
             if (session) {
                 // Calculate hours since pause
                 const hoursAgo = (Date.now() - session.pausedAt) / (1000 * 60 * 60);
-                const roundedHours = Math.round(hoursAgo * 10) / 10; // One decimal place
+                const roundedHours = Math.round(hoursAgo);
                 // Show staleness warning if > 24 hours
                 if (hoursAgo > 24) {
-                    output += `⚠️ Session is ${Math.round(hoursAgo)}h old\n`;
+                    output += `⚠️ ${roundedHours}h old\n`;
                 }
                 output += formatBold('Session ID:') + ` ${session.sessionId}\n`;
                 output += formatBold('Paused:') + ` ${new Date(session.pausedAt).toLocaleString()}\n`;
@@ -81,24 +81,26 @@ export const paulStatus = tool({
                 output += 'No active session\n';
             }
             // Show plan progress if in APPLY phase
-            if (phase === 'APPLY' && phaseState?.currentPlanId) {
-                const plan = fileManager.readPlan(phaseNumber, phaseState.currentPlanId);
+            if (phase === 'APPLY') {
                 output += '\n' + formatHeader(3, 'Plan Progress') + '\n';
-                if (plan) {
-                    const totalTasks = plan.tasks.length;
-                    // Get completed tasks from phase state metadata
-                    const completedTasks = getCompletedTaskCount(phaseState.metadata);
-                    const progress = progressBar(completedTasks, totalTasks);
-                    output += progress + '\n';
-                    // Show plan count for phase
-                    if (phaseState.metadata?.totalPlans) {
-                        const completedPlans = phaseState.metadata.completedPlans ?? 0;
-                        const totalPlans = phaseState.metadata.totalPlans;
-                        output += formatBold('Plans complete:') + ` ${completedPlans}/${totalPlans}\n`;
+                if (phaseState?.currentPlanId) {
+                    const plan = fileManager.readPlan(phaseNumber, phaseState.currentPlanId);
+                    if (plan) {
+                        const totalTasks = plan.tasks.length;
+                        const completedTasks = getCompletedTaskCount(phaseState.metadata);
+                        const progress = progressBar(completedTasks, totalTasks);
+                        output += progress + '\n';
+                    }
+                    else {
+                        output += 'No active plan\n';
                     }
                 }
                 else {
                     output += 'No active plan\n';
+                }
+                const planCounts = resolvePlanCounts(phaseState);
+                if (planCounts) {
+                    output += formatBold('Plans complete:') + ` ${planCounts.completed}/${planCounts.total}\n`;
                 }
             }
             // Show next action
@@ -176,5 +178,34 @@ function getCompletedTaskCount(metadata) {
         metadata.tasksCompleted ??
         0;
     return typeof value === 'number' ? value : 0;
+}
+function resolvePlanCounts(phaseState) {
+    if (!phaseState) {
+        return null;
+    }
+    const metadata = phaseState.metadata ?? {};
+    const totalPlans = getNumberValue(metadata.totalPlans);
+    const completedPlans = getNumberValue(metadata.completedPlans, metadata.plansCompleted, metadata.completedPlanCount);
+    if (totalPlans !== null && completedPlans !== null) {
+        return { completed: completedPlans, total: totalPlans };
+    }
+    const plans = phaseState.plans;
+    const completedPlanIds = phaseState.completedPlans;
+    if (Array.isArray(plans)) {
+        const completed = Array.isArray(completedPlanIds) ? completedPlanIds.length : 0;
+        return { completed, total: plans.length };
+    }
+    return null;
+}
+function getNumberValue(...values) {
+    for (const value of values) {
+        if (typeof value === 'number' && Number.isFinite(value)) {
+            return value;
+        }
+    }
+    return null;
+}
+function normalizeNextAction(action) {
+    return action.replace(/\/paul:/g, '/openpaul:');
 }
 //# sourceMappingURL=status.js.map

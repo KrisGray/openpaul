@@ -40,9 +40,19 @@ export const PaulPlugin = async ({ project, client, directory, worktree }) => {
             'paul:pause': paulPause,
             'paul:resume': paulResume,
             'paul:handoff': paulHandoff,
+            'openpaul:init': paulInit,
+            'openpaul:plan': paulPlan,
+            'openpaul:apply': paulApply,
+            'openpaul:unify': paulUnify,
+            'openpaul:progress': paulProgress,
+            'openpaul:status': paulStatus,
+            'openpaul:help': paulHelp,
+            'openpaul:pause': paulPause,
+            'openpaul:resume': paulResume,
+            'openpaul:handoff': paulHandoff,
         }
     };
 };
 // Export types for external use
-// export * from './types'  // Will be added in subsequent plans
+export * from './types';
 //# sourceMappingURL=index.js.map

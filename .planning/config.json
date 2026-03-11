@@ -3,7 +3,7 @@
   "depth": "comprehensive",
   "parallelization": false,
   "commit_docs": true,
-  "model_profile": "smart",
+  "model_profile": "balanced",
   "workflow": {
     "research": true,
     "plan_check": true,

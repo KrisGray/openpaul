@@ -8,13 +8,13 @@ export const CommandInputSchema = z.object({
         'research', 'research-phase', 'verify', 'plan-fix',
         'add-phase', 'remove-phase', 'flows', 'config',
     ]),
-    args: z.array(z.string()).optional(),
-    flags: z.record(z.string(), z.unknown()).optional(),
+    args: z.array(z.string()),
+    flags: z.record(z.string(), z.unknown()),
 });
 export const CommandResultSchema = z.object({
     success: z.boolean(),
     message: z.string(),
-    data: z.unknown().optional(),
-    nextAction: z.string().optional(),
+    data: z.unknown().nullable(),
+    nextAction: z.string().nullable(),
 });
 //# sourceMappingURL=command.js.map

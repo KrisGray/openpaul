@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>16/16</span>
+                <span class='fraction'>0/16</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>0/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>0/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>16/16</span>
+                <span class='fraction'>0/16</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -169,31 +169,31 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
  * Error Formatter
@@ -235,31 +235,31 @@ export interface GuidedErrorParams {
  *   ]
  * })
  */
-export function formatGuidedError(params: GuidedErrorParams): string {
-  const { title, message, context, suggestedFix, nextSteps } = params
+<span class="cstat-no" title="statement not covered" >export function <span class="fstat-no" title="function not covered" >f</span>ormatGuidedError(</span>params: GuidedErrorParams): string {
+  const { title, message, context, suggestedFix, nextSteps } = <span class="cstat-no" title="statement not covered" >params</span>
   
-  let output = `## ❌ ${title}\n\n`
-  output += `${message}\n\n`
+  let output = <span class="cstat-no" title="statement not covered" >`## ❌ ${title}\n\n`</span>
+<span class="cstat-no" title="statement not covered" >  output += `${message}\n\n`</span>
   
-  if (context) {
-    output += `### Context\n\n${context}\n\n`
+<span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (context) {</span>
+<span class="cstat-no" title="statement not covered" >    output += `### Context\n\n${context}\n\n`</span>
   }
   
-  output += `### Suggested Fix\n\n${suggestedFix}\n\n`
+<span class="cstat-no" title="statement not covered" >  output += `### Suggested Fix\n\n${suggestedFix}\n\n`</span>
   
-  if (nextSteps.length &gt; 0) {
-    output += `### Next Steps\n\n`
-    nextSteps.forEach((step, index) =&gt; {
-      output += `${index + 1}. ${step}\n`
+<span class="cstat-no" title="statement not covered" >  <span class="missing-if-branch" title="if path not taken" >I</span>if (nextSteps.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >    output += `### Next Steps\n\n`</span>
+<span class="cstat-no" title="statement not covered" >    nextSteps.forEach(<span class="fstat-no" title="function not covered" >(s</span>tep, index) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >      output += `${index + 1}. ${step}\n`</span>
     })
-    output += '\n'
+<span class="cstat-no" title="statement not covered" >    output += '\n'</span>
   }
   
-  output += `### Quick Help\n\n`
-  output += `- Run \`/paul:help\` for command reference\n`
-  output += `- Run \`/paul:progress\` to check current state\n`
+<span class="cstat-no" title="statement not covered" >  output += `### Quick Help\n\n`</span>
+<span class="cstat-no" title="statement not covered" >  output += `- Run \`/paul:help\` for command reference\n`</span>
+<span class="cstat-no" title="statement not covered" >  output += `- Run \`/paul:progress\` to check current state\n`</span>
   
-  return output
+<span class="cstat-no" title="statement not covered" >  return output</span>
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -268,7 +268,7 @@ export function formatGuidedError(params: GuidedErrorParams): string {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-03-06T14:00:50.343Z
+                at 2026-03-11T14:29:41.427Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

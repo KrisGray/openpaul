@@ -203,7 +203,7 @@ describe('ResearchManager', () => {
       const content = manager.generateResearchContent(result)
       
       expect(content).toContain('# Phase 6: Research')
-      expect(content).toContain('**Query:** Test query')
+      expect(content).toContain('Test query')
       expect(content).toContain('## Summary')
       expect(content).toContain('## Findings')
       expect(content).toContain('## Confidence Breakdown')

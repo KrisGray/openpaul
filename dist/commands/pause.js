@@ -1,27 +1,27 @@
 import { tool } from '@opencode-ai/plugin';
+import { z } from 'zod';
 import { readFileSync, readdirSync, statSync, existsSync, mkdirSync } from 'fs';
-import { join, relative } from 'path';
+import { join, relative, sep } from 'path';
 import { createHash } from 'crypto';
 import { StateManager } from '../state/state-manager';
 import { SessionManager } from '../storage/session-manager';
 import { atomicWrite } from '../storage/atomic-writes';
 import { formatHeader, formatList, formatBold } from '../output/formatter';
-/**
- * /paul:pause Command
- *
- * Pause current development session and save context
- *
- * From PLAN.md:
- * - Captures current loop position (phase, phaseNumber, planId)
- * - Saves session state with SessionManager
- * - Generates HANDOFF.md with session context
- * - Warns before overwriting recent sessions (< 24 hours)
- * - Returns formatted success message with next steps
- */
-export const paulPause = tool({
+import { detectUncommittedChanges, detectModifiedFiles } from '../utils/change-detector';
+import { buildSessionContext } from '../utils/session-context';
+import { renderHandoffTemplate } from '../utils/handoff-template';
+import { captureSessionSnapshots } from '../utils/session-snapshots';
+const toolFactory = tool;
+export const paulPause = toolFactory({
+    name: 'paul:pause',
     description: 'Pause current development session and save context',
-    args: {},
-    execute: async (_args, context) => {
+    parameters: z.object({
+        onUnsavedChanges: z
+            .enum(['commit', 'save', 'discard', 'abort'])
+            .optional()
+            .describe('How to proceed when unsaved changes are detected'),
+    }),
+    execute: async ({ onUnsavedChanges }, context) => {
         try {
             const stateManager = new StateManager(context.directory);
             const sessionManager = new SessionManager(context.directory);
@@ -55,17 +55,50 @@ export const paulPause = tool({
             }
             // Compute file checksums for diff generation
             const fileChecksums = computeFileChecksums(context.directory);
+            // Check for uncommitted changes
+            const gitStatus = await detectUncommittedChanges(context.directory);
+            const fileStatus = await detectModifiedFiles(context.directory, fileChecksums);
+            const hasUnsavedChanges = gitStatus.hasChanges || fileStatus.hasModifications;
+            if (hasUnsavedChanges && !onUnsavedChanges) {
+                const changeSummary = formatChangeSummary(gitStatus, fileStatus);
+                return formatHeader(2, '⚠️ Unsaved Changes Detected') + '\n\n' +
+                    changeSummary + '\n\n' +
+                    formatBold('Next Steps:') + '\n' +
+                    formatList([
+                        'Re-run `/openpaul:pause` with onUnsavedChanges="commit" after committing your work',
+                        'Re-run `/openpaul:pause` with onUnsavedChanges="save" after saving your work',
+                        'Re-run `/openpaul:pause` with onUnsavedChanges="discard" to continue without saving',
+                        'Re-run `/openpaul:pause` with onUnsavedChanges="abort" to cancel pausing',
+                    ]);
+            }
+            if (hasUnsavedChanges && onUnsavedChanges === 'abort') {
+                return formatHeader(2, '⏹ Pause Aborted') + '\n\n' +
+                    'Pause was canceled. No session data was saved.\n\n' +
+                    formatBold('Next Steps:') + '\n' +
+                    formatList([
+                        'Resolve your changes and re-run `/openpaul:pause` when ready',
+                        'Run `/openpaul:status` to check your current position',
+                    ]);
+            }
+            const sessionContext = buildSessionContext(stateManager, position);
+            const metadata = {};
+            if (hasUnsavedChanges && onUnsavedChanges) {
+                metadata.unsavedChangesAction = onUnsavedChanges;
+            }
+            const sessionId = sessionManager.generateSessionId();
+            const snapshotResult = captureSessionSnapshots(context.directory, sessionId, fileChecksums);
+            metadata.snapshotRoot = snapshotResult.snapshotRoot;
             // Capture session state
             const sessionState = {
-                sessionId: sessionManager.generateSessionId(),
+                sessionId,
                 createdAt: Date.now(),
                 pausedAt: Date.now(),
                 phase: position.phase,
                 phaseNumber: position.phaseNumber,
-                currentPlanId: undefined, // Will be extracted from state metadata in future enhancement
-                workInProgress: [], // Empty for now, will be extracted in later enhancement
-                nextSteps: [stateManager.getRequiredNextAction(position.phase)],
-                metadata: {},
+                currentPlanId: sessionContext.currentPlanId,
+                workInProgress: sessionContext.workInProgress,
+                nextSteps: sessionContext.nextSteps,
+                metadata,
                 fileChecksums,
             };
             // Save session
@@ -86,11 +119,16 @@ export const paulPause = tool({
             const phaseName = getPhaseName(context.directory, position.phaseNumber);
             // Generate HANDOFF.md
             const handoffPath = join(context.directory, '.openpaul', 'HANDOFF.md');
-            const handoffContent = generateHandoffMd({
+            const handoffContent = renderHandoffTemplate({
                 sessionState,
+                status: 'paused',
                 projectName,
                 phaseName,
-                totalPhases: 9, // Hardcoded for now, could be extracted from ROADMAP.md
+                totalPhases: 9,
+                version: getVersion(context.directory),
+                accomplished: sessionContext.accomplished,
+                workInProgress: sessionContext.workInProgress,
+                nextSteps: sessionContext.nextSteps,
             });
             // Write HANDOFF.md using atomic write
             const handoffDir = join(context.directory, '.openpaul');
@@ -160,13 +198,25 @@ function collectChecksums(dirPath, projectRoot, checksums) {
         const fullPath = join(dirPath, entry);
         const stat = statSync(fullPath);
         if (stat.isDirectory()) {
-            collectChecksums(fullPath, projectRoot, checksums);
+            const relPath = relative(projectRoot, fullPath);
+            if (!isSnapshotPath(relPath)) {
+                collectChecksums(fullPath, projectRoot, checksums);
+            }
         }
         else if (stat.isFile()) {
             const relPath = relative(projectRoot, fullPath);
-            checksums[relPath] = computeFileChecksum(fullPath);
+            if (!isSnapshotPath(relPath)) {
+                checksums[relPath] = computeFileChecksum(fullPath);
+            }
         }
     }
+}
+function isSnapshotPath(relPath) {
+    const parts = relPath.split(sep);
+    const openIndex = parts.indexOf('.openpaul');
+    const sessionsIndex = parts.indexOf('SESSIONS');
+    const snapshotsIndex = parts.indexOf('snapshots');
+    return openIndex !== -1 && sessionsIndex === openIndex + 1 && snapshotsIndex > sessionsIndex;
 }
 /**
  * Compute SHA256 checksum for a single file
@@ -218,102 +268,59 @@ function extractPhaseName(roadmapPath, phaseNumber) {
     }
 }
 /**
- * Generate HANDOFF.md content from template
+ * Format change summary for display
  */
-function generateHandoffMd(params) {
-    const { sessionState, projectName, phaseName, totalPhases } = params;
-    // Determine loop position markers
-    const planMark = sessionState.phase === 'PLAN' ? '●' : '○';
-    const applyMark = sessionState.phase === 'APPLY' ? '●' : sessionState.phase === 'PLAN' ? '○' : '○';
-    const unifyMark = sessionState.phase === 'UNIFY' ? '●' : sessionState.phase === 'APPLY' ? '○' : '○';
-    // Format current plan path
-    const currentPlanPath = sessionState.currentPlanId
-        ? `.paul/phases/${sessionState.phaseNumber}-${sessionState.currentPlanId}-PLAN.json`
-        : 'none';
-    // Format accomplished list (empty for now)
-    const accomplishedList = '- None (session captured before execution)';
-    // Format in-progress list
-    const inProgressList = sessionState.workInProgress.length > 0
-        ? sessionState.workInProgress.map(item => `- ${item}`).join('\n')
-        : '- None';
-    const timestamp = new Date().toISOString();
-    return `# PAUL Handoff
-
-**Date:** ${timestamp}
-**Session:** ${sessionState.sessionId}
-**Status:** paused
-
----
-
-## READ THIS FIRST
-
-You have no prior context. This document tells you everything.
-
-**Project:** ${projectName}
-**Core value:** Enforce the PLAN → APPLY → UNIFY loop with mandatory reconciliation
-
----
-
-## Current State
-
-**Version:** 1.0.0
-**Phase:** ${sessionState.phaseNumber} of ${totalPhases} — ${phaseName}
-**Plan:** ${sessionState.currentPlanId || 'none'} — ${sessionState.phase}
-
-**Loop Position:**
-\`\`\`
-PLAN ──▶ APPLY ──▶ UNIFY
-  ${planMark}        ${applyMark}        ${unifyMark}
-\`\`\`
-
----
-
-## What Was Done
-
-${accomplishedList}
-
----
-
-## What's In Progress
-
-${inProgressList}
-
----
-
-## What's Next
-
-**Immediate:** ${sessionState.nextSteps[0] || 'No next step'}
-
-**After that:** Continue with next plan
-
----
-
-## Key Files
-
-| File | Purpose |
-|------|---------|
-| \`.paul/STATE.md\` | Live project state |
-| \`.paul/ROADMAP.md\` | Phase overview |
-| ${currentPlanPath} | Current active plan |
-
----
-
-## Resume Instructions
-
-1. Read \`.paul/STATE.md\` for latest position
-2. Check if PLAN exists for current phase
-3. Based on loop position:
-   - \`○○○\` (fresh) → Run \`/paul:plan\`
-   - \`✓○○\` (planned) → Review plan, then \`/paul:apply\`
-   - \`✓✓○\` (applied) → Run \`/paul:unify\`
-   - \`✓✓✓\` (complete) → Ready for next phase
-
-**Or simply run:** \`/paul:resume\`
-
----
-
-*Handoff created: ${timestamp}*
-*This file is the single entry point for fresh sessions*
-`;
+function formatChangeSummary(gitStatus, fileStatus) {
+    const parts = [];
+    if (gitStatus.hasChanges) {
+        const modified = gitStatus.files.filter(f => f.status === 'modified').length;
+        const added = gitStatus.files.filter(f => f.status === 'added').length;
+        const deleted = gitStatus.files.filter(f => f.status === 'deleted').length;
+        const untracked = gitStatus.files.filter(f => f.status === 'untracked').length;
+        const counts = [];
+        if (modified > 0)
+            counts.push(`${modified} modified`);
+        if (added > 0)
+            counts.push(`${added} added`);
+        if (deleted > 0)
+            counts.push(`${deleted} deleted`);
+        if (untracked > 0)
+            counts.push(`${untracked} untracked`);
+        parts.push(`Git changes: ${counts.join(', ')}`);
+        const filesToShow = gitStatus.files.slice(0, 10);
+        filesToShow.forEach(f => {
+            parts.push(`  - ${f.path} (${f.status})`);
+        });
+        if (gitStatus.files.length > 10) {
+            parts.push(`  ... and ${gitStatus.files.length - 10} more`);
+        }
+    }
+    if (fileStatus.hasModifications) {
+        parts.push(`Modified files: ${fileStatus.files.length} file(s) changed`);
+        const filesToShow = fileStatus.files.slice(0, 10);
+        filesToShow.forEach(f => {
+            parts.push(`  - ${f.path}`);
+        });
+        if (fileStatus.files.length > 10) {
+            parts.push(`  ... and ${fileStatus.files.length - 10} more`);
+        }
+    }
+    return parts.join('\n');
+}
+/**
+ * Get version from package.json
+ */
+function getVersion(projectRoot) {
+    const packagePath = join(projectRoot, 'package.json');
+    if (existsSync(packagePath)) {
+        try {
+            const pkg = JSON.parse(readFileSync(packagePath, 'utf-8'));
+            return pkg.version || '1.0.0';
+        }
+        catch {
+            // Fall through to default
+        }
+    }
+    return '1.0.0';
 }
 //# sourceMappingURL=pause.js.map
