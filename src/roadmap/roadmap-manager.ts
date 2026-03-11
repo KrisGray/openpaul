@@ -264,6 +264,9 @@ Plans:
       mkdirSync(newPhaseDir, { recursive: true })
     }
 
+    // Update STATE.md progress tracking
+    this.updateStateProgress()
+
     return {
       number: newPhaseNumber,
       name: options.name,
@@ -295,6 +298,49 @@ Plans:
     }
 
     return null
+  }
+
+  /**
+   * Resolve the path to STATE.md file
+   * Checks both .paul/STATE.md and .openpaul/STATE.md locations.
+   * 
+   * @returns Full path to STATE.md or null if not found
+   */
+  private resolveStatePath(): string | null {
+    const primaryPath = join(this.projectRoot, '.paul', 'STATE.md')
+    if (existsSync(primaryPath)) {
+      return primaryPath
+    }
+    const fallbackPath = join(this.projectRoot, '.openpaul', 'STATE.md')
+    if (existsSync(fallbackPath)) {
+      return fallbackPath
+    }
+    return null
+  }
+
+  /**
+   * Update STATE.md progress tracking after adding a phase
+   * Increments the Total Phases count by 1.
+   */
+  private updateStateProgress(): void {
+    const statePath = this.resolveStatePath()
+    if (!statePath) {
+      // STATE.md is optional - not all projects have it
+      return
+    }
+
+    const content = readFileSync(statePath, 'utf-8')
+    
+    // Find and update "Total Phases: N" pattern
+    const totalPhasesRegex = /(\*\*Total Phases:\*\*\s*)(\d+)/
+    const match = content.match(totalPhasesRegex)
+    
+    if (match) {
+      const currentCount = parseInt(match[2], 10)
+      const newCount = currentCount + 1
+      const updatedContent = content.replace(totalPhasesRegex, `$1${newCount}`)
+      writeFileSync(statePath, updatedContent, 'utf-8')
+    }
   }
 
   /**
