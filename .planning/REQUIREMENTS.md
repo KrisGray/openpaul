@@ -21,9 +21,9 @@ Requirements for full command implementation. Each maps to roadmap phases.
 
 ### Milestone Management
 
-- [ ] **MILE-01**: User can create new milestone with `/openpaul:milestone` that defines milestone with scope, phases, theme, creates milestone section in ROADMAP.md
-- [ ] **MILE-02**: User can mark milestone complete with `/openpaul:complete-milestone` that archives milestone to MILESTONE-ARCHIVE.md, updates ROADMAP.md progress
-- [ ] **MILE-03**: User can plan upcoming milestone with `/openpaul:discuss-milestone` that creates MILESTONE-CONTEXT.md with features, scope, phase mapping, constraints
+- [x] **MILE-01**: User can create new milestone with `/openpaul:milestone` that defines milestone with scope, phases, theme, creates milestone section in ROADMAP.md
+- [x] **MILE-02**: User can mark milestone complete with `/openpaul:complete-milestone` that archives milestone to MILESTONE-ARCHIVE.md, updates ROADMAP.md progress
+- [x] **MILE-03**: User can plan upcoming milestone with `/openpaul:discuss-milestone` that creates MILESTONE-CONTEXT.md with features, scope, phase mapping, constraints
 
 ### Pre-Planning
 
@@ -83,9 +83,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SESS-04 | Phase 3 | Complete |
 | ROAD-01 | Phase 4 | Complete |
 | ROAD-02 | Phase 4 | Complete |
-| MILE-01 | Phase 5 | Pending |
-| MILE-02 | Phase 5 | Pending |
-| MILE-03 | Phase 5 | Pending |
+| MILE-01 | Phase 5 | Complete |
+| MILE-02 | Phase 5 | Complete |
+| MILE-03 | Phase 5 | Complete |
 | PLAN-01 | Phase 6 | Pending |
 | PLAN-02 | Phase 6 | Pending |
 | PLAN-03 | Phase 6 | Pending |
