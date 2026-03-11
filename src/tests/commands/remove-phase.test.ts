@@ -7,7 +7,7 @@
 import { existsSync } from 'fs'
 import { RoadmapManager } from '../../roadmap/roadmap-manager'
 import { paulRemovePhase } from '../../commands/remove-phase'
-import { formatHeader, from '../../output/formatter'
+import { formatHeader, formatBold, formatList } from '../../output/formatter'
 import type { RoadmapValidationResult, RemovePhaseResult, PhaseEntry } from '../../types/roadmap'
 
 import { PhaseEntrySchema } from '../../types/roadmap'
@@ -55,6 +55,8 @@ describe('Remove Phase Command', () => {
 
     ;(RoadmapManager as jest.Mock).mockImplementation(() => mockRoadmapManager)
     ;(existsSync as jest.Mock).mockReturnValue(true)
+  })
+
   const mockPhaseEntry: PhaseEntry = {
     number: 3,
     name: 'Phase to Remove',
