@@ -107,14 +107,14 @@ Plans:
   1. User can create new milestone with `/openpaul:milestone` that defines milestone with scope, phases, and theme, and creates milestone section in ROADMAP.md
   2. User can mark milestone complete with `/openpaul:complete-milestone` that archives milestone to MILESTONE-ARCHIVE.md and updates ROADMAP.md progress tracking
   3. User can plan upcoming milestone with `/openpaul:discuss-milestone` that creates MILESTONE-CONTEXT.md with features, scope, phase mapping, and constraints
-**Plans**: TBD
+**Plans**: 5 plans
 
 Plans:
 - [ ] 05-01: Implement MilestoneManager for milestone lifecycle
-- [ ] 05-02: Build /openpaul:milestone command
-- [ ] 05-03: Build /openpaul:complete-milestone command
-- [ ] 05-04: Build /openpaul:discuss-milestone command
-- [ ] 05-05: Add tests for milestone management operations
+- [ ] 05-02: Build /openpaul:milestone command (create new milestones)
+- [ ] 05-03: Build /openpaul:complete-milestone command (archive completed)
+- [ ] 05-04: Build /openpaul:discuss-milestone command (plan upcoming)
+- [ ] 05-05: Add integration tests for milestone management operations
 
 #### Phase 6: Pre-Planning + Research
 **Goal**: Users can conduct phase planning and research to improve plan quality
