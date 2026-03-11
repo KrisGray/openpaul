@@ -19,6 +19,12 @@ import { paulHandoff } from './commands/handoff'
 import { paulMilestone } from './commands/milestone'
 import { paulCompleteMilestone } from './commands/complete-milestone'
 import { paulDiscussMilestone } from './commands/discuss-milestone'
+import { paulDiscuss } from './commands/discuss'
+import { paulAssumptions } from './commands/assumptions'
+import { paulDiscover } from './commands/discover'
+import { paulConsiderIssues } from './commands/consider-issues'
+import { paulResearch } from './commands/research'
+import { paulResearchPhase } from './commands/research-phase'
 
 export const PaulPlugin: Plugin = async ({ project, client, directory, worktree }) => {
   // Plugin initialization
@@ -60,6 +66,18 @@ export const PaulPlugin: Plugin = async ({ project, client, directory, worktree 
       'openpaul:milestone': paulMilestone,
       'openpaul:complete-milestone': paulCompleteMilestone,
       'openpaul:discuss-milestone': paulDiscussMilestone,
+      'openpaul:discuss': paulDiscuss,
+      'paul:discuss': paulDiscuss,
+      'openpaul:assumptions': paulAssumptions,
+      'paul:assumptions': paulAssumptions,
+      'openpaul:discover': paulDiscover,
+      'paul:discover': paulDiscover,
+      'openpaul:consider-issues': paulConsiderIssues,
+      'paul:consider-issues': paulConsiderIssues,
+      'openpaul:research': paulResearch,
+      'paul:research': paulResearch,
+      'openpaul:research-phase': paulResearchPhase,
+      'paul:research-phase': paulResearchPhase,
     }
   }
 }
