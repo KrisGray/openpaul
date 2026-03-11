@@ -167,16 +167,15 @@ Plans:
   1. User can manage project configuration with `/openpaul:config` that manages integrations (SonarQube), project settings, and preferences via YAML config in .openpaul/config.md
   2. User can configure specialized flows with `/openpaul:flows` that enables/disables specialized workflows defined in SPECIAL-FLOWS.md
   3. User can document codebase structure with `/openpaul:map-codebase` that creates CODEBASE.md with structure, stack, conventions, concerns, integrations, and architecture
-**Plans**: TBD
+**Plans**: 6 plans in 2 waves
 
 Plans:
-- [ ] 08-01: Implement ConfigManager for configuration management
-- [ ] 08-02: Build /openpaul:config command
-- [ ] 08-03: Build /openpaul:flows command
-- [ ] 08-04: Build /openpaul:map-codebase command
-- [ ] 08-05: Add configuration precedence resolution logic
-- [ ] 08-06: Add incremental mapping for large codebases
-- [ ] 08-07: Add tests for configuration operations
+- [ ] 08-01-PLAN.md — ConfigManager + /openpaul:config command (CONF-01)
+- [ ] 08-02-PLAN.md — FlowsManager + /openpaul:flows command (CONF-02)
+- [ ] 08-03-PLAN.md — /openpaul:map-codebase command (CONF-03)
+- [ ] 08-04-PLAN.md — Config precedence and validation (CONF-01)
+- [ ] 08-05-PLAN.md — Incremental mapping for large codebases (CONF-03)
+- [ ] 08-06-PLAN.md — Tests for config, flows, map-codebase commands
 
 #### Phase 9: Documentation
 **Goal**: All OpenPAUL documentation uses consistent "OpenPAUL" branding
