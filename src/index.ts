@@ -27,6 +27,7 @@ import { paulResearch } from './commands/research'
 import { paulResearchPhase } from './commands/research-phase'
 import { paulConfig } from './commands/config'
 import { paulFlows } from './commands/flows'
+import { paulMapCodebase } from './commands/map-codebase'
 
 export const PaulPlugin: Plugin = async ({ project, client, directory, worktree }) => {
   // Plugin initialization
@@ -83,6 +84,8 @@ export const PaulPlugin: Plugin = async ({ project, client, directory, worktree 
       'paul:config': paulConfig,
       'openpaul:flows': paulFlows,
       'paul:flows': paulFlows,
+      'openpaul:map-codebase': paulMapCodebase,
+      'paul:map-codebase': paulMapCodebase,
       'paul:research-phase': paulResearchPhase,
     }
   }
