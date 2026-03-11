@@ -16,8 +16,8 @@ Requirements for full command implementation. Each maps to roadmap phases.
 
 ### Roadmap Management
 
-- [ ] **ROAD-01**: User can add phase to roadmap with `/openpaul:add-phase` that adds phase to ROADMAP.md table, creates phase directory, updates STATE.md
-- [ ] **ROAD-02**: User can remove phase from roadmap with `/openpaul:remove-phase` that removes phase, renumbers subsequent phases, cleans up phase directory
+- [x] **ROAD-01**: User can add phase to roadmap with `/openpaul:add-phase` that adds phase to ROADMAP.md table, creates phase directory, updates STATE.md
+- [x] **ROAD-02**: User can remove phase from roadmap with `/openpaul:remove-phase` that removes phase, renumbers subsequent phases, cleans up phase directory
 
 ### Milestone Management
 
@@ -81,8 +81,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SESS-02 | Phase 3 | Complete |
 | SESS-03 | Phase 3 | Complete |
 | SESS-04 | Phase 3 | Complete |
-| ROAD-01 | Phase 4 | Pending |
-| ROAD-02 | Phase 4 | Pending |
+| ROAD-01 | Phase 4 | Complete |
+| ROAD-02 | Phase 4 | Complete |
 | MILE-01 | Phase 5 | Pending |
 | MILE-02 | Phase 5 | Pending |
 | MILE-03 | Phase 5 | Pending |

@@ -85,6 +85,7 @@ Recent decisions affecting current work:
 - [Phase 03]: Normalize next-action text to openpaul command prefix for status output consistency
 - [Phase 03-session-management]: Require explicit --confirm before restoring session state after showing context sources
 - [Phase 03-session-management]: Persist snapshot root in session metadata for resume diff rendering
+- [Phase 04-roadmap-management]: Added STATE.md progress tracking to addPhase() following existing resolveRoadmapPath pattern — Ensures STATE.md reflects phase additions
 
 ### Pending Todos
 
@@ -102,8 +103,8 @@ yet.
 
 ## Session Continuity
 
-**Last session:** 2026-03-10T17:19:13.140Z
-**Stopped at:** Completed 04-04-PLAN 04
+**Last session:** 2026-03-11T13:05:51.060Z
+**Stopped at:** Completed 04-05-PLAN.md
 **Resume file:** None
 
 ---
