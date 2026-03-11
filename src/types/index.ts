@@ -30,3 +30,6 @@ export * from './model-config'
 
 // OpenCode plugin types
 export type { Plugin } from '@opencode-ai/plugin'
+
+// Milestone types
+export * from './milestone'
