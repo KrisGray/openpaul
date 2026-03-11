@@ -128,21 +128,21 @@ Plans:
   5. User can research user-specified topics with `/openpaul:research` that executes research with proper verification and returns findings with confidence levels
   6. User can auto-detect and research phase unknowns with `/openpaul:research-phase` that analyzes phase description, identifies unknowns, and spawns parallel research agents
   7. User can use commands with "openpaul" prefix in all command names (BRND-02)
-**Plans**: TBD
+**Plans**: 12 plans in 4 waves
 
 Plans:
-- [ ] 06-01: Implement PrePlanningManager for pre-planning artifacts
-- [ ] 06-02: Implement ResearchManager for research coordination
-- [ ] 06-03: Build /openpaul:discuss command
-- [ ] 06-04: Build /openpaul:assumptions command
-- [ ] 06-05: Build /openpaul:discover command
-- [ ] 06-06: Build /openpaul:consider-issues command
-- [ ] 06-07: Build /openpaul:research command
-- [ ] 06-08: Build /openpaul:research-phase command
-- [ ] 06-09: Add parallel subagent spawning with OpenCode Task tool
-- [ ] 06-10: Add artifact cleanup strategy for completed phases
-- [ ] 06-11: Add tests for pre-planning and research operations
-- [ ] 06-12: Update command names and paths to use "openpaul" prefix
+- [ ] 06-01: Create PrePlanningManager and types (Wave 1, PLAN-01/02/04)
+- [ ] 06-02: Create ResearchManager and types (Wave 1, RSCH-01/02)
+- [ ] 06-03: Build /openpaul:discuss command (Wave 2, PLAN-01, BRND-02)
+- [ ] 06-04: Build /openpaul:assumptions command (Wave 2, PLAN-02, BRND-02)
+- [ ] 06-05: Build /openpaul:discover command with depth modes (Wave 2, PLAN-03, BRND-02)
+- [ ] 06-06: Build /openpaul:consider-issues command (Wave 2, PLAN-04, BRND-02)
+- [ ] 06-07: Build /openpaul:research command (Wave 2, RSCH-01, BRND-02)
+- [ ] 06-08: Build /openpaul:research-phase with parallel agents (Wave 2, RSCH-02, BRND-02)
+- [ ] 06-09: PrePlanningManager tests (Wave 3)
+- [ ] 06-10: ResearchManager tests (Wave 3)
+- [ ] 06-11: Pre-planning command tests (Wave 3)
+- [ ] 06-12: Research command tests + BRND-02 verification (Wave 4)
 
 #### Phase 7: Quality
 **Goal**: Users can verify plans and fix issues to close loops properly
@@ -213,7 +213,7 @@ Phases execute in numeric order: 3 → 4 → 5 → 6 → 7 → 8 → 9
 | 3. Session Management | v1.1 | 0/12 | Not started | - |
 | 4. Roadmap Management | v1.1 | 0/4 | Not started | - |
 | 5. Milestone Management | v1.1 | 0/5 | Not started | - |
-| 6. Pre-Planning + Research | v1.1 | 0/12 | Not started | - |
+| 6. Pre-Planning + Research | v1.1 | 0/12 | Ready to execute | - |
 | 7. Quality | v1.1 | 0/6 | Not started | - |
 | 8. Configuration | v1.1 | 0/7 | Not started | - |
 | 9. Documentation | v1.1 | 0/4 | Not started | - |
