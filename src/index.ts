@@ -25,6 +25,7 @@ import { paulDiscover } from './commands/discover'
 import { paulConsiderIssues } from './commands/consider-issues'
 import { paulResearch } from './commands/research'
 import { paulResearchPhase } from './commands/research-phase'
+import { paulConfig } from './commands/config'
 
 export const PaulPlugin: Plugin = async ({ project, client, directory, worktree }) => {
   // Plugin initialization
@@ -77,6 +78,8 @@ export const PaulPlugin: Plugin = async ({ project, client, directory, worktree 
       'openpaul:research': paulResearch,
       'paul:research': paulResearch,
       'openpaul:research-phase': paulResearchPhase,
+      'openpaul:config': paulConfig,
+      'paul:config': paulConfig,
       'paul:research-phase': paulResearchPhase,
     }
   }
