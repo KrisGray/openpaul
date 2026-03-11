@@ -39,8 +39,8 @@ Requirements for full command implementation. Each maps to roadmap phases.
 
 ### Quality
 
-- [ ] **QUAL-01**: User can perform manual acceptance testing with `/openpaul:verify` that generates test checklist from SUMMARY.md, guides through each test, captures results in phase UAT-ISSUES.md
-- [ ] **QUAL-02**: User can fix plans based on verification issues with `/openpaul:plan-fix` that reads UAT-ISSUES.md, identifies issues requiring plan updates, creates new or modifies existing plan
+- [x] **QUAL-01**: User can perform manual acceptance testing with `/openpaul:verify` that generates test checklist from SUMMARY.md, guides through each test, captures results in phase UAT-ISSUES.md
+- [x] **QUAL-02**: User can fix plans based on verification issues with `/openpaul:plan-fix` that reads UAT-ISSUES.md, identifies issues requiring plan updates, creates new or modifies existing plan
 
 ### Configuration
 
@@ -92,8 +92,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PLAN-04 | Phase 6 | Pending |
 | RSCH-01 | Phase 6 | Pending |
 | RSCH-02 | Phase 6 | Pending |
-| QUAL-01 | Phase 7 | Pending |
-| QUAL-02 | Phase 7 | Pending |
+| QUAL-01 | Phase 7 | Complete |
+| QUAL-02 | Phase 7 | Complete |
 | CONF-01 | Phase 8 | Pending |
 | CONF-02 | Phase 8 | Pending |
 | CONF-03 | Phase 8 | Pending |
