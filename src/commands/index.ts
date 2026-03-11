@@ -29,3 +29,4 @@ export { paulResearchPhase } from './research-phase'
 
 // Quality commands
 export { paulVerify } from './verify'
+export { paulPlanFix } from './plan-fix'
