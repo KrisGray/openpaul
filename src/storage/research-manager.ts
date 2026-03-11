@@ -277,7 +277,9 @@ export class ResearchManager {
 
   generateResearchPhaseContent(
     phaseNumber: number,
-    result: ResearchPhaseResult
+    result: ResearchPhaseResult,
+    findings: ResearchFinding[],
+    themes: string[]
   ): string {
     const lines: string[] = [
       `# Phase ${phaseNumber}: Phase Research`,
@@ -362,14 +364,16 @@ export class ResearchManager {
 
   async writeResearchPhaseResult(
     phaseNumber: number,
-    result: ResearchPhaseResult
+    result: ResearchPhaseResult,
+    findings: ResearchFinding[],
+    themes: string[]
   ): Promise<string> {
     const phaseDir = this.resolvePhaseDir(phaseNumber)
     if (!phaseDir) {
       throw new Error(`Phase ${phaseNumber} directory not found`)
     }
 
-    const content = this.generateResearchPhaseContent(phaseNumber, result)
+    const content = this.generateResearchPhaseContent(phaseNumber, result, findings, themes)
     const researchPath = join(phaseDir, 'RESEARCH.md')
     await atomicWrite(researchPath, content)
     return researchPath

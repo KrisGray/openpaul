@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>6/6</span>
+                <span class='fraction'>0/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>1/2</span>
+                <span class='fraction'>0/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>0/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>6/6</span>
+                <span class='fraction'>0/6</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -96,7 +96,7 @@
 <a name='L31'></a><a href='#L31'>31</a>
 <a name='L32'></a><a href='#L32'>32</a>
 <a name='L33'></a><a href='#L33'>33</a>
-<a name='L34'></a><a href='#L34'>34</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">22x</span>
+<a name='L34'></a><a href='#L34'>34</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -110,13 +110,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -125,11 +125,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">22x</span>
-<span class="cline-any cline-yes">22x</span>
-<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { z } from 'zod'
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import { z } from 'zod'</span>
 &nbsp;
 /**
  * Loop Phase - The three stages of the PAUL loop
@@ -143,13 +143,13 @@ export type LoopPhase = 'PLAN' | 'APPLY' | 'UNIFY'
 /**
  * Zod schema for LoopPhase validation
  */
-export const LoopPhaseSchema = z.enum(['PLAN', 'APPLY', 'UNIFY'])
+export const <span class="cstat-no" title="statement not covered" >LoopPhaseSchema = z.enum(['PLAN', 'APPLY', 'UNIFY'])</span>
 &nbsp;
 /**
  * Valid state transitions for the loop
  * Enforces: PLAN → APPLY → UNIFY → PLAN
  */
-export const VALID_TRANSITIONS: Record&lt;LoopPhase, LoopPhase[]&gt; = {
+export const <span class="cstat-no" title="statement not covered" >VALID_TRANSITIONS: Record&lt;LoopPhase, LoopPhase[]&gt; = {</span>
   PLAN: ['APPLY'],
   APPLY: ['UNIFY'],
   UNIFY: ['PLAN'],
@@ -158,9 +158,9 @@ export const VALID_TRANSITIONS: Record&lt;LoopPhase, LoopPhase[]&gt; = {
 /**
  * Check if a transition from one phase to another is valid
  */
-export function isValidTransition(from: LoopPhase, to: LoopPhase): boolean {
-  const allowed = VALID_TRANSITIONS[from]
-  return allowed?.includes(to) ?? <span class="branch-1 cbranch-no" title="branch not covered" >false</span>
+<span class="cstat-no" title="statement not covered" >export function <span class="fstat-no" title="function not covered" >i</span>sValidTransition(</span>from: LoopPhase, to: LoopPhase): boolean {
+  const allowed = <span class="cstat-no" title="statement not covered" >VALID_TRANSITIONS[from]</span>
+<span class="cstat-no" title="statement not covered" >  return allowed?.includes(to) ?? false</span>
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -169,7 +169,7 @@ export function isValidTransition(from: LoopPhase, to: LoopPhase): boolean {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-03-06T14:00:50.369Z
+                at 2026-03-11T14:29:41.453Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

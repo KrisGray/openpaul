@@ -149,21 +149,15 @@ export const paulMilestone = toolFactory({
 
       if (invalidPhases.length > 0) {
         const validPhaseItems = existingPhases.map(p => `Phase ${p.number}: ${p.name}`)
-        const errorLines = [
-          formatHeader(2, '❌ Invalid Phase Numbers'),
-          '',
-          `The following phase numbers do not exist: ${invalidPhases.join(', ')}`,
-          '',
-          formatBold('Valid phases:'),
-          ...formatList(validPhaseItems),
-          '',
-          formatBold('Usage:'),
-          ...formatList([
+        return formatHeader(2, '❌ Invalid Phase Numbers') + '\n\n' +
+          `The following phase numbers do not exist: ${invalidPhases.join(', ')}` + '\n\n' +
+          formatBold('Valid phases:') + '\n' +
+          formatList(validPhaseItems) + '\n\n' +
+          formatBold('Usage:') + '\n' +
+          formatList([
             'Use phase numbers that exist in ROADMAP.md',
             'Example: --phases "3,4,5,6"',
-          ]),
-        ]
-        return errorLines.join('\n')
+          ])
       }
 
       // Create the milestone

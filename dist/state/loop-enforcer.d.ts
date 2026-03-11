@@ -28,7 +28,7 @@ export declare class LoopEnforcer {
      *
      * From CONTEXT.md: Force PLAN as entry point, users must always start with PLAN
      */
-    canStartNewLoop(currentPhase: LoopPhase): boolean;
+    canStartNewLoop(currentPhase: LoopPhase | undefined): boolean;
     /**
      * Enforce that we can start a new loop - throws error if not
      */

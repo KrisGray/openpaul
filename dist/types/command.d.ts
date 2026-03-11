@@ -18,21 +18,21 @@ export type CommandType = 'init' | 'plan' | 'apply' | 'unify' | 'progress' | 'he
  */
 export interface CommandInput {
     type: CommandType;
-    args?: string[];
-    flags?: Record<string, unknown>;
+    args: string[];
+    flags: Record<string, unknown>;
 }
 export declare const CommandInputSchema: z.ZodObject<{
     type: z.ZodEnum<["init", "plan", "apply", "unify", "progress", "help", "pause", "resume", "handoff", "status", "milestone", "complete-milestone", "discuss-milestone", "map-codebase", "discuss", "assumptions", "discover", "consider-issues", "research", "research-phase", "verify", "plan-fix", "add-phase", "remove-phase", "flows", "config"]>;
-    args: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
-    flags: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodUnknown>>;
+    args: z.ZodArray<z.ZodString, "many">;
+    flags: z.ZodRecord<z.ZodString, z.ZodUnknown>;
 }, "strip", z.ZodTypeAny, {
     type: "status" | "verify" | "plan" | "init" | "apply" | "unify" | "progress" | "help" | "pause" | "resume" | "handoff" | "milestone" | "complete-milestone" | "discuss-milestone" | "map-codebase" | "discuss" | "assumptions" | "discover" | "consider-issues" | "research" | "research-phase" | "plan-fix" | "add-phase" | "remove-phase" | "flows" | "config";
-    args?: string[] | undefined;
-    flags?: Record<string, unknown> | undefined;
+    args: string[];
+    flags: Record<string, unknown>;
 }, {
     type: "status" | "verify" | "plan" | "init" | "apply" | "unify" | "progress" | "help" | "pause" | "resume" | "handoff" | "milestone" | "complete-milestone" | "discuss-milestone" | "map-codebase" | "discuss" | "assumptions" | "discover" | "consider-issues" | "research" | "research-phase" | "plan-fix" | "add-phase" | "remove-phase" | "flows" | "config";
-    args?: string[] | undefined;
-    flags?: Record<string, unknown> | undefined;
+    args: string[];
+    flags: Record<string, unknown>;
 }>;
 /**
  * Command Result - Result of executing a command
@@ -40,24 +40,24 @@ export declare const CommandInputSchema: z.ZodObject<{
 export interface CommandResult {
     success: boolean;
     message: string;
-    data?: unknown;
-    nextAction?: string;
+    data: unknown | null;
+    nextAction: string | null;
 }
 export declare const CommandResultSchema: z.ZodObject<{
     success: z.ZodBoolean;
     message: z.ZodString;
-    data: z.ZodOptional<z.ZodUnknown>;
-    nextAction: z.ZodOptional<z.ZodString>;
+    data: z.ZodNullable<z.ZodUnknown>;
+    nextAction: z.ZodNullable<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
     message: string;
     success: boolean;
+    nextAction: string | null;
     data?: unknown;
-    nextAction?: string | undefined;
 }, {
     message: string;
     success: boolean;
+    nextAction: string | null;
     data?: unknown;
-    nextAction?: string | undefined;
 }>;
 /**
  * Command Handler - Function that handles a command
