@@ -1,155 +1,79 @@
-# Project Config Template
-
-Template for `.openpaul/config.md` - project-specific configuration and integrations.
-
-**Purpose:** Store project settings and optional integration flags. Allows OpenPAUL to adapt behavior based on available tools.
-
 ---
-
-## File Template
-
-```markdown
-# Project Config
-
-**Project:** [project-name]
-**Created:** [YYYY-MM-DD]
-
-## Project Settings
-
-```yaml
 project:
-  name: [project-name]
-  version: [current-version or "0.0.0"]
-```
+  name: example-project
+  description: OpenPAUL-managed project
+integrations:
+  sonarqube:
+    enabled: false
+    url: https://sonarqube.example.com
+    projectKey: example-project
+    branch: main
+preferences:
+  autoAdvance: false
+  parallelization: false
+  verbose: false
+---
+# OpenPAUL Configuration
+
+This file stores configuration in YAML frontmatter. Notes below are preserved
+when OpenPAUL updates the config values.
+
+## Project
+
+Use this section to identify the project in OpenPAUL output.
+
+- `project.name` is required
+- `project.description` is optional
 
 ## Integrations
 
-Optional integrations that enhance OpenPAUL functionality.
+Enable optional integrations used by configuration-aware commands.
 
 ### SonarQube
 
-Code quality scanning and static analysis.
+Fields for SonarQube integration:
 
-```yaml
-sonarqube:
-  enabled: false
-  project_key: [project-key]  # Must match sonar-project.properties
-  server_url: http://localhost:9000  # Optional, for reference
-```
-
-**When enabled:**
-- `/openpaul:quality-gate` runs scans and updates CONCERNS.md
-- Quality metrics inform planning decisions
-- Issues feed into tech debt tracking
-
-**Requirements:**
-- SonarQube server running (local or cloud)
-- `sonar-project.properties` in project root
-- SonarQube MCP server configured
-
-### Future Integrations
-
-Reserved for future use:
-
-```yaml
-# linting:
-#   enabled: false
-#   config_file: .eslintrc
-
-# testing:
-#   enabled: false
-#   coverage_threshold: 80
-```
+- `enabled`: true when SonarQube is available
+- `url`: server URL (cloud or local)
+- `projectKey`: project identifier in SonarQube
+- `branch`: default branch for scans
 
 ## Preferences
 
-Optional user preferences for OpenPAUL behavior.
+Toggle optional CLI behavior for OpenPAUL.
 
-```yaml
-preferences:
-  auto_commit: false          # Auto-commit after successful tasks
-  verbose_output: false       # Show detailed step output
-  parallel_agents: false      # Allow parallel agent spawning (advanced)
-```
+- `autoAdvance`: allow auto-approval of checkpoints
+- `parallelization`: allow parallel agents when supported
+- `verbose`: show detailed output
 
----
+## Notes
 
-*Config created: [timestamp]*
-*Edit anytime - changes take effect on next command*
-```
-
----
-
-## Good Example
-
-```markdown
-# Project Config
-
-**Project:** expense-tracker
-**Created:** 2026-01-28
-
-## Project Settings
-
-```yaml
-project:
-  name: expense-tracker
-  version: 0.2.0
-```
-
-## Integrations
-
-### SonarQube
-
-```yaml
-sonarqube:
-  enabled: true
-  project_key: expense-tracker
-  server_url: http://localhost:9000
-```
-
-### Future Integrations
-
-```yaml
-# linting:
-#   enabled: false
-```
-
-## Preferences
-
-```yaml
-preferences:
-  auto_commit: false
-  verbose_output: false
-  parallel_agents: false
-```
-
----
-
-*Config created: 2026-01-28*
-```
-
----
+Only the YAML frontmatter above is parsed as configuration. The markdown
+body stays intact after edits and can be used for documentation, links,
+or team-specific guidance.
 
 ## Guidelines
 
-**What belongs in config.md:**
-- Project identification (name, version)
-- Integration toggles (enabled/disabled flags)
-- Integration-specific settings (project keys, URLs)
-- User preferences for OpenPAUL behavior
+- Keep keys limited to: project, integrations, preferences
+- Avoid secrets in this file; use environment variables instead
+- Review changes with `/openpaul:config action=list`
 
-**What does NOT belong here:**
-- Sensitive credentials (use environment variables)
-- Build configuration (use native config files)
-- Project requirements (that's PROJECT.md)
-- Roadmap information (that's ROADMAP.md)
+## Example Updates
 
-**When to create config.md:**
-- During `/openpaul:init` if user enables integrations
-- Manually when adding integrations later
-- Not required for basic OpenPAUL usage
+Typical edits are safe to make directly in the frontmatter:
 
-**Git behavior:**
-- Can be committed (no secrets)
-- Or gitignored if preferences are personal
-- Recommend: commit integration flags, gitignore preferences
+- Update `project.name` when the repo name changes
+- Set `sonarqube.enabled` to true after integration is ready
+- Set `preferences.verbose` to true while troubleshooting
+
+## Troubleshooting
+
+If OpenPAUL reports an unknown key:
+
+- Check for typos in frontmatter keys
+- Verify indentation is two spaces
+- Ensure only top-level keys are used
+
+---
+
+Managed by `/openpaul:config`
