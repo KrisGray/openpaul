@@ -1,5 +1,5 @@
-import { readdirSync, statSync, existsSync } from 'fs'
-import { join, basename } from 'path'
+import { readdirSync, statSync, existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs'
+import { join, basename, dirname } from 'path'
 
 export interface TreeNode {
   name: string
@@ -11,12 +11,31 @@ export interface TreeNode {
 export interface ScanOptions {
   maxDepth: number
   excludeDirs: string[]
+  force?: boolean
+  verbose?: boolean
+}
+
+export interface CacheEntry {
+  path: string
+  mtime: number
+  size: number
+}
+
+export interface CacheData {
+  version: string
+  timestamp: number
+  entries: CacheEntry[]
 }
 
 const DEFAULT_OPTIONS: ScanOptions = {
   maxDepth: 5,
   excludeDirs: ['node_modules', '.git', 'dist', 'coverage', '.opencode', '.planning', '.paul', '.openpaul', '__pycache__', '.next', '.nuxt', 'build', 'out', '.cache'],
+  force: false,
+  verbose: false,
 }
+
+const CACHE_VERSION = '1.0'
+const CACHE_FILE = '.openpaul/.codebase-cache.json'
 
 export function scanDirectory(
   dir: string,
@@ -125,4 +144,47 @@ export function countFiles(node: TreeNode): { files: number; directories: number
   }
 
   return { files, directories }
+}
+
+export function loadCache(projectRoot: string): CacheData | null {
+  const cachePath = join(projectRoot, CACHE_FILE)
+  if (!existsSync(cachePath)) {
+    return null
+  }
+  try {
+    const content = readFileSync(cachePath, 'utf-8')
+    return JSON.parse(content)
+  } catch {
+    return null
+  }
+}
+
+export function saveCache(projectRoot: string, entries: CacheEntry[]): void {
+  const cachePath = join(projectRoot, CACHE_FILE)
+  const dir = dirname(cachePath)
+  if (!existsSync(dir)) {
+    mkdirSync(dir, { recursive: true })
+  }
+  const cache: CacheData = {
+    version: CACHE_VERSION,
+    timestamp: Date.now(),
+    entries,
+  }
+  writeFileSync(cachePath, JSON.stringify(cache, null, 2), 'utf-8')
+}
+
+export function isCacheValid(projectRoot: string, outputPath?: string): boolean {
+  const cache = loadCache(projectRoot)
+  if (!cache || cache.version !== CACHE_VERSION) {
+    return false
+  }
+
+  if (outputPath && existsSync(outputPath)) {
+    const outputMtime = statSync(outputPath).mtimeMs
+    if (outputMtime < cache.timestamp) {
+      return true
+    }
+  }
+
+  return false
 }
