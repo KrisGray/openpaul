@@ -2,7 +2,8 @@ import { tool, type ToolDefinition } from '@opencode-ai/plugin'
 import { generateCodebaseDoc, docToMarkdown } from '../utils/codebase-generator'
 import { isCacheValid, loadCache } from '../utils/directory-scanner'
 import { formatHeader, formatBold } from '../output/formatter'
-import { writeFileSync, existsSync, mkdirSync } from 'fs'
+import { atomicWrite } from '../storage/atomic-writes'
+import { existsSync, mkdirSync } from 'fs'
 import { dirname, join } from 'path'
 
 export const openpaulMapCodebase: ToolDefinition = tool({
@@ -38,7 +39,7 @@ export const openpaulMapCodebase: ToolDefinition = tool({
       }
 
       const markdown = docToMarkdown(doc)
-      writeFileSync(outputPath, markdown, 'utf-8')
+      await atomicWrite(outputPath, markdown)
 
       if (verbose) {
         console.error(`Scanned ${doc.fileCounts.files} files in ${doc.fileCounts.directories} directories`)
@@ -49,7 +50,7 @@ export const openpaulMapCodebase: ToolDefinition = tool({
         `Files: ${doc.fileCounts.files}\n` +
         `Directories: ${doc.fileCounts.directories}\n` +
         `Stack items: ${doc.stack.length}\n\n` +
-        'Run `cat CODEBASE.md` to view the documentation.'
+        `Last updated: ${doc.generatedAt}`
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
       return formatHeader(2, '❌ Map Codebase Error') + '\n\n' +
