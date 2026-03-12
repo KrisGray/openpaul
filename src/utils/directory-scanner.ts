@@ -36,6 +36,19 @@ const DEFAULT_OPTIONS: ScanOptions = {
 
 const CACHE_VERSION = '1.0'
 const CACHE_FILE = '.openpaul/.codebase-cache.json'
+let lastScanEntries: CacheEntry[] = []
+
+function resetLastScanEntries(): void {
+  lastScanEntries = []
+}
+
+function addCacheEntry(path: string, mtime: number, size: number): void {
+  lastScanEntries.push({ path, mtime, size })
+}
+
+export function getLastScanCacheEntries(): CacheEntry[] {
+  return [...lastScanEntries]
+}
 
 export function scanDirectory(
   dir: string,
@@ -43,6 +56,10 @@ export function scanDirectory(
   currentDepth: number = 0
 ): TreeNode | null {
   const opts = { ...DEFAULT_OPTIONS, ...options }
+
+  if (currentDepth === 0) {
+    resetLastScanEntries()
+  }
 
   if (currentDepth > opts.maxDepth) {
     return null
@@ -84,6 +101,7 @@ export function scanDirectory(
           node.children!.push(childNode)
         }
       } else if (stats.isFile()) {
+        addCacheEntry(fullPath, stats.mtimeMs, stats.size)
         node.children!.push({
           name: entry,
           type: 'file',
