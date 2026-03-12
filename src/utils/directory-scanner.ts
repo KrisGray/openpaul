@@ -179,12 +179,32 @@ export function isCacheValid(projectRoot: string, outputPath?: string): boolean 
     return false
   }
 
-  if (outputPath && existsSync(outputPath)) {
+  if (!cache.timestamp || !Array.isArray(cache.entries) || cache.entries.length === 0) {
+    return false
+  }
+
+  let latestEntryMtime = Number.NEGATIVE_INFINITY
+  for (const entry of cache.entries) {
+    if (!entry || typeof entry.path !== 'string' || typeof entry.mtime !== 'number' || typeof entry.size !== 'number') {
+      return false
+    }
+    latestEntryMtime = Math.max(latestEntryMtime, entry.mtime)
+  }
+
+  if (!Number.isFinite(latestEntryMtime) || cache.timestamp < latestEntryMtime) {
+    return false
+  }
+
+  if (outputPath) {
+    if (!existsSync(outputPath)) {
+      return false
+    }
+
     const outputMtime = statSync(outputPath).mtimeMs
     if (outputMtime < cache.timestamp) {
-      return true
+      return false
     }
   }
 
-  return false
+  return true
 }
