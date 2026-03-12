@@ -6,7 +6,7 @@
 
 import { QualityManager } from '../../storage/quality-manager'
 import { FileManager } from '../../storage/file-manager'
-import { openpaulpaulPlanFix } from '../../commands/plan-fix'
+import { openpaulPlanFix } from '../../commands/plan-fix'
 
 // Mock dependencies
 jest.mock('../../storage/quality-manager')
@@ -65,7 +65,7 @@ describe('Plan-fix Command', () => {
       mockQualityManager.resolvePhaseDir.mockReturnValue(null)
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await openpaulpaulPlanFix.execute({ phase: 7 }, toolContext)
+      const result = await openpaulPlanFix.execute({ phase: 7 }, toolContext)
 
       expect(result).toContain('Cannot Create Fix Plan')
       expect(result).toContain('directory not found')
@@ -78,7 +78,7 @@ describe('Plan-fix Command', () => {
       mockQualityManager.readUATIssues.mockReturnValue(null)
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await openpaulpaulPlanFix.execute({ phase: 7 }, toolContext)
+      const result = await openpaulPlanFix.execute({ phase: 7 }, toolContext)
 
       expect(result).toContain('No Issues Found')
       expect(result).toContain('UAT-ISSUES.md not found')
@@ -107,7 +107,7 @@ describe('Plan-fix Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await openpaulpaulPlanFix.execute({ phase: 7 }, toolContext)
+      const result = await openpaulPlanFix.execute({ phase: 7 }, toolContext)
 
       expect(result).toContain('No Open Issues')
     })
@@ -145,7 +145,7 @@ describe('Plan-fix Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await openpaulpaulPlanFix.execute({ phase: 7 }, toolContext)
+      const result = await openpaulPlanFix.execute({ phase: 7 }, toolContext)
 
       expect(result).toContain('Open Issues')
       expect(result).toContain('1.')
@@ -176,7 +176,7 @@ describe('Plan-fix Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await openpaulpaulPlanFix.execute({ phase: 7, issue: 99 }, toolContext)
+      const result = await openpaulPlanFix.execute({ phase: 7, issue: 99 }, toolContext)
 
       expect(result).toContain('Invalid Issue')
       expect(result).toContain('not found or already fixed')
@@ -210,7 +210,7 @@ describe('Plan-fix Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await openpaulpaulPlanFix.execute({ phase: 7, issue: 1 }, toolContext)
+      const result = await openpaulPlanFix.execute({ phase: 7, issue: 1 }, toolContext)
 
       expect(result).toContain('Fix Plan Created')
       expect(result).toContain('07-01a')
@@ -243,7 +243,7 @@ describe('Plan-fix Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await openpaulpaulPlanFix.execute({ phase: 7, issue: 1 }, toolContext)
+      const result = await openpaulPlanFix.execute({ phase: 7, issue: 1 }, toolContext)
 
       expect(result).toContain('Wave: 3')
     })
@@ -274,7 +274,7 @@ describe('Plan-fix Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await openpaulpaulPlanFix.execute({ phase: 7, issue: 1 }, toolContext)
+      const result = await openpaulPlanFix.execute({ phase: 7, issue: 1 }, toolContext)
 
       expect(result).toContain('Parent plan:')
       expect(result).toContain('07-02')
@@ -306,7 +306,7 @@ describe('Plan-fix Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await openpaulpaulPlanFix.execute({ phase: 7, issue: 1 }, toolContext)
+      const result = await openpaulPlanFix.execute({ phase: 7, issue: 1 }, toolContext)
 
       expect(result).toContain('Location:')
       expect(result).toContain('07-01a-PLAN.md')
@@ -338,7 +338,7 @@ describe('Plan-fix Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await openpaulpaulPlanFix.execute({ phase: 7, issue: 1 }, toolContext)
+      const result = await openpaulPlanFix.execute({ phase: 7, issue: 1 }, toolContext)
 
       expect(result).toContain('Severity:')
       expect(result).toContain('critical')
@@ -372,7 +372,7 @@ describe('Plan-fix Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await openpaulpaulPlanFix.execute({ phase: 7, issue: 1, execute: true }, toolContext)
+      const result = await openpaulPlanFix.execute({ phase: 7, issue: 1, execute: true }, toolContext)
 
       expect(result).toContain('/gsd-execute-phase')
     })
@@ -403,7 +403,7 @@ describe('Plan-fix Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await openpaulpaulPlanFix.execute({ phase: 7, issue: 1 }, toolContext)
+      const result = await openpaulPlanFix.execute({ phase: 7, issue: 1 }, toolContext)
 
       expect(result).toContain('/gsd-execute-phase')
       expect(result).toContain('--execute')
@@ -438,7 +438,7 @@ describe('Plan-fix Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await openpaulpaulPlanFix.execute({ phase: 7, issue: 1 }, toolContext)
+      const result = await openpaulPlanFix.execute({ phase: 7, issue: 1 }, toolContext)
 
       // Fix plan is created successfully with issue info
       expect(result).toContain('Fix Plan Created')

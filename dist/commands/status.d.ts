@@ -10,5 +10,5 @@ import { type ToolDefinition } from '@opencode-ai/plugin';
  * - Shows session info if paused
  * - Detects and warns about stale sessions
  */
-export declare const paulStatus: ToolDefinition;
+export declare const openpaulStatus: ToolDefinition;
 //# sourceMappingURL=status.d.ts.map

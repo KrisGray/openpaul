@@ -6,7 +6,7 @@ import { ResearchManager } from '../storage/research-manager';
 import { formatHeader, formatList, formatBold } from '../output/formatter';
 import { atomicWrite } from '../storage/atomic-writes';
 const toolFactory = tool;
-export const paulResearch = toolFactory({
+export const openpaulResearch = toolFactory({
     name: 'openpaul:research',
     description: 'Execute research on user-specified topics with verification',
     parameters: z.object({

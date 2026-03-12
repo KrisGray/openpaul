@@ -1,2 +1,2 @@
-export declare const paulResume: any;
+export declare const openpaulResume: any;
 //# sourceMappingURL=resume.d.ts.map

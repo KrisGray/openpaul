@@ -20,13 +20,13 @@ export declare class MilestoneManager {
     constructor(projectRoot: string, roadmapManager: RoadmapManager);
     /**
      * Resolve the path to MILESTONE-ARCHIVE.md file
-     * Checks both .paul/ and .openpaul/ locations.
+     * Checks both .openpaul/ and .paul/ locations.
      *
      * @returns Full path to MILESTONE-ARCHIVE.md or null if planning dir not found
      */
     resolveMilestoneArchivePath(): string | null;
     /**
-     * Get the planning directory path (.paul or .openpaul)
+     * Get the planning directory path (.openpaul or .paul)
      */
     private getPlanningDir;
     /**

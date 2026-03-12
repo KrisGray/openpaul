@@ -1,2 +1,2 @@
-export declare const paulUnify: any;
+export declare const openpaulUnify: any;
 //# sourceMappingURL=unify.d.ts.map

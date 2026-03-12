@@ -3,7 +3,7 @@ import { ConfigManager } from '../storage/config-manager';
 import { formatHeader, formatBold } from '../output/formatter';
 import { existsSync } from 'fs';
 import { join } from 'path';
-export const paulConfig = tool({
+export const openpaulConfig = tool({
     description: 'Manage project configuration (init/list/get/set)',
     args: {
         action: tool.schema.enum(['init', 'list', 'get', 'set']).optional().describe('Config action: init, list, get, set'),

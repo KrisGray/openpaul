@@ -15,7 +15,7 @@ import { formatHeader, formatBold, formatList } from '../output/formatter';
  * - Prompts user to update STATE.md after creation
  */
 const toolFactory = tool;
-export const paulMilestone = toolFactory({
+export const openpaulMilestone = toolFactory({
     name: 'openpaul:milestone',
     description: 'Create a new project milestone with name, scope, and phases',
     parameters: z.object({

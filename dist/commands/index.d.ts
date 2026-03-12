@@ -1,25 +1,32 @@
 /**
  * Commands Index
  *
- * Exports all PAUL commands
+ * Exports all OpenPAUL commands
  */
-export { paulInit } from './init';
-export { paulPlan } from './plan';
-export { paulProgress } from './progress';
-export { paulStatus } from './status';
-export { paulHelp } from './help';
-export { paulApply } from './apply';
-export { paulUnify } from './unify';
-export { paulPause } from './pause';
-export { paulResume } from './resume';
-export { paulAddPhase } from './add-phase';
-export { paulRemovePhase } from './remove-phase';
-export { paulDiscuss } from './discuss';
-export { paulAssumptions } from './assumptions';
-export { paulDiscover } from './discover';
-export { paulConsiderIssues } from './consider-issues';
-export { paulResearch } from './research';
-export { paulResearchPhase } from './research-phase';
-export { paulVerify } from './verify';
-export { paulPlanFix } from './plan-fix';
+export { openpaulInit } from './init';
+export { openpaulPlan } from './plan';
+export { openpaulProgress } from './progress';
+export { openpaulStatus } from './status';
+export { openpaulHelp } from './help';
+export { openpaulApply } from './apply';
+export { openpaulUnify } from './unify';
+export { openpaulPause } from './pause';
+export { openpaulResume } from './resume';
+export { openpaulAddPhase } from './add-phase';
+export { openpaulRemovePhase } from './remove-phase';
+export { openpaulDiscuss } from './discuss';
+export { openpaulAssumptions } from './assumptions';
+export { openpaulDiscover } from './discover';
+export { openpaulConsiderIssues } from './consider-issues';
+export { openpaulResearch } from './research';
+export { openpaulResearchPhase } from './research-phase';
+export { openpaulVerify } from './verify';
+export { openpaulPlanFix } from './plan-fix';
+export { openpaulHandoff } from './handoff';
+export { openpaulMilestone } from './milestone';
+export { openpaulCompleteMilestone } from './complete-milestone';
+export { openpaulDiscussMilestone } from './discuss-milestone';
+export { openpaulConfig } from './config';
+export { openpaulFlows } from './flows';
+export { openpaulMapCodebase } from './map-codebase';
 //# sourceMappingURL=index.d.ts.map

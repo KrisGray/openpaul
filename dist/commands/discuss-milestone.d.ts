@@ -1,2 +1,2 @@
-export declare const paulDiscussMilestone: any;
+export declare const openpaulDiscussMilestone: any;
 //# sourceMappingURL=discuss-milestone.d.ts.map

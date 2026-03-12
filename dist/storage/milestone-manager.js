@@ -21,30 +21,30 @@ export class MilestoneManager {
     }
     /**
      * Resolve the path to MILESTONE-ARCHIVE.md file
-     * Checks both .paul/ and .openpaul/ locations.
+     * Checks both .openpaul/ and .paul/ locations.
      *
      * @returns Full path to MILESTONE-ARCHIVE.md or null if planning dir not found
      */
     resolveMilestoneArchivePath() {
-        const primaryDir = join(this.projectRoot, '.paul');
+        const primaryDir = join(this.projectRoot, '.openpaul');
         if (existsSync(primaryDir)) {
             return join(primaryDir, 'MILESTONE-ARCHIVE.md');
         }
-        const fallbackDir = join(this.projectRoot, '.openpaul');
+        const fallbackDir = join(this.projectRoot, '.paul');
         if (existsSync(fallbackDir)) {
             return join(fallbackDir, 'MILESTONE-ARCHIVE.md');
         }
         return null;
     }
     /**
-     * Get the planning directory path (.paul or .openpaul)
+     * Get the planning directory path (.openpaul or .paul)
      */
     getPlanningDir() {
-        const primary = join(this.projectRoot, '.paul');
+        const primary = join(this.projectRoot, '.openpaul');
         if (existsSync(primary)) {
             return primary;
         }
-        return join(this.projectRoot, '.openpaul');
+        return join(this.projectRoot, '.paul');
     }
     /**
      * Get the path to ROADMAP.md

@@ -1,2 +1,2 @@
-export declare const paulAssumptions: any;
+export declare const openpaulAssumptions: any;
 //# sourceMappingURL=assumptions.d.ts.map

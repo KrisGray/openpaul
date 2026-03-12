@@ -6,7 +6,7 @@ import { PrePlanningManager } from '../storage/pre-planning-manager';
 import { formatHeader, formatList, formatBold } from '../output/formatter';
 import { atomicWrite } from '../storage/atomic-writes';
 const toolFactory = tool;
-export const paulAssumptions = toolFactory({
+export const openpaulAssumptions = toolFactory({
     name: 'openpaul:assumptions',
     description: 'Capture and validate project assumptions',
     parameters: z.object({

@@ -1,0 +1,242 @@
+FAIL src/tests/commands/pause.test.ts
+FAIL src/tests/commands/pause.test.ts
+  ● Test suite failed to run
+
+    [96msrc/tests/commands/pause.test.ts[0m:[93m125[0m:[93m54[0m - [91merror[0m[90m TS2304: [0mCannot find name 'toolContext'.
+
+    [7m125[0m       const result = await openpaulPause.execute({}, toolContext)
+    [7m   [0m [91m                                                     ~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m133[0m:[93m7[0m - [91merror[0m[90m TS2552: [0mCannot find name 'mockStateManager'. Did you mean 'StateManager'?
+
+    [7m133[0m       mockStateManager.getCurrentPosition.mockReturnValue({
+    [7m   [0m [91m      ~~~~~~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m138[0m:[93m39[0m - [91merror[0m[90m TS2304: [0mCannot find name 'toolContext'.
+
+    [7m138[0m       await openpaulPause.execute({}, toolContext)
+    [7m   [0m [91m                                      ~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m140[0m:[93m14[0m - [91merror[0m[90m TS2552: [0mCannot find name 'mockSessionManager'. Did you mean 'SessionManager'?
+
+    [7m140[0m       expect(mockSessionManager.saveSession).toHaveBeenCalledWith(
+    [7m   [0m [91m             ~~~~~~~~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m149[0m:[93m7[0m - [91merror[0m[90m TS2552: [0mCannot find name 'mockStateManager'. Did you mean 'StateManager'?
+
+    [7m149[0m       mockStateManager.getRequiredNextAction.mockReturnValue('Custom next action')
+    [7m   [0m [91m      ~~~~~~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m151[0m:[93m39[0m - [91merror[0m[90m TS2304: [0mCannot find name 'toolContext'.
+
+    [7m151[0m       await openpaulPause.execute({}, toolContext)
+    [7m   [0m [91m                                      ~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m153[0m:[93m14[0m - [91merror[0m[90m TS2552: [0mCannot find name 'mockSessionManager'. Did you mean 'SessionManager'?
+
+    [7m153[0m       expect(mockSessionManager.saveSession).toHaveBeenCalledWith(
+    [7m   [0m [91m             ~~~~~~~~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m165[0m:[93m7[0m - [91merror[0m[90m TS2552: [0mCannot find name 'mockSessionManager'. Did you mean 'SessionManager'?
+
+    [7m165[0m       mockSessionManager.getCurrentSessionId.mockReturnValue('old-session')
+    [7m   [0m [91m      ~~~~~~~~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m166[0m:[93m7[0m - [91merror[0m[90m TS2552: [0mCannot find name 'mockSessionManager'. Did you mean 'SessionManager'?
+
+    [7m166[0m       mockSessionManager.loadCurrentSession.mockReturnValue({
+    [7m   [0m [91m      ~~~~~~~~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m171[0m:[93m54[0m - [91merror[0m[90m TS2304: [0mCannot find name 'toolContext'.
+
+    [7m171[0m       const result = await openpaulPause.execute({}, toolContext)
+    [7m   [0m [91m                                                     ~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m181[0m:[93m7[0m - [91merror[0m[90m TS2304: [0mCannot find name 'mockSessionManager'.
+
+    [7m181[0m       mockSessionManager.getCurrentSessionId.mockReturnValue('old-session')
+    [7m   [0m [91m      ~~~~~~~~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m182[0m:[93m7[0m - [91merror[0m[90m TS2552: [0mCannot find name 'mockSessionManager'. Did you mean 'SessionManager'?
+
+    [7m182[0m       mockSessionManager.loadCurrentSession.mockReturnValue({
+    [7m   [0m [91m      ~~~~~~~~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m187[0m:[93m39[0m - [91merror[0m[90m TS2304: [0mCannot find name 'toolContext'.
+
+    [7m187[0m       await openpaulPause.execute({}, toolContext)
+    [7m   [0m [91m                                      ~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m189[0m:[93m14[0m - [91merror[0m[90m TS2304: [0mCannot find name 'mockSessionManager'.
+
+   ● Test suite failed to run
+
+    [96msrc/tests/commands/pause.test.ts[0m:[93m125[0m:[93m54[0m - [91merror[0m[90m TS2304: [0mCannot find name 'toolContext'.
+
+    [7m125[0m       const result = await openpaulPause.execute({}, toolContext)
+    [7m   [0m [91m                                                     ~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m133[0m:[93m7[0m - [91merror[0m[90m TS2552: [0mCannot find name 'mockStateManager'. Did you mean 'StateManager'?
+
+    [7m133[0m       mockStateManager.getCurrentPosition.mockReturnValue({
+    [7m   [0m [91m      ~~~~~~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m138[0m:[93m39[0m - [91merror[0m[90m TS2304: [0mCannot find name 'toolContext'.
+
+    [7m138[0m       await openpaulPause.execute({}, toolContext)
+    [7m   [0m [91m                                      ~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m140[0m:[93m14[0m - [91merror[0m[90m TS2552: [0mCannot find name 'mockSessionManager'. Did you mean 'SessionManager'?
+
+    [7m140[0m       expect(mockSessionManager.saveSession).toHaveBeenCalledWith(
+    [7m   [0m [91m             ~~~~~~~~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m149[0m:[93m7[0m - [91merror[0m[90m TS2552: [0mCannot find name 'mockStateManager'. Did you mean 'StateManager'?
+
+    [7m149[0m       mockStateManager.getRequiredNextAction.mockReturnValue('Custom next action')
+    [7m   [0m [91m      ~~~~~~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m151[0m:[93m39[0m - [91merror[0m[90m TS2304: [0mCannot find name 'toolContext'.
+
+    [7m151[0m       await openpaulPause.execute({}, toolContext)
+    [7m   [0m [91m                                      ~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m153[0m:[93m14[0m - [91merror[0m[90m TS2552: [0mCannot find name 'mockSessionManager'. Did you mean 'SessionManager'?
+
+    [7m153[0m       expect(mockSessionManager.saveSession).toHaveBeenCalledWith(
+    [7m   [0m [91m             ~~~~~~~~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m165[0m:[93m7[0m - [91merror[0m[90m TS2552: [0mCannot find name 'mockSessionManager'. Did you mean 'SessionManager'?
+
+    [7m165[0m       mockSessionManager.getCurrentSessionId.mockReturnValue('old-session')
+    [7m   [0m [91m      ~~~~~~~~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m166[0m:[93m7[0m - [91merror[0m[90m TS2552: [0mCannot find name 'mockSessionManager'. Did you mean 'SessionManager'?
+
+    [7m166[0m       mockSessionManager.loadCurrentSession.mockReturnValue({
+    [7m   [0m [91m      ~~~~~~~~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m171[0m:[93m54[0m - [91merror[0m[90m TS2304: [0mCannot find name 'toolContext'.
+
+    [7m171[0m       const result = await openpaulPause.execute({}, toolContext)
+    [7m   [0m [91m                                                     ~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m181[0m:[93m7[0m - [91merror[0m[90m TS2304: [0mCannot find name 'mockSessionManager'.
+
+    [7m181[0m       mockSessionManager.getCurrentSessionId.mockReturnValue('old-session')
+    [7m   [0m [91m      ~~~~~~~~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m182[0m:[93m7[0m - [91merror[0m[90m TS2552: [0mCannot find name 'mockSessionManager'. Did you mean 'SessionManager'?
+
+    [7m182[0m       mockSessionManager.loadCurrentSession.mockReturnValue({
+    [7m   [0m [91m      ~~~~~~~~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m187[0m:[93m39[0m - [91merror[0m[90m TS2304: [0mCannot find name 'toolContext'.
+
+    [7m187[0m       await openpaulPause.execute({}, toolContext)
+    [7m   [0m [91m                                      ~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m189[0m:[93m14[0m - [91merror[0m[90m TS2304: [0mCannot find name 'mockSessionManager'.
+
+    [7m189[0m       expect(mockSessionManager.saveSession).toHaveBeenCalled()
+    [7m   [0m [91m             ~~~~~~~~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m195[0m:[93m7[0m - [91merror[0m[90m TS2304: [0mCannot find name 'mockStateManager'.
+
+    [7m195[0m       mockStateManager.getCurrentPosition.mockReturnValue(undefined)
+    [7m   [0m [91m      ~~~~~~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m197[0m:[93m54[0m - [91merror[0m[90m TS2304: [0mCannot find name 'toolContext'.
+
+    [7m197[0m       const result = await openpaulPause.execute({}, toolContext)
+    [7m   [0m [91m                                                     ~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m205[0m:[93m7[0m - [91merror[0m[90m TS2304: [0mCannot find name 'mockSessionManager'.
+
+    [7m205[0m       mockSessionManager.saveSession.mockRejectedValue(new Error('Write failed'))
+    [7m   [0m [91m      ~~~~~~~~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m207[0m:[93m54[0m - [91merror[0m[90m TS2304: [0mCannot find name 'toolContext'.
+
+    [7m207[0m       const result = await openpaulPause.execute({}, toolContext)
+    [7m   [0m [91m                                                     ~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m121[0m:[93m3[0m - [91merror[0m[90m TS1005: [0m',' expected.
+
+    [7m121[0m   })
+    [7m   [0m [91m  ~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m159[0m:[93m3[0m - [91merror[0m[90m TS1128: [0mDeclaration or statement expected.
+
+    [7m159[0m   })
+    [7m   [0m [91m  ~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m159[0m:[93m4[0m - [91merror[0m[90m TS1128: [0mDeclaration or statement expected.
+
+    [7m159[0m   })
+    [7m   [0m [91m   ~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m214[0m:[93m1[0m - [91merror[0m[90m TS1128: [0mDeclaration or statement expected.
+
+    [7m214[0m })
+    [7m   [0m [91m~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m214[0m:[93m2[0m - [91merror[0m[90m TS1128: [0mDeclaration or statement expected.
+
+    [7m214[0m })
+    [7m   [0m [91m ~[0m
+
+   [7m189[0m       expect(mockSessionManager.saveSession).toHaveBeenCalled()
+    [7m   [0m [91m             ~~~~~~~~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m195[0m:[93m7[0m - [91merror[0m[90m TS2304: [0mCannot find name 'mockStateManager'.
+
+    [7m195[0m       mockStateManager.getCurrentPosition.mockReturnValue(undefined)
+    [7m   [0m [91m      ~~~~~~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m197[0m:[93m54[0m - [91merror[0m[90m TS2304: [0mCannot find name 'toolContext'.
+
+    [7m197[0m       const result = await openpaulPause.execute({}, toolContext)
+    [7m   [0m [91m                                                     ~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m205[0m:[93m7[0m - [91merror[0m[90m TS2304: [0mCannot find name 'mockSessionManager'.
+
+    [7m205[0m       mockSessionManager.saveSession.mockRejectedValue(new Error('Write failed'))
+    [7m   [0m [91m      ~~~~~~~~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m207[0m:[93m54[0m - [91merror[0m[90m TS2304: [0mCannot find name 'toolContext'.
+
+    [7m207[0m       const result = await openpaulPause.execute({}, toolContext)
+    [7m   [0m [91m                                                     ~~~~~~~~~~~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m121[0m:[93m3[0m - [91merror[0m[90m TS1005: [0m',' expected.
+
+    [7m121[0m   })
+    [7m   [0m [91m  ~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m159[0m:[93m3[0m - [91merror[0m[90m TS1128: [0mDeclaration or statement expected.
+
+    [7m159[0m   })
+    [7m   [0m [91m  ~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m159[0m:[93m4[0m - [91merror[0m[90m TS1128: [0mDeclaration or statement expected.
+
+    [7m159[0m   })
+    [7m   [0m [91m   ~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m214[0m:[93m1[0m - [91merror[0m[90m TS1128: [0mDeclaration or statement expected.
+
+    [7m214[0m })
+    [7m   [0m [91m~[0m
+    [96msrc/tests/commands/pause.test.ts[0m:[93m214[0m:[93m2[0m - [91merror[0m[90m TS1128: [0mDeclaration or statement expected.
+
+    [7m214[0m })
+    [7m   [0m [91m ~[0m
+
+PASS src/tests/commands/handoff.test.ts
+PASS src/tests/commands/handoff.test.ts
+  Handoff Command Functionality
+  Handoff Command Functionality
+    not initialized state
+    not initialized state
+      ✓ should return error if no active state (not initialized) (2 ms)
+      ✓ should return error if no active state (not initialized) (2 ms)
+    with paused session
+    with paused session
+      ✓ should work with paused session (loads existing session) (2 ms)
+      ✓ should work with paused session (loads existing session) (2 ms)
+      ✓ should include correct session ID and timestamp
+      ✓ should include correct session ID and timestamp
+    without paused session
+    without paused session
+      ✓ should work without paused session (creates temporary session) (1 ms)
+    template replacement
+      ✓ should work without paused session (creates temporary session) (1 ms)
+    template replacement
+      ✓ should replace all template variables correctly
+      ✓ should replace all template variables correctly
+      ✓ should include correct loop position markers (1 ms)
+      ✓ should generate HANDOFF.md from template
+      ✓ should include correct loop position markers (1 ms)
+      ✓ should generate HANDOFF.md from template
+    file generation
+    file generation
+      ✓ should write HANDOFF.md to .openpaul/ directory
+      ✓ should return formatted success message
+      ✓ should write HANDOFF.md to .openpaul/ directory
+      ✓ should return formatted success message
+      ✓ should create .openpaul directory if it doesn't exist (1 ms)
+      ✓ should create .openpaul directory if it doesn't exist (1 ms)
+    error handling
+    error handling
+      ✓ should return formatted error on file write failure
+      ✓ should return formatted error on file write failure
+
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       11 passed, 11 total
+Snapshots:   0 total
+Time:        0.97 s, estimated 2 s
+Ran all test suites matching /handoff.test.ts|pause.test.ts|run|build/i.
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       11 passed, 11 total
+Snapshots:   0 total
+Time:        0.97 s, estimated 2 s
+Ran all test suites matching /handoff.test.ts|pause.test.ts|run|build/i.

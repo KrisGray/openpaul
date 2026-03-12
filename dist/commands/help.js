@@ -1,7 +1,7 @@
 import { tool } from '@opencode-ai/plugin';
 import { formatHeader, formatBold, formatList } from '../output/formatter';
 /**
- * /paul:help Command
+ * /openpaul:help Command
  *
  * Show command reference for all 26 commands
  *
@@ -10,7 +10,7 @@ import { formatHeader, formatBold, formatList } from '../output/formatter';
  * - Provides detailed help for specific commands
  * - Output includes 📚 emoji and usage examples
  */
-export const paulHelp = tool({
+export const openpaulHelp = tool({
     description: 'Show command reference',
     args: {
         command: tool.schema.string().optional().describe('Show help for specific command'),
@@ -21,129 +21,129 @@ export const paulHelp = tool({
             // Core commands (Phase 2)
             init: {
                 description: 'Initialize OpenPAUL in the current project',
-                usage: '/paul:init [--force]',
+                usage: '/openpaul:init [--force]',
             },
             plan: {
                 description: 'Create an executable plan with tasks',
-                usage: '/paul:plan --phase N --plan NN --tasks [...]',
+                usage: '/openpaul:plan --phase N --plan NN --tasks [...]',
                 phase: '2',
             },
             apply: {
                 description: 'Execute the current plan',
-                usage: '/paul:apply [--dry-run] [--task N]',
+                usage: '/openpaul:apply [--dry-run] [--task N]',
                 phase: '2',
             },
             unify: {
                 description: 'Close the loop and generate summary',
-                usage: '/paul:unify [--status success|partial|failed]',
+                usage: '/openpaul:unify [--status success|partial|failed]',
                 phase: '2',
             },
             progress: {
                 description: 'View current loop status and next action',
-                usage: '/paul:progress [--verbose]',
+                usage: '/openpaul:progress [--verbose]',
             },
             help: {
                 description: 'Show command reference',
-                usage: '/paul:help [command]',
+                usage: '/openpaul:help [command]',
             },
             // Session Management commands (Phase 3)
             pause: {
                 description: 'Create session handoff',
-                usage: '/paul:pause',
+                usage: '/openpaul:pause',
                 phase: '3',
             },
             resume: {
                 description: 'Restore from paused session',
-                usage: '/paul:resume',
+                usage: '/openpaul:resume',
                 phase: '3',
             },
             handoff: {
                 description: 'Generate comprehensive handoff document',
-                usage: '/paul:handoff',
+                usage: '/openpaul:handoff',
                 phase: '3',
             },
             status: {
-                description: '[DEPRECATED] Use /paul:progress instead',
-                usage: '/paul:status',
+                description: '[DEPRECATED] Use /openpaul:progress instead',
+                usage: '/openpaul:status',
                 phase: '3',
             },
             // Milestone Management commands (Phase 5)
             milestone: {
                 description: 'Create new milestone',
-                usage: '/paul:milestone --name "..."',
+                usage: '/openpaul:milestone --name "..."',
                 phase: '5',
             },
             'complete-milestone': {
                 description: 'Mark milestone complete and archive',
-                usage: '/paul:complete-milestone --id ...',
+                usage: '/openpaul:complete-milestone --id ...',
                 phase: '5',
             },
             'discuss-milestone': {
                 description: 'Plan upcoming milestone',
-                usage: '/paul:discuss-milestone',
+                usage: '/openpaul:discuss-milestone',
                 phase: '5',
             },
             // Planning Support commands (Phase 6)
             discuss: {
                 description: 'Capture planning discussion',
-                usage: '/paul:discuss --topic "..."',
+                usage: '/openpaul:discuss --topic "..."',
                 phase: '6',
             },
             assumptions: {
                 description: 'Review intended approach',
-                usage: '/paul:assumptions',
+                usage: '/openpaul:assumptions',
                 phase: '6',
             },
             discover: {
                 description: 'Explore options',
-                usage: '/paul:discover --query "..."',
+                usage: '/openpaul:discover --query "..."',
                 phase: '6',
             },
             'consider-issues': {
                 description: 'Triage deferred issues',
-                usage: '/paul:consider-issues',
+                usage: '/openpaul:consider-issues',
                 phase: '6',
             },
             // Research & Quality commands (Phase 7)
             research: {
                 description: 'Deploy research agents',
-                usage: '/paul:research --question "..."',
+                usage: '/openpaul:research --question "..."',
                 phase: '7',
             },
             'research-phase': {
                 description: 'Research phase unknowns',
-                usage: '/paul:research-phase --phase N',
+                usage: '/openpaul:research-phase --phase N',
                 phase: '7',
             },
             verify: {
                 description: 'Verify acceptance criteria',
-                usage: '/paul:verify',
+                usage: '/openpaul:verify',
                 phase: '7',
             },
             'plan-fix': {
                 description: 'Plan UAT fixes',
-                usage: '/paul:plan-fix',
+                usage: '/openpaul:plan-fix',
                 phase: '7',
             },
             // Roadmap & Configuration commands (Phase 8)
             'add-phase': {
                 description: 'Append new phase to roadmap',
-                usage: '/paul:add-phase --name "..."',
+                usage: '/openpaul:add-phase --name "..."',
                 phase: '8',
             },
             'remove-phase': {
                 description: 'Remove future phase',
-                usage: '/paul:remove-phase --phase N',
+                usage: '/openpaul:remove-phase --phase N',
                 phase: '8',
             },
             flows: {
                 description: 'Configure skill requirements',
-                usage: '/paul:flows',
+                usage: '/openpaul:flows',
                 phase: '8',
             },
             config: {
                 description: 'View/modify settings',
-                usage: '/paul:config',
+                usage: '/openpaul:config',
                 phase: '8',
             },
         };
@@ -155,15 +155,15 @@ export const paulHelp = tool({
                     `Unknown command: ${command}\n\n` +
                     formatBold('Available commands:') + '\n' +
                     formatList(Object.keys(COMMAND_REFERENCE)) + '\n' +
-                    'Run `/paul:help` to see all commands';
+                    'Run `/openpaul:help` to see all commands';
             }
-            let output = formatHeader(1, `📖 Command: /paul:${command}`) + '\n\n';
+            let output = formatHeader(1, `📖 Command: /openpaul:${command}`) + '\n\n';
             output += formatBold('Description:') + ` ${cmdInfo.description}\n`;
             output += formatBold('Usage:') + ` \`${cmdInfo.usage}\`\n`;
             if (cmdInfo.phase) {
                 output += formatBold('Phase:') + ` ${cmdInfo.phase}\n`;
             }
-            output += '\n' + formatBold('Tip:') + ' Run `/paul:help` to see all commands.';
+            output += '\n' + formatBold('Tip:') + ' Run `/openpaul:help` to see all commands.';
             return output;
         }
         // Show all commands grouped by phase
@@ -231,7 +231,7 @@ export const paulHelp = tool({
         })
             .join('\n');
         output += roadmapCommands;
-        output += '\n\n' + formatBold('Tip:') + ' Run `/paul:help {command}` for detailed usage.';
+        output += '\n\n' + formatBold('Tip:') + ' Run `/openpaul:help {command}` for detailed usage.';
         return output;
     },
 });

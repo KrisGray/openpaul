@@ -28,20 +28,30 @@ export const SummarySchema = z.object({
 /**
  * File Manager
  *
- * Manages PAUL state files with per-phase organization.
+ * Manages OpenPAUL state files with per-phase organization.
+ * Uses dual-path resolution: checks .openpaul/ first, falls back to .paul/ for migration compatibility.
  * Files are named: state-phase-{N}.json
  */
 export class FileManager {
     constructor(projectRoot) {
+        this.openPaulDir = join(projectRoot, '.openpaul');
         this.paulDir = join(projectRoot, '.paul');
-        this.phasesDir = join(this.paulDir, 'phases');
+        this.phasesDir = join(this.openPaulDir, 'phases');
     }
     /**
      * Get phase state file path
      *
-     * Pattern: .paul/state-phase-{N}.json
+     * Pattern: .openpaul/state-phase-{N}.json (primary) or .paul/state-phase-{N}.json (fallback)
+     * Reads check .openpaul first, fall back to .paul for migration compatibility.
+     * Writes always go to .openpaul/.
      */
     getPhaseStatePath(phaseNumber) {
+        // Check .openpaul first (primary)
+        const openPaulPath = join(this.openPaulDir, `state-phase-${phaseNumber}.json`);
+        if (existsSync(openPaulPath)) {
+            return openPaulPath;
+        }
+        // Fall back to .paul for migration compatibility
         return join(this.paulDir, `state-phase-${phaseNumber}.json`);
     }
     /**
@@ -92,19 +102,25 @@ export class FileManager {
         return existsSync(filePath);
     }
     /**
-     * Ensure .paul directory exists
+     * Ensure .openpaul directory exists
      */
     ensurePaulDir() {
-        if (!existsSync(this.paulDir)) {
-            mkdirSync(this.paulDir, { recursive: true });
+        if (!existsSync(this.openPaulDir)) {
+            mkdirSync(this.openPaulDir, { recursive: true });
         }
     }
     /**
      * Get model config file path
      *
-     * Pattern: .paul/model-config.json
+     * Pattern: .openpaul/model-config.json (primary) or .paul/model-config.json (fallback)
      */
     getModelConfigPath() {
+        // Check .openpaul first (primary)
+        const openPaulPath = join(this.openPaulDir, 'model-config.json');
+        if (existsSync(openPaulPath)) {
+            return openPaulPath;
+        }
+        // Fall back to .paul for migration compatibility
         return join(this.paulDir, 'model-config.json');
     }
     /**
@@ -124,10 +140,17 @@ export class FileManager {
     /**
      * Get plan file path
      *
-     * Pattern: .paul/phases/{phaseNumber}-{planId}-PLAN.json
+     * Pattern: .openpaul/phases/{phaseNumber}-{planId}-PLAN.json
+     * Note: phasesDir is set to .openpaul/phases, but reads check both locations
      */
     getPlanPath(phaseNumber, planId) {
-        return join(this.phasesDir, `${phaseNumber}-${planId}-PLAN.json`);
+        // Check .openpaul/phases first (primary)
+        const openPaulPath = join(this.openPaulDir, 'phases', `${phaseNumber}-${planId}-PLAN.json`);
+        if (existsSync(openPaulPath)) {
+            return openPaulPath;
+        }
+        // Fall back to .paul/phases for migration compatibility
+        return join(this.paulDir, 'phases', `${phaseNumber}-${planId}-PLAN.json`);
     }
     /**
      * Read plan
@@ -151,7 +174,7 @@ export class FileManager {
         return existsSync(filePath);
     }
     /**
-     * Ensure .paul/phases directory exists
+     * Ensure .openpaul/phases directory exists
      */
     ensurePhasesDir() {
         if (!existsSync(this.phasesDir)) {
@@ -161,10 +184,16 @@ export class FileManager {
     /**
      * Get summary file path
      *
-     * Pattern: .paul/phases/{phaseNumber}-{planId}-SUMMARY.json
+     * Pattern: .openpaul/phases/{phaseNumber}-{planId}-SUMMARY.json
      */
     getSummaryPath(phaseNumber, planId) {
-        return join(this.phasesDir, `${phaseNumber}-${planId}-SUMMARY.json`);
+        // Check .openpaul/phases first (primary)
+        const openPaulPath = join(this.openPaulDir, 'phases', `${phaseNumber}-${planId}-SUMMARY.json`);
+        if (existsSync(openPaulPath)) {
+            return openPaulPath;
+        }
+        // Fall back to .paul/phases for migration compatibility
+        return join(this.paulDir, 'phases', `${phaseNumber}-${planId}-SUMMARY.json`);
     }
     /**
      * Read summary

@@ -1,0 +1,686 @@
+PASS src/tests/storage/research-manager.test.ts
+PASS src/tests/storage/research-manager.test.ts
+  ResearchManager
+    getPlanningDir
+      ✓ should return .paul directory when it exists (2 ms)
+      ✓ should return .openpaul directory as fallback (1 ms)
+    resolvePhaseDir
+      ✓ should find phase directory when it exists
+      ✓ should return null when phase directory not found
+    createResearchResult
+      ✓ should create valid ResearchResult (2 ms)
+      ✓ should calculate overall confidence as low for empty findings
+      ✓ should calculate overall confidence as medium for mixed findings (7 ms)
+    aggregateAgentResults
+      ✓ should aggregate agent results correctly (1 ms)
+    formatAgentDashboard
+      ✓ should format agent dashboard correctly
+    organizeByTheme
+      ✓ should organize findings by theme
+    generateResearchContent
+      ✓ should generate valid RESEARCH.md content
+
+  ResearchManager
+    getPlanningDir
+      ✓ should return .paul directory when it exists (2 ms)
+      ✓ should return .openpaul directory as fallback (1 ms)
+    resolvePhaseDir
+      ✓ should find phase directory when it exists
+      ✓ should return null when phase directory not found
+    createResearchResult
+      ✓ should create valid ResearchResult (2 ms)
+      ✓ should calculate overall confidence as low for empty findings
+      ✓ should calculate overall confidence as medium for mixed findings (7 ms)
+    aggregateAgentResults
+      ✓ should aggregate agent results correctly (1 ms)
+    formatAgentDashboard
+      ✓ should format agent dashboard correctly
+    organizeByTheme
+      ✓ should organize findings by theme
+    generateResearchContent
+      ✓ should generate valid RESEARCH.md content
+
+PASS src/tests/commands/unify.test.ts
+  openpaulUnify command
+    ✓ registers openpaul:unify in the plugin tool map (51 ms)
+    error handling
+      ✓ should return error without init (3 ms)
+      ✓ should return error if not in APPLY phase (1 ms)
+      ✓ should return error if no current plan is found
+PASS src/tests/commands/unify.test.ts
+  openpaulUnify command
+    ✓ registers openpaul:unify in the plugin tool map (51 ms)
+    error handling
+      ✓ should return error without init (3 ms)
+      ✓ should return error if not in APPLY phase (1 ms)
+      ✓ should return error if no current plan is found
+    summary creation and state transitions
+      ✓ should create summary and transition to APPLY → UNIFY → PLAN (5 ms)
+      ✓ should handle output format with emojis
+      ✓ should support partial status flag (1 ms)
+      ✓ should include reconciliation and criteria results when provided
+
+    summary creation and state transitions
+      ✓ should create summary and transition to APPLY → UNIFY → PLAN (5 ms)
+      ✓ should handle output format with emojis
+      ✓ should support partial status flag (1 ms)
+      ✓ should include reconciliation and criteria results when provided
+
+PASS src/tests/state/state-manager.test.ts
+PASS src/tests/state/state-manager.test.ts
+  StateManager
+  StateManager
+    loadPhaseState
+    loadPhaseState
+      ✓ should return null for non-existent state (2 ms)
+      ✓ should return null for non-existent state (2 ms)
+      ✓ should load valid phase state (1 ms)
+      ✓ should load valid phase state (1 ms)
+      ✓ should return null for invalid state (129 ms)
+      ✓ should return null for invalid state (129 ms)
+    savePhaseState
+    savePhaseState
+      ✓ should save state with atomic writes (2 ms)
+      ✓ should save state with atomic writes (2 ms)
+      ✓ should validate state with Zod schema (1 ms)
+      ✓ should validate state with Zod schema (1 ms)
+    getRequiredNextAction
+    getRequiredNextAction
+      ✓ should return correct action for each phase (1 ms)
+      ✓ should return correct action for each phase (1 ms)
+    getCurrentPosition
+      ✓ should return undefined when no state files exist
+    getCurrentPosition
+      ✓ should return undefined when no state files exist
+      ✓ should return undefined when .paul directory exists but has no state files (2 ms)
+      ✓ should return undefined when .paul directory exists but has no state files (2 ms)
+      ✓ should return undefined when state file is corrupted (4 ms)
+      ✓ should return latest phase position (3 ms)
+
+      ✓ should return undefined when state file is corrupted (4 ms)
+      ✓ should return latest phase position (3 ms)
+
+PASS src/tests/integration/milestone-integration.test.ts
+PASS src/tests/integration/milestone-integration.test.ts
+  Milestone Integration Tests
+    Full Lifecycle Happy Path
+      ✓ should create milestone and add it to ROADMAP.md (15 ms)
+      ✓ should get created milestone by name (13 ms)
+      ✓ should get active (first non-completed) milestone (4 ms)
+      ✓ should calculate milestone progress correctly (72 ms)
+      ✓ should complete milestone and create archive entry (3 ms)
+      ✓ should collapse completed milestone in ROADMAP.md (5 ms)
+    discuss-milestone workflow
+      ✓ should verify MILESTONE-CONTEXT.md can be created (2 ms)
+  Milestone Integration Tests
+    Full Lifecycle Happy Path
+      ✓ should create milestone and add it to ROADMAP.md (15 ms)
+      ✓ should get created milestone by name (13 ms)
+      ✓ should get active (first non-completed) milestone (4 ms)
+      ✓ should calculate milestone progress correctly (72 ms)
+      ✓ should complete milestone and create archive entry (3 ms)
+      ✓ should collapse completed milestone in ROADMAP.md (5 ms)
+    discuss-milestone workflow
+      ✓ should verify MILESTONE-CONTEXT.md can be created (2 ms)
+      ✓ should verify MILESTONE-CONTEXT.md content structure (1 ms)
+      ✓ should verify MILESTONE-CONTEXT.md content structure (1 ms)
+    Edge Cases
+    Edge Cases
+      ✓ should error when creating milestone with non-existent phase (16 ms)
+      ✓ should error when creating milestone with non-existent phase (16 ms)
+      ✓ should error when completing already completed milestone (6 ms)
+      ✓ should error when completing already completed milestone (6 ms)
+      ✓ should error when completing non-existent milestone (2 ms)
+      ✓ should error when completing non-existent milestone (2 ms)
+      ✓ should return null for progress of non-existent milestone (1 ms)
+      ✓ should check if phase modification is allowed (1 ms)
+      ✓ should return null for progress of non-existent milestone (1 ms)
+      ✓ should check if phase modification is allowed (1 ms)
+      ✓ should allow modifying phase not in milestone (2 ms)
+      ✓ should get active milestone from ROADMAP.md (1 ms)
+      ✓ should allow modifying phase not in milestone (2 ms)
+      ✓ should get active milestone from ROADMAP.md (1 ms)
+      ✓ should handle progress calculation with partial phase completion (2 ms)
+    Integration with Managers
+      ✓ should handle progress calculation with partial phase completion (2 ms)
+    Integration with Managers
+      ✓ should integrate with RoadmapManager for phase validation (1 ms)
+      ✓ should integrate with RoadmapManager for phase validation (1 ms)
+      ✓ should use RoadmapManager for phase number validation (2 ms)
+    Archive Operations
+      ✓ should use RoadmapManager for phase number validation (2 ms)
+    Archive Operations
+      ✓ should create MILESTONE-ARCHIVE.md if it does not exist (3 ms)
+      ✓ should create MILESTONE-ARCHIVE.md if it does not exist (3 ms)
+      ✓ should append to existing MILESTONE-ARCHIVE.md (6 ms)
+      ✓ should include metrics in archive entry (2 ms)
+      ✓ should append to existing MILESTONE-ARCHIVE.md (6 ms)
+      ✓ should include metrics in archive entry (2 ms)
+
+
+PASS src/tests/storage/config-manager.test.ts
+PASS src/tests/storage/config-manager.test.ts
+  ConfigManager class
+    load
+      ✓ should return default config when no config file exists (3 ms)
+  ConfigManager class
+    load
+      ✓ should return default config when no config file exists (3 ms)
+      ✓ should load config from .openpaul/config.md (6 ms)
+    get/set
+      ✓ should get and set config values (3 ms)
+      ✓ should return undefined for non-existent keys
+    getWithDefaults
+      ✓ should return value if exists (1 ms)
+      ✓ should return default if key missing
+    validate
+      ✓ should load config from .openpaul/config.md (6 ms)
+    get/set
+      ✓ should get and set config values (3 ms)
+      ✓ should return undefined for non-existent keys
+    getWithDefaults
+      ✓ should return value if exists (1 ms)
+      ✓ should return default if key missing
+    validate
+      ✓ should return valid for default config (1 ms)
+    init
+      ✓ should create config file at .openpaul/config.md (2 ms)
+
+      ✓ should return valid for default config (1 ms)
+    init
+      ✓ should create config file at .openpaul/config.md (2 ms)
+
+PASS src/tests/commands/status.test.ts
+PASS src/tests/commands/status.test.ts
+  Status Command Functionality
+    not initialized state
+  Status Command Functionality
+    not initialized state
+      ✓ should return "Not initialized" if .openpaul/ doesn't exist (4 ms)
+    no active state
+      ✓ should return "Not initialized" if .openpaul/ doesn't exist (4 ms)
+    no active state
+      ✓ should return error if no active state (1 ms)
+    loop visualization
+      ✓ should return error if no active state (1 ms)
+    loop visualization
+      ✓ should display loop visualization with correct markers (48 ms)
+      ✓ should use correct loop markers (◉ ✓ ○)
+      ✓ should display loop visualization with correct markers (48 ms)
+      ✓ should use correct loop markers (◉ ✓ ○)
+    phase and stage display
+      ✓ should show current phase and stage (1 ms)
+    phase and stage display
+      ✓ should show current phase and stage (1 ms)
+    plan progress bar
+      ✓ should show plan progress bar when in APPLY phase
+    plan progress bar
+      ✓ should show plan progress bar when in APPLY phase
+      ✓ should format progress bar correctly
+    session info
+      ✓ should format progress bar correctly
+    session info
+      ✓ should show session info if paused (19 ms)
+      ✓ should show "No active session" if not paused
+      ✓ should show session info if paused (19 ms)
+      ✓ should show "No active session" if not paused
+      ✓ should show staleness warning for stale sessions
+    next action
+      ✓ should show staleness warning for stale sessions
+    next action
+      ✓ should show next action based on current phase (1 ms)
+    verbose mode
+      ✓ should show next action based on current phase (1 ms)
+    verbose mode
+      ✓ should show additional details in verbose mode (1 ms)
+
+      ✓ should show additional details in verbose mode (1 ms)
+
+FAIL src/tests/utils/directory-scanner.test.ts
+FAIL src/tests/utils/directory-scanner.test.ts
+  DirectoryScanner
+  DirectoryScanner
+    scanDirectory
+    scanDirectory
+      ✓ should scan empty directory (4 ms)
+      ✓ should scan directory with files (9 ms)
+      ✓ should scan empty directory (4 ms)
+      ✓ should scan directory with files (9 ms)
+      ✓ should respect maxDepth (3 ms)
+      ✓ should exclude directories (1 ms)
+    treeToMarkdown
+      ✓ should convert tree to markdown
+      ✓ should respect maxDepth (3 ms)
+      ✓ should exclude directories (1 ms)
+    treeToMarkdown
+      ✓ should convert tree to markdown
+    countFiles
+      ✓ should count files and directories
+    cache
+      ✓ should save and load cache (3 ms)
+      ✕ should check cache validity (1 ms)
+
+  ● DirectoryScanner › cache › should check cache validity
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      126 |       const valid = isCacheValid(tempDir)
+      127 |
+    > 128 |       expect(valid).toBe(true)
+          |                     ^
+      129 |     })
+      130 |   })
+      131 | })
+
+      at Object.<anonymous> (src/tests/utils/directory-scanner.test.ts:128:21)
+
+    countFiles
+      ✓ should count files and directories
+    cache
+      ✓ should save and load cache (3 ms)
+      ✕ should check cache validity (1 ms)
+
+  ● DirectoryScanner › cache › should check cache validity
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      126 |       const valid = isCacheValid(tempDir)
+      127 |
+    > 128 |       expect(valid).toBe(true)
+          |                     ^
+      129 |     })
+      130 |   })
+      131 | })
+
+      at Object.<anonymous> (src/tests/utils/directory-scanner.test.ts:128:21)
+
+(node:21765) [DEP0147] DeprecationWarning: In future versions of Node.js, fs.rmdir(path, { recursive: true }) will be removed. Use fs.rm(path, { recursive: true }) instead
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:21765) [DEP0147] DeprecationWarning: In future versions of Node.js, fs.rmdir(path, { recursive: true }) will be removed. Use fs.rm(path, { recursive: true }) instead
+(Use `node --trace-deprecation ...` to show where the warning was created)
+PASS src/tests/storage/model-config-manager.test.ts
+PASS src/tests/storage/model-config-manager.test.ts
+  ModelConfigManager
+    Initialization
+  ModelConfigManager
+    Initialization
+      ✓ should throw error when config does not exist and no default created (54 ms)
+      ✓ should throw error when config does not exist and no default created (54 ms)
+      ✓ should create default config with initializeDefault() (13 ms)
+      ✓ should load existing config without error (1 ms)
+      ✓ should create default config with initializeDefault() (13 ms)
+      ✓ should load existing config without error (1 ms)
+    getModel
+      ✓ should return default model for unconfigured sub-stage (1 ms)
+    getModel
+      ✓ should return default model for unconfigured sub-stage (1 ms)
+      ✓ should return sub-stage specific model when configured (2 ms)
+      ✓ should fall back to default when sub-stage config is undefined (2 ms)
+      ✓ should return sub-stage specific model when configured (2 ms)
+      ✓ should fall back to default when sub-stage config is undefined (2 ms)
+    setModel
+      ✓ should add new sub-stage configuration (5 ms)
+    setModel
+      ✓ should add new sub-stage configuration (5 ms)
+      ✓ should update existing sub-stage configuration (2 ms)
+      ✓ should update lastUpdated timestamp (3 ms)
+      ✓ should persist changes to file (3 ms)
+    setDefault
+      ✓ should update default model configuration (2 ms)
+      ✓ should persist changes to file (1 ms)
+    Caching
+      ✓ should cache config after first load (1 ms)
+      ✓ should clear cache when clearCache() called (1 ms)
+      ✓ should reload from file after cache cleared (2 ms)
+    Validation
+      ✓ should validate model reference format (provider/model) (2 ms)
+      ✓ should accept provider/sub-provider/model format
+      ✓ should validate model options (temperature range, etc.) (1 ms)
+    Atomic write verification
+      ✓ should use atomic writes (file exists after write) (1 ms)
+      ✓ should handle concurrent writes gracefully (3 ms)
+
+      ✓ should update existing sub-stage configuration (2 ms)
+      ✓ should update lastUpdated timestamp (3 ms)
+      ✓ should persist changes to file (3 ms)
+    setDefault
+      ✓ should update default model configuration (2 ms)
+      ✓ should persist changes to file (1 ms)
+    Caching
+      ✓ should cache config after first load (1 ms)
+      ✓ should clear cache when clearCache() called (1 ms)
+      ✓ should reload from file after cache cleared (2 ms)
+    Validation
+      ✓ should validate model reference format (provider/model) (2 ms)
+      ✓ should accept provider/sub-provider/model format
+      ✓ should validate model options (temperature range, etc.) (1 ms)
+    Atomic write verification
+      ✓ should use atomic writes (file exists after write) (1 ms)
+      ✓ should handle concurrent writes gracefully (3 ms)
+
+PASS src/tests/state/loop-enforcer.test.ts
+PASS src/tests/state/loop-enforcer.test.ts
+  LoopEnforcer
+    canTransition
+      ✓ should allow PLAN → APPLY (6 ms)
+      ✓ should allow APPLY → UNIFY
+      ✓ should allow UNIFY → PLAN
+      ✓ should reject PLAN → UNIFY (1 ms)
+      ✓ should reject APPLY → PLAN
+      ✓ should reject UNIFY → APPLY
+      ✓ should mirror isValidTransition helper
+    enforceTransition
+      ✓ should not throw for valid transitions
+      ✓ should throw error with guidance for invalid transitions (99 ms)
+      ✓ should include user-friendly error messages
+      ✓ should report no valid next states for invalid from phase
+    getRequiredNextAction
+      ✓ should return correct action for PLAN
+      ✓ should return correct action for APPLY
+      ✓ should return correct action for UNIFY
+    canStartNewLoop
+      ✓ should allow starting new loop from UNIFY
+      ✓ should allow starting new loop from undefined
+      ✓ should not allow starting new loop from PLAN
+      ✓ should not allow starting new loop from APPLY
+    enforceCanStartNewLoop
+      ✓ should not throw when can start new loop
+      ✓ should throw with guidance when cannot start new loop
+      ✓ should include currentPhase in error message when called with PLAN
+      ✓ should not throw when called with undefined (can start new loop)
+      ✓ should include APPLY in error message when called with APPLY
+      ✓ should include initial state guidance when called with null
+
+  LoopEnforcer
+    canTransition
+      ✓ should allow PLAN → APPLY (6 ms)
+      ✓ should allow APPLY → UNIFY
+      ✓ should allow UNIFY → PLAN
+      ✓ should reject PLAN → UNIFY (1 ms)
+      ✓ should reject APPLY → PLAN
+      ✓ should reject UNIFY → APPLY
+      ✓ should mirror isValidTransition helper
+    enforceTransition
+      ✓ should not throw for valid transitions
+      ✓ should throw error with guidance for invalid transitions (99 ms)
+      ✓ should include user-friendly error messages
+      ✓ should report no valid next states for invalid from phase
+    getRequiredNextAction
+      ✓ should return correct action for PLAN
+      ✓ should return correct action for APPLY
+      ✓ should return correct action for UNIFY
+    canStartNewLoop
+      ✓ should allow starting new loop from UNIFY
+      ✓ should allow starting new loop from undefined
+      ✓ should not allow starting new loop from PLAN
+      ✓ should not allow starting new loop from APPLY
+    enforceCanStartNewLoop
+      ✓ should not throw when can start new loop
+      ✓ should throw with guidance when cannot start new loop
+      ✓ should include currentPhase in error message when called with PLAN
+      ✓ should not throw when called with undefined (can start new loop)
+      ✓ should include APPLY in error message when called with APPLY
+      ✓ should include initial state guidance when called with null
+
+PASS src/tests/storage/milestone-manager.test.ts
+PASS src/tests/storage/milestone-manager.test.ts
+  MilestoneManager
+  MilestoneManager
+    resolveMilestoneArchivePath
+    resolveMilestoneArchivePath
+      ✓ should return .paul/MILESTONE-ARCHIVE.md when .paul exists (1 ms)
+      ✓ should return .openpaul/MILESTONE-ARCHIVE.md when .openpaul exists
+      ✓ should return null when neither directory exists
+    createMilestone
+      ✓ should return .paul/MILESTONE-ARCHIVE.md when .paul exists (1 ms)
+      ✓ should return .openpaul/MILESTONE-ARCHIVE.md when .openpaul exists
+      ✓ should return null when neither directory exists
+    createMilestone
+      ✓ should create milestone with required fields (1 ms)
+      ✓ should add milestone section to ROADMAP.md
+      ✓ should create milestone with required fields (1 ms)
+      ✓ should add milestone section to ROADMAP.md
+      ✓ should validate phase numbers exist (92 ms)
+      ✓ should accept optional theme
+      ✓ should throw when ROADMAP.md not found
+    getMilestone
+      ✓ should return milestone when found
+      ✓ should return null when not found
+      ✓ should validate phase numbers exist (92 ms)
+      ✓ should accept optional theme
+      ✓ should throw when ROADMAP.md not found
+    getMilestone
+      ✓ should return milestone when found
+      ✓ should return null when not found
+      ✓ should parse milestone dates from ROADMAP.md (1 ms)
+    getActiveMilestone
+      ✓ should return first non-completed milestone
+      ✓ should return null when all completed
+      ✓ should return null when no milestones
+    getMilestoneProgress
+      ✓ should calculate progress by phases completed
+      ✓ should return null for non-existent milestone
+      ✓ should calculate percentage correctly
+      ✓ should include phase status breakdown (1 ms)
+    completeMilestone
+      ✓ should throw when milestone not found
+      ✓ should throw when milestone already completed
+    canModifyPhase
+      ✓ should return allowed=true without warning when no active milestone
+      ✓ should parse milestone dates from ROADMAP.md (1 ms)
+    getActiveMilestone
+      ✓ should return first non-completed milestone
+      ✓ should return null when all completed
+      ✓ should return null when no milestones
+    getMilestoneProgress
+      ✓ should calculate progress by phases completed
+      ✓ should return null for non-existent milestone
+      ✓ should calculate percentage correctly
+      ✓ should include phase status breakdown (1 ms)
+    completeMilestone
+      ✓ should throw when milestone not found
+      ✓ should throw when milestone already completed
+    canModifyPhase
+      ✓ should return allowed=true without warning when no active milestone
+      ✓ should return allowed=true with warning when phase in active milestone
+      ✓ should return allowed=true without warning when phase not in active milestone
+
+      ✓ should return allowed=true with warning when phase in active milestone
+      ✓ should return allowed=true without warning when phase not in active milestone
+
+PASS src/tests/storage/session-manager.test.ts
+PASS src/tests/storage/session-manager.test.ts
+  SessionManager class
+  SessionManager class
+    saveSession
+    saveSession
+      ✓ should create session file with valid data (8 ms)
+      ✓ should update CURRENT-SESSION reference file (2 ms)
+      ✓ should validate session state before saving (7 ms)
+    loadCurrentSession
+      ✓ should load session from CURRENT-SESSION reference (4 ms)
+      ✓ should return null if no session exists (1 ms)
+      ✓ should create session file with valid data (8 ms)
+      ✓ should update CURRENT-SESSION reference file (2 ms)
+      ✓ should validate session state before saving (7 ms)
+    loadCurrentSession
+      ✓ should load session from CURRENT-SESSION reference (4 ms)
+      ✓ should return null if no session exists (1 ms)
+      ✓ should return null if session file is corrupted (2 ms)
+      ✓ should return null if CURRENT-SESSION file is missing
+    sessionExists
+      ✓ should return true for existing session (2 ms)
+      ✓ should return false for non-existent session (1 ms)
+    deleteSession
+      ✓ should remove session file (1 ms)
+      ✓ should handle missing session gracefully
+    getCurrentSessionId
+      ✓ should return current session ID (3 ms)
+      ✓ should return null if no session
+    generateSessionId
+      ✓ should create unique IDs (3 ms)
+      ✓ should return null if session file is corrupted (2 ms)
+      ✓ should return null if CURRENT-SESSION file is missing
+    sessionExists
+      ✓ should return true for existing session (2 ms)
+      ✓ should return false for non-existent session (1 ms)
+    deleteSession
+      ✓ should remove session file (1 ms)
+      ✓ should handle missing session gracefully
+    getCurrentSessionId
+      ✓ should return current session ID (3 ms)
+      ✓ should return null if no session
+    generateSessionId
+      ✓ should create unique IDs (3 ms)
+    validateSessionState
+    validateSessionState
+      ✓ should return valid=true for fresh session (3 ms)
+      ✓ should warn about stale sessions (> 24 hours) (2 ms)
+      ✓ should return errors for corrupted session (1 ms)
+      ✓ should return errors for non-existent session (1 ms)
+
+      ✓ should return valid=true for fresh session (3 ms)
+      ✓ should warn about stale sessions (> 24 hours) (2 ms)
+      ✓ should return errors for corrupted session (1 ms)
+      ✓ should return errors for non-existent session (1 ms)
+
+FAIL src/tests/commands/handoff.test.ts
+FAIL src/tests/commands/handoff.test.ts
+  Handoff Command Functionality
+    not initialized state
+      ✕ should return error if no active state (not initialized) (3 ms)
+  Handoff Command Functionality
+    not initialized state
+      ✕ should return error if no active state (not initialized) (3 ms)
+    with paused session
+      ✓ should work with paused session (loads existing session) (2 ms)
+    with paused session
+      ✓ should work with paused session (loads existing session) (2 ms)
+      ✓ should include correct session ID and timestamp (1 ms)
+    without paused session
+      ✓ should include correct session ID and timestamp (1 ms)
+    without paused session
+      ✓ should work without paused session (creates temporary session) (2 ms)
+    template replacement
+      ✓ should replace all template variables correctly (1 ms)
+      ✓ should work without paused session (creates temporary session) (2 ms)
+    template replacement
+      ✓ should replace all template variables correctly (1 ms)
+      ✓ should include correct loop position markers
+      ✓ should generate HANDOFF.md from template
+    file generation
+      ✓ should write HANDOFF.md to .openpaul/ directory (1 ms)
+      ✓ should return formatted success message
+      ✓ should include correct loop position markers
+      ✓ should generate HANDOFF.md from template
+    file generation
+      ✓ should write HANDOFF.md to .openpaul/ directory (1 ms)
+      ✓ should return formatted success message
+      ✓ should create .openpaul directory if it doesn't exist (1 ms)
+    error handling
+      ✓ should return formatted error on file write failure
+      ✓ should create .openpaul directory if it doesn't exist (1 ms)
+    error handling
+      ✓ should return formatted error on file write failure
+
+
+  ● Handoff Command Functionality › not initialized state › should return error if no active state (not initialized)
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected substring: "/paul:init"
+    Received string:    "## ❌ Cannot Create Handoff·
+    OpenPAUL has not been initialized in this project.·
+    **Next Steps:**
+    - Run `/openpaul:init` to initialize OpenPAUL"
+
+      71 |       expect(result).toContain('Cannot Create Handoff')
+      72 |       expect(result).toContain('not been initialized')
+    > 73 |       expect(result).toContain('/paul:init')
+         |                      ^
+      74 |     })
+      75 |   })
+      76 |
+
+      at Object.<anonymous> (src/tests/commands/handoff.test.ts:73:22)
+
+  ● Handoff Command Functionality › not initialized state › should return error if no active state (not initialized)
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected substring: "/paul:init"
+    Received string:    "## ❌ Cannot Create Handoff·
+    OpenPAUL has not been initialized in this project.·
+    **Next Steps:**
+    - Run `/openpaul:init` to initialize OpenPAUL"
+
+      71 |       expect(result).toContain('Cannot Create Handoff')
+      72 |       expect(result).toContain('not been initialized')
+    > 73 |       expect(result).toContain('/paul:init')
+         |                      ^
+      74 |     })
+      75 |   })
+      76 |
+
+      at Object.<anonymous> (src/tests/commands/handoff.test.ts:73:22)
+
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: write EPIPE
+    at afterWriteDispatched (node:internal/stream_base_commons:159:15)
+    at writeGeneric (node:internal/stream_base_commons:150:3)
+    at Socket._writeGeneric (node:net:971:11)
+    at Socket._write (node:net:983:8)
+    at writeOrBuffer (node:internal/streams/writable:572:12)
+    at _write (node:internal/streams/writable:501:10)
+    at Writable.write (node:internal/streams/writable:510:10)
+    at stream.write (/Users/kris/Repos/openpaul/node_modules/@jest/reporters/build/VerboseReporter.js:47:7)
+    at PassThrough.ondata (node:internal/streams/readable:1009:22)
+    at PassThrough.emit (node:events:518:28)
+Emitted 'error' event on Socket instance at:
+    at Socket.onerror (node:internal/streams/readable:1028:14)
+    at Socket.emit (node:events:518:28)
+    at emitErrorNT (node:internal/streams/destroy:170:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:129:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  errno: -32,
+  code: 'EPIPE',
+  syscall: 'write'
+}
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: write EPIPE
+    at afterWriteDispatched (node:internal/stream_base_commons:159:15)
+    at writeGeneric (node:internal/stream_base_commons:150:3)
+    at Socket._writeGeneric (node:net:971:11)
+    at Socket._write (node:net:983:8)
+    at writeOrBuffer (node:internal/streams/writable:572:12)
+    at _write (node:internal/streams/writable:501:10)
+    at Writable.write (node:internal/streams/writable:510:10)
+    at stream.write (/Users/kris/Repos/openpaul/node_modules/@jest/reporters/build/VerboseReporter.js:47:7)
+    at PassThrough.ondata (node:internal/streams/readable:1009:22)
+    at PassThrough.emit (node:events:518:28)
+Emitted 'error' event on Socket instance at:
+    at Socket.onerror (node:internal/streams/readable:1028:14)
+    at Socket.emit (node:events:518:28)
+    at emitErrorNT (node:internal/streams/destroy:170:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:129:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  errno: -32,
+  code: 'EPIPE',
+  syscall: 'write'
+}
+
+Node.js v22.14.0
+
+Node.js v22.14.0
