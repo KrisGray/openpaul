@@ -34,6 +34,7 @@ export const openpaulMapCodebase: ToolDefinition = tool({
         console.error('Scanning codebase...')
       }
 
+      const scanTimestamp = Date.now()
       const doc = generateCodebaseDoc(context.directory, { maxDepth, outputPath })
 
       const dir = dirname(outputPath)
@@ -45,7 +46,7 @@ export const openpaulMapCodebase: ToolDefinition = tool({
       await atomicWrite(outputPath, markdown)
 
       const cacheEntries = getLastScanCacheEntries()
-      saveCache(context.directory, cacheEntries)
+      saveCache(context.directory, cacheEntries, scanTimestamp)
 
       if (verbose) {
         console.error(`Scanned ${doc.fileCounts.files} files in ${doc.fileCounts.directories} directories`)
