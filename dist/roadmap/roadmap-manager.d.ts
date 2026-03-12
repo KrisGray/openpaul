@@ -47,6 +47,18 @@ export declare class RoadmapManager {
      */
     private readCurrentPhaseFromState;
     /**
+     * Resolve the path to STATE.md file
+     * Checks both .paul/STATE.md and .openpaul/STATE.md locations.
+     *
+     * @returns Full path to STATE.md or null if not found
+     */
+    private resolveStatePath;
+    /**
+     * Update STATE.md progress tracking after adding a phase
+     * Increments the Total Phases count by 1.
+     */
+    private updateStateProgress;
+    /**
      * Validate if a phase can be removed
      *
      * @param phaseNumber The phase number to remove
