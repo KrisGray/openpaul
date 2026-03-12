@@ -30,26 +30,15 @@ export const openpaulFlows: ToolDefinition = tool({
           }
 
           const flowsManager = new FlowsManager(context.directory)
-          const flows = flowsManager.list()
+          const { enabled, disabled } = flowsManager.list()
+          const enabledList = enabled.length > 0 ? formatList(enabled) : '- None'
+          const disabledList = disabled.length > 0 ? formatList(disabled) : '- None'
 
-          if (flows.length === 0) {
-            return formatHeader(2, '🌊 Special Flows') + '\n\n' +
-              'No flows configured.\n\n' +
-              'Run `/openpaul:flows action=init` to create default flows.'
-          }
-
-          let output = formatHeader(2, '🌊 Special Flows') + '\n\n'
-          
-          for (const flow of flows) {
-            const status = flow.enabled ? '✓ Enabled' : '○ Disabled'
-            output += formatBold(`${flow.name}:`) + ` ${status}`
-            if (flow.trigger) {
-              output += ` (trigger: ${flow.trigger})`
-            }
-            output += '\n'
-          }
-
-          return output
+          return formatHeader(2, '🌊 Special Flows') + '\n\n' +
+            formatBold('Enabled:') + '\n' +
+            `${enabledList}\n\n` +
+            formatBold('Disabled:') + '\n' +
+            `${disabledList}\n`
         }
 
         case 'enable': {
@@ -62,11 +51,7 @@ export const openpaulFlows: ToolDefinition = tool({
           }
 
           const flowsManager = new FlowsManager(context.directory)
-          const success = flowsManager.enable(name)
-
-          if (!success) {
-            return `Error: Flow "${name}" not found.`
-          }
+          flowsManager.enable(name)
 
           return formatHeader(2, '⚡ Flow Enabled') + '\n\n' +
             formatBold('Flow:') + ` ${name}\n\n` +
@@ -83,11 +68,7 @@ export const openpaulFlows: ToolDefinition = tool({
           }
 
           const flowsManager = new FlowsManager(context.directory)
-          const success = flowsManager.disable(name)
-
-          if (!success) {
-            return `Error: Flow "${name}" not found.`
-          }
+          flowsManager.disable(name)
 
           return formatHeader(2, '⚡ Flow Disabled') + '\n\n' +
             formatBold('Flow:') + ` ${name}\n\n` +
