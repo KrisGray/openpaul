@@ -346,7 +346,7 @@ describe('Plan-fix Command', () => {
       expect(result).toContain('performance')
     })
 
-    it('should show execute option with --execute flag', async () => {
+    it('should require confirmation when --execute is set without --confirm', async () => {
       mockQualityManager.resolvePhaseDir.mockReturnValue('/test/.planning/phases/07-quality')
       mockQualityManager.readUATIssues.mockReturnValue({
         phaseNumber: 7,
@@ -374,7 +374,44 @@ describe('Plan-fix Command', () => {
       const toolContext = { directory: mockDirectory } as any
       const result = await openpaulPlanFix.execute({ phase: 7, issue: 1, execute: true }, toolContext)
 
-      expect(result).toContain('/gsd-execute-phase')
+      expect(result).toContain('Confirmation required')
+      expect(result).toContain('--confirm')
+    })
+
+    it('should auto-execute when --execute and --confirm are set', async () => {
+      mockQualityManager.resolvePhaseDir.mockReturnValue('/test/.planning/phases/07-quality')
+      mockQualityManager.readUATIssues.mockReturnValue({
+        phaseNumber: 7,
+        sourcePlanId: '07-01',
+        createdAt: 1699999999000,
+        issues: [
+          {
+            id: 1,
+            itemDescription: 'Test item',
+            status: 'open',
+            severity: 'major',
+            category: 'functional',
+            description: 'Issue to fix',
+            sourcePlanId: '07-01',
+            createdAt: 1699999999000,
+          },
+        ],
+      })
+      mockQualityManager.getNextAlphaPlanId.mockReturnValue('07-01a')
+      mockFileManager.readPlan.mockReturnValue({
+        wave: 1,
+        requirements: [],
+      })
+
+      const executeMock = jest.fn().mockResolvedValue('ok')
+      const toolContext = { directory: mockDirectory, execute: executeMock } as any
+      const result = await openpaulPlanFix.execute(
+        { phase: 7, issue: 1, execute: true, confirm: true },
+        toolContext
+      )
+
+      expect(executeMock).toHaveBeenCalled()
+      expect(result).toContain('Auto-execution')
     })
 
     it('should show suggestion to run execute without --execute flag', async () => {
