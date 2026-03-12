@@ -27,6 +27,7 @@ type PlanFixArgs = {
   phase: number
   issue?: number
   execute?: boolean
+  confirm?: boolean
 }
 
 export const openpaulPlanFix = toolFactory({
@@ -36,6 +37,7 @@ export const openpaulPlanFix = toolFactory({
     phase: z.number().int().positive().describe('Phase number to fix issues in'),
     issue: z.number().int().positive().optional().describe('Issue ID to fix (from UAT-ISSUES.md)'),
     execute: z.boolean().optional().describe('Run execute-phase after creating plan'),
+    confirm: z.boolean().optional().describe('Confirm auto-execution when --execute is set'),
   }),
   execute: async (args: PlanFixArgs, context: ToolContext) => {
     try {
@@ -170,15 +172,36 @@ export const openpaulPlanFix = toolFactory({
       output += `- Parent plan: ${parentPlanId}\n`
       output += `- Wave: ${parentWave}\n\n`
 
-      if (args.execute) {
-        output += formatBold('Next:') + '\n'
-        output += 'Run `/gsd-execute-phase ' + args.phase + '` to implement the fix\n'
-      } else {
-        output += formatBold('Next:') + '\n'
-        output += 'Run `/gsd-execute-phase ' + args.phase + '` to implement the fix\n\n'
-        output += formatBold('Or execute immediately with:') + '\n'
-        output += `/openpaul:plan-fix --phase ${args.phase} --issue ${args.issue} --execute\n`
+      if (args.execute && !args.confirm) {
+        output += formatBold('Confirmation required:') + '\n'
+        output += formatList([
+          'A fix plan was created, but auto-execution requires explicit confirmation.',
+          'Re-run with --confirm to proceed.',
+        ]) + '\n\n'
+        output += formatBold('To execute now:') + '\n'
+        output += `/openpaul:plan-fix --phase ${args.phase} --issue ${args.issue} --execute --confirm\n`
+        return output
       }
+
+      if (args.execute && args.confirm) {
+        const executionCommand = `/gsd-execute-phase ${args.phase}`
+        output += formatBold('Auto-execution:') + '\n'
+
+        const executionResult = await tryExecutePhase(context, executionCommand)
+        if (executionResult.executed) {
+          output += `Started ${executionCommand}.\n`
+        } else {
+          output += 'Unable to auto-execute in this environment.\n'
+          output += `Run \`${executionCommand}\` manually.\n`
+        }
+
+        return output
+      }
+
+      output += formatBold('Next:') + '\n'
+      output += 'Run `/gsd-execute-phase ' + args.phase + '` to implement the fix\n\n'
+      output += formatBold('Or execute immediately with:') + '\n'
+      output += `/openpaul:plan-fix --phase ${args.phase} --issue ${args.issue} --execute\n`
 
       return output
 
@@ -195,6 +218,37 @@ export const openpaulPlanFix = toolFactory({
     }
   },
 })
+
+async function tryExecutePhase(
+  context: ToolContext,
+  command: string
+): Promise<{ executed: boolean }> {
+  const contextAny = context as any
+  const helpers = [
+    contextAny?.executePhase,
+    contextAny?.executeCommand,
+    contextAny?.executeTool,
+    contextAny?.execute,
+    contextAny?.runTool,
+    contextAny?.tool?.execute,
+  ].filter((helper): helper is (input: any) => Promise<unknown> => typeof helper === 'function')
+
+  for (const helper of helpers) {
+    try {
+      await helper(command)
+      return { executed: true }
+    } catch (error) {
+      try {
+        await helper({ command })
+        return { executed: true }
+      } catch (nestedError) {
+        continue
+      }
+    }
+  }
+
+  return { executed: false }
+}
 
 /**
  * Display list of open issues
