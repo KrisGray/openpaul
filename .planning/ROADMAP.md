@@ -3,7 +3,7 @@
 ## Milestones
 
 - ✅ **v1.0 MVP** - Phases 1-2 (shipped 2026-03-05)
-- 🚧 **v1.1 Full Command Implementation** - Phases 3-9 (18/50 plans, 36% complete)
+- 🚧 **v1.1 Full Command Implementation** - Phases 3-9 (21/56 plans, 38% complete)
 - 📋 **v2.0** - Future enhancements (planned)
 
 ## Phases
@@ -161,13 +161,19 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. User can perform manual acceptance testing with `/openpaul:verify` that generates test checklist from SUMMARY.md, guides through each test, and captures results in phase UAT-ISSUES.md
   2. User can fix plans based on verification issues with `/openpaul:plan-fix` that reads UAT-ISSUES.md, identifies issues requiring plan updates, and creates new or modifies existing plan
-**Plans**: 4 plans (4 complete, needs UAT verification)
+**Plans**: 10 plans (7 complete, gap closure in progress)
 
 Plans:
 - [x] 07-01: Create quality types and QualityManager (Wave 1)
 - [x] 07-02: Build /openpaul:verify command (Wave 2, QUAL-01)
 - [x] 07-03: Build /openpaul:plan-fix command (Wave 2, QUAL-02)
 - [x] 07-04: Add tests for quality commands (Wave 3)
+- [x] 07-05: Fix branding-related test failures
+- [x] 07-06: Add diff dependency for diff-formatter
+- [x] 07-07: Fix directory scanner cache validity
+- [ ] 07-08: Add Jest test suites for quality command workflows
+- [ ] 07-09: Resolve remaining UAT test failures and confirm full suite passes
+- [ ] 07-10: Add missing @opencode-ai/plugin mocks to command tests
 
 #### Phase 8: Configuration
 **Goal**: Users can manage project configuration, specialized flows, and codebase documentation
@@ -222,11 +228,11 @@ Phases execute in numeric order: 3 → 4 → 5 → 6 → 7 → 8 → 9
 | 4. Roadmap Management | v1.1 | 0/4 | Not started | - |
 | 5. Milestone Management | v1.1 | 0/5 | Not started | - |
 | 6. Pre-Planning + Research | v1.1 | 0/12 | Not started | - |
-| 7. Quality | v1.1 | 4/4 | Executed, needs UAT | - |
+| 7. Quality | v1.1 | 7/10 | In progress (gaps) | - |
 | 8. Configuration | v1.1 | 0/7 | Not started | - |
 | 9. Documentation | v1.1 | 4/4 | Executed, needs UAT | - |
 
-**Overall v1.1 Progress:** 18/50 plans (36%)
+**Overall v1.1 Progress:** 21/56 plans (38%)
 
 ## Dependencies
 
@@ -251,7 +257,7 @@ Phase 9 (Documentation) - Ready to execute (can run independently)
 - [ ] All 7 phases complete (3-9)
 - [ ] All 22 requirements verified and passing
   - [x] Phase 3: 14/14 complete (Session Management)
-  - [x] Phase 7: 4/4 executed, needs UAT (Quality)
+- [x] Phase 7: 7/10 executed, needs UAT (Quality)
   - [x] Phase 9: 4/4 ready to execute (Documentation)
   - [ ] Phase 4: 0/4 (Roadmap Management)
   - [ ] Phase 5: 0/5 (Milestone Management)
