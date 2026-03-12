@@ -7,7 +7,7 @@
 import { RoadmapManager } from '../../roadmap/roadmap-manager'
 import { MilestoneManager } from '../../storage/milestone-manager'
 import { StateManager } from '../../state/state-manager'
-import { paulMilestone } from '../../commands/milestone'
+import { openpaulMilestone } from '../../commands/milestone'
 import { formatHeader, formatBold, formatList } from '../../output/formatter'
 import type { PhaseEntry } from '../../types/roadmap'
 import type { Milestone } from '../../types/milestone'
@@ -98,7 +98,7 @@ describe('Milestone Command', () => {
 
     it('should create milestone with all required fields', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulMilestone.execute(
+      const result = await openpaulMilestone.execute(
         {
           name: 'v1.1 Full Command Implementation',
           scope: 'Implement all remaining PAUL commands',
@@ -121,7 +121,7 @@ describe('Milestone Command', () => {
 
     it('should create milestone with optional theme', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulMilestone.execute(
+      const result = await openpaulMilestone.execute(
         {
           name: 'v1.1 Features',
           scope: 'All commands',
@@ -144,7 +144,7 @@ describe('Milestone Command', () => {
 
     it('should validate phase numbers exist', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulMilestone.execute(
+      const result = await openpaulMilestone.execute(
         {
           name: 'Test Milestone',
           scope: 'Test scope',
@@ -162,7 +162,7 @@ describe('Milestone Command', () => {
 
     it('should prompt for STATE.md update in interactive mode', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulMilestone.execute(
+      const result = await openpaulMilestone.execute(
         {
           name: 'v1.1',
           scope: 'Commands',
@@ -180,7 +180,7 @@ describe('Milestone Command', () => {
 
     it('should skip STATE.md prompt with --updateState flag', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulMilestone.execute(
+      const result = await openpaulMilestone.execute(
         {
           name: 'v1.1',
           scope: 'Commands',
@@ -197,7 +197,7 @@ describe('Milestone Command', () => {
 
     it('should trim whitespace from inputs', async () => {
       const toolContext = { directory: mockDirectory } as any
-      await paulMilestone.execute(
+      await openpaulMilestone.execute(
         {
           name: '  v1.1 Features  ',
           scope: '  All commands  ',
@@ -218,7 +218,7 @@ describe('Milestone Command', () => {
 
     it('should return help message when no args provided', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulMilestone.execute(
+      const result = await openpaulMilestone.execute(
         {
           name: undefined,
           scope: undefined,
@@ -243,7 +243,7 @@ describe('Milestone Command', () => {
       mockRoadmapManager.resolveRoadmapPath.mockReturnValue(null)
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulMilestone.execute(
+      const result = await openpaulMilestone.execute(
         {
           name: 'Test',
           scope: 'Test scope',
@@ -268,7 +268,7 @@ describe('Milestone Command', () => {
 
     it('should list valid phases when invalid phases provided', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulMilestone.execute(
+      const result = await openpaulMilestone.execute(
         {
           name: 'Test',
           scope: 'Test scope',
@@ -295,7 +295,7 @@ describe('Milestone Command', () => {
 
     it('should return error when name is missing', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulMilestone.execute(
+      const result = await openpaulMilestone.execute(
         {
           name: undefined,
           scope: 'Test scope',
@@ -313,7 +313,7 @@ describe('Milestone Command', () => {
 
     it('should return error when scope is missing', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulMilestone.execute(
+      const result = await openpaulMilestone.execute(
         {
           name: 'Test Milestone',
           scope: undefined,
@@ -331,7 +331,7 @@ describe('Milestone Command', () => {
 
     it('should return error when phases is missing', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulMilestone.execute(
+      const result = await openpaulMilestone.execute(
         {
           name: 'Test Milestone',
           scope: 'Test scope',
@@ -349,7 +349,7 @@ describe('Milestone Command', () => {
 
     it('should return error when name is empty string', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulMilestone.execute(
+      const result = await openpaulMilestone.execute(
         {
           name: '',
           scope: 'Test scope',
@@ -366,7 +366,7 @@ describe('Milestone Command', () => {
 
     it('should return error when name is whitespace only', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulMilestone.execute(
+      const result = await openpaulMilestone.execute(
         {
           name: '   ',
           scope: 'Test scope',
@@ -393,7 +393,7 @@ describe('Milestone Command', () => {
 
     it('should handle duplicate milestone names', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulMilestone.execute(
+      const result = await openpaulMilestone.execute(
         {
           name: 'v1.1',
           scope: 'Test scope',
@@ -420,7 +420,7 @@ describe('Milestone Command', () => {
 
     it('should handle unexpected errors gracefully', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulMilestone.execute(
+      const result = await openpaulMilestone.execute(
         {
           name: 'Test',
           scope: 'Test scope',
@@ -442,7 +442,7 @@ describe('Milestone Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulMilestone.execute(
+      const result = await openpaulMilestone.execute(
         {
           name: 'Test',
           scope: 'Test scope',
@@ -467,7 +467,7 @@ describe('Milestone Command', () => {
 
     it('should format output with header + bullet list style', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulMilestone.execute(
+      const result = await openpaulMilestone.execute(
         {
           name: 'v1.1 Full Command Implementation',
           scope: 'Implement all commands',
@@ -487,7 +487,7 @@ describe('Milestone Command', () => {
 
     it('should include milestone name in output', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulMilestone.execute(
+      const result = await openpaulMilestone.execute(
         {
           name: 'v1.1 Features',
           scope: 'All commands',
@@ -503,7 +503,7 @@ describe('Milestone Command', () => {
 
     it('should include phase numbers in output', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulMilestone.execute(
+      const result = await openpaulMilestone.execute(
         {
           name: 'Test',
           scope: 'Test scope',
@@ -520,7 +520,7 @@ describe('Milestone Command', () => {
 
     it('should include status in output', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulMilestone.execute(
+      const result = await openpaulMilestone.execute(
         {
           name: 'Test',
           scope: 'Test scope',
@@ -542,7 +542,7 @@ describe('Milestone Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulMilestone.execute(
+      const result = await openpaulMilestone.execute(
         {
           name: 'Test',
           scope: 'Test scope',
@@ -566,7 +566,7 @@ describe('Milestone Command', () => {
 
     it('should parse comma-separated phase numbers', async () => {
       const toolContext = { directory: mockDirectory } as any
-      await paulMilestone.execute(
+      await openpaulMilestone.execute(
         {
           name: 'Test',
           scope: 'Test scope',
@@ -587,7 +587,7 @@ describe('Milestone Command', () => {
 
     it('should handle phases with spaces', async () => {
       const toolContext = { directory: mockDirectory } as any
-      await paulMilestone.execute(
+      await openpaulMilestone.execute(
         {
           name: 'Test',
           scope: 'Test scope',
@@ -608,7 +608,7 @@ describe('Milestone Command', () => {
 
     it('should filter out invalid phase numbers in input', async () => {
       const toolContext = { directory: mockDirectory } as any
-      await paulMilestone.execute(
+      await openpaulMilestone.execute(
         {
           name: 'Test',
           scope: 'Test scope',
@@ -629,7 +629,7 @@ describe('Milestone Command', () => {
 
     it('should filter out negative phase numbers', async () => {
       const toolContext = { directory: mockDirectory } as any
-      await paulMilestone.execute(
+      await openpaulMilestone.execute(
         {
           name: 'Test',
           scope: 'Test scope',

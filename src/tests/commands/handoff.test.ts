@@ -6,7 +6,7 @@
 
 import { StateManager } from '../../state/state-manager'
 import { SessionManager } from '../../storage/session-manager'
-import { paulHandoff } from '../../commands/handoff'
+import { openpaulHandoff } from '../../commands/handoff'
 import { formatHeader, formatBold, formatList } from '../../output/formatter'
 import { readFileSync, existsSync, mkdirSync } from 'fs'
 import { atomicWrite } from '../../storage/atomic-writes'
@@ -66,7 +66,7 @@ describe('Handoff Command Functionality', () => {
       mockStateManager.getCurrentPosition.mockReturnValue(undefined)
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulHandoff.execute({}, toolContext)
+      const result = await openpaulHandoff.execute({}, toolContext)
 
       expect(result).toContain('Cannot Create Handoff')
       expect(result).toContain('not been initialized')
@@ -99,7 +99,7 @@ describe('Handoff Command Functionality', () => {
       ;(readFileSync as jest.Mock).mockReturnValue(templateContent)
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulHandoff.execute({}, toolContext)
+      const result = await openpaulHandoff.execute({}, toolContext)
 
       expect(result).toContain('Handoff Created')
       expect(result).toContain('paused-session-456')
@@ -111,7 +111,7 @@ describe('Handoff Command Functionality', () => {
       ;(readFileSync as jest.Mock).mockReturnValue(templateContent)
 
       const toolContext = { directory: mockDirectory } as any
-      await paulHandoff.execute({}, toolContext)
+      await openpaulHandoff.execute({}, toolContext)
 
       const writeCall = (atomicWrite as jest.Mock).mock.calls[0]
       const writtenContent = writeCall[1]
@@ -135,7 +135,7 @@ describe('Handoff Command Functionality', () => {
       ;(readFileSync as jest.Mock).mockReturnValue(templateContent)
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulHandoff.execute({}, toolContext)
+      const result = await openpaulHandoff.execute({}, toolContext)
 
       expect(result).toContain('Handoff Created')
       expect(mockSessionManager.generateSessionId).toHaveBeenCalled()
@@ -179,7 +179,7 @@ Next: {{next_action}}
       ;(readFileSync as jest.Mock).mockReturnValue(templateContent)
 
       const toolContext = { directory: mockDirectory } as any
-      await paulHandoff.execute({}, toolContext)
+      await openpaulHandoff.execute({}, toolContext)
 
       const writeCall = (atomicWrite as jest.Mock).mock.calls[0]
       const writtenContent = writeCall[1]
@@ -198,7 +198,7 @@ Next: {{next_action}}
       ;(readFileSync as jest.Mock).mockReturnValue(templateContent)
 
       const toolContext = { directory: mockDirectory } as any
-      await paulHandoff.execute({}, toolContext)
+      await openpaulHandoff.execute({}, toolContext)
 
       const writeCall = (atomicWrite as jest.Mock).mock.calls[0]
       const writtenContent = writeCall[1]
@@ -214,7 +214,7 @@ Next: {{next_action}}
       ;(readFileSync as jest.Mock).mockReturnValue(templateContent)
 
       const toolContext = { directory: mockDirectory } as any
-      await paulHandoff.execute({}, toolContext)
+      await openpaulHandoff.execute({}, toolContext)
 
       expect(readFileSync).toHaveBeenCalled()
       expect(atomicWrite).toHaveBeenCalled()
@@ -234,7 +234,7 @@ Next: {{next_action}}
 
     it('should write HANDOFF.md to .openpaul/ directory', async () => {
       const toolContext = { directory: mockDirectory } as any
-      await paulHandoff.execute({}, toolContext)
+      await openpaulHandoff.execute({}, toolContext)
 
       const writeCall = (atomicWrite as jest.Mock).mock.calls[0]
       const writtenPath = writeCall[0]
@@ -245,7 +245,7 @@ Next: {{next_action}}
 
     it('should return formatted success message', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulHandoff.execute({}, toolContext)
+      const result = await openpaulHandoff.execute({}, toolContext)
 
       expect(result).toContain('✅ Handoff Created')
       expect(result).toContain('HANDOFF.md')
@@ -268,7 +268,7 @@ Next: {{next_action}}
       })
 
       const toolContext = { directory: mockDirectory } as any
-      await paulHandoff.execute({}, toolContext)
+      await openpaulHandoff.execute({}, toolContext)
 
       expect(mkdirSync).toHaveBeenCalledWith(
         expect.stringContaining('.openpaul'),
@@ -290,7 +290,7 @@ Next: {{next_action}}
       ;(readFileSync as jest.Mock).mockReturnValue(templateContent)
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulHandoff.execute({}, toolContext)
+      const result = await openpaulHandoff.execute({}, toolContext)
 
       expect(result).toContain('Handoff Failed')
       expect(result).toContain('Write failed')

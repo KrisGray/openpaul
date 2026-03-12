@@ -1,7 +1,7 @@
 import { FileManager } from '../../storage/file-manager'
 import { StateManager } from '../../state/state-manager'
 import { LoopEnforcer } from '../../state/loop-enforcer'
-import { paulUnify } from '../../commands/unify'
+import { openpaulUnify } from '../../commands/unify'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 
@@ -16,7 +16,7 @@ jest.mock(
   { virtual: true }
 )
 
-describe('paulUnify command', () => {
+describe('openpaulUnify command', () => {
   const mockDirectory = '/test/project'
   const toolContext = { directory: mockDirectory } as any
 
@@ -66,18 +66,18 @@ describe('paulUnify command', () => {
     ;(LoopEnforcer as jest.Mock).mockImplementation(() => mockLoopEnforcer)
   })
 
-  it('registers paul:unify in the plugin tool map', () => {
+  it('registers openpaul:unify in the plugin tool map', () => {
     const pluginPath = join(__dirname, '../../index.ts')
     const pluginSource = readFileSync(pluginPath, 'utf-8')
 
-    expect(pluginSource).toContain("'paul:unify'")
+    expect(pluginSource).toContain("'openpaul:unify'")
   })
 
   describe('error handling', () => {
     it('should return error without init', async () => {
       mockStateManager.getCurrentPosition.mockReturnValue(undefined)
 
-      const result = await paulUnify.execute({}, toolContext)
+      const result = await openpaulUnify.execute({}, toolContext)
 
       expect(result).toContain('❌ Not Initialized')
       expect(result).toContain('Run /paul:init first')
@@ -86,7 +86,7 @@ describe('paulUnify command', () => {
     it('should return error if not in APPLY phase', async () => {
       mockStateManager.getCurrentPosition.mockReturnValue({ phaseNumber: 2, phase: 'PLAN' })
 
-      const result = await paulUnify.execute({}, toolContext)
+      const result = await openpaulUnify.execute({}, toolContext)
 
       expect(result).toContain('❌ Invalid State')
       expect(result).toContain('Must be in APPLY phase')
@@ -101,7 +101,7 @@ describe('paulUnify command', () => {
         metadata: {},
       })
 
-      const result = await paulUnify.execute({}, toolContext)
+      const result = await openpaulUnify.execute({}, toolContext)
 
       expect(result).toContain('❌ No Plan Found')
       expect(result).toContain('No current plan found')
@@ -134,7 +134,7 @@ describe('paulUnify command', () => {
     it('should create summary and transition to APPLY → UNIFY → PLAN', async () => {
       mockFileManager.readPlan.mockReturnValue(plan)
 
-      const result = await paulUnify.execute({}, toolContext)
+      const result = await openpaulUnify.execute({}, toolContext)
 
       expect(result).toContain('🔗 Loop Closed: 02-03')
       expect(result).toContain('## Summary')
@@ -181,7 +181,7 @@ describe('paulUnify command', () => {
     it('should handle output format with emojis', async () => {
       mockFileManager.readPlan.mockReturnValue(plan)
 
-      const result = await paulUnify.execute({}, toolContext)
+      const result = await openpaulUnify.execute({}, toolContext)
 
       expect(result).toContain('🔗 Loop Closed: 02-03')
       expect(result).toContain('✅')
@@ -190,7 +190,7 @@ describe('paulUnify command', () => {
     it('should support partial status flag', async () => {
       mockFileManager.readPlan.mockReturnValue(plan)
 
-      const result = await paulUnify.execute({ status: 'partial' }, toolContext)
+      const result = await openpaulUnify.execute({ status: 'partial' }, toolContext)
 
       expect(result).toContain('⚠️ partial')
       expect(mockFileManager.writeSummary).toHaveBeenCalledWith(
@@ -205,7 +205,7 @@ describe('paulUnify command', () => {
     it('should include reconciliation and criteria results when provided', async () => {
       mockFileManager.readPlan.mockReturnValue(plan)
 
-      const result = await paulUnify.execute(
+      const result = await openpaulUnify.execute(
         {
           actuals: ['Task 1', { name: 'Extra Task', status: 'completed' }],
           criteriaResults: [

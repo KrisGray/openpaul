@@ -2,7 +2,7 @@
  * discuss command Tests
  */
 
-import { paulDiscuss } from '../../commands/discuss'
+import { openpaulDiscuss } from '../../commands/discuss'
 import { existsSync } from 'fs'
 import { join } from 'path'
 
@@ -18,7 +18,7 @@ jest.mock('../../storage/atomic-writes', () => ({
   atomicWrite: jest.fn().mockResolvedValue(undefined),
 }))
 
-describe('paulDiscuss', () => {
+describe('openpaulDiscuss', () => {
   const mockContext = { directory: '/test/project' }
 
   beforeEach(() => {
@@ -28,7 +28,7 @@ describe('paulDiscuss', () => {
   it('should return error when phase directory not found', async () => {
     ;(existsSync as jest.Mock).mockReturnValue(false)
     
-    const result = await (paulDiscuss as any).execute(
+    const result = await (openpaulDiscuss as any).execute(
       { phase: 99 },
       mockContext
     )
@@ -39,7 +39,7 @@ describe('paulDiscuss', () => {
   it('should return error when CONTEXT.md exists without overwrite', async () => {
     ;(existsSync as jest.Mock).mockReturnValue(true)
     
-    const result = await (paulDiscuss as any).execute(
+    const result = await (openpaulDiscuss as any).execute(
       { phase: 1 },
       mockContext
     )

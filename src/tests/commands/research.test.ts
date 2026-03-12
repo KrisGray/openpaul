@@ -2,7 +2,7 @@
  * research command Tests
  */
 
-import { paulResearch } from '../../commands/research'
+import { openpaulResearch } from '../../commands/research'
 import { existsSync } from 'fs'
 
 jest.mock('fs', () => ({
@@ -17,7 +17,7 @@ jest.mock('../../storage/atomic-writes', () => ({
   atomicWrite: jest.fn().mockResolvedValue(undefined),
 }))
 
-describe('paulResearch', () => {
+describe('openpaulResearch', () => {
   const mockContext = { directory: '/test/project' }
 
   beforeEach(() => {
@@ -25,7 +25,7 @@ describe('paulResearch', () => {
   })
 
   it('should return error when query is empty', async () => {
-    const result = await (paulResearch as any).execute(
+    const result = await (openpaulResearch as any).execute(
       { phase: 1, query: '' },
       mockContext
     )
@@ -36,7 +36,7 @@ describe('paulResearch', () => {
   it('should return error when phase directory not found', async () => {
     ;(existsSync as jest.Mock).mockReturnValue(false)
     
-    const result = await (paulResearch as any).execute(
+    const result = await (openpaulResearch as any).execute(
       { phase: 99, query: 'Test query' },
       mockContext
     )
@@ -49,7 +49,7 @@ describe('paulResearch', () => {
       return path.includes('phases')
     })
     
-    const result = await (paulResearch as any).execute(
+    const result = await (openpaulResearch as any).execute(
       { 
         phase: 1, 
         query: 'Test query',
@@ -67,7 +67,7 @@ describe('paulResearch', () => {
       return path.includes('phases')
     })
     
-    const result = await (paulResearch as any).execute(
+    const result = await (openpaulResearch as any).execute(
       { 
         phase: 1, 
         query: 'Test query',
@@ -83,7 +83,7 @@ describe('paulResearch', () => {
   it('should return error when file exists without overwrite', async () => {
     ;(existsSync as jest.Mock).mockReturnValue(true)
     
-    const result = await (paulResearch as any).execute(
+    const result = await (openpaulResearch as any).execute(
       { phase: 1, query: 'Test' },
       mockContext
     )

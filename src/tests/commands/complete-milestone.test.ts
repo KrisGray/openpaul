@@ -6,7 +6,7 @@
 
 import { RoadmapManager } from '../../roadmap/roadmap-manager'
 import { MilestoneManager } from '../../storage/milestone-manager'
-import { paulCompleteMilestone } from '../../commands/complete-milestone'
+import { openpaulCompleteMilestone } from '../../commands/complete-milestone'
 import { formatHeader, formatBold, formatList } from '../../output/formatter'
 import type { Milestone, MilestoneProgress, MilestoneArchiveEntry } from '../../types/milestone'
 
@@ -110,7 +110,7 @@ describe('Complete Milestone Command', () => {
 
     it('should show summary and prompt for confirmation without --confirm', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulCompleteMilestone.execute({}, toolContext)
+      const result = await openpaulCompleteMilestone.execute({}, toolContext)
 
       expect(mockMilestoneManager.getActiveMilestone).toHaveBeenCalled()
       expect(mockMilestoneManager.getMilestoneProgress).toHaveBeenCalledWith(mockMilestone.name)
@@ -123,7 +123,7 @@ describe('Complete Milestone Command', () => {
 
     it('should complete milestone with --confirm flag', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulCompleteMilestone.execute({ confirm: true }, toolContext)
+      const result = await openpaulCompleteMilestone.execute({ confirm: true }, toolContext)
 
       expect(mockMilestoneManager.completeMilestone).toHaveBeenCalledWith(mockMilestone.name)
       expect(result).toContain('Milestone Completed')
@@ -133,7 +133,7 @@ describe('Complete Milestone Command', () => {
     it('should use specified milestone name', async () => {
       mockMilestoneManager.getMilestone.mockReturnValue(mockMilestone)
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulCompleteMilestone.execute({ 
+      const result = await openpaulCompleteMilestone.execute({ 
         name: 'v1.1 Full Command Implementation',
         confirm: true,
       }, toolContext)
@@ -144,7 +144,7 @@ describe('Complete Milestone Command', () => {
 
     it('should show metrics in summary before confirmation', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulCompleteMilestone.execute({}, toolContext)
+      const result = await openpaulCompleteMilestone.execute({}, toolContext)
 
       expect(result).toContain('Phases:')
       expect(result).toContain('3/3')
@@ -153,14 +153,14 @@ describe('Complete Milestone Command', () => {
 
     it('should include archive location in success output', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulCompleteMilestone.execute({ confirm: true }, toolContext)
+      const result = await openpaulCompleteMilestone.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('MILESTONE-ARCHIVE.md')
     })
 
     it('should include what will happen in confirmation prompt', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulCompleteMilestone.execute({}, toolContext)
+      const result = await openpaulCompleteMilestone.execute({}, toolContext)
 
       expect(result).toContain('Archive milestone')
       expect(result).toContain('Collapse phases')
@@ -169,7 +169,7 @@ describe('Complete Milestone Command', () => {
 
     it('should show verbose phase breakdown with --verbose flag', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulCompleteMilestone.execute({ verbose: true }, toolContext)
+      const result = await openpaulCompleteMilestone.execute({ verbose: true }, toolContext)
 
       expect(result).toContain('Phase Details')
       expect(result).toContain('Phase 3')
@@ -182,7 +182,7 @@ describe('Complete Milestone Command', () => {
     it('should return error when ROADMAP.md does not exist', async () => {
       mockRoadmapManager.resolveRoadmapPath.mockReturnValue(null)
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulCompleteMilestone.execute({}, toolContext)
+      const result = await openpaulCompleteMilestone.execute({}, toolContext)
 
       expect(result).toContain('Cannot Complete Milestone')
       expect(result).toContain('ROADMAP.md not found')
@@ -198,7 +198,7 @@ describe('Complete Milestone Command', () => {
       mockMilestoneManager.getActiveMilestone.mockReturnValue(mockMilestone)
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulCompleteMilestone.execute({ 
+      const result = await openpaulCompleteMilestone.execute({ 
         name: 'Non-existent Milestone',
       }, toolContext)
 
@@ -212,7 +212,7 @@ describe('Complete Milestone Command', () => {
       mockMilestoneManager.getActiveMilestone.mockReturnValue(mockMilestone)
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulCompleteMilestone.execute({ 
+      const result = await openpaulCompleteMilestone.execute({ 
         name: 'Non-existent Milestone',
       }, toolContext)
 
@@ -227,7 +227,7 @@ describe('Complete Milestone Command', () => {
       mockMilestoneManager.getActiveMilestone.mockReturnValue(null)
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulCompleteMilestone.execute({}, toolContext)
+      const result = await openpaulCompleteMilestone.execute({}, toolContext)
 
       expect(result).toContain('No Active Milestone')
       expect(result).toContain('/openpaul:milestone')
@@ -241,7 +241,7 @@ describe('Complete Milestone Command', () => {
       mockMilestoneManager.getActiveMilestone.mockReturnValue(completedMilestone)
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulCompleteMilestone.execute({}, toolContext)
+      const result = await openpaulCompleteMilestone.execute({}, toolContext)
 
       expect(result).toContain('Already Completed')
       expect(result).toContain('MILESTONE-ARCHIVE.md')
@@ -266,7 +266,7 @@ describe('Complete Milestone Command', () => {
       mockMilestoneManager.getMilestoneProgress.mockReturnValue(incompleteProgress)
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulCompleteMilestone.execute({}, toolContext)
+      const result = await openpaulCompleteMilestone.execute({}, toolContext)
 
       expect(result).toContain('Warning')
       expect(result).toContain('Incomplete Phases')
@@ -292,7 +292,7 @@ describe('Complete Milestone Command', () => {
       mockMilestoneManager.completeMilestone.mockReturnValue(mockArchiveEntry)
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulCompleteMilestone.execute({ confirm: true }, toolContext)
+      const result = await openpaulCompleteMilestone.execute({ confirm: true }, toolContext)
 
       expect(mockMilestoneManager.completeMilestone).toHaveBeenCalled()
       expect(result).toContain('Milestone Completed')
@@ -306,7 +306,7 @@ describe('Complete Milestone Command', () => {
       mockMilestoneManager.getMilestoneProgress.mockReturnValue(null)
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulCompleteMilestone.execute({}, toolContext)
+      const result = await openpaulCompleteMilestone.execute({}, toolContext)
 
       expect(result).toContain('Error Calculating Progress')
     })
@@ -322,7 +322,7 @@ describe('Complete Milestone Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulCompleteMilestone.execute({ confirm: true }, toolContext)
+      const result = await openpaulCompleteMilestone.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('Already Completed')
     })
@@ -336,7 +336,7 @@ describe('Complete Milestone Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulCompleteMilestone.execute({ confirm: true }, toolContext)
+      const result = await openpaulCompleteMilestone.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('Milestone Not Found')
     })
@@ -350,7 +350,7 @@ describe('Complete Milestone Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulCompleteMilestone.execute({ confirm: true }, toolContext)
+      const result = await openpaulCompleteMilestone.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('Completion Failed')
       expect(result).toContain('Unexpected filesystem error')
@@ -365,7 +365,7 @@ describe('Complete Milestone Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulCompleteMilestone.execute({ confirm: true }, toolContext)
+      const result = await openpaulCompleteMilestone.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('Completion Failed')
       expect(result).toContain('Unknown error')
@@ -382,7 +382,7 @@ describe('Complete Milestone Command', () => {
 
     it('should include plans completed in success output', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulCompleteMilestone.execute({ confirm: true }, toolContext)
+      const result = await openpaulCompleteMilestone.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('Plans Completed')
       expect(result).toContain('15/15')
@@ -390,7 +390,7 @@ describe('Complete Milestone Command', () => {
 
     it('should include execution time in success output', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulCompleteMilestone.execute({ confirm: true }, toolContext)
+      const result = await openpaulCompleteMilestone.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('Execution Time')
       expect(result).toContain('10 days')
@@ -398,7 +398,7 @@ describe('Complete Milestone Command', () => {
 
     it('should include requirements addressed count', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulCompleteMilestone.execute({ confirm: true }, toolContext)
+      const result = await openpaulCompleteMilestone.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('Requirements Addressed')
       expect(result).toContain('3')
@@ -406,7 +406,7 @@ describe('Complete Milestone Command', () => {
 
     it('should include next steps after completion', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulCompleteMilestone.execute({ confirm: true }, toolContext)
+      const result = await openpaulCompleteMilestone.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('Next Steps')
       expect(result).toContain('/openpaul:status')
@@ -414,7 +414,7 @@ describe('Complete Milestone Command', () => {
 
     it('should include scope in summary display', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulCompleteMilestone.execute({}, toolContext)
+      const result = await openpaulCompleteMilestone.execute({}, toolContext)
 
       expect(result).toContain('Scope:')
       expect(result).toContain(mockMilestone.scope)

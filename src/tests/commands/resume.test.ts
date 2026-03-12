@@ -4,7 +4,7 @@
  * Tests for /paul:resume command functionality
  */
 
-import { paulResume } from '../../commands/resume'
+import { openpaulResume } from '../../commands/resume'
 import { StateManager } from '../../state/state-manager'
 import { SessionManager } from '../../storage/session-manager'
 import { FileManager } from '../../storage/file-manager'
@@ -23,7 +23,7 @@ jest.mock(
   { virtual: true }
 )
 
-describe('paulResume command', () => {
+describe('openpaulResume command', () => {
   const mockDirectory = '/test/project'
   const toolContext = { directory: mockDirectory } as any
 
@@ -105,19 +105,19 @@ describe('paulResume command', () => {
 
   describe('successful resume', () => {
     it('should load session from SessionManager.loadCurrentSession', async () => {
-      await paulResume.execute({ confirm: true }, toolContext)
+      await openpaulResume.execute({ confirm: true }, toolContext)
 
       expect(mockSessionManager.loadCurrentSession).toHaveBeenCalled()
     })
 
     it('should validate session state', async () => {
-      await paulResume.execute({ confirm: true }, toolContext)
+      await openpaulResume.execute({ confirm: true }, toolContext)
 
       expect(mockSessionManager.validateSessionState).toHaveBeenCalledWith('session-123')
     })
 
     it('should show session summary with loop position', async () => {
-      const result = await paulResume.execute({ confirm: true }, toolContext)
+      const result = await openpaulResume.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('📋 Session Resume')
       expect(result).toContain('session-123')
@@ -126,7 +126,7 @@ describe('paulResume command', () => {
     })
 
     it('should return formatted success message', async () => {
-      const result = await paulResume.execute({ confirm: true }, toolContext)
+      const result = await openpaulResume.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('Session ID')
       expect(result).toContain('Paused')
@@ -137,14 +137,14 @@ describe('paulResume command', () => {
     it('should show next action based on current phase', async () => {
       mockStateManager.getRequiredNextAction = jest.fn().mockReturnValue('Run custom action')
 
-      const result = await paulResume.execute({ confirm: true }, toolContext)
+      const result = await openpaulResume.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('Next Action')
       expect(result).toContain('Run custom action')
     })
 
     it('should format work in progress and next steps correctly', async () => {
-      const result = await paulResume.execute({ confirm: true }, toolContext)
+      const result = await openpaulResume.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('Work in Progress')
       expect(result).toContain('Task 1 in progress')
@@ -166,7 +166,7 @@ describe('paulResume command', () => {
         fileChecksums: {},
       })
 
-      const result = await paulResume.execute({ confirm: true }, toolContext)
+      const result = await openpaulResume.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('session-456')
       expect(result).toContain('APPLY')
@@ -175,7 +175,7 @@ describe('paulResume command', () => {
 
   describe('confirmation gate', () => {
     it('should require confirmation before restoring session', async () => {
-      const result = await paulResume.execute({}, toolContext)
+      const result = await openpaulResume.execute({}, toolContext)
 
       expect(result).toContain('Confirmation required')
       expect(result).toContain('Context Sources')
@@ -199,7 +199,7 @@ describe('paulResume command', () => {
         fileChecksums: {},
       })
 
-      const result = await paulResume.execute({ confirm: true }, toolContext)
+      const result = await openpaulResume.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('⚠️')
       expect(result).toContain('hours ago')
@@ -220,7 +220,7 @@ describe('paulResume command', () => {
         fileChecksums: {},
       })
 
-      const result = await paulResume.execute({ confirm: true }, toolContext)
+      const result = await openpaulResume.execute({ confirm: true }, toolContext)
 
       expect(result).not.toContain('⚠️')
     })
@@ -230,7 +230,7 @@ describe('paulResume command', () => {
     it('should return error if no session found', async () => {
       mockSessionManager.loadCurrentSession.mockReturnValue(null)
 
-      const result = await paulResume.execute({}, toolContext)
+      const result = await openpaulResume.execute({}, toolContext)
 
       expect(result).toContain('📋 Session Resume')
       expect(result).toContain('No paused session found')
@@ -244,7 +244,7 @@ describe('paulResume command', () => {
         errors: ['Invalid session structure', 'Missing required fields'],
       })
 
-      const result = await paulResume.execute({ confirm: true }, toolContext)
+      const result = await openpaulResume.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('❌ Session Validation Failed')
       expect(result).toContain('Errors')
@@ -257,7 +257,7 @@ describe('paulResume command', () => {
         throw new Error('Failed to read session file')
       })
 
-      const result = await paulResume.execute({ confirm: true }, toolContext)
+      const result = await openpaulResume.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('❌ Resume Failed')
       expect(result).toContain('Failed to read session file')
@@ -285,7 +285,7 @@ describe('paulResume command', () => {
         return 'new content'
       })
 
-      const result = await paulResume.execute({ confirm: true }, toolContext)
+      const result = await openpaulResume.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('Changes since pause')
     })
@@ -317,7 +317,7 @@ describe('paulResume command', () => {
         return true
       })
 
-      const result = await paulResume.execute({ confirm: true }, toolContext)
+      const result = await openpaulResume.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('No changes since pause')
     })

@@ -2,7 +2,7 @@
  * consider-issues command Tests
  */
 
-import { paulConsiderIssues } from '../../commands/consider-issues'
+import { openpaulConsiderIssues } from '../../commands/consider-issues'
 import { existsSync } from 'fs'
 
 jest.mock('fs', () => ({
@@ -17,7 +17,7 @@ jest.mock('../../storage/atomic-writes', () => ({
   atomicWrite: jest.fn().mockResolvedValue(undefined),
 }))
 
-describe('paulConsiderIssues', () => {
+describe('openpaulConsiderIssues', () => {
   const mockContext = { directory: '/test/project' }
 
   beforeEach(() => {
@@ -27,7 +27,7 @@ describe('paulConsiderIssues', () => {
   it('should return error when phase directory not found', async () => {
     ;(existsSync as jest.Mock).mockReturnValue(false)
     
-    const result = await (paulConsiderIssues as any).execute(
+    const result = await (openpaulConsiderIssues as any).execute(
       { phase: 99, issues: 'Test issue' },
       mockContext
     )
@@ -40,7 +40,7 @@ describe('paulConsiderIssues', () => {
       return path.includes('phases')
     })
     
-    const result = await (paulConsiderIssues as any).execute(
+    const result = await (openpaulConsiderIssues as any).execute(
       { 
         phase: 1, 
         issues: 'Issue 1, Issue 2',
@@ -62,7 +62,7 @@ describe('paulConsiderIssues', () => {
       return path.includes('phases')
     })
     
-    const result = await (paulConsiderIssues as any).execute(
+    const result = await (openpaulConsiderIssues as any).execute(
       { 
         phase: 1, 
         issues: 'Issue 1',
@@ -77,7 +77,7 @@ describe('paulConsiderIssues', () => {
   it('should return error when file exists without overwrite', async () => {
     ;(existsSync as jest.Mock).mockReturnValue(true)
     
-    const result = await (paulConsiderIssues as any).execute(
+    const result = await (openpaulConsiderIssues as any).execute(
       { phase: 1, issues: 'Test' },
       mockContext
     )

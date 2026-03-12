@@ -2,7 +2,7 @@
  * research-phase command Tests
  */
 
-import { paulResearchPhase } from '../../commands/research-phase'
+import { openpaulpaulResearchPhase } from '../../commands/research-phase'
 import { existsSync, readFileSync } from 'fs'
 
 jest.mock('fs', () => ({
@@ -18,7 +18,7 @@ jest.mock('../../storage/atomic-writes', () => ({
   atomicWrite: jest.fn().mockResolvedValue(undefined),
 }))
 
-describe('paulResearchPhase', () => {
+describe('openpaulpaulResearchPhase', () => {
   const mockContext = { directory: '/test/project' }
 
   beforeEach(() => {
@@ -28,7 +28,7 @@ describe('paulResearchPhase', () => {
   it('should return error when phase directory not found', async () => {
     ;(existsSync as jest.Mock).mockReturnValue(false)
     
-    const result = await (paulResearchPhase as any).execute(
+    const result = await (openpaulpaulResearchPhase as any).execute(
       { phase: 99 },
       mockContext
     )
@@ -42,7 +42,7 @@ describe('paulResearchPhase', () => {
     })
     ;(readFileSync as jest.Mock).mockReturnValue('')
     
-    const result = await (paulResearchPhase as any).execute(
+    const result = await (openpaulpaulResearchPhase as any).execute(
       { phase: 1 },
       mockContext
     )
@@ -55,7 +55,7 @@ describe('paulResearchPhase', () => {
       return path.includes('phases')
     })
     
-    const result = await (paulResearchPhase as any).execute(
+    const result = await (openpaulpaulResearchPhase as any).execute(
       { 
         phase: 1, 
         topics: 'Topic 1, Topic 2, Topic 3',
@@ -73,7 +73,7 @@ describe('paulResearchPhase', () => {
       return path.includes('phases')
     })
     
-    const result = await (paulResearchPhase as any).execute(
+    const result = await (openpaulpaulResearchPhase as any).execute(
       { 
         phase: 1, 
         topics: 'T1, T2, T3, T4, T5, T6',
@@ -89,7 +89,7 @@ describe('paulResearchPhase', () => {
   it('should return error when file exists without overwrite', async () => {
     ;(existsSync as jest.Mock).mockReturnValue(true)
     
-    const result = await (paulResearchPhase as any).execute(
+    const result = await (openpaulpaulResearchPhase as any).execute(
       { phase: 1 },
       mockContext
     )
@@ -102,7 +102,7 @@ describe('paulResearchPhase', () => {
       return path.includes('phases')
     })
     
-    const result = await (paulResearchPhase as any).execute(
+    const result = await (openpaulpaulResearchPhase as any).execute(
       { 
         phase: 1, 
         topics: 'Topic 1, Topic 2',
@@ -120,7 +120,7 @@ describe('paulResearchPhase', () => {
       return path.includes('phases')
     })
     
-    const result = await (paulResearchPhase as any).execute(
+    const result = await (openpaulpaulResearchPhase as any).execute(
       { 
         phase: 1, 
         topics: 'api, auth, database',

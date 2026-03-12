@@ -5,7 +5,7 @@
  */
 
 import { QualityManager } from '../../storage/quality-manager'
-import { paulVerify } from '../../commands/verify'
+import { openpaulVerify } from '../../commands/verify'
 
 // Mock dependencies
 jest.mock('../../storage/quality-manager')
@@ -67,7 +67,7 @@ describe('Verify Command', () => {
       mockQualityManager.resolvePhaseDir.mockReturnValue(null)
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulVerify.execute({ phase: 7 }, toolContext)
+      const result = await openpaulVerify.execute({ phase: 7 }, toolContext)
 
       expect(result).toContain('Cannot Verify')
       expect(result).toContain('directory not found')
@@ -80,7 +80,7 @@ describe('Verify Command', () => {
       mockQualityManager.summaryExists.mockReturnValue(false)
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulVerify.execute({ phase: 7 }, toolContext)
+      const result = await openpaulVerify.execute({ phase: 7 }, toolContext)
 
       expect(result).toContain('Cannot Verify')
       expect(result).toContain('SUMMARY.md not found')
@@ -94,7 +94,7 @@ describe('Verify Command', () => {
       mockQualityManager.parseSummaryMustHaves.mockReturnValue(null)
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulVerify.execute({ phase: 7 }, toolContext)
+      const result = await openpaulVerify.execute({ phase: 7 }, toolContext)
 
       expect(result).toContain('Cannot Verify')
       expect(result).toContain('Could not parse SUMMARY.md')
@@ -108,7 +108,7 @@ describe('Verify Command', () => {
       mockQualityManager.parseSummaryMustHaves.mockReturnValue({ truths: [], sourcePlanId: '07-01' })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulVerify.execute({ phase: 7 }, toolContext)
+      const result = await openpaulVerify.execute({ phase: 7 }, toolContext)
 
       expect(result).toContain('No Test Items')
     })
@@ -133,7 +133,7 @@ describe('Verify Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulVerify.execute({ phase: 7 }, toolContext)
+      const result = await openpaulVerify.execute({ phase: 7 }, toolContext)
 
       expect(result).toContain('UAT Checklist')
       expect(result).toContain('Truth one')
@@ -161,7 +161,7 @@ describe('Verify Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulVerify.execute({ phase: 7 }, toolContext)
+      const result = await openpaulVerify.execute({ phase: 7 }, toolContext)
 
       expect(result).toContain('Progress:')
       expect(result).toContain('1/3 tested')
@@ -185,7 +185,7 @@ describe('Verify Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulVerify.execute({ phase: 7, item: 1 }, toolContext)
+      const result = await openpaulVerify.execute({ phase: 7, item: 1 }, toolContext)
 
       expect(result).toContain('Item 1')
       expect(result).toContain('Truth one')
@@ -211,7 +211,7 @@ describe('Verify Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulVerify.execute({ phase: 7, item: 1 }, toolContext)
+      const result = await openpaulVerify.execute({ phase: 7, item: 1 }, toolContext)
 
       expect(result).toContain('Current status:')
       expect(result).toContain('fail')
@@ -227,7 +227,7 @@ describe('Verify Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulVerify.execute({ phase: 7, item: 99 }, toolContext)
+      const result = await openpaulVerify.execute({ phase: 7, item: 99 }, toolContext)
 
       expect(result).toContain('Invalid Item')
       expect(result).toContain('out of range')
@@ -259,7 +259,7 @@ describe('Verify Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulVerify.execute(
+      const result = await openpaulVerify.execute(
         { phase: 7, item: 1, result: 'pass' },
         toolContext
       )
@@ -301,7 +301,7 @@ describe('Verify Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulVerify.execute(
+      const result = await openpaulVerify.execute(
         { phase: 7, item: 1, result: 'fail', severity: 'major', category: 'functional', notes: 'Issue found' },
         toolContext
       )
@@ -337,7 +337,7 @@ describe('Verify Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulVerify.execute(
+      const result = await openpaulVerify.execute(
         { phase: 7, item: 1, result: 'skip' },
         toolContext
       )
@@ -357,7 +357,7 @@ describe('Verify Command', () => {
       mockQualityManager.readUAT.mockReturnValue(null)
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulVerify.execute(
+      const result = await openpaulVerify.execute(
         { phase: 7, item: 1, result: 'fail' },
         toolContext
       )
@@ -377,7 +377,7 @@ describe('Verify Command', () => {
       mockQualityManager.readUAT.mockReturnValue(null)
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulVerify.execute(
+      const result = await openpaulVerify.execute(
         { phase: 7, item: 1, result: 'fail', severity: 'major', category: 'functional' },
         toolContext
       )
@@ -414,7 +414,7 @@ describe('Verify Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulVerify.execute(
+      const result = await openpaulVerify.execute(
         { phase: 7, item: 1, result: 'pass' },
         toolContext
       )
@@ -454,7 +454,7 @@ describe('Verify Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulVerify.execute(
+      const result = await openpaulVerify.execute(
         { phase: 7, item: 1, result: 'fail', severity: 'major', category: 'functional', notes: 'Issue' },
         toolContext
       )
@@ -487,7 +487,7 @@ describe('Verify Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulVerify.execute(
+      const result = await openpaulVerify.execute(
         { phase: 7, item: 1, result: 'pass' },
         toolContext
       )

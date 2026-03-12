@@ -5,7 +5,7 @@
  */
 
 import { RoadmapManager } from '../../roadmap/roadmap-manager'
-import { paulAddPhase } from '../../commands/add-phase'
+import { openpaulAddPhase } from '../../commands/add-phase'
 import { formatHeader, formatBold, formatList } from '../../output/formatter'
 
 // Mock dependencies
@@ -60,7 +60,7 @@ describe('Add Phase Command', () => {
 
     it('should add phase with --after flag', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulAddPhase.execute(
+      const result = await openpaulAddPhase.execute(
         { name: 'New Feature', after: 2, before: undefined },
         toolContext
       )
@@ -77,7 +77,7 @@ describe('Add Phase Command', () => {
 
     it('should add phase with --before flag', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulAddPhase.execute(
+      const result = await openpaulAddPhase.execute(
         { name: 'Insert Before', after: undefined, before: 4 },
         toolContext
       )
@@ -100,7 +100,7 @@ describe('Add Phase Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulAddPhase.execute(
+      const result = await openpaulAddPhase.execute(
         { name: 'Auth Module', after: 1, before: undefined },
         toolContext
       )
@@ -112,7 +112,7 @@ describe('Add Phase Command', () => {
 
     it('should trim whitespace from phase name', async () => {
       const toolContext = { directory: mockDirectory } as any
-      await paulAddPhase.execute(
+      await openpaulAddPhase.execute(
         { name: '  Trimmed Name  ', after: 1, before: undefined },
         toolContext
       )
@@ -128,7 +128,7 @@ describe('Add Phase Command', () => {
   describe('error: both flags provided', () => {
     it('should return error when both --after and --before are provided', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulAddPhase.execute(
+      const result = await openpaulAddPhase.execute(
         { name: 'Test Phase', after: 1, before: 2 },
         toolContext
       )
@@ -142,7 +142,7 @@ describe('Add Phase Command', () => {
   describe('error: neither flag provided', () => {
     it('should return error when neither --after nor --before are provided', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulAddPhase.execute(
+      const result = await openpaulAddPhase.execute(
         { name: 'Test Phase', after: undefined, before: undefined },
         toolContext
       )
@@ -156,7 +156,7 @@ describe('Add Phase Command', () => {
   describe('error: empty name', () => {
     it('should return error for empty name', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulAddPhase.execute(
+      const result = await openpaulAddPhase.execute(
         { name: '', after: 1, before: undefined },
         toolContext
       )
@@ -168,7 +168,7 @@ describe('Add Phase Command', () => {
 
     it('should return error for whitespace-only name', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulAddPhase.execute(
+      const result = await openpaulAddPhase.execute(
         { name: '   ', after: 1, before: undefined },
         toolContext
       )
@@ -184,7 +184,7 @@ describe('Add Phase Command', () => {
       mockRoadmapManager.resolveRoadmapPath.mockReturnValue(null)
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulAddPhase.execute(
+      const result = await openpaulAddPhase.execute(
         { name: 'Test Phase', after: 1, before: undefined },
         toolContext
       )
@@ -203,7 +203,7 @@ describe('Add Phase Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulAddPhase.execute(
+      const result = await openpaulAddPhase.execute(
         { name: 'Test Phase', after: 99, before: undefined },
         toolContext
       )
@@ -221,7 +221,7 @@ describe('Add Phase Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulAddPhase.execute(
+      const result = await openpaulAddPhase.execute(
         { name: 'Test Phase', after: 1, before: undefined },
         toolContext
       )
@@ -238,7 +238,7 @@ describe('Add Phase Command', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulAddPhase.execute(
+      const result = await openpaulAddPhase.execute(
         { name: 'Test Phase', after: 1, before: undefined },
         toolContext
       )
@@ -261,7 +261,7 @@ describe('Add Phase Command', () => {
 
     it('should include phase number in output', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulAddPhase.execute(
+      const result = await openpaulAddPhase.execute(
         { name: 'Search Feature', after: 4, before: undefined },
         toolContext
       )
@@ -271,7 +271,7 @@ describe('Add Phase Command', () => {
 
     it('should include directory path in output', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulAddPhase.execute(
+      const result = await openpaulAddPhase.execute(
         { name: 'Search Feature', after: 4, before: undefined },
         toolContext
       )
