@@ -1,45 +1,97 @@
 ---
 phase: 08-configuration
-plan: 04
+plan: "04"
 subsystem: config
-tags: [config, defaults, validation]
-requires: [CONF-01]
-provides: [ConfigManager defaults and validation]
-affects: [config-manager.ts]
-tech_stack:
+tags: [config, env, validation, precedence]
+
+# Dependency graph
+requires:
+  - phase: 08-configuration
+    provides: ConfigManager YAML parsing and /openpaul:config baseline output
+provides:
+  - Resolved config precedence with env and CLI overrides
+  - Required-key validation with consistent missing-key errors
+affects: [configuration, flows]
+
+# Tech tracking
+tech-stack:
   added: []
-  patterns: [Zod validation, defaults handling]
-key_files:
+  patterns:
+    - Precedence resolution with env overrides and shallow section merges
+    - Required-key validation gating config command actions
+
+key-files:
   created: []
   modified:
     - src/storage/config-manager.ts
-key_decisions: []
-requirements_completed: [CONF-01]
-duration: 0 min
-completed: 2026-03-11
+    - src/commands/config.ts
+
+key-decisions: []
+
+patterns-established:
+  - "Resolved config built from defaults, file config, overrides, and env"
+  - "Missing required keys reported via consistent error message"
+
+requirements-completed: [CONF-01]
+
+# Metrics
+duration: 7 min
+completed: 2026-03-12
 ---
 
-# Phase 8 Plan 4: Config Defaults and Validation Summary
+# Phase 08 Plan 04: Config Precedence Summary
 
-**Objective:** Add configuration precedence resolution logic for .openpaul/.paul compatibility and default values.
+**Config precedence resolution with env overrides and required-key validation in /openpaul:config.**
 
-## Summary
+## Performance
 
-Already implemented in 08-01:
-- DEFAULT_CONFIG constant with sensible defaults (version, project, preferences)
-- Zod validation via ProjectConfigSchema on load()
-- .paul to .openpaul migration in resolveConfigPath()
-- getWithDefaults() method for default value handling
-- Error handling with actionable messages for YAML parse errors
+- **Duration:** 7 min
+- **Started:** 2026-03-12T18:09:06Z
+- **Completed:** 2026-03-12T18:16:13Z
+- **Tasks:** 2
+- **Files modified:** 2
 
-## Changes
+## Accomplishments
+- Added resolved config merging across defaults, file config, overrides, and environment variables.
+- Implemented required-key validation with consistent missing-key messaging.
+- Updated /openpaul:config to enforce resolved config validation for list/get/set.
 
-None - all features already in ConfigManager from 08-01.
+## task Commits
+
+Each task was committed atomically:
+
+1. **task 1: Add config precedence resolution and validation helpers** - `7680a4b` (feat)
+2. **task 2: Use resolved config and validation in /openpaul:config** - `a02e0a6` (feat)
+
+**Plan metadata:** pending
+
+_Note: TDD tasks may have multiple commits (test → feat → refactor)_
+
+## Files Created/Modified
+- `src/storage/config-manager.ts` - Resolved config merging, env overrides, and required-key validation helpers.
+- `src/commands/config.ts` - Validation gates for list/get/set using resolved config.
+
+## Decisions Made
+None - followed plan as specified.
+
+## Deviations from Plan
+
+None - plan executed exactly as written.
 
 ## Issues Encountered
+- `npx tsc --noEmit src/commands/config.ts` failed due to moduleResolution settings for @opencode-ai/plugin.
 
-None
+## User Setup Required
 
-## Next Steps
+None - no external service configuration required.
 
-Ready for 08-05 (incremental mapping with caching)
+## Next Phase Readiness
+
+- Config precedence and validation logic ready for incremental map-codebase work.
+- Follow-up plan can build on resolved config access patterns.
+
+---
+*Phase: 08-configuration*
+*Completed: 2026-03-12*
+
+## Self-Check: PASSED
