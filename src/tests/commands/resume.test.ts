@@ -1,7 +1,7 @@
 /**
  * Resume Command Tests
  * 
- * Tests for /paul:resume command functionality
+ * Tests for /openpaul:resume command functionality
  */
 
 import { openpaulResume } from '../../commands/resume'
@@ -44,7 +44,7 @@ describe('openpaulResume command', () => {
     jest.clearAllMocks()
 
     mockStateManager = {
-      getRequiredNextAction: jest.fn().mockReturnValue('Run /paul:apply'),
+      getRequiredNextAction: jest.fn().mockReturnValue('Run /openpaul:apply'),
       loadPhaseState: jest.fn().mockReturnValue({
         phase: 'PLAN',
         phaseNumber: 2,
@@ -66,7 +66,7 @@ describe('openpaulResume command', () => {
         phaseNumber: 2,
         currentPlanId: '01',
         workInProgress: ['Task 1 in progress'],
-        nextSteps: ['Run /paul:apply'],
+        nextSteps: ['Run /openpaul:apply'],
         metadata: { snapshotRoot: '.openpaul/SESSIONS/session-123/snapshots' },
         fileChecksums: {},
       }),
@@ -149,7 +149,7 @@ describe('openpaulResume command', () => {
       expect(result).toContain('Work in Progress')
       expect(result).toContain('Task 1 in progress')
       expect(result).toContain('Next Steps')
-      expect(result).toContain('Run /paul:apply')
+      expect(result).toContain('Run /openpaul:apply')
     })
 
     it('should handle metadata parsing correctly', async () => {
@@ -179,7 +179,7 @@ describe('openpaulResume command', () => {
 
       expect(result).toContain('Confirmation required')
       expect(result).toContain('Context Sources')
-      expect(result).toContain('/paul:resume --confirm')
+      expect(result).toContain('/openpaul:resume --confirm')
     })
   })
 
@@ -234,8 +234,8 @@ describe('openpaulResume command', () => {
 
       expect(result).toContain('📋 Session Resume')
       expect(result).toContain('No paused session found')
-      expect(result).toContain('/paul:init')
-      expect(result).toContain('/paul:progress')
+      expect(result).toContain('/openpaul:init')
+      expect(result).toContain('/openpaul:progress')
     })
 
     it('should return error if session validation fails', async () => {
