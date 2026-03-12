@@ -29,7 +29,7 @@ export interface CacheData {
 
 const DEFAULT_OPTIONS: ScanOptions = {
   maxDepth: 5,
-  excludeDirs: ['node_modules', '.git', 'dist', 'coverage', '.opencode', '.planning', '.paul', '.openpaul', '__pycache__', '.next', '.nuxt', 'build', 'out', '.cache'],
+  excludeDirs: ['node_modules', '.git', 'dist', 'coverage', 'fixtures', 'vendor', '.opencode', '.planning', '.paul', '.openpaul', '__pycache__', '.next', '.nuxt', 'build', 'out', '.cache'],
   force: false,
   verbose: false,
 }
