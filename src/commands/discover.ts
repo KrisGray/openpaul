@@ -19,7 +19,7 @@ type DiscoverArgs = {
 
 const toolFactory = tool as unknown as (input: any) => any
 
-export const paulDiscover = toolFactory({
+export const openpaulDiscover = toolFactory({
   name: 'openpaul:discover',
   description: 'Research technical options with configurable depth',
   parameters: z.object({

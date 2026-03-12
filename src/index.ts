@@ -1,41 +1,41 @@
 import type { Plugin } from '@opencode-ai/plugin'
 
 /**
- * PAUL - Plan-Apply-Unify Loop Plugin for OpenCode
+ * OpenPAUL - Plan-Apply-Unify Loop Plugin for OpenCode
  * 
  * This plugin enforces the PLAN → APPLY → UNIFY loop with mandatory reconciliation,
  * ensuring every plan closes properly with full traceability and context preservation.
  */
-import { paulInit } from './commands/init'
-import { paulPlan } from './commands/plan'
-import { paulApply } from './commands/apply'
-import { paulUnify } from './commands/unify'
-import { paulProgress } from './commands/progress'
-import { paulStatus } from './commands/status'
-import { paulHelp } from './commands/help'
-import { paulPause } from './commands/pause'
-import { paulResume } from './commands/resume'
-import { paulHandoff } from './commands/handoff'
-import { paulMilestone } from './commands/milestone'
-import { paulCompleteMilestone } from './commands/complete-milestone'
-import { paulDiscussMilestone } from './commands/discuss-milestone'
-import { paulDiscuss } from './commands/discuss'
-import { paulAssumptions } from './commands/assumptions'
-import { paulDiscover } from './commands/discover'
-import { paulConsiderIssues } from './commands/consider-issues'
-import { paulResearch } from './commands/research'
-import { paulResearchPhase } from './commands/research-phase'
-import { paulConfig } from './commands/config'
-import { paulFlows } from './commands/flows'
-import { paulMapCodebase } from './commands/map-codebase'
+import { openpaulInit } from './commands/init'
+import { openpaulPlan } from './commands/plan'
+import { openpaulApply } from './commands/apply'
+import { openpaulUnify } from './commands/unify'
+import { openpaulProgress } from './commands/progress'
+import { openpaulStatus } from './commands/status'
+import { openpaulHelp } from './commands/help'
+import { openpaulPause } from './commands/pause'
+import { openpaulResume } from './commands/resume'
+import { openpaulHandoff } from './commands/handoff'
+import { openpaulMilestone } from './commands/milestone'
+import { openpaulCompleteMilestone } from './commands/complete-milestone'
+import { openpaulDiscussMilestone } from './commands/discuss-milestone'
+import { openpaulDiscuss } from './commands/discuss'
+import { openpaulAssumptions } from './commands/assumptions'
+import { openpaulDiscover } from './commands/discover'
+import { openpaulConsiderIssues } from './commands/consider-issues'
+import { openpaulResearch } from './commands/research'
+import { openpaulResearchPhase } from './commands/research-phase'
+import { openpaulConfig } from './commands/config'
+import { openpaulFlows } from './commands/flows'
+import { openpaulMapCodebase } from './commands/map-codebase'
 
-export const PaulPlugin: Plugin = async ({ project, client, directory, worktree }) => {
+export const OpenPaulPlugin: Plugin = async ({ project, client, directory, worktree }) => {
   // Plugin initialization
   await client.app.log({
     body: {
-      service: 'paul-plugin',
+      service: 'openpaul-plugin',
       level: 'info',
-      message: 'PAUL plugin initialized',
+      message: 'OpenPAUL plugin initialized',
       extra: {
         project: project.id,
         directory,
@@ -44,49 +44,30 @@ export const PaulPlugin: Plugin = async ({ project, client, directory, worktree 
   })
   
   return {
-    // Register commands
+    // Register commands - openpaul: prefix only (clean break)
     tool: {
-      'paul:init': paulInit,
-      'paul:plan': paulPlan,
-      'paul:apply': paulApply,
-      'paul:unify': paulUnify,
-      'paul:progress': paulProgress,
-      'paul:status': paulStatus,
-      'paul:help': paulHelp,
-      'paul:pause': paulPause,
-      'paul:resume': paulResume,
-      'paul:handoff': paulHandoff,
-      'openpaul:init': paulInit,
-      'openpaul:plan': paulPlan,
-      'openpaul:apply': paulApply,
-      'openpaul:unify': paulUnify,
-      'openpaul:progress': paulProgress,
-      'openpaul:status': paulStatus,
-      'openpaul:help': paulHelp,
-      'openpaul:pause': paulPause,
-      'openpaul:resume': paulResume,
-      'openpaul:handoff': paulHandoff,
-      'openpaul:milestone': paulMilestone,
-      'openpaul:complete-milestone': paulCompleteMilestone,
-      'openpaul:discuss-milestone': paulDiscussMilestone,
-      'openpaul:discuss': paulDiscuss,
-      'paul:discuss': paulDiscuss,
-      'openpaul:assumptions': paulAssumptions,
-      'paul:assumptions': paulAssumptions,
-      'openpaul:discover': paulDiscover,
-      'paul:discover': paulDiscover,
-      'openpaul:consider-issues': paulConsiderIssues,
-      'paul:consider-issues': paulConsiderIssues,
-      'openpaul:research': paulResearch,
-      'paul:research': paulResearch,
-      'openpaul:research-phase': paulResearchPhase,
-      'openpaul:config': paulConfig,
-      'paul:config': paulConfig,
-      'openpaul:flows': paulFlows,
-      'paul:flows': paulFlows,
-      'openpaul:map-codebase': paulMapCodebase,
-      'paul:map-codebase': paulMapCodebase,
-      'paul:research-phase': paulResearchPhase,
+      'openpaul:init': openpaulInit,
+      'openpaul:plan': openpaulPlan,
+      'openpaul:apply': openpaulApply,
+      'openpaul:unify': openpaulUnify,
+      'openpaul:progress': openpaulProgress,
+      'openpaul:status': openpaulStatus,
+      'openpaul:help': openpaulHelp,
+      'openpaul:pause': openpaulPause,
+      'openpaul:resume': openpaulResume,
+      'openpaul:handoff': openpaulHandoff,
+      'openpaul:milestone': openpaulMilestone,
+      'openpaul:complete-milestone': openpaulCompleteMilestone,
+      'openpaul:discuss-milestone': openpaulDiscussMilestone,
+      'openpaul:discuss': openpaulDiscuss,
+      'openpaul:assumptions': openpaulAssumptions,
+      'openpaul:discover': openpaulDiscover,
+      'openpaul:consider-issues': openpaulConsiderIssues,
+      'openpaul:research': openpaulResearch,
+      'openpaul:research-phase': openpaulResearchPhase,
+      'openpaul:config': openpaulConfig,
+      'openpaul:flows': openpaulFlows,
+      'openpaul:map-codebase': openpaulMapCodebase,
     }
   }
 }

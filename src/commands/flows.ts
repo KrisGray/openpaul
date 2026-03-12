@@ -4,7 +4,7 @@ import { formatHeader, formatBold, formatList } from '../output/formatter'
 import { existsSync } from 'fs'
 import { join } from 'path'
 
-export const paulFlows: ToolDefinition = tool({
+export const openpaulFlows: ToolDefinition = tool({
   description: 'Manage special flows (list/enable/disable/init)',
   args: {
     action: tool.schema.enum(['list', 'enable', 'disable', 'init']).optional().describe('Flow action: list, enable, disable, init'),

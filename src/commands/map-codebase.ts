@@ -5,7 +5,7 @@ import { formatHeader, formatBold } from '../output/formatter'
 import { writeFileSync, existsSync, mkdirSync } from 'fs'
 import { dirname, join } from 'path'
 
-export const paulMapCodebase: ToolDefinition = tool({
+export const openpaulMapCodebase: ToolDefinition = tool({
   description: 'Generate codebase documentation (CODEBASE.md)',
   args: {
     output: tool.schema.string().optional().describe('Output file path (default: CODEBASE.md)'),

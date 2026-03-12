@@ -27,7 +27,7 @@ type VerifyArgs = {
   category?: 'functional' | 'visual' | 'performance' | 'configuration'
 }
 
-export const paulVerify = toolFactory({
+export const openpaulVerify = toolFactory({
   name: 'openpaul:verify',
   description: 'Perform manual acceptance testing from SUMMARY.md checklist',
   parameters: z.object({

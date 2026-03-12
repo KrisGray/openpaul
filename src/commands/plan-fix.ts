@@ -29,7 +29,7 @@ type PlanFixArgs = {
   execute?: boolean
 }
 
-export const paulPlanFix = toolFactory({
+export const openpaulPlanFix = toolFactory({
   name: 'openpaul:plan-fix',
   description: 'Create fix plans from UAT verification issues',
   parameters: z.object({

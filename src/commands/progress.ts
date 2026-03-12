@@ -10,7 +10,7 @@ import { existsSync } from 'fs'
 import { join } from 'path'
 
 /**
- * /paul:progress Command
+ * /openpaul:progress Command
  * 
  * View current loop status and next action
  * 
@@ -19,7 +19,7 @@ import { join } from 'path'
  * - Shows position, active task name, and next action
  * - Quick visual scan + actionable context
  */
-export const paulProgress = tool({
+export const openpaulProgress = tool({
   description: 'View current loop status and next action',
   args: {
     verbose: tool.schema.boolean().optional().describe('Show detailed status'),
@@ -34,7 +34,7 @@ export const paulProgress = tool({
           formatBold('Status:') + ' Not initialized\n\n' +
           formatHeader(3, 'What to do') + '\n' +
           formatList([
-            'Run `/paul:init` to set up OpenPAUL in this project.',
+            'Run `/openpaul:init` to set up OpenPAUL in this project.',
           ])
       }
 
@@ -46,7 +46,7 @@ export const paulProgress = tool({
           formatBold('Status:') + ' No active state\n\n' +
           formatHeader(3, 'What to do') + '\n' +
           formatList([
-            'Run `/paul:init` to set up OpenPAUL in this project.',
+            'Run `/openpaul:init` to set up OpenPAUL in this project.',
           ])
       }
 
@@ -94,10 +94,10 @@ export const paulProgress = tool({
         output += formatBold('Last updated:') + ` ${timestamp}\n`
         output += '\n' + formatHeader(3, 'Quick Commands') + '\n'
         output += formatList([
-          '/paul:plan - Create a new plan',
-          '/paul:apply - Execute the current plan',
-          '/paul:unify - Close the loop',
-          '/paul:help - View all commands',
+          '/openpaul:plan - Create a new plan',
+          '/openpaul:apply - Execute the current plan',
+          '/openpaul:unify - Close the loop',
+          '/openpaul:help - View all commands',
         ])
       }
 
@@ -110,7 +110,7 @@ export const paulProgress = tool({
         formatList([
           'Ensure .paul/ directory exists and is readable',
           'Check if state files are valid JSON',
-          'Try running /paul:init if not initialized',
+          'Try running /openpaul:init if not initialized',
         ])
     }
   },
@@ -314,11 +314,11 @@ function buildApplyGuidance(options: {
   hasStartTime: boolean
 }): string | undefined {
   if (!options.planAvailable) {
-    return 'Plan data is missing. Run /paul:plan or check .paul/phases for the current plan.'
+    return 'Plan data is missing. Run /openpaul:plan or check .paul/phases for the current plan.'
   }
 
   if (!options.hasActiveTask || !options.hasStartTime) {
-    return 'Task metadata is incomplete. Resume /paul:apply to refresh task context.'
+    return 'Task metadata is incomplete. Resume /openpaul:apply to refresh task context.'
   }
 
   return undefined

@@ -20,7 +20,7 @@ import { join } from 'path'
  * - Shows session info if paused
  * - Detects and warns about stale sessions
  */
-export const paulStatus: ToolDefinition = tool({
+export const openpaulStatus: ToolDefinition = tool({
   description: 'View current project status and loop position',
   args: {
     verbose: tool.schema.boolean().optional().describe('Show detailed status'),

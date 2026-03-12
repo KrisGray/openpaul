@@ -23,7 +23,7 @@ const toolFactory = tool as unknown as (input: any) => any
 
 const MAX_AGENTS = 4
 
-export const paulResearchPhase = toolFactory({
+export const openpaulResearchPhase = toolFactory({
   name: 'openpaul:research-phase',
   description: 'Auto-detect phase unknowns and research them in parallel',
   parameters: z.object({

@@ -14,7 +14,7 @@ import { renderHandoffTemplate } from '../utils/handoff-template'
 import { captureSessionSnapshots } from '../utils/session-snapshots'
 
 /**
- * /paul:pause Command
+ * /openpaul:pause Command
  * 
  * Pause current development session and save context
  * 
@@ -31,7 +31,7 @@ type PauseArgs = {
 
 const toolFactory = tool as unknown as (input: any) => any
 
-export const paulPause = toolFactory({
+export const openpaulPause = toolFactory({
   name: 'paul:pause',
   description: 'Pause current development session and save context',
   parameters: z.object({
@@ -53,7 +53,7 @@ export const paulPause = toolFactory({
           'OpenPAUL has not been initialized in this project.\n\n' +
           formatBold('Next Steps:') + '\n' +
           formatList([
-            'Run `/paul:init` to initialize OpenPAUL',
+            'Run `/openpaul:init` to initialize OpenPAUL',
           ])
       }
 
@@ -69,8 +69,8 @@ export const paulPause = toolFactory({
               `A session was paused ${hoursRounded} hours ago.\n\n` +
               formatBold('Options:') + '\n' +
               formatList([
-                'Run `/paul:resume` to continue the existing session',
-                'Run `/paul:pause` again to replace it with a new session',
+                'Run `/openpaul:resume` to continue the existing session',
+                'Run `/openpaul:pause` again to replace it with a new session',
               ])
           }
         }
@@ -182,8 +182,8 @@ export const paulPause = toolFactory({
       output += formatBold('HANDOFF.md:') + ` .openpaul/HANDOFF.md\n\n`
       output += formatBold('Next Steps:') + '\n'
       output += formatList([
-        'Run `/paul:resume` to continue this session',
-        'Run `/paul:status` to check your current position',
+        'Run `/openpaul:resume` to continue this session',
+        'Run `/openpaul:status` to check your current position',
       ])
 
       return output
@@ -193,7 +193,7 @@ export const paulPause = toolFactory({
         `Failed to pause session: ${errorMessage}\n\n` +
         formatBold('Troubleshooting:') + '\n' +
         formatList([
-          'Ensure OpenPAUL is initialized with `/paul:init`',
+          'Ensure OpenPAUL is initialized with `/openpaul:init`',
           'Check that the .openpaul directory is writable',
           'Try running with appropriate permissions',
         ])

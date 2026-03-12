@@ -11,7 +11,7 @@ import { formatHeader, formatBold, formatList, formatExecutionGraph } from '../o
 import type { ExecutionGraph, Plan, Task, TaskDependencies } from '../types/plan'
 
 /**
- * /paul:plan command
+ * /openpaul:plan command
  * 
  * Creates an executable plan with tasks, criteria, and boundaries.
  * Plans are stored in .paul/phases/{phase}-{plan}-PLAN.json
@@ -49,8 +49,8 @@ type PlanArgs = {
 
 const toolFactory = tool as unknown as (input: any) => any
 
-export const paulPlan = toolFactory({
-  name: 'paul:plan',
+export const openpaulPlan = toolFactory({
+  name: 'openpaul:plan',
   description: 'Create an executable plan with tasks, criteria, and boundaries',
   parameters: z.object({
     phase: z.number().int().positive().describe('Phase number'),
@@ -97,10 +97,10 @@ export const paulPlan = toolFactory({
           title: 'Not Initialized',
           message: 'PAUL has not been initialized for this project.',
           context: `Project directory: ${context.directory}`,
-          suggestedFix: 'Run /paul:init to create the .paul/ directory and initial state.',
+          suggestedFix: 'Run /openpaul:init to create the .paul/ directory and initial state.',
           nextSteps: [
-            'Run /paul:init',
-            'Re-run /paul:plan once initialization completes',
+            'Run /openpaul:init',
+            'Re-run /openpaul:plan once initialization completes',
           ],
         })
       }
@@ -116,7 +116,7 @@ export const paulPlan = toolFactory({
           suggestedFix: 'Complete the current loop phase before starting a new plan.',
           nextSteps: [
             `Run ${loopEnforcer.getRequiredNextAction(currentPosition.phase)}`,
-            'Re-run /paul:plan after the loop is ready for planning',
+            'Re-run /openpaul:plan after the loop is ready for planning',
           ],
         })
       }
@@ -209,7 +209,7 @@ export const paulPlan = toolFactory({
           suggestedFix: 'Check file permissions and ensure the .paul/ directory is writable.',
           nextSteps: [
             'Verify .paul/ directory permissions',
-            'Retry /paul:plan after resolving filesystem issues',
+            'Retry /openpaul:plan after resolving filesystem issues',
           ],
         })
       }
@@ -267,7 +267,7 @@ export const paulPlan = toolFactory({
         output.push(formatList(taskList, true))
         if (structureLabel === 'complex') {
           output.push('')
-          output.push(`${formatBold('Note:')} Use /paul:plan --verbose for full task details.`)
+          output.push(`${formatBold('Note:')} Use /openpaul:plan --verbose for full task details.`)
         }
       }
       
@@ -275,7 +275,7 @@ export const paulPlan = toolFactory({
       output.push(formatBold('Status:') + ' ✅ Plan created successfully')
       output.push(formatBold('Location:') + ` .paul/phases/${planIdLabel}-PLAN.json`)
       output.push('')
-      output.push(formatBold('Next action:') + ' Run /paul:apply to execute the plan')
+      output.push(formatBold('Next action:') + ' Run /openpaul:apply to execute the plan')
       
       return output.join('\n')
       
@@ -287,7 +287,7 @@ export const paulPlan = toolFactory({
         suggestedFix: 'Review your inputs and retry the command.',
         nextSteps: [
           'Verify plan parameters (phase, plan ID, tasks)',
-          'Run /paul:plan again after correcting inputs',
+          'Run /openpaul:plan again after correcting inputs',
         ],
       })
     }

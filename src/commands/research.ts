@@ -19,7 +19,7 @@ type ResearchArgs = {
 
 const toolFactory = tool as unknown as (input: any) => any
 
-export const paulResearch = toolFactory({
+export const openpaulResearch = toolFactory({
   name: 'openpaul:research',
   description: 'Execute research on user-specified topics with verification',
   parameters: z.object({

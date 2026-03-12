@@ -13,7 +13,7 @@ import { progressBar } from '../output/progress-bar'
 import type { Plan } from '../types/plan'
 
 /**
- * /paul:unify command
+ * /openpaul:unify command
  * 
  * Closes the loop after plan execution, generating summaries comparing plan vs actual.
  * Transitions state from APPLY → UNIFY → PLAN for the next loop iteration.
@@ -59,8 +59,8 @@ type NormalizedCriteriaResult = {
 
 const toolFactory = tool as unknown as (input: any) => any
 
-export const paulUnify = toolFactory({
-  name: 'paul:unify',
+export const openpaulUnify = toolFactory({
+  name: 'openpaul:unify',
   description: 'Close the loop with reconciliation and summary generation',
   parameters: z.object({
     phase: z.number().int().positive().optional().describe('Phase number (defaults to current)'),
@@ -107,7 +107,7 @@ export const paulUnify = toolFactory({
       if (!currentPosition) {
         return `${formatHeader(1, '❌ Not Initialized')}
 
-${formatBold('Error:')} Run /paul:init first to initialize PAUL.`
+${formatBold('Error:')} Run /openpaul:init first to initialize PAUL.`
       }
       
       // Determine phase and plan
@@ -122,7 +122,7 @@ ${formatBold('Error:')} Run /paul:init first to initialize PAUL.`
             formatHeader(1, '❌ No Plan Found'),
             '',
             `${formatBold('Error:')} No current plan found.`,
-            'Run /paul:plan first to create a plan.',
+            'Run /openpaul:plan first to create a plan.',
           ].join('\n')
         }
         planId = phaseState.currentPlanId
@@ -134,7 +134,7 @@ ${formatBold('Error:')} Run /paul:init first to initialize PAUL.`
         return [
           formatHeader(1, '❌ Invalid State'),
           '',
-          `${formatBold('Error:')} Must be in APPLY phase to run /paul:unify.`,
+          `${formatBold('Error:')} Must be in APPLY phase to run /openpaul:unify.`,
           `Current phase: ${currentPhase}`,
           '',
           `${formatBold('Next action:')} ${loopEnforcer.getRequiredNextAction(currentPhase)}`,
@@ -149,7 +149,7 @@ ${formatBold('Error:')} Run /paul:init first to initialize PAUL.`
           formatHeader(1, '❌ No Plan Found'),
           '',
           `${formatBold('Error:')} No plan found for phase ${phaseNumber}, plan ${planId}.`,
-          'Run /paul:plan first to create a plan.',
+          'Run /openpaul:plan first to create a plan.',
         ].join('\n')
       }
       
@@ -239,7 +239,7 @@ ${formatBold('Error:')} Run /paul:init first to initialize PAUL.`
         '',
         formatBold('Next steps:'),
         '- Check that the plan exists and was executed',
-        '- Verify your current state with /paul:progress',
+        '- Verify your current state with /openpaul:progress',
         '- Try again with valid parameters',
       ].join('\n')
     }
@@ -333,7 +333,7 @@ function formatUnifyOutput(
   output.push('')
   output.push('✅ Loop successfully closed with reconciliation')
   output.push(`${formatBold('Ready for:')} Next loop iteration`)
-  output.push(`${formatBold('Run:')} /paul:plan to start planning the next phase`)
+  output.push(`${formatBold('Run:')} /openpaul:plan to start planning the next phase`)
   output.push('')
   output.push(formatBold('🎉 Great work completing this loop!'))
   

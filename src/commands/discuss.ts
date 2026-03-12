@@ -19,7 +19,7 @@ type DiscussArgs = {
 
 const toolFactory = tool as unknown as (input: any) => any
 
-export const paulDiscuss = toolFactory({
+export const openpaulDiscuss = toolFactory({
   name: 'openpaul:discuss',
   description: 'Explore phase goals and capture planning context',
   parameters: z.object({
