@@ -26,7 +26,7 @@ type MilestoneArgs = {
   updateState?: boolean
 }
 
-export const paulMilestone = toolFactory({
+export const openpaulMilestone = toolFactory({
   name: 'openpaul:milestone',
   description: 'Create a new project milestone with name, scope, and phases',
   parameters: z.object({

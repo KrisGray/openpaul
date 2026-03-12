@@ -14,7 +14,7 @@ import type { PhaseState } from '../types/state'
 import type { SessionState } from '../types/session'
 
 /**
- * /paul:resume Command
+ * /openpaul:resume Command
  * 
  * Resume paused development session with diff display
  * 
@@ -31,8 +31,8 @@ type ResumeArgs = {
 
 const toolFactory = tool as unknown as (input: any) => any
 
-export const paulResume = toolFactory({
-  name: 'paul:resume',
+export const openpaulResume = toolFactory({
+  name: 'openpaul:resume',
   description: 'Resume paused development session',
   parameters: z.object({
     confirm: z.boolean().optional().describe('Confirm restoring session state'),
@@ -51,8 +51,8 @@ export const paulResume = toolFactory({
           formatBold('Status:') + ' No paused session found\n\n' +
           formatHeader(3, 'What to do') + '\n' +
           formatList([
-            'Run `/paul:init` to start a new session',
-            'Run `/paul:progress` to check current status',
+            'Run `/openpaul:init` to start a new session',
+            'Run `/openpaul:progress` to check current status',
           ])
       }
 
@@ -68,7 +68,7 @@ export const paulResume = toolFactory({
           formatList(validation.errors) + '\n\n' +
           formatHeader(3, 'What to do') + '\n' +
           formatList([
-            'Run `/paul:init` to start a fresh session',
+            'Run `/openpaul:init` to start a fresh session',
             'Check .openpaul/SESSIONS/ for session files',
           ])
       }
@@ -80,8 +80,8 @@ export const paulResume = toolFactory({
           formatList(preconditions.errors) + '\n\n' +
           formatHeader(3, 'What to do') + '\n' +
           formatList([
-            'Resolve the issues above and retry `/paul:resume --confirm`',
-            'Run `/paul:status` to inspect project state',
+            'Resolve the issues above and retry `/openpaul:resume --confirm`',
+            'Run `/openpaul:status` to inspect project state',
           ])
       }
 
@@ -142,8 +142,8 @@ export const paulResume = toolFactory({
       
       output += formatBold('Commands:') + '\n' +
         formatList([
-          'Run `/paul:status` for full project status',
-          'Run `/paul:progress` for detailed loop status',
+          'Run `/openpaul:status` for full project status',
+          'Run `/openpaul:progress` for detailed loop status',
         ])
       
       return output
@@ -155,7 +155,7 @@ export const paulResume = toolFactory({
         formatList([
           'Ensure .openpaul/CURRENT-SESSION file exists',
           'Check if session files are valid JSON',
-          'Try running `/paul:init` to start fresh',
+          'Try running `/openpaul:init` to start fresh',
         ])
     }
   },
@@ -184,7 +184,7 @@ function formatResumeConfirmation(session: SessionState, projectRoot: string): s
   output += '\n\n' + formatBold('Next Steps:') + '\n'
   output += formatList([
     'Review the context sources above',
-    'Re-run `/paul:resume --confirm` to restore session state',
+    'Re-run `/openpaul:resume --confirm` to restore session state',
   ])
 
   return output

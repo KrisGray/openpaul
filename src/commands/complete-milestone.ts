@@ -24,7 +24,7 @@ type CompleteMilestoneArgs = {
   verbose?: boolean
 }
 
-export const paulCompleteMilestone = toolFactory({
+export const openpaulCompleteMilestone = toolFactory({
   name: 'openpaul:complete-milestone',
   description: 'Mark a milestone complete with archival and ROADMAP.md cleanup',
   parameters: z.object({

@@ -4,7 +4,7 @@ import { formatHeader, formatBold, formatList } from '../output/formatter'
 import { existsSync } from 'fs'
 import { join } from 'path'
 
-export const paulConfig: ToolDefinition = tool({
+export const openpaulConfig: ToolDefinition = tool({
   description: 'Manage project configuration (init/list/get/set)',
   args: {
     action: tool.schema.enum(['init', 'list', 'get', 'set']).optional().describe('Config action: init, list, get, set'),

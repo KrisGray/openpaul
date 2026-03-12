@@ -8,14 +8,14 @@ import { progressBar } from '../output/progress-bar'
 import type { Plan, Task } from '../types/plan'
 
 /**
- * /paul:apply command
+ * /openpaul:apply command
  * 
  * Executes approved plans sequentially with task verification.
  * This command is informational — it displays plan tasks for the user/assistant to execute.
  * The actual task execution is done by the assistant reading the plan output.
  */
-export const paulApply = tool({
-  name: 'paul:apply',
+export const openpaulApply = tool({
+  name: 'openpaul:apply',
   description: 'Execute an approved plan with task-by-task progress tracking',
   parameters: z.object({
     phase: z.number().int().positive().optional().describe('Phase number (defaults to current)'),
@@ -36,7 +36,7 @@ export const paulApply = tool({
       if (!currentPosition) {
         return `${formatHeader(1, '❌ Not Initialized')}
 
-${formatBold('Error:')} Run /paul:init first to initialize PAUL.`
+${formatBold('Error:')} Run /openpaul:init first to initialize PAUL.`
       }
       
       // Determine phase and plan
@@ -50,7 +50,7 @@ ${formatBold('Error:')} Run /paul:init first to initialize PAUL.`
           return `${formatHeader(1, '❌ No Plan Found')}
 
 ${formatBold('Error:')} No current plan found.
-Run /paul:plan first to create a plan.`
+Run /openpaul:plan first to create a plan.`
         }
         planId = phaseState.currentPlanId
       }
@@ -62,7 +62,7 @@ Run /paul:plan first to create a plan.`
         return `${formatHeader(1, '❌ No Plan Found')}
 
 ${formatBold('Error:')} No plan found for phase ${phaseNumber}, plan ${planId}.
-Run /paul:plan first to create a plan.`
+Run /openpaul:plan first to create a plan.`
       }
       
       // Check for dry run mode
@@ -105,7 +105,7 @@ ${formatBold('Error:')} ${error instanceof Error ? error.message : 'Unknown erro
 
 ${formatBold('Next steps:')}
 - Check that the plan exists
-- Verify your current state with /paul:progress
+- Verify your current state with /openpaul:progress
 - Try again with valid parameters`
     }
   },
@@ -174,7 +174,7 @@ function formatApplyOutput(plan: Plan, tasks: Task[], startIndex: number): strin
   output.push(`${formatBold('Remaining:')} ${totalTasks - startIndex}`)
   output.push('')
   output.push(`${formatBold('Next action:')} Execute tasks sequentially, verify each task`)
-  output.push(`${formatBold('After completion:')} Run /paul:unify to close the loop`)
+  output.push(`${formatBold('After completion:')} Run /openpaul:unify to close the loop`)
   
   return output.join('\n')
 }
@@ -232,7 +232,7 @@ function formatDryRunOutput(plan: Plan): string {
   // Footer
   output.push(formatBold('⚠️ Dry run - no changes made'))
   output.push('')
-  output.push(`${formatBold('To execute:')} Run /paul:apply without --dryRun flag`)
+  output.push(`${formatBold('To execute:')} Run /openpaul:apply without --dryRun flag`)
   
   return output.join('\n')
 }

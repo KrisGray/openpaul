@@ -20,7 +20,7 @@ type ConsiderIssuesArgs = {
 
 const toolFactory = tool as unknown as (input: any) => any
 
-export const paulConsiderIssues = toolFactory({
+export const openpaulConsiderIssues = toolFactory({
   name: 'openpaul:consider-issues',
   description: 'Identify potential blockers and risks',
   parameters: z.object({

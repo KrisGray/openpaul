@@ -28,7 +28,7 @@ type DiscussMilestoneArgs = {
 
 const toolFactory = tool as unknown as (input: any) => any
 
-export const paulDiscussMilestone = toolFactory({
+export const openpaulDiscussMilestone = toolFactory({
   name: 'openpaul:discuss-milestone',
   description: 'Plan upcoming milestone with context capture for pre-planning',
   parameters: z.object({

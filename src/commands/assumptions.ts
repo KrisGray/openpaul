@@ -21,7 +21,7 @@ type AssumptionsArgs = {
 
 const toolFactory = tool as unknown as (input: any) => any
 
-export const paulAssumptions = toolFactory({
+export const openpaulAssumptions = toolFactory({
   name: 'openpaul:assumptions',
   description: 'Capture and validate project assumptions',
   parameters: z.object({
