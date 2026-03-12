@@ -1,2 +1,2 @@
-export declare const paulConsiderIssues: any;
+export declare const openpaulConsiderIssues: any;
 //# sourceMappingURL=consider-issues.d.ts.map

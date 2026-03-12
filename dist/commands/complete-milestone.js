@@ -15,7 +15,7 @@ import { formatHeader, formatBold, formatList } from '../output/formatter';
  * - Collapses phases to <details> section in ROADMAP.md
  */
 const toolFactory = tool;
-export const paulCompleteMilestone = toolFactory({
+export const openpaulCompleteMilestone = toolFactory({
     name: 'openpaul:complete-milestone',
     description: 'Mark a milestone complete with archival and ROADMAP.md cleanup',
     parameters: z.object({

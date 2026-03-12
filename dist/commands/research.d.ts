@@ -1,2 +1,2 @@
-export declare const paulResearch: any;
+export declare const openpaulResearch: any;
 //# sourceMappingURL=research.d.ts.map

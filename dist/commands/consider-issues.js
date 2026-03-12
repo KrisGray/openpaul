@@ -6,7 +6,7 @@ import { PrePlanningManager } from '../storage/pre-planning-manager';
 import { formatHeader, formatList, formatBold } from '../output/formatter';
 import { atomicWrite } from '../storage/atomic-writes';
 const toolFactory = tool;
-export const paulConsiderIssues = toolFactory({
+export const openpaulConsiderIssues = toolFactory({
     name: 'openpaul:consider-issues',
     description: 'Identify potential blockers and risks',
     parameters: z.object({

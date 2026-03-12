@@ -1,5 +1,5 @@
 /**
- * /paul:handoff Command
+ * /openpaul:handoff Command
  *
  * Create explicit handoff document for team collaboration
  *
@@ -10,7 +10,7 @@
  * - Saves to .openpaul/HANDOFF.md
  * - Returns formatted success message with file location
  */
-export declare const paulHandoff: {
+export declare const openpaulHandoff: {
     description: string;
     args: {};
     execute(args: Record<string, never>, context: import("@opencode-ai/plugin").ToolContext): Promise<string>;

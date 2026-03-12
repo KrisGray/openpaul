@@ -64,7 +64,7 @@ describe('openpaulConsiderIssues', () => {
       return path.includes('phases')
     })
     
-    const result = await (openpaulConsiderIssues as any).execute(
+    const result = await openpaulConsiderIssues.execute(
       { 
         phase: 1, 
         issues: 'Issue 1',
@@ -79,7 +79,7 @@ describe('openpaulConsiderIssues', () => {
   it('should return error when file exists without overwrite', async () => {
     ;(existsSync as jest.Mock).mockReturnValue(true)
     
-    const result = await (openpaulConsiderIssues as any).execute(
+    const result = await openpaulConsiderIssues.execute(
       { phase: 1, issues: 'Test' },
       mockContext
     )

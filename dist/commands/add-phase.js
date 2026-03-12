@@ -12,7 +12,7 @@ import { formatHeader, formatBold, formatList } from '../output/formatter';
  * - Directory name auto-generated
  * - Brief success output only
  */
-export const paulAddPhase = tool({
+export const openpaulAddPhase = tool({
     description: 'Add a new phase to the roadmap at a specified position',
     args: {
         name: tool.schema.string().describe('Phase name'),

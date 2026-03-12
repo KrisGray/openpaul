@@ -80,7 +80,7 @@ describe('openpaulUnify command', () => {
       const result = await openpaulUnify.execute({}, toolContext)
 
       expect(result).toContain('❌ Not Initialized')
-      expect(result).toContain('Run /paul:init first')
+      expect(result).toContain('Run /openpaul:init first')
     })
 
     it('should return error if not in APPLY phase', async () => {

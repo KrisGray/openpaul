@@ -3,7 +3,7 @@ import { FlowsManager } from '../storage/flows-manager';
 import { formatHeader, formatBold } from '../output/formatter';
 import { existsSync } from 'fs';
 import { join } from 'path';
-export const paulFlows = tool({
+export const openpaulFlows = tool({
     description: 'Manage special flows (list/enable/disable/init)',
     args: {
         action: tool.schema.enum(['list', 'enable', 'disable', 'init']).optional().describe('Flow action: list, enable, disable, init'),

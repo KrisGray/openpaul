@@ -1,2 +1,2 @@
-export declare const paulMilestone: any;
+export declare const openpaulMilestone: any;
 //# sourceMappingURL=milestone.d.ts.map

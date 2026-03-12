@@ -1,2 +1,2 @@
-export declare const paulPause: any;
+export declare const openpaulPause: any;
 //# sourceMappingURL=pause.d.ts.map

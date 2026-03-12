@@ -2,7 +2,16 @@ import type { AssumptionEntry, IssueEntry, ContextParams, DiscoveryParams } from
 export declare class PrePlanningManager {
     private projectRoot;
     constructor(projectRoot: string);
+    /**
+     * Get the planning directory path (.openpaul or .paul)
+     * Uses .openpaul as primary, falls back to .paul for migration compatibility.
+     * Defaults to .openpaul if neither exists.
+     */
     private getPlanningDir;
+    /**
+     * Resolve phase directory path
+     * Checks .openpaul/phases first, then falls back to .paul/phases and .planning/phases
+     */
     resolvePhaseDir(phaseNumber: number): string | null;
     private formatPhaseDirName;
     resolveContextPath(phaseNumber: number): string | null;

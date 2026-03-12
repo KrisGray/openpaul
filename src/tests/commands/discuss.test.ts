@@ -18,6 +18,8 @@ jest.mock('../../storage/atomic-writes', () => ({
   atomicWrite: jest.fn().mockResolvedValue(undefined),
 }))
 
+jest.mock('@opencode-ai/plugin', () => ({ tool: (input: any) => input }), { virtual: true })
+
 describe('openpaulDiscuss', () => {
   const mockContext = { directory: '/test/project' }
 

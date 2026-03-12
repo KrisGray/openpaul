@@ -1,3 +1,3 @@
 import { type ToolDefinition } from '@opencode-ai/plugin';
-export declare const paulFlows: ToolDefinition;
+export declare const openpaulFlows: ToolDefinition;
 //# sourceMappingURL=flows.d.ts.map

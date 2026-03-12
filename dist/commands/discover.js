@@ -6,7 +6,7 @@ import { PrePlanningManager } from '../storage/pre-planning-manager';
 import { formatHeader, formatList, formatBold } from '../output/formatter';
 import { atomicWrite } from '../storage/atomic-writes';
 const toolFactory = tool;
-export const paulDiscover = toolFactory({
+export const openpaulDiscover = toolFactory({
     name: 'openpaul:discover',
     description: 'Research technical options with configurable depth',
     parameters: z.object({

@@ -6,7 +6,7 @@ import { PrePlanningManager } from '../storage/pre-planning-manager';
 import { formatHeader, formatList, formatBold } from '../output/formatter';
 import { atomicWrite } from '../storage/atomic-writes';
 const toolFactory = tool;
-export const paulDiscuss = toolFactory({
+export const openpaulDiscuss = toolFactory({
     name: 'openpaul:discuss',
     description: 'Explore phase goals and capture planning context',
     parameters: z.object({

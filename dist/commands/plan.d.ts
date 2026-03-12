@@ -1,2 +1,2 @@
-export declare const paulPlan: any;
+export declare const openpaulPlan: any;
 //# sourceMappingURL=plan.d.ts.map

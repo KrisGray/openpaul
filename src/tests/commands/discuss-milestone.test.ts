@@ -4,7 +4,7 @@
  * Tests for /openpaul:discuss-milestone command functionality
  */
 
-import { openpaulpaulDiscussMilestone } from '../../commands/discuss-milestone'
+import { openpaulDiscussMilestone } from '../../commands/discuss-milestone'
 import { existsSync, mkdirSync } from 'fs'
 import { atomicWrite } from '../../storage/atomic-writes'
 
@@ -19,7 +19,7 @@ jest.mock(
   { virtual: true }
 )
 
-describe('openpaulpaulDiscussMilestone command', () => {
+describe('openpaulDiscussMilestone command', () => {
   const mockDirectory = '/test/project'
   const toolContext = { directory: mockDirectory } as any
 
@@ -39,7 +39,7 @@ describe('openpaulpaulDiscussMilestone command', () => {
 
   describe('successful context creation', () => {
     it('should create MILESTONE-CONTEXT.md with all fields', async () => {
-      const result = await openpaulpaulDiscussMilestone.execute({
+      const result = await openpaulDiscussMilestone.execute({
         name: 'v2.0',
         scope: 'Full feature release',
         features: 'Auth,Payments,Dashboard',
@@ -54,7 +54,7 @@ describe('openpaulpaulDiscussMilestone command', () => {
     })
 
     it('should create file in .planning/ root (not phase directory)', async () => {
-      await openpaulpaulDiscussMilestone.execute({
+      await openpaulDiscussMilestone.execute({
         name: 'v2.0',
       }, toolContext)
 
@@ -67,7 +67,7 @@ describe('openpaulpaulDiscussMilestone command', () => {
     })
 
     it('should handle minimal args (just name)', async () => {
-      const result = await openpaulpaulDiscussMilestone.execute({
+      const result = await openpaulDiscussMilestone.execute({
         name: 'v3.0',
       }, toolContext)
 
@@ -82,7 +82,7 @@ describe('openpaulpaulDiscussMilestone command', () => {
     })
 
     it('should parse comma-separated features correctly', async () => {
-      await openpaulpaulDiscussMilestone.execute({
+      await openpaulDiscussMilestone.execute({
         name: 'v2.0',
         features: 'Feature A, Feature B , Feature C ',
       }, toolContext)
@@ -96,7 +96,7 @@ describe('openpaulpaulDiscussMilestone command', () => {
     })
 
     it('should parse comma-separated phases correctly', async () => {
-      await openpaulpaulDiscussMilestone.execute({
+      await openpaulDiscussMilestone.execute({
         name: 'v2.0',
         phases: '6, 7, 8',
       }, toolContext)
@@ -110,7 +110,7 @@ describe('openpaulpaulDiscussMilestone command', () => {
     })
 
     it('should include all template sections', async () => {
-      await openpaulpaulDiscussMilestone.execute({
+      await openpaulDiscussMilestone.execute({
         name: 'v2.0',
         scope: 'Test scope',
         features: 'Feature 1',
@@ -132,7 +132,7 @@ describe('openpaulpaulDiscussMilestone command', () => {
     })
 
     it('should return formatted success message with next steps', async () => {
-      const result = await openpaulpaulDiscussMilestone.execute({
+      const result = await openpaulDiscussMilestone.execute({
         name: 'v2.0',
       }, toolContext)
 
@@ -152,7 +152,7 @@ describe('openpaulpaulDiscussMilestone command', () => {
         return false
       })
 
-      const result = await openpaulpaulDiscussMilestone.execute({
+      const result = await openpaulDiscussMilestone.execute({
         name: 'v2.0',
       }, toolContext)
 
@@ -169,7 +169,7 @@ describe('openpaulpaulDiscussMilestone command', () => {
         return false
       })
 
-      const result = await openpaulpaulDiscussMilestone.execute({
+      const result = await openpaulDiscussMilestone.execute({
         name: 'v2.0',
         overwrite: true,
       }, toolContext)
@@ -183,7 +183,7 @@ describe('openpaulpaulDiscussMilestone command', () => {
     it('should return error if .planning directory does not exist', async () => {
       ;(existsSync as jest.Mock).mockReturnValue(false)
 
-      const result = await openpaulpaulDiscussMilestone.execute({
+      const result = await openpaulDiscussMilestone.execute({
         name: 'v2.0',
       }, toolContext)
 
@@ -193,7 +193,7 @@ describe('openpaulpaulDiscussMilestone command', () => {
     })
 
     it('should return error for invalid milestone name', async () => {
-      const result = await openpaulpaulDiscussMilestone.execute({
+      const result = await openpaulDiscussMilestone.execute({
         name: '',
       }, toolContext)
 
@@ -202,7 +202,7 @@ describe('openpaulpaulDiscussMilestone command', () => {
     })
 
     it('should return error for whitespace-only name', async () => {
-      const result = await openpaulpaulDiscussMilestone.execute({
+      const result = await openpaulDiscussMilestone.execute({
         name: '   ',
       }, toolContext)
 
@@ -212,7 +212,7 @@ describe('openpaulpaulDiscussMilestone command', () => {
     it('should return formatted error on file write failure', async () => {
       ;(atomicWrite as jest.Mock).mockRejectedValue(new Error('Write failed'))
 
-      const result = await openpaulpaulDiscussMilestone.execute({
+      const result = await openpaulDiscussMilestone.execute({
         name: 'v2.0',
       }, toolContext)
 
@@ -224,7 +224,7 @@ describe('openpaulpaulDiscussMilestone command', () => {
 
   describe('template generation', () => {
     it('should generate template with correct structure', async () => {
-      await openpaulpaulDiscussMilestone.execute({
+      await openpaulDiscussMilestone.execute({
         name: 'v2.0',
         scope: 'Release new features',
         features: 'Auth,Payments',
@@ -263,7 +263,7 @@ describe('openpaulpaulDiscussMilestone command', () => {
     })
 
     it('should include open questions section', async () => {
-      await openpaulpaulDiscussMilestone.execute({
+      await openpaulDiscussMilestone.execute({
         name: 'v2.0',
       }, toolContext)
 
@@ -277,7 +277,7 @@ describe('openpaulpaulDiscussMilestone command', () => {
     })
 
     it('should use defaults for missing optional fields', async () => {
-      await openpaulpaulDiscussMilestone.execute({
+      await openpaulDiscussMilestone.execute({
         name: 'v2.0',
       }, toolContext)
 

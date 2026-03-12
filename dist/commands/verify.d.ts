@@ -1,2 +1,2 @@
-export declare const paulVerify: any;
+export declare const openpaulVerify: any;
 //# sourceMappingURL=verify.d.ts.map

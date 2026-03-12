@@ -15,7 +15,7 @@ import { formatHeader, formatBold, formatList } from '../output/formatter';
  * - Create both UAT.md (pass/fail summary) and UAT-ISSUES.md (failed item details)
  */
 const toolFactory = tool;
-export const paulVerify = toolFactory({
+export const openpaulVerify = toolFactory({
     name: 'openpaul:verify',
     description: 'Perform manual acceptance testing from SUMMARY.md checklist',
     parameters: z.object({

@@ -5,7 +5,7 @@ import { FileManager } from '../storage/file-manager';
 import { createDefaultModelConfig } from '../types/model-config';
 import { formatHeader, formatList, formatBold } from '../output/formatter';
 /**
- * /paul:init Command
+ * /openpaul:init Command
  *
  * Initialize a new OpenPAUL project with .paul/ directory structure
  *
@@ -15,7 +15,7 @@ import { formatHeader, formatList, formatBold } from '../output/formatter';
  * - Sets up initial state for phase 1
  * - Provides clear next steps
  */
-export const paulInit = tool({
+export const openpaulInit = tool({
     description: 'Initialize OpenPAUL in the current project',
     args: {
         force: tool.schema.boolean().optional().describe('Reinitialize even if .paul/ exists'),
@@ -30,8 +30,8 @@ export const paulInit = tool({
                     'OpenPAUL has already been initialized in this project.\n\n' +
                     formatBold('Options:') + '\n' +
                     formatList([
-                        'Run `/paul:progress` to check current state',
-                        'Run `/paul:init --force` to reinitialize (this will reset all state)',
+                        'Run `/openpaul:progress` to check current state',
+                        'Run `/openpaul:init --force` to reinitialize (this will reset all state)',
                     ]);
             }
             // Ensure .paul directory exists
@@ -55,9 +55,9 @@ export const paulInit = tool({
             ]) + '\n\n';
             output += formatBold('Next Steps:') + '\n';
             output += formatList([
-                'Run `/paul:plan` to create your first plan',
-                'Run `/paul:help` to see all available commands',
-                'Run `/paul:progress` to check your current state',
+                'Run `/openpaul:plan` to create your first plan',
+                'Run `/openpaul:help` to see all available commands',
+                'Run `/openpaul:progress` to check your current state',
             ]);
             return output;
         }

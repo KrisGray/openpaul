@@ -16,7 +16,7 @@ import { formatHeader, formatBold, formatList } from '../output/formatter';
  * - Renumbering only affects ROADMAP.md
  * - No --force override
  */
-export const paulRemovePhase = tool({
+export const openpaulRemovePhase = tool({
     description: 'Remove a phase from the roadmap with automatic renumbering',
     args: {
         phase: tool.schema.number().describe('Phase number to remove'),

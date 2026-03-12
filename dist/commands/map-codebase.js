@@ -4,7 +4,7 @@ import { isCacheValid, loadCache } from '../utils/directory-scanner';
 import { formatHeader, formatBold } from '../output/formatter';
 import { writeFileSync, existsSync, mkdirSync } from 'fs';
 import { dirname, join } from 'path';
-export const paulMapCodebase = tool({
+export const openpaulMapCodebase = tool({
     description: 'Generate codebase documentation (CODEBASE.md)',
     args: {
         output: tool.schema.string().optional().describe('Output file path (default: CODEBASE.md)'),

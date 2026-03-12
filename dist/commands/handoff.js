@@ -8,7 +8,7 @@ import { formatHeader, formatList, formatBold } from '../output/formatter';
 import { buildSessionContext } from '../utils/session-context';
 import { renderHandoffTemplate } from '../utils/handoff-template';
 /**
- * /paul:handoff Command
+ * /openpaul:handoff Command
  *
  * Create explicit handoff document for team collaboration
  *
@@ -19,7 +19,7 @@ import { renderHandoffTemplate } from '../utils/handoff-template';
  * - Saves to .openpaul/HANDOFF.md
  * - Returns formatted success message with file location
  */
-export const paulHandoff = tool({
+export const openpaulHandoff = tool({
     description: 'Create explicit handoff document for team collaboration',
     args: {},
     execute: async (_args, context) => {
@@ -33,7 +33,7 @@ export const paulHandoff = tool({
                     'OpenPAUL has not been initialized in this project.\n\n' +
                     formatBold('Next Steps:') + '\n' +
                     formatList([
-                        'Run `/paul:init` to initialize OpenPAUL',
+                        'Run `/openpaul:init` to initialize OpenPAUL',
                     ]);
             }
             // Load current session or create temporary session state
@@ -98,7 +98,7 @@ export const paulHandoff = tool({
             output += formatList([
                 'Review and edit HANDOFF.md before sharing',
                 'Share HANDOFF.md with team members',
-                'To resume: /paul:resume',
+                'To resume: /openpaul:resume',
             ]);
             return output;
         }
@@ -108,7 +108,7 @@ export const paulHandoff = tool({
                 `Failed to create handoff: ${errorMessage}\n\n` +
                 formatBold('Troubleshooting:') + '\n' +
                 formatList([
-                    'Ensure OpenPAUL is initialized with `/paul:init`',
+                    'Ensure OpenPAUL is initialized with `/openpaul:init`',
                     'Check that the .openpaul directory is writable',
                     'Verify the HANDOFF.md template exists',
                 ]);

@@ -89,17 +89,21 @@ export declare const SummarySchema: z.ZodObject<{
 /**
  * File Manager
  *
- * Manages PAUL state files with per-phase organization.
+ * Manages OpenPAUL state files with per-phase organization.
+ * Uses dual-path resolution: checks .openpaul/ first, falls back to .paul/ for migration compatibility.
  * Files are named: state-phase-{N}.json
  */
 export declare class FileManager {
+    private openPaulDir;
     private paulDir;
     private phasesDir;
     constructor(projectRoot: string);
     /**
      * Get phase state file path
      *
-     * Pattern: .paul/state-phase-{N}.json
+     * Pattern: .openpaul/state-phase-{N}.json (primary) or .paul/state-phase-{N}.json (fallback)
+     * Reads check .openpaul first, fall back to .paul for migration compatibility.
+     * Writes always go to .openpaul/.
      */
     private getPhaseStatePath;
     /**
@@ -123,13 +127,13 @@ export declare class FileManager {
      */
     phaseStateExists(phaseNumber: number): boolean;
     /**
-     * Ensure .paul directory exists
+     * Ensure .openpaul directory exists
      */
     ensurePaulDir(): void;
     /**
      * Get model config file path
      *
-     * Pattern: .paul/model-config.json
+     * Pattern: .openpaul/model-config.json (primary) or .paul/model-config.json (fallback)
      */
     private getModelConfigPath;
     /**
@@ -143,7 +147,8 @@ export declare class FileManager {
     /**
      * Get plan file path
      *
-     * Pattern: .paul/phases/{phaseNumber}-{planId}-PLAN.json
+     * Pattern: .openpaul/phases/{phaseNumber}-{planId}-PLAN.json
+     * Note: phasesDir is set to .openpaul/phases, but reads check both locations
      */
     private getPlanPath;
     /**
@@ -159,13 +164,13 @@ export declare class FileManager {
      */
     planExists(phaseNumber: number, planId: string): boolean;
     /**
-     * Ensure .paul/phases directory exists
+     * Ensure .openpaul/phases directory exists
      */
     ensurePhasesDir(): void;
     /**
      * Get summary file path
      *
-     * Pattern: .paul/phases/{phaseNumber}-{planId}-SUMMARY.json
+     * Pattern: .openpaul/phases/{phaseNumber}-{planId}-SUMMARY.json
      */
     private getSummaryPath;
     /**

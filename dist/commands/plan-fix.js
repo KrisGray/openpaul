@@ -19,7 +19,7 @@ import { formatHeader, formatBold, formatList } from '../output/formatter';
  * - Prompts for execution after creation
  */
 const toolFactory = tool;
-export const paulPlanFix = toolFactory({
+export const openpaulPlanFix = toolFactory({
     name: 'openpaul:plan-fix',
     description: 'Create fix plans from UAT verification issues',
     parameters: z.object({

@@ -5,7 +5,7 @@ import { join } from 'path';
 import { atomicWrite } from '../storage/atomic-writes';
 import { formatHeader, formatList, formatBold } from '../output/formatter';
 const toolFactory = tool;
-export const paulDiscussMilestone = toolFactory({
+export const openpaulDiscussMilestone = toolFactory({
     name: 'openpaul:discuss-milestone',
     description: 'Plan upcoming milestone with context capture for pre-planning',
     parameters: z.object({
