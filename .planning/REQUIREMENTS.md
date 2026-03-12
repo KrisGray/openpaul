@@ -46,7 +46,7 @@ Requirements for full command implementation. Each maps to roadmap phases.
 
 - [x] **CONF-01**: User can manage project configuration with `/openpaul:config` that manages integrations (SonarQube), project settings, preferences via YAML config in .openpaul/config.md
 - [x] **CONF-02**: User can configure specialized flows with `/openpaul:flows` that enables/disables specialized workflows defined in SPECIAL-FLOWS.md
-- [ ] **CONF-03**: User can document codebase structure with `/openpaul:map-codebase` that creates CODEBASE.md with structure, stack, conventions, concerns, integrations, architecture
+- [x] **CONF-03**: User can document codebase structure with `/openpaul:map-codebase` that creates CODEBASE.md with structure, stack, conventions, concerns, integrations, architecture
 
 ### Branding
 
@@ -96,7 +96,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | QUAL-02 | Phase 7 | Complete |
 | CONF-01 | Phase 8 | Complete |
 | CONF-02 | Phase 8 | Complete |
-| CONF-03 | Phase 8 | Pending |
+| CONF-03 | Phase 8 | Complete |
 | BRND-01 | Phase 9 | Complete |
 | BRND-02 | Phase 6 | Pending |
 
