@@ -17,25 +17,42 @@ export class ResearchManager {
     this.projectRoot = projectRoot
   }
 
+  /**
+   * Get the planning directory path (.openpaul or .paul)
+   * Uses .openpaul as primary, falls back to .paul for migration compatibility.
+   */
   getPlanningDir(): string {
-    const primary = join(this.projectRoot, '.paul')
+    const primary = join(this.projectRoot, '.openpaul')
     if (existsSync(primary)) {
       return primary
     }
-    return join(this.projectRoot, '.openpaul')
+    return join(this.projectRoot, '.paul')
   }
 
+  /**
+   * Resolve phase directory path
+   * Checks .openpaul/phases first, then falls back to .paul/phases and .planning/phases
+   */
   resolvePhaseDir(phaseNumber: number): string | null {
-    const primaryPhases = join(this.projectRoot, '.paul', 'phases')
+    // Check .openpaul/phases first (primary)
+    const primaryPhases = join(this.projectRoot, '.openpaul', 'phases')
     const primaryPhaseDir = join(primaryPhases, this.formatPhaseDirName(phaseNumber))
     if (existsSync(primaryPhaseDir)) {
       return primaryPhaseDir
     }
 
-    const fallbackPhases = join(this.projectRoot, '.planning', 'phases')
+    // Fall back to .paul/phases for migration compatibility
+    const fallbackPhases = join(this.projectRoot, '.paul', 'phases')
     const fallbackPhaseDir = join(fallbackPhases, this.formatPhaseDirName(phaseNumber))
     if (existsSync(fallbackPhaseDir)) {
       return fallbackPhaseDir
+    }
+
+    // Final fallback to .planning/phases
+    const planningPhases = join(this.projectRoot, '.planning', 'phases')
+    const planningPhaseDir = join(planningPhases, this.formatPhaseDirName(phaseNumber))
+    if (existsSync(planningPhaseDir)) {
+      return planningPhaseDir
     }
 
     return null
