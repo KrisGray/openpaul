@@ -122,9 +122,19 @@ describe('DirectoryScanner', () => {
         { path: '/test/file.ts', mtime: Date.now(), size: 100 }
       ]
 
-      saveCache(tempDir, entries)
-      const valid = isCacheValid(tempDir)
-
+      // Create an output file that's older than the cache will be
+      const outputPath = join(tempDir, 'output.json')
+      writeFileSync(outputPath, 'old content')
+      
+      // Wait a tiny bit to ensure cache is newer
+      const originalTime = Date.now() - 1000
+      const cacheEntries = [
+        { path: '/test/file.ts', mtime: originalTime, size: 100 }
+      ]
+      saveCache(tempDir, cacheEntries)
+      
+      const valid = isCacheValid(tempDir, outputPath)
+      
       expect(valid).toBe(true)
     })
   })

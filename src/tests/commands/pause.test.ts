@@ -46,7 +46,7 @@ describe('openpaulPause command', () => {
         phase: 'PLAN',
         phaseNumber: 2,
       }),
-      getRequiredNextAction: jest.fn().mockReturnValue('Run /paul:apply'),
+      getRequiredNextAction: jest.fn().mockReturnValue('Run /openpaul:apply'),
       loadPhaseState: jest.fn().mockReturnValue({
         currentPlanId: '02',
         completedPlans: [],
@@ -92,7 +92,7 @@ describe('openpaulPause command', () => {
           phaseNumber: 2,
           createdAt: expect.any(Number),
           pausedAt: expect.any(Number),
-          nextSteps: expect.arrayContaining(['Run /paul:apply']),
+          nextSteps: expect.arrayContaining(['Run /openpaul:apply']),
           fileChecksums: expect.any(Object),
           metadata: expect.objectContaining({
             snapshotRoot: expect.stringContaining('snapshots'),
@@ -115,14 +115,16 @@ describe('openpaulPause command', () => {
       expect(result).toContain('Current phase')
       expect(result).toContain('Loop position')
       expect(result).toContain('HANDOFF.md')
+      expect(result).toContain('/openpaul:resume')
+      expect(result).toContain('/openpaul:status')
     })
 
     it('should include next steps in output', async () => {
       const result = await openpaulPause.execute({}, toolContext)
 
       expect(result).toContain('Next Steps')
-      expect(result).toContain('/paul:resume')
-      expect(result).toContain('/paul:status')
+      expect(result).toContain('/openpaul:resume')
+      expect(result).toContain('/openpaul:status')
     })
 
     it('should capture correct loop position (phase, phaseNumber)', async () => {
@@ -168,7 +170,7 @@ describe('openpaulPause command', () => {
 
       expect(result).toContain('⚠️ Recent Session Exists')
       expect(result).toContain('12 hours ago')
-      expect(result).toContain('/paul:resume')
+      expect(result).toContain('/openpaul:resume')
     })
 
     it('should not warn for old sessions (> 24 hours)', async () => {
@@ -194,7 +196,7 @@ describe('openpaulPause command', () => {
 
       expect(result).toContain('❌ Cannot Pause')
       expect(result).toContain('not been initialized')
-      expect(result).toContain('/paul:init')
+      expect(result).toContain('/openpaul:init')
     })
 
     it('should return formatted error on file write failure', async () => {

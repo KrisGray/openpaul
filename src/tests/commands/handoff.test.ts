@@ -70,7 +70,7 @@ describe('Handoff Command Functionality', () => {
 
       expect(result).toContain('Cannot Create Handoff')
       expect(result).toContain('not been initialized')
-      expect(result).toContain('/paul:init')
+      expect(result).toContain('/openpaul:init')
     })
   })
 
