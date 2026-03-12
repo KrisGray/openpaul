@@ -43,6 +43,8 @@ describe('openpaulResearchPhase', () => {
 
   it('should return error when no topics detected and none provided', async () => {
     ;(existsSync as jest.Mock).mockImplementation((path: string) => {
+      if (path.endsWith('RESEARCH.md')) return false
+      if (path.endsWith('CONTEXT.md')) return true
       return path.includes('phases')
     })
     ;(readFileSync as jest.Mock).mockReturnValue('')
