@@ -161,7 +161,7 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. User can perform manual acceptance testing with `/openpaul:verify` that generates test checklist from SUMMARY.md, guides through each test, and captures results in phase UAT-ISSUES.md
   2. User can fix plans based on verification issues with `/openpaul:plan-fix` that reads UAT-ISSUES.md, identifies issues requiring plan updates, and creates new or modifies existing plan
-**Plans**: 10 plans (7 complete, gap closure in progress)
+**Plans**: 11 plans (7 complete, gap closure in progress)
 
 Plans:
 - [x] 07-01: Create quality types and QualityManager (Wave 1)
@@ -174,6 +174,7 @@ Plans:
 - [ ] 07-08: Add Jest test suites for quality command workflows
 - [ ] 07-09: Resolve remaining UAT test failures and confirm full suite passes
 - [ ] 07-10: Add missing @opencode-ai/plugin mocks to command tests
+- [ ] 07-11: Add confirmation gate for plan-fix auto-execution
 
 #### Phase 8: Configuration
 **Goal**: Users can manage project configuration, specialized flows, and codebase documentation
