@@ -118,24 +118,59 @@ describe('DirectoryScanner', () => {
     })
 
     it('should check cache validity', () => {
-      const entries = [
-        { path: '/test/file.ts', mtime: Date.now(), size: 100 }
+      const cacheEntries = [
+        { path: '/test/file.ts', mtime: Date.now() - 1000, size: 100 }
       ]
 
-      // Create an output file that's older than the cache will be
-      const outputPath = join(tempDir, 'output.json')
-      writeFileSync(outputPath, 'old content')
-      
-      // Wait a tiny bit to ensure cache is newer
-      const originalTime = Date.now() - 1000
-      const cacheEntries = [
-        { path: '/test/file.ts', mtime: originalTime, size: 100 }
-      ]
       saveCache(tempDir, cacheEntries)
-      
+
+      const outputPath = join(tempDir, 'output.json')
+      writeFileSync(outputPath, 'fresh content')
+
       const valid = isCacheValid(tempDir, outputPath)
-      
+
       expect(valid).toBe(true)
+    })
+
+    it('should mark cache invalid when output is missing', () => {
+      const cacheEntries = [
+        { path: '/test/file.ts', mtime: Date.now() - 1000, size: 100 }
+      ]
+
+      saveCache(tempDir, cacheEntries)
+
+      const valid = isCacheValid(tempDir, join(tempDir, 'missing.json'))
+
+      expect(valid).toBe(false)
+    })
+
+    it('should mark cache invalid when cache metadata is missing', () => {
+      const cachePath = join(tempDir, '.openpaul', '.codebase-cache.json')
+      mkdirSync(join(tempDir, '.openpaul'), { recursive: true })
+
+      writeFileSync(cachePath, JSON.stringify({ version: '1.0', timestamp: Date.now() }))
+
+      const outputPath = join(tempDir, 'output.json')
+      writeFileSync(outputPath, 'fresh content')
+
+      const valid = isCacheValid(tempDir, outputPath)
+
+      expect(valid).toBe(false)
+    })
+
+    it('should mark cache invalid when sources are newer than cache', () => {
+      const cacheEntries = [
+        { path: '/test/file.ts', mtime: Date.now() + 1000, size: 100 }
+      ]
+
+      saveCache(tempDir, cacheEntries)
+
+      const outputPath = join(tempDir, 'output.json')
+      writeFileSync(outputPath, 'fresh content')
+
+      const valid = isCacheValid(tempDir, outputPath)
+
+      expect(valid).toBe(false)
     })
   })
 })
