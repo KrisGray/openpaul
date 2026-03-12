@@ -16,4 +16,5 @@ export * from './command';
 export * from './sub-stage';
 export * from './model-config';
 export type { Plugin } from '@opencode-ai/plugin';
+export * from './milestone';
 //# sourceMappingURL=index.d.ts.map

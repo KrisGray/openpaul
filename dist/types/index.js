@@ -21,4 +21,6 @@ export * from './command';
 export * from './sub-stage';
 // Model configuration types
 export * from './model-config';
+// Milestone types
+export * from './milestone';
 //# sourceMappingURL=index.js.map

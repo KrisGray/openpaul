@@ -67,89 +67,84 @@ export const paulHelp = tool({
                 usage: '/paul:status',
                 phase: '3',
             },
-            // Project Management commands (Phase 4)
+            // Milestone Management commands (Phase 5)
             milestone: {
-                description: 'Create a milestone',
+                description: 'Create new milestone',
                 usage: '/paul:milestone --name "..."',
-                phase: '4',
+                phase: '5',
             },
             'complete-milestone': {
-                description: 'Complete a milestone',
+                description: 'Mark milestone complete and archive',
                 usage: '/paul:complete-milestone --id ...',
-                phase: '4',
+                phase: '5',
             },
             'discuss-milestone': {
-                description: 'Articulate milestone vision',
+                description: 'Plan upcoming milestone',
                 usage: '/paul:discuss-milestone',
-                phase: '4',
+                phase: '5',
             },
-            'map-codebase': {
-                description: 'Generate codebase overview',
-                usage: '/paul:map-codebase',
-                phase: '4',
-            },
-            // Planning Support commands (Phase 5)
+            // Planning Support commands (Phase 6)
             discuss: {
                 description: 'Capture planning discussion',
                 usage: '/paul:discuss --topic "..."',
-                phase: '5',
+                phase: '6',
             },
             assumptions: {
                 description: 'Review intended approach',
                 usage: '/paul:assumptions',
-                phase: '5',
+                phase: '6',
             },
             discover: {
                 description: 'Explore options',
                 usage: '/paul:discover --query "..."',
-                phase: '5',
+                phase: '6',
             },
             'consider-issues': {
                 description: 'Triage deferred issues',
                 usage: '/paul:consider-issues',
-                phase: '5',
+                phase: '6',
             },
-            // Research & Quality commands (Phase 6)
+            // Research & Quality commands (Phase 7)
             research: {
                 description: 'Deploy research agents',
                 usage: '/paul:research --question "..."',
-                phase: '6',
+                phase: '7',
             },
             'research-phase': {
                 description: 'Research phase unknowns',
                 usage: '/paul:research-phase --phase N',
-                phase: '6',
+                phase: '7',
             },
             verify: {
                 description: 'Verify acceptance criteria',
                 usage: '/paul:verify',
-                phase: '6',
+                phase: '7',
             },
             'plan-fix': {
                 description: 'Plan UAT fixes',
                 usage: '/paul:plan-fix',
-                phase: '6',
+                phase: '7',
             },
-            // Roadmap & Configuration commands (Phase 7)
+            // Roadmap & Configuration commands (Phase 8)
             'add-phase': {
                 description: 'Append new phase to roadmap',
                 usage: '/paul:add-phase --name "..."',
-                phase: '7',
+                phase: '8',
             },
             'remove-phase': {
                 description: 'Remove future phase',
                 usage: '/paul:remove-phase --phase N',
-                phase: '7',
+                phase: '8',
             },
             flows: {
                 description: 'Configure skill requirements',
                 usage: '/paul:flows',
-                phase: '7',
+                phase: '8',
             },
             config: {
                 description: 'View/modify settings',
                 usage: '/paul:config',
-                phase: '7',
+                phase: '8',
             },
         };
         // If specific command requested, show detailed help

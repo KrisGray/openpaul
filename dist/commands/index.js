@@ -15,4 +15,15 @@ export { paulPause } from './pause';
 export { paulResume } from './resume';
 export { paulAddPhase } from './add-phase';
 export { paulRemovePhase } from './remove-phase';
+// Pre-planning commands
+export { paulDiscuss } from './discuss';
+export { paulAssumptions } from './assumptions';
+export { paulDiscover } from './discover';
+export { paulConsiderIssues } from './consider-issues';
+// Research commands
+export { paulResearch } from './research';
+export { paulResearchPhase } from './research-phase';
+// Quality commands
+export { paulVerify } from './verify';
+export { paulPlanFix } from './plan-fix';
 //# sourceMappingURL=index.js.map

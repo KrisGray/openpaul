@@ -182,15 +182,16 @@ Plans:
 **Depends on**: Phase 8
 **Requirements**: BRND-01
 **Success Criteria** (what must be TRUE):
-  1. All instances of "PAUL" are replaced with "OpenPAUL" in documentation, command names, and user-facing text
-  2. Codebase documentation includes comprehensive mapping of structure, stack, conventions, testing, integrations, and architecture
-**Plans**: TBD
+  1. All instances of "PAUL" replaced with "OpenPAUL" in documentation, command names, and user-facing text
+  2. All paulX function exports renamed to openpaulX
+  3. Plugin renamed to OpenPaulPlugin with only openpaul: command prefix
+**Plans**: 4 plans in 2 waves
 
 Plans:
-- [ ] 09-01: Update all documentation to use "OpenPAUL" terminology
-- [ ] 09-02: Update command names and file references to use "openpaul" prefix
-- [ ] 09-03: Ensure all user-facing text uses consistent branding
-- [ ] 09-04: Add tests to verify branding consistency
+- [ ] 09-01-PLAN.md — Command function renames (paulX → openpaulX), plugin rename, remove paul: aliases
+- [ ] 09-02-PLAN.md — Storage dual-path resolution (.openpaul/ primary, .paul/ fallback)
+- [ ] 09-03-PLAN.md — Templates and documentation (README, package.json)
+- [ ] 09-04-PLAN.md — Tests and branding consistency verification
 
 ### 📋 v2.0 (Planned)
 
@@ -213,7 +214,7 @@ Phases execute in numeric order: 3 → 4 → 5 → 6 → 7 → 8 → 9
 | 6. Pre-Planning + Research | v1.1 | 0/12 | Ready to execute | - |
 | 7. Quality | v1.1 | Complete    | 2026-03-11 | - |
 | 8. Configuration | v1.1 | 0/7 | Not started | - |
-| 9. Documentation | v1.1 | 0/4 | Not started | - |
+| 9. Documentation | v1.1 | 4/4 | Ready to execute | -
 
 **Overall v1.1 Progress:** 0/50 plans (0%)
 
