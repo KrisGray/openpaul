@@ -14,6 +14,7 @@ export const openpaulConfig: ToolDefinition = tool({
   execute: async ({ action = 'list', key, value }, context) => {
     try {
       const configDir = join(context.directory, '.openpaul')
+      const allowedTopLevel = 'project, integrations, preferences'
       
       switch (action) {
         case 'init': {
@@ -34,51 +35,53 @@ export const openpaulConfig: ToolDefinition = tool({
           const config = configManager.load()
 
           let output = formatHeader(2, '📋 Configuration') + '\n\n'
-          output += formatBold('Version:') + ` ${config.version}\n\n`
-          
           output += formatHeader(3, 'Project') + '\n'
-          output += formatBold('Name:') + ` ${config.project.name}\n`
+          const projectLines = [`${formatBold('Name:')} ${config.project.name}`]
           if (config.project.description) {
-            output += formatBold('Description:') + ` ${config.project.description}\n`
+            projectLines.push(`${formatBold('Description:')} ${config.project.description}`)
           }
-          output += '\n'
+          output += formatList(projectLines) + '\n\n'
 
-          if (config.preferences) {
-            output += formatHeader(3, 'Preferences') + '\n'
-            if (config.preferences.autoAdvance !== undefined) {
-              output += formatBold('Auto Advance:') + ` ${config.preferences.autoAdvance}\n`
+          output += formatHeader(3, 'Integrations') + '\n'
+          const integrationsLines: string[] = []
+          if (config.integrations?.sonarqube) {
+            const sonar = config.integrations.sonarqube
+            integrationsLines.push(`${formatBold('SonarQube:')} ${sonar.enabled ? 'Enabled' : 'Disabled'}`)
+            if (sonar.url) {
+              integrationsLines.push(`${formatBold('URL:')} ${sonar.url}`)
             }
-            if (config.preferences.parallelization !== undefined) {
-              output += formatBold('Parallelization:') + ` ${config.preferences.parallelization}\n`
+            if (sonar.projectKey) {
+              integrationsLines.push(`${formatBold('Project Key:')} ${sonar.projectKey}`)
             }
-            if (config.preferences.verbose !== undefined) {
-              output += formatBold('Verbose:') + ` ${config.preferences.verbose}\n`
+            if (sonar.branch) {
+              integrationsLines.push(`${formatBold('Branch:')} ${sonar.branch}`)
             }
-            output += '\n'
           }
+          output += integrationsLines.length > 0
+            ? `${formatList(integrationsLines)}\n\n`
+            : `${formatList(['None configured'])}\n\n`
 
-          if (config.integrations && Object.keys(config.integrations).length > 0) {
-            output += formatHeader(3, 'Integrations') + '\n'
-            for (const [name, integration] of Object.entries(config.integrations)) {
-              output += formatBold(`${name}:`) + ' configured\n'
-            }
-            output += '\n'
+          output += formatHeader(3, 'Preferences') + '\n'
+          const preferencesLines: string[] = []
+          if (config.preferences?.autoAdvance !== undefined) {
+            preferencesLines.push(`${formatBold('Auto Advance:')} ${config.preferences.autoAdvance}`)
           }
-
-          if (config.flows && Object.keys(config.flows).length > 0) {
-            output += formatHeader(3, 'Flows') + '\n'
-            for (const [name, flow] of Object.entries(config.flows)) {
-              output += `${name}: ${flow.enabled ? '✓' : '○'}\n`
-            }
-            output += '\n'
+          if (config.preferences?.parallelization !== undefined) {
+            preferencesLines.push(`${formatBold('Parallelization:')} ${config.preferences.parallelization}`)
           }
+          if (config.preferences?.verbose !== undefined) {
+            preferencesLines.push(`${formatBold('Verbose:')} ${config.preferences.verbose}`)
+          }
+          output += preferencesLines.length > 0
+            ? `${formatList(preferencesLines)}\n\n`
+            : `${formatList(['None configured'])}\n\n`
 
           return output
         }
 
         case 'get': {
           if (!key) {
-            return 'Error: --key required for get action'
+            return `Error: --key required for get action. Allowed top-level keys: ${allowedTopLevel}.`
           }
 
           if (!existsSync(join(configDir, 'config.md'))) {
@@ -89,7 +92,7 @@ export const openpaulConfig: ToolDefinition = tool({
           const value = configManager.get(key)
 
           if (value === undefined) {
-            return `Config key "${key}" not found.`
+            return `Config key "${key}" is not set. Allowed top-level keys: ${allowedTopLevel}.`
           }
 
           return `${key}: ${JSON.stringify(value, null, 2)}`
@@ -114,7 +117,7 @@ export const openpaulConfig: ToolDefinition = tool({
           }
           
           configManager.set(key, parsedValue)
-          
+           
           return formatHeader(2, '⚡ Config Updated') + '\n\n' +
             formatBold('Key:') + ` ${key}\n` +
             formatBold('Value:') + ` ${JSON.stringify(parsedValue)}\n\n` +
