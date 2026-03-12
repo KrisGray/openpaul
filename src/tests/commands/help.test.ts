@@ -4,7 +4,7 @@
  * Tests for the command reference functionality
  */
 
-import { paulHelp } from '../../commands/help'
+import { openpaulHelp } from '../../commands/help'
 import { formatHeader, formatBold } from '../../output/formatter'
 
 jest.mock(
@@ -95,7 +95,7 @@ describe('Help Command Functionality', () => {
     const toolContext = { directory: '/test/project' } as any
 
     it('should list Phase 2 commands in grouped output', async () => {
-      const output = await paulHelp.execute({}, toolContext)
+      const output = await openpaulHelp.execute({}, toolContext)
 
       expect(output).toContain('Core Loop Commands (Phase 2)')
       expect(output).toContain('/plan')

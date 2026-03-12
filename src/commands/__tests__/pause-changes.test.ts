@@ -1,4 +1,4 @@
-import { paulPause } from '../../commands/pause'
+import { openpaulPause } from '../../commands/pause'
 import { StateManager } from '../../state/state-manager'
 import { SessionManager } from '../../storage/session-manager'
 import { existsSync, readFileSync, readdirSync, statSync, mkdirSync } from 'fs'
@@ -17,7 +17,7 @@ jest.mock(
   { virtual: true }
 )
 
-describe('paulPause command - change detection', () => {
+describe('openpaulPause command - change detection', () => {
   const mockDirectory = '/test/project'
   const toolContext = { directory: mockDirectory } as any
 
@@ -90,7 +90,7 @@ describe('paulPause command - change detection', () => {
         files: [{ path: 'src/test.ts', status: 'modified' }],
       })
 
-      const result = await paulPause.execute({}, toolContext)
+      const result = await openpaulPause.execute({}, toolContext)
 
       expect(result).toContain('Unsaved Changes Detected')
       expect(result).toContain('Git changes: 1 modified')
@@ -105,7 +105,7 @@ describe('paulPause command - change detection', () => {
         files: [{ path: 'src/test.ts', oldChecksum: 'old', newChecksum: 'new' }],
       })
 
-      const result = await paulPause.execute({}, toolContext)
+      const result = await openpaulPause.execute({}, toolContext)
 
       expect(result).toContain('Unsaved Changes Detected')
       expect(result).toContain('Modified files: 1 file(s) changed')
@@ -115,14 +115,14 @@ describe('paulPause command - change detection', () => {
     })
 
     it('should allow pause when no changes detected and no recent session', async () => {
-      const result = await paulPause.execute({}, toolContext)
+      const result = await openpaulPause.execute({}, toolContext)
 
       expect(result).toContain('Session Paused')
       expect(mockSessionManager.saveSession).toHaveBeenCalled()
     })
 
     it('should call change detection with correct directory', async () => {
-      await paulPause.execute({}, toolContext)
+      await openpaulPause.execute({}, toolContext)
 
       expect(changeDetector.detectUncommittedChanges).toHaveBeenCalledWith(mockDirectory)
       expect(changeDetector.detectModifiedFiles).toHaveBeenCalled()
@@ -134,7 +134,7 @@ describe('paulPause command - change detection', () => {
         files: [{ path: 'src/test.ts', status: 'modified' }],
       })
 
-      const result = await paulPause.execute({}, toolContext)
+      const result = await openpaulPause.execute({}, toolContext)
 
       expect(result).toContain('onUnsavedChanges="commit"')
       expect(result).toContain('onUnsavedChanges="save"')
@@ -155,7 +155,7 @@ describe('paulPause command - change detection', () => {
         files: [{ path: 'config.json', oldChecksum: 'old', newChecksum: 'new' }],
       })
 
-      const result = await paulPause.execute({}, toolContext)
+      const result = await openpaulPause.execute({}, toolContext)
 
       expect(result).toContain('Git changes: 1 modified, 1 added')
       expect(result).toContain('Modified files: 1 file(s) changed')
@@ -167,7 +167,7 @@ describe('paulPause command - change detection', () => {
         files: [{ path: 'src/test.ts', status: 'modified' }],
       })
 
-      await paulPause.execute({ onUnsavedChanges: 'save' }, toolContext)
+      await openpaulPause.execute({ onUnsavedChanges: 'save' }, toolContext)
 
       expect(mockSessionManager.saveSession).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -184,7 +184,7 @@ describe('paulPause command - change detection', () => {
         files: [{ path: 'src/test.ts', status: 'modified' }],
       })
 
-      const result = await paulPause.execute({ onUnsavedChanges: 'abort' }, toolContext)
+      const result = await openpaulPause.execute({ onUnsavedChanges: 'abort' }, toolContext)
 
       expect(result).toContain('Pause Aborted')
       expect(mockSessionManager.saveSession).not.toHaveBeenCalled()
@@ -200,7 +200,7 @@ describe('paulPause command - change detection', () => {
         files: manyFiles,
       })
 
-      const result = await paulPause.execute({}, toolContext)
+      const result = await openpaulPause.execute({}, toolContext)
 
       expect(result).toContain('... and 5 more')
     })
@@ -212,7 +212,7 @@ describe('paulPause command - change detection', () => {
         pausedAt: Date.now() - 1000 * 60 * 60 * 2,
       })
 
-      const result = await paulPause.execute({}, toolContext)
+      const result = await openpaulPause.execute({}, toolContext)
 
       expect(result).toContain('Recent Session Exists')
       expect(changeDetector.detectUncommittedChanges).not.toHaveBeenCalled()

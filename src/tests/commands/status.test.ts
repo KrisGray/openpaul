@@ -7,7 +7,7 @@
 import { StateManager } from '../../state/state-manager'
 import { FileManager } from '../../storage/file-manager'
 import { SessionManager } from '../../storage/session-manager'
-import { paulStatus } from '../../commands/status'
+import { openpaulStatus } from '../../commands/status'
 import { progressBar } from '../../output/progress-bar'
 import { formatHeader, formatBold, formatList } from '../../output/formatter'
 import { existsSync } from 'fs'
@@ -83,7 +83,7 @@ describe('Status Command Functionality', () => {
       ;(existsSync as jest.Mock).mockReturnValue(false)
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulStatus.execute({ verbose: false }, toolContext)
+      const result = await openpaulStatus.execute({ verbose: false }, toolContext)
 
       expect(result).toContain('📍 OpenPAUL Status')
       expect(result).toContain('Not initialized')
@@ -97,7 +97,7 @@ describe('Status Command Functionality', () => {
       mockStateManager.getCurrentPosition.mockReturnValue(undefined)
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulStatus.execute({ verbose: false }, toolContext)
+      const result = await openpaulStatus.execute({ verbose: false }, toolContext)
 
       expect(result).toContain('No active state')
       expect(result).toContain('/openpaul:init')
@@ -123,7 +123,7 @@ describe('Status Command Functionality', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulStatus.execute({ verbose: false }, toolContext)
+      const result = await openpaulStatus.execute({ verbose: false }, toolContext)
 
       expect(result).toContain('📍 Loop:')
       expect(result).toContain('✓ PLAN')
@@ -144,7 +144,7 @@ describe('Status Command Functionality', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulStatus.execute({ verbose: false }, toolContext)
+      const result = await openpaulStatus.execute({ verbose: false }, toolContext)
 
       // Current phase should have ◉
       expect(result).toContain('◉ PLAN')
@@ -173,7 +173,7 @@ describe('Status Command Functionality', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulStatus.execute({ verbose: false }, toolContext)
+      const result = await openpaulStatus.execute({ verbose: false }, toolContext)
 
       expect(result).toContain('**Phase:** 2')
       expect(result).toContain('**Current Stage:** APPLY')
@@ -205,7 +205,7 @@ describe('Status Command Functionality', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulStatus.execute({ verbose: false }, toolContext)
+      const result = await openpaulStatus.execute({ verbose: false }, toolContext)
 
       expect(result).toContain('Plan Progress')
       expect(result).toContain(progressBar(2, 3))
@@ -230,7 +230,7 @@ describe('Status Command Functionality', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulStatus.execute({ verbose: false }, toolContext)
+      const result = await openpaulStatus.execute({ verbose: false }, toolContext)
 
       expect(result).toContain(progressBar(1, 2))
     })
@@ -266,7 +266,7 @@ describe('Status Command Functionality', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulStatus.execute({ verbose: false }, toolContext)
+      const result = await openpaulStatus.execute({ verbose: false }, toolContext)
 
       expect(result).toContain('Session Info')
       expect(result).toContain('session-123')
@@ -287,7 +287,7 @@ describe('Status Command Functionality', () => {
       mockSessionManager.loadCurrentSession.mockReturnValue(undefined)
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulStatus.execute({ verbose: false }, toolContext)
+      const result = await openpaulStatus.execute({ verbose: false }, toolContext)
 
       expect(result).toContain('No active session')
     })
@@ -317,7 +317,7 @@ describe('Status Command Functionality', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulStatus.execute({ verbose: false }, toolContext)
+      const result = await openpaulStatus.execute({ verbose: false }, toolContext)
 
       expect(result).toContain('⚠️')
       expect(result).toContain('h old')
@@ -343,7 +343,7 @@ describe('Status Command Functionality', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulStatus.execute({ verbose: false }, toolContext)
+      const result = await openpaulStatus.execute({ verbose: false }, toolContext)
 
       expect(result).toContain('Next Action')
       expect(result).toContain('Run /openpaul:apply to execute the plan')
@@ -369,7 +369,7 @@ describe('Status Command Functionality', () => {
       })
 
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulStatus.execute({ verbose: true }, toolContext)
+      const result = await openpaulStatus.execute({ verbose: true }, toolContext)
 
       expect(result).toContain('Details')
       expect(result).toContain('Current timestamp:')

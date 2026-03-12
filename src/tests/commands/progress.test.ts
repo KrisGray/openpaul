@@ -6,7 +6,7 @@
 
 import { StateManager } from '../../state/state-manager'
 import { FileManager } from '../../storage/file-manager'
-import { paulProgress } from '../../commands/progress'
+import { openpaulProgress } from '../../commands/progress'
 import { progressBar } from '../../output/progress-bar'
 import { formatHeader, formatBold, formatList } from '../../output/formatter'
 import { existsSync } from 'fs'
@@ -51,9 +51,9 @@ describe('Progress Command Functionality', () => {
       getCurrentPosition: jest.fn(),
       getRequiredNextAction: jest.fn((phase: 'PLAN' | 'APPLY' | 'UNIFY') => {
         const actions: Record<'PLAN' | 'APPLY' | 'UNIFY', string> = {
-          PLAN: 'Run /paul:apply to execute the plan',
-          APPLY: 'Run /paul:unify to close the loop',
-          UNIFY: 'Run /paul:plan to start a new loop',
+          PLAN: 'Run /openpaul:apply to execute the plan',
+          APPLY: 'Run /openpaul:unify to close the loop',
+          UNIFY: 'Run /openpaul:plan to start a new loop',
         }
         return actions[phase]
       }),
@@ -82,12 +82,12 @@ describe('Progress Command Functionality', () => {
         formatBold('Status:') + ' Not initialized\n\n' +
         formatHeader(3, 'What to do') + '\n' +
         formatList([
-          'Run `/paul:init` to set up OpenPAUL in this project.',
+          'Run `/openpaul:init` to set up OpenPAUL in this project.',
         ])
 
       expect(output).toContain('📍')
       expect(output).toContain('Not initialized')
-      expect(output).toContain('/paul:init')
+      expect(output).toContain('/openpaul:init')
     })
   })
 
@@ -138,15 +138,15 @@ describe('Progress Command Functionality', () => {
       
       mockStateManager.getCurrentPosition.mockReturnValue({ phaseNumber: 1, phase: 'PLAN' })
       let action: string = stateManager.getRequiredNextAction('PLAN')
-      expect(action).toBe('Run /paul:apply to execute the plan')
+      expect(action).toBe('Run /openpaul:apply to execute the plan')
       
       mockStateManager.getCurrentPosition.mockReturnValue({ phaseNumber: 1, phase: 'APPLY' })
       action = stateManager.getRequiredNextAction('APPLY')
-      expect(action).toBe('Run /paul:unify to close the loop')
+      expect(action).toBe('Run /openpaul:unify to close the loop')
       
       mockStateManager.getCurrentPosition.mockReturnValue({ phaseNumber: 1, phase: 'UNIFY' })
       action = stateManager.getRequiredNextAction('UNIFY')
-      expect(action).toBe('Run /paul:plan to start a new loop')
+      expect(action).toBe('Run /openpaul:plan to start a new loop')
     })
   })
 
@@ -194,16 +194,16 @@ describe('Progress Command Functionality', () => {
       const output = formatHeader(2, '📍 OpenPAUL Status') + '\n\n' +
         '📍 Loop: ◉ PLAN → ○ APPLY → ○ UNIFY\n\n' +
         formatBold('Phase:') + ' 1\n' +
-        formatBold('Next:') + ' Run /paul:apply to execute the plan\n\n' +
+        formatBold('Next:') + ' Run /openpaul:apply to execute the plan\n\n' +
         formatHeader(3, 'Details') + '\n' +
         formatBold('Stage:') + ' PLAN\n' +
         formatBold('Last updated:') + ' 2021-01-01T00:00:00.000Z\n\n' +
         formatHeader(3, 'Quick Commands') + '\n' +
         formatList([
-          '/paul:plan - Create a new plan',
-          '/paul:apply - Execute the current plan',
-          '/paul:unify - Close the loop',
-          '/paul:help - View all commands',
+          '/openpaul:plan - Create a new plan',
+          '/openpaul:apply - Execute the current plan',
+          '/openpaul:unify - Close the loop',
+          '/openpaul:help - View all commands',
         ])
 
       expect(output).toContain('**Stage:** PLAN')
@@ -252,7 +252,7 @@ describe('Progress Command Functionality', () => {
         ],
       })
 
-      const output = await paulProgress.execute({ verbose: false }, toolContext)
+      const output = await openpaulProgress.execute({ verbose: false }, toolContext)
 
       expect(output).toContain('Current Task')
       expect(output).toContain('Task 2/3 — Second task')

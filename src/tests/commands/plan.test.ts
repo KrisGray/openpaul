@@ -1,7 +1,7 @@
 import { FileManager } from '../../storage/file-manager'
 import { StateManager } from '../../state/state-manager'
 import { LoopEnforcer } from '../../state/loop-enforcer'
-import { paulPlan } from '../../commands/plan'
+import { openpaulPlan } from '../../commands/plan'
 
 jest.mock('../../storage/file-manager')
 jest.mock('../../state/state-manager')
@@ -14,7 +14,7 @@ jest.mock(
   { virtual: true }
 )
 
-describe('paulPlan command', () => {
+describe('openpaulPlan command', () => {
   const mockDirectory = '/test/project'
   const toolContext = { directory: mockDirectory } as any
 
@@ -57,7 +57,7 @@ describe('paulPlan command', () => {
   })
 
   it('persists criteria, boundaries, and dependency graph', async () => {
-    const result = await paulPlan.execute({
+    const result = await openpaulPlan.execute({
       phase: 2,
       plan: '01',
       criteria: ['Must include execution graph'],
@@ -105,7 +105,7 @@ describe('paulPlan command', () => {
   it('formats guided error when not initialized', async () => {
     mockStateManager.getCurrentPosition.mockReturnValue(undefined)
 
-    const result = await paulPlan.execute({
+    const result = await openpaulPlan.execute({
       phase: 2,
       plan: '01',
       tasks: [
@@ -128,7 +128,7 @@ describe('paulPlan command', () => {
       throw new Error('Cannot start new loop from APPLY')
     })
 
-    const result = await paulPlan.execute({
+    const result = await openpaulPlan.execute({
       phase: 2,
       plan: '02',
       tasks: [

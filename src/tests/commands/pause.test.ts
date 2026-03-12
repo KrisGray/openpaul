@@ -4,7 +4,7 @@
  * Tests for /paul:pause command functionality
  */
 
-import { paulPause } from '../../commands/pause'
+import { openpaulPause } from '../../commands/pause'
 import { StateManager } from '../../state/state-manager'
 import { SessionManager } from '../../storage/session-manager'
 import { existsSync, readFileSync, readdirSync, statSync, mkdirSync, writeFileSync } from 'fs'
@@ -22,7 +22,7 @@ jest.mock(
   { virtual: true }
 )
 
-describe('paulPause command', () => {
+describe('openpaulPause command', () => {
   const mockDirectory = '/test/project'
   const toolContext = { directory: mockDirectory } as any
 
@@ -83,7 +83,7 @@ describe('paulPause command', () => {
 
   describe('successful pause', () => {
     it('should create session state with correct fields', async () => {
-      await paulPause.execute({}, toolContext)
+      await openpaulPause.execute({}, toolContext)
 
       expect(mockSessionManager.saveSession).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -102,13 +102,13 @@ describe('paulPause command', () => {
     })
 
     it('should save session via SessionManager.saveSession', async () => {
-      await paulPause.execute({}, toolContext)
+      await openpaulPause.execute({}, toolContext)
 
       expect(mockSessionManager.saveSession).toHaveBeenCalled()
     })
 
     it('should return formatted success message', async () => {
-      const result = await paulPause.execute({}, toolContext)
+      const result = await openpaulPause.execute({}, toolContext)
 
       expect(result).toContain('✅ Session Paused')
       expect(result).toContain('session-123')
@@ -118,7 +118,7 @@ describe('paulPause command', () => {
     })
 
     it('should include next steps in output', async () => {
-      const result = await paulPause.execute({}, toolContext)
+      const result = await openpaulPause.execute({}, toolContext)
 
       expect(result).toContain('Next Steps')
       expect(result).toContain('/paul:resume')
@@ -131,7 +131,7 @@ describe('paulPause command', () => {
         phaseNumber: 3,
       })
 
-      await paulPause.execute({}, toolContext)
+      await openpaulPause.execute({}, toolContext)
 
       expect(mockSessionManager.saveSession).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -144,7 +144,7 @@ describe('paulPause command', () => {
     it('should include correct next steps in session state', async () => {
       mockStateManager.getRequiredNextAction.mockReturnValue('Custom next action')
 
-      await paulPause.execute({}, toolContext)
+      await openpaulPause.execute({}, toolContext)
 
       expect(mockSessionManager.saveSession).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -164,7 +164,7 @@ describe('paulPause command', () => {
         pausedAt: recentTime,
       })
 
-      const result = await paulPause.execute({}, toolContext)
+      const result = await openpaulPause.execute({}, toolContext)
 
       expect(result).toContain('⚠️ Recent Session Exists')
       expect(result).toContain('12 hours ago')
@@ -180,7 +180,7 @@ describe('paulPause command', () => {
         pausedAt: oldTime,
       })
 
-      await paulPause.execute({}, toolContext)
+      await openpaulPause.execute({}, toolContext)
 
       expect(mockSessionManager.saveSession).toHaveBeenCalled()
     })
@@ -190,7 +190,7 @@ describe('paulPause command', () => {
     it('should return error if no active state (not initialized)', async () => {
       mockStateManager.getCurrentPosition.mockReturnValue(undefined)
 
-      const result = await paulPause.execute({}, toolContext)
+      const result = await openpaulPause.execute({}, toolContext)
 
       expect(result).toContain('❌ Cannot Pause')
       expect(result).toContain('not been initialized')
@@ -200,7 +200,7 @@ describe('paulPause command', () => {
     it('should return formatted error on file write failure', async () => {
       mockSessionManager.saveSession.mockRejectedValue(new Error('Write failed'))
 
-      const result = await paulPause.execute({}, toolContext)
+      const result = await openpaulPause.execute({}, toolContext)
 
       expect(result).toContain('❌ Pause Failed')
       expect(result).toContain('Write failed')

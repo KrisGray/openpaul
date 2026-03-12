@@ -2,7 +2,7 @@
  * discover command Tests
  */
 
-import { paulDiscover } from '../../commands/discover'
+import { openpaulDiscover } from '../../commands/discover'
 import { existsSync } from 'fs'
 
 jest.mock('fs', () => ({
@@ -17,7 +17,7 @@ jest.mock('../../storage/atomic-writes', () => ({
   atomicWrite: jest.fn().mockResolvedValue(undefined),
 }))
 
-describe('paulDiscover', () => {
+describe('openpaulDiscover', () => {
   const mockContext = { directory: '/test/project' }
 
   beforeEach(() => {
@@ -26,7 +26,7 @@ describe('paulDiscover', () => {
 
   describe('Quick mode', () => {
     it('should return verbal response only (no file)', async () => {
-      const result = await (paulDiscover as any).execute(
+      const result = await (openpaulDiscover as any).execute(
         { phase: 1, topic: 'Test topic', quick: true },
         mockContext
       )
@@ -43,7 +43,7 @@ describe('paulDiscover', () => {
         return path.includes('phases')
       })
       
-      const result = await (paulDiscover as any).execute(
+      const result = await (openpaulDiscover as any).execute(
         { phase: 1, topic: 'Test topic', overwrite: true },
         mockContext
       )
@@ -58,7 +58,7 @@ describe('paulDiscover', () => {
         return path.includes('phases')
       })
       
-      const result = await (paulDiscover as any).execute(
+      const result = await (openpaulDiscover as any).execute(
         { phase: 1, topic: 'Test topic', deep: true },
         mockContext
       )
@@ -71,7 +71,7 @@ describe('paulDiscover', () => {
         return path.includes('phases')
       })
       
-      const result = await (paulDiscover as any).execute(
+      const result = await (openpaulDiscover as any).execute(
         { phase: 1, topic: 'Test topic', deep: true, confirm: true, overwrite: true },
         mockContext
       )
@@ -84,7 +84,7 @@ describe('paulDiscover', () => {
 
   describe('Mode conflict', () => {
     it('should error when both --quick and --deep specified', async () => {
-      const result = await (paulDiscover as any).execute(
+      const result = await (openpaulDiscover as any).execute(
         { phase: 1, topic: 'Test', quick: true, deep: true },
         mockContext
       )

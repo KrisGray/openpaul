@@ -20,13 +20,18 @@ export class ResearchManager {
   /**
    * Get the planning directory path (.openpaul or .paul)
    * Uses .openpaul as primary, falls back to .paul for migration compatibility.
+   * Defaults to .openpaul if neither exists.
    */
   getPlanningDir(): string {
     const primary = join(this.projectRoot, '.openpaul')
     if (existsSync(primary)) {
       return primary
     }
-    return join(this.projectRoot, '.paul')
+    const fallback = join(this.projectRoot, '.paul')
+    if (existsSync(fallback)) {
+      return fallback
+    }
+    return primary // Default to .openpaul
   }
 
   /**

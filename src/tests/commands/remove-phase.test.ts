@@ -6,7 +6,7 @@
 
 import { existsSync } from 'fs'
 import { RoadmapManager } from '../../roadmap/roadmap-manager'
-import { paulRemovePhase } from '../../commands/remove-phase'
+import { openpaulRemovePhase } from '../../commands/remove-phase'
 import { formatHeader, formatBold, formatList } from '../../output/formatter'
 import type { RoadmapValidationResult, RemovePhaseResult, PhaseEntry } from '../../types/roadmap'
 
@@ -80,7 +80,7 @@ describe('Remove Phase Command', () => {
 
     it('should remove phase and return confirmation', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulRemovePhase.execute({ phase: 3 }, toolContext)
+      const result = await openpaulRemovePhase.execute({ phase: 3 }, toolContext)
 
       expect(mockRoadmapManager.canRemovePhase).toHaveBeenCalledWith(3, expect.any(String))
       expect(mockRoadmapManager.removePhase).toHaveBeenCalledWith(3)
@@ -90,12 +90,12 @@ describe('Remove Phase Command', () => {
 
     it('should show renumbered phases in output', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulRemovePhase.execute({ phase: 3 }, toolContext)
+      const result = await openpaulRemovePhase.execute({ phase: 3 }, toolContext)
       expect(result).toContain('2 subsequent phases renumbered')
     })
     it('should show next steps after removal', async () => {
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulRemovePhase.execute({ phase: 3 }, toolContext)
+      const result = await openpaulRemovePhase.execute({ phase: 3 }, toolContext)
       expect(result).toContain('Next steps')
       expect(result).toContain('Review ROADMAP.md')
     })
@@ -106,7 +106,7 @@ describe('Remove Phase Command', () => {
         renumberedPhases: [],
       } as RemovePhaseResult)
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulRemovePhase.execute({ phase: 3 }, toolContext)
+      const result = await openpaulRemovePhase.execute({ phase: 3 }, toolContext)
       expect(result).toContain('Phase Removed')
       expect(result).not.toContain('subnumbered')
     })
@@ -115,7 +115,7 @@ describe('Remove Phase Command', () => {
     it('should return error when ROADMAP.md does not exist', async () => {
       mockRoadmapManager.resolveRoadmapPath.mockReturnValue(null)
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulRemovePhase.execute({ phase: 3 }, toolContext)
+      const result = await openpaulRemovePhase.execute({ phase: 3 }, toolContext)
       expect(result).toContain('Cannot Remove Phase')
       expect(result).toContain('ROADMAP.md not found')
       expect(result).toContain('/openpaul:init')
@@ -131,7 +131,7 @@ describe('Remove Phase Command', () => {
         errors: ['Phase 99 does not exist.'],
       } as RoadmapValidationResult)
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulRemovePhase.execute({ phase: 99 }, toolContext)
+      const result = await openpaulRemovePhase.execute({ phase: 99 }, toolContext)
       expect(result).toContain('Cannot Remove Phase')
       expect(result).toContain('Phase 99 does not exist')
       expect(mockRoadmapManager.removePhase).not.toHaveBeenCalled()
@@ -145,7 +145,7 @@ describe('Remove Phase Command', () => {
         errors: ['Cannot remove completed phase 3.'],
       } as RoadmapValidationResult)
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulRemovePhase.execute({ phase: 3 }, toolContext)
+      const result = await openpaulRemovePhase.execute({ phase: 3 }, toolContext)
       expect(result).toContain('Cannot Remove Phase')
       expect(result).toContain('completed phase')
       expect(result).toContain('Why this is blocked')
@@ -159,7 +159,7 @@ describe('Remove Phase Command', () => {
         errors: ['Cannot remove current phase 3 (currently in progress).'],
       } as RoadmapValidationResult)
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulRemovePhase.execute({ phase: 3 }, toolContext)
+      const result = await openpaulRemovePhase.execute({ phase: 3 }, toolContext)
       expect(result).toContain('Cannot Remove Phase')
       expect(result).toContain('Cannot remove current phase')
       expect(result).toContain('currently in progress')
@@ -173,7 +173,7 @@ describe('Remove Phase Command', () => {
         errors: ['Cannot remove phase 3: has in-progress plans.'],
       } as RoadmapValidationResult)
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulRemovePhase.execute({ phase: 3 }, toolContext)
+      const result = await openpaulRemovePhase.execute({ phase: 3 }, toolContext)
       expect(result).toContain('Cannot Remove Phase')
       expect(result).toContain('in-progress plans')
     })
@@ -189,7 +189,7 @@ describe('Remove Phase Command', () => {
         ],
       } as RoadmapValidationResult)
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulRemovePhase.execute({ phase: 3 }, toolContext)
+      const result = await openpaulRemovePhase.execute({ phase: 3 }, toolContext)
       expect(result).toContain('Cannot Remove Phase')
       expect(result).toContain('completed phase')
       expect(result).toContain('current phase')
@@ -208,7 +208,7 @@ describe('Remove Phase Command', () => {
         renumberedPhases: [],
       } as RemovePhaseResult)
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulRemovePhase.execute({ phase: 3 }, toolContext)
+      const result = await openpaulRemovePhase.execute({ phase: 3 }, toolContext)
       expect(result).toContain('Removal Failed')
       expect(result).toContain('Troubleshooting')
     })
@@ -220,7 +220,7 @@ describe('Remove Phase Command', () => {
         throw new Error('Unexpected filesystem error')
       })
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulRemovePhase.execute({ phase: 3 }, toolContext)
+      const result = await openpaulRemovePhase.execute({ phase: 3 }, toolContext)
       expect(result).toContain('Removal Failed')
       expect(result).toContain('Unexpected filesystem error')
       expect(result).toContain('Troubleshooting')
@@ -231,7 +231,7 @@ describe('Remove Phase Command', () => {
         throw 'String error'
       })
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulRemovePhase.execute({ phase: 3 }, toolContext)
+      const result = await openpaulRemovePhase.execute({ phase: 3 }, toolContext)
       expect(result).toContain('Removal Failed')
       expect(result).toContain('Unknown error')
     })
@@ -254,7 +254,7 @@ describe('Remove Phase Command', () => {
         renumberedPhases: [],
       } as RemovePhaseResult)
       const toolContext = { directory: mockDirectory } as any
-      await paulRemovePhase.execute({ phase: 3 }, toolContext)
+      await openpaulRemovePhase.execute({ phase: 3 }, toolContext)
       expect(mockRoadmapManager.canRemovePhase).toHaveBeenCalledWith(3, '/test/project/.paul/STATE.md')
     })
     it('should use .openpaul/STATE.md as fallback', async () => {
@@ -274,7 +274,7 @@ describe('Remove Phase Command', () => {
         renumberedPhases: [],
       } as RemovePhaseResult)
       const toolContext = { directory: mockDirectory } as any
-      await paulRemovePhase.execute({ phase: 3 }, toolContext)
+      await openpaulRemovePhase.execute({ phase: 3 }, toolContext)
       expect(mockRoadmapManager.canRemovePhase).toHaveBeenCalledWith(3, '/test/project/.openpaul/STATE.md')
     })
   })
@@ -291,7 +291,7 @@ describe('Remove Phase Command', () => {
         renumberedPhases: [4, 5, 6, 7, 8],
       } as RemovePhaseResult)
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulRemovePhase.execute({ phase: 5 }, toolContext)
+      const result = await openpaulRemovePhase.execute({ phase: 5 }, toolContext)
       expect(result).toContain('5')
     })
     it('should include renumbered count when applicable', async () => {
@@ -307,7 +307,7 @@ describe('Remove Phase Command', () => {
         renumberedPhases: [6, 7, 8, 9, 10],
       } as RemovePhaseResult)
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulRemovePhase.execute({ phase: 5 }, toolContext)
+      const result = await openpaulRemovePhase.execute({ phase: 5 }, toolContext)
       expect(result).toContain('5 subsequent phases renumbered')
     })
     it('should suggest next actions', async () => {
@@ -322,7 +322,7 @@ describe('Remove Phase Command', () => {
         renumberedPhases: [6],
       } as RemovePhaseResult)
       const toolContext = { directory: mockDirectory } as any
-      const result = await paulRemovePhase.execute({ phase: 6 }, toolContext)
+      const result = await openpaulRemovePhase.execute({ phase: 6 }, toolContext)
       expect(result).toContain('/openpaul:status')
       expect(result).toContain('ROADMAP.md')
     })
