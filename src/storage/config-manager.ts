@@ -6,7 +6,7 @@ import { parse, stringify } from 'yaml'
 const ALLOWED_TOP_LEVEL_KEYS = ['project', 'integrations', 'preferences'] as const
 
 const SonarQubeSchema = z.object({
-  enabled: z.boolean(),
+  enabled: z.boolean().optional(),
   url: z.string().optional(),
   projectKey: z.string().optional(),
   branch: z.string().optional(),
@@ -23,12 +23,13 @@ const PreferencesSchema = z.object({
 }).strict()
 
 const ProjectSchema = z.object({
-  name: z.string(),
+  name: z.string().optional(),
   description: z.string().optional(),
+  version: z.string().optional(),
 }).strict()
 
 const ProjectConfigSchema = z.object({
-  project: ProjectSchema,
+  project: ProjectSchema.optional(),
   integrations: IntegrationsSchema.optional(),
   preferences: PreferencesSchema.optional(),
 }).strict()
@@ -59,6 +60,7 @@ const ALLOWED_KEYS = new Set([
   'project',
   'project.name',
   'project.description',
+  'project.version',
   'integrations',
   'integrations.sonarqube',
   'integrations.sonarqube.enabled',
@@ -113,6 +115,24 @@ Controls optional CLI behavior (autoAdvance, parallelization, verbose).
 const ALLOWED_KEYS_MESSAGE = `Allowed top-level keys: ${ALLOWED_TOP_LEVEL_KEYS.join(', ')}.`
 
 const TEMPLATE_PATH_SEGMENTS = ['src', 'templates', 'config.md']
+
+const ENV_BOOL_TRUE = ['1', 'true', 'yes', 'on']
+const ENV_BOOL_FALSE = ['0', 'false', 'no', 'off']
+
+type ConfigOverrides = Partial<Pick<ProjectConfig, 'project' | 'integrations' | 'preferences'>>
+
+const mergeSection = <T extends Record<string, unknown>>(
+  ...sections: Array<T | undefined>
+): T | undefined => {
+  let merged: T | undefined
+  for (const section of sections) {
+    if (!section) {
+      continue
+    }
+    merged = { ...(merged ?? {}), ...section } as T
+  }
+  return merged
+}
 
 export class ConfigManager {
   private configPath: string
@@ -205,7 +225,7 @@ export class ConfigManager {
     return `---\n${frontmatter.trimEnd()}\n---${bodyContent}`
   }
 
-  private assertAllowedKey(key: string): void {
+  public assertAllowedKey(key: string): void {
     if (!ALLOWED_KEYS.has(key)) {
       throw new Error(`Unknown config key "${key}". ${ALLOWED_KEYS_MESSAGE}`)
     }
@@ -221,14 +241,23 @@ export class ConfigManager {
       return this.config
     }
 
+    const loaded = this.loadConfigFile()
+    this.config = loaded ?? { ...DEFAULT_CONFIG }
+    return this.config
+  }
+
+  private loadConfigFile(): ProjectConfig | null {
+    if (!existsSync(this.configPath)) {
+      return null
+    }
+
     try {
       const content = readFileSync(this.configPath, 'utf-8')
       const { frontmatter, body } = this.splitFrontmatter(content)
       const parsed = this.parseFrontmatter(frontmatter)
       const validated = ProjectConfigSchema.parse(parsed)
-      this.config = validated
       this.markdownBody = body
-      return this.config
+      return validated
     } catch (error) {
       if (error instanceof z.ZodError) {
         throw new Error(this.formatSchemaError(error))
@@ -237,6 +266,135 @@ export class ConfigManager {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error'
       throw new Error(`Failed to parse config: ${errorMessage}`)
     }
+  }
+
+  private parseEnvBoolean(value: string, key: string): boolean {
+    const normalized = value.trim().toLowerCase()
+    if (ENV_BOOL_TRUE.includes(normalized)) {
+      return true
+    }
+    if (ENV_BOOL_FALSE.includes(normalized)) {
+      return false
+    }
+    throw new Error(`Invalid boolean value for ${key}: "${value}". Use true or false.`)
+  }
+
+  private getEnvOverrides(): ConfigOverrides {
+    const project: ProjectConfig['project'] = {}
+    const preferences: ProjectConfig['preferences'] = {}
+    const sonar: NonNullable<ProjectConfig['integrations']>['sonarqube'] = {}
+
+    const projectName = process.env.OPENPAUL_PROJECT_NAME
+    if (projectName?.trim()) {
+      project.name = projectName.trim()
+    }
+
+    const projectDescription = process.env.OPENPAUL_PROJECT_DESCRIPTION
+    if (projectDescription?.trim()) {
+      project.description = projectDescription.trim()
+    }
+
+    const projectVersion = process.env.OPENPAUL_PROJECT_VERSION
+    if (projectVersion?.trim()) {
+      project.version = projectVersion.trim()
+    }
+
+    const verboseEnv = process.env.OPENPAUL_PREFERENCES_VERBOSE
+    if (verboseEnv !== undefined) {
+      preferences.verbose = this.parseEnvBoolean(verboseEnv, 'OPENPAUL_PREFERENCES_VERBOSE')
+    }
+
+    const parallelEnv = process.env.OPENPAUL_PREFERENCES_PARALLELIZATION
+    if (parallelEnv !== undefined) {
+      preferences.parallelization = this.parseEnvBoolean(parallelEnv, 'OPENPAUL_PREFERENCES_PARALLELIZATION')
+    }
+
+    const autoAdvanceEnv = process.env.OPENPAUL_PREFERENCES_AUTO_ADVANCE
+    if (autoAdvanceEnv !== undefined) {
+      preferences.autoAdvance = this.parseEnvBoolean(autoAdvanceEnv, 'OPENPAUL_PREFERENCES_AUTO_ADVANCE')
+    }
+
+    const sonarEnabledEnv = process.env.OPENPAUL_INTEGRATIONS_SONARQUBE_ENABLED
+    if (sonarEnabledEnv !== undefined) {
+      sonar.enabled = this.parseEnvBoolean(sonarEnabledEnv, 'OPENPAUL_INTEGRATIONS_SONARQUBE_ENABLED')
+    }
+
+    const sonarUrl = process.env.OPENPAUL_INTEGRATIONS_SONARQUBE_URL
+    if (sonarUrl?.trim()) {
+      sonar.url = sonarUrl.trim()
+    }
+
+    const sonarProjectKey = process.env.OPENPAUL_INTEGRATIONS_SONARQUBE_PROJECT_KEY
+    if (sonarProjectKey?.trim()) {
+      sonar.projectKey = sonarProjectKey.trim()
+    }
+
+    const sonarBranch = process.env.OPENPAUL_INTEGRATIONS_SONARQUBE_BRANCH
+    if (sonarBranch?.trim()) {
+      sonar.branch = sonarBranch.trim()
+    }
+
+    const integrations: ProjectConfig['integrations'] =
+      Object.keys(sonar).length > 0 ? { sonarqube: sonar } : undefined
+
+    return {
+      project: Object.keys(project).length > 0 ? project : undefined,
+      integrations,
+      preferences: Object.keys(preferences).length > 0 ? preferences : undefined,
+    }
+  }
+
+  resolveEffectiveConfig(options: { overrides?: ConfigOverrides } = {}): ProjectConfig {
+    const overrides = options.overrides
+    const fileConfig = this.loadConfigFile() ?? {}
+    const envOverrides = this.getEnvOverrides()
+
+    return {
+      project: mergeSection(
+        DEFAULT_CONFIG.project as Record<string, unknown>,
+        fileConfig.project as Record<string, unknown> | undefined,
+        overrides?.project as Record<string, unknown> | undefined,
+        envOverrides.project as Record<string, unknown> | undefined,
+      ) as ProjectConfig['project'],
+      integrations: mergeSection(
+        DEFAULT_CONFIG.integrations as Record<string, unknown>,
+        fileConfig.integrations as Record<string, unknown> | undefined,
+        overrides?.integrations as Record<string, unknown> | undefined,
+        envOverrides.integrations as Record<string, unknown> | undefined,
+      ) as ProjectConfig['integrations'],
+      preferences: mergeSection(
+        DEFAULT_CONFIG.preferences as Record<string, unknown>,
+        fileConfig.preferences as Record<string, unknown> | undefined,
+        overrides?.preferences as Record<string, unknown> | undefined,
+        envOverrides.preferences as Record<string, unknown> | undefined,
+      ) as ProjectConfig['preferences'],
+    }
+  }
+
+  validateRequired(config?: ProjectConfig): string[] {
+    const effective = config ?? this.resolveEffectiveConfig()
+    const missing: string[] = []
+
+    const projectName = effective.project?.name
+    if (!projectName || projectName.trim().length === 0) {
+      missing.push('project.name')
+    }
+
+    if (effective.integrations?.sonarqube?.enabled) {
+      const sonar = effective.integrations.sonarqube
+      if (!sonar?.projectKey || sonar.projectKey.trim().length === 0) {
+        missing.push('integrations.sonarqube.projectKey')
+      }
+      if (!sonar?.url || sonar.url.trim().length === 0) {
+        missing.push('integrations.sonarqube.url')
+      }
+    }
+
+    return missing
+  }
+
+  static formatMissingRequired(missing: string[]): string {
+    return `Missing required config keys: ${missing.join(', ')}`
   }
 
   save(config?: ProjectConfig): void {
