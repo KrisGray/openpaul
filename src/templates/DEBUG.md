@@ -1,6 +1,6 @@
 # Debug Template
 
-Template for `.paul/debug/[slug].md` — active debug session tracking.
+Template for `.openpaul/debug/[slug].md` — active debug session tracking.
 
 ---
 
@@ -129,7 +129,7 @@ files_changed: []
 
 **On resolution:**
 - status → "resolved"
-- Move file to .paul/debug/resolved/
+- Move file to .openpaul/debug/resolved/
 
 **Complex fixes:** If fix requires significant code changes:
 - Create a dedicated PLAN.md for the fix

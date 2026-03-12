@@ -1,4 +1,4 @@
-# PAUL Handoff
+# OpenPAUL Handoff
 
 **Date:** {{timestamp}}
 **Session:** {{session_id}}
@@ -53,23 +53,23 @@ PLAN ──▶ APPLY ──▶ UNIFY
 
 | File | Purpose |
 |------|---------|
-| `.paul/STATE.md` | Live project state |
-| `.paul/ROADMAP.md` | Phase overview |
+| `.openpaul/STATE.md` | Live project state |
+| `.openpaul/ROADMAP.md` | Phase overview |
 | {{current_plan_path}} | {{plan_purpose}} |
 
 ---
 
 ## Resume Instructions
 
-1. Read `.paul/STATE.md` for latest position
+1. Read `.openpaul/STATE.md` for latest position
 2. Check if PLAN exists for current phase
 3. Based on loop position:
-   - `○○○` (fresh) → Run `/paul:plan`
-   - `✓○○` (planned) → Review plan, then `/paul:apply`
-   - `✓✓○` (applied) → Run `/paul:unify`
+   - `○○○` (fresh) → Run `/openpaul:plan`
+   - `✓○○` (planned) → Review plan, then `/openpaul:apply`
+   - `✓✓○` (applied) → Run `/openpaul:unify`
    - `✓✓✓` (complete) → Ready for next phase
 
-**Or simply run:** `/paul:resume`
+**Or simply run:** `/openpaul:resume`
 
 ---
 
