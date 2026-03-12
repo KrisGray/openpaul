@@ -177,15 +177,24 @@ export function loadCache(projectRoot: string): CacheData | null {
   }
 }
 
-export function saveCache(projectRoot: string, entries: CacheEntry[]): void {
+export function saveCache(projectRoot: string, entries: CacheEntry[], timestamp: number = Date.now()): void {
   const cachePath = join(projectRoot, CACHE_FILE)
   const dir = dirname(cachePath)
   if (!existsSync(dir)) {
     mkdirSync(dir, { recursive: true })
   }
+  const latestEntryMtime = entries.reduce((latest, entry) => {
+    if (!entry || typeof entry.mtime !== 'number') {
+      return latest
+    }
+    return Math.max(latest, entry.mtime)
+  }, Number.NEGATIVE_INFINITY)
+  const normalizedTimestamp = Number.isFinite(latestEntryMtime)
+    ? Math.max(timestamp, latestEntryMtime)
+    : timestamp
   const cache: CacheData = {
     version: CACHE_VERSION,
-    timestamp: Date.now(),
+    timestamp: normalizedTimestamp,
     entries,
   }
   writeFileSync(cachePath, JSON.stringify(cache, null, 2), 'utf-8')
