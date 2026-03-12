@@ -17,7 +17,23 @@ jest.mock('../../storage/atomic-writes', () => ({
   atomicWrite: jest.fn().mockResolvedValue(undefined),
 }))
 
-jest.mock('@opencode-ai/plugin', () => ({ tool: (input: any) => input }), { virtual: true })
+jest.mock(
+  '@opencode-ai/plugin',
+  () => {
+    const chainable = {
+      optional: () => chainable,
+      describe: () => chainable,
+    }
+    const tool = (input: any) => input
+    tool.schema = {
+      boolean: () => chainable,
+      string: () => chainable,
+      number: () => chainable,
+    }
+    return { tool }
+  },
+  { virtual: true }
+)
 
 describe('openpaulDiscover', () => {
   const mockContext = { directory: '/test/project' }
@@ -34,7 +50,7 @@ describe('openpaulDiscover', () => {
       )
       
       expect(result).toContain('Quick Discovery')
-      expect(result).toContain('no file created')
+      expect(result).toContain('No file created')
       expect(result).toContain('verbal response only')
     })
   })
@@ -42,6 +58,9 @@ describe('openpaulDiscover', () => {
   describe('Standard mode', () => {
     it('should create DISCOVERY.md', async () => {
       ;(existsSync as jest.Mock).mockImplementation((path: string) => {
+        if (path.endsWith('DISCOVERY.md')) {
+          return false
+        }
         return path.includes('phases')
       })
       
@@ -57,6 +76,9 @@ describe('openpaulDiscover', () => {
   describe('Deep mode', () => {
     it('should prompt for confirmation without --confirm', async () => {
       ;(existsSync as jest.Mock).mockImplementation((path: string) => {
+        if (path.endsWith('DISCOVERY.md')) {
+          return false
+        }
         return path.includes('phases')
       })
       
@@ -79,7 +101,7 @@ describe('openpaulDiscover', () => {
       )
       
       expect(result).toContain('Discovery Created')
-      expect(result).toContain('depth')
+      expect(result).toContain('Depth')
       expect(result).toContain('deep')
     })
   })

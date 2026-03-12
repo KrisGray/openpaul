@@ -17,7 +17,23 @@ jest.mock('../../storage/atomic-writes', () => ({
   atomicWrite: jest.fn().mockResolvedValue(undefined),
 }))
 
-jest.mock('@opencode-ai/plugin', () => ({ tool: (input: any) => input }), { virtual: true })
+jest.mock(
+  '@opencode-ai/plugin',
+  () => {
+    const chainable = {
+      optional: () => chainable,
+      describe: () => chainable,
+    }
+    const tool = (input: any) => input
+    tool.schema = {
+      boolean: () => chainable,
+      string: () => chainable,
+      number: () => chainable,
+    }
+    return { tool }
+  },
+  { virtual: true }
+)
 
 describe('openpaulConsiderIssues', () => {
   const mockContext = { directory: '/test/project' }
@@ -39,6 +55,9 @@ describe('openpaulConsiderIssues', () => {
 
   it('should create issues with severity categorization', async () => {
     ;(existsSync as jest.Mock).mockImplementation((path: string) => {
+      if (path.endsWith('ISSUES.md')) {
+        return false
+      }
       return path.includes('phases')
     })
     
@@ -61,6 +80,9 @@ describe('openpaulConsiderIssues', () => {
 
   it('should return error for invalid severity', async () => {
     ;(existsSync as jest.Mock).mockImplementation((path: string) => {
+      if (path.endsWith('ISSUES.md')) {
+        return false
+      }
       return path.includes('phases')
     })
     

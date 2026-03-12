@@ -17,12 +17,10 @@ jest.mock('../../storage/atomic-writes', () => ({
   atomicWrite: jest.fn().mockResolvedValue(undefined),
 }))
 
-jest.mock('@opencode-ai/plugin', () => ({ tool: (input: any) => input }), { virtual: true })
-
 jest.mock(
   '@opencode-ai/plugin',
-  () => ({
-    chainable: {
+  () => {
+    const chainable = {
       optional: () => chainable,
       describe: () => chainable,
     }
@@ -33,7 +31,7 @@ jest.mock(
       number: () => chainable,
     }
     return { tool }
-  }),
+  },
   { virtual: true }
 )
 
