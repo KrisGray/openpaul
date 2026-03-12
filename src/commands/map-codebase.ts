@@ -1,6 +1,6 @@
 import { tool, type ToolDefinition } from '@opencode-ai/plugin'
 import { generateCodebaseDoc, docToMarkdown } from '../utils/codebase-generator'
-import { isCacheValid, loadCache } from '../utils/directory-scanner'
+import { isCacheValid, loadCache, saveCache, getLastScanCacheEntries } from '../utils/directory-scanner'
 import { formatHeader, formatBold } from '../output/formatter'
 import { atomicWrite } from '../storage/atomic-writes'
 import { existsSync, mkdirSync } from 'fs'
@@ -20,9 +20,12 @@ export const openpaulMapCodebase: ToolDefinition = tool({
 
       if (!force && isCacheValid(context.directory, outputPath)) {
         const cache = loadCache(context.directory)
+        const cachedAt = cache?.timestamp ? new Date(cache.timestamp).toISOString() : 'Unknown'
         return formatHeader(2, '📍 Codebase Cached') + '\n\n' +
           formatBold('Output:') + ` ${outputPath}\n` +
-          formatBold('Status:') + ' Using cached result\n\n' +
+          formatBold('Status:') + ' Using cached result\n' +
+          formatBold('Scan:') + ' Skipped (cache valid)\n' +
+          formatBold('Cached at:') + ` ${cachedAt}\n\n` +
           'No changes detected since last run.\n' +
           'Use --force to regenerate.'
       }
@@ -41,8 +44,15 @@ export const openpaulMapCodebase: ToolDefinition = tool({
       const markdown = docToMarkdown(doc)
       await atomicWrite(outputPath, markdown)
 
+      const cacheEntries = getLastScanCacheEntries()
+      saveCache(context.directory, cacheEntries)
+
       if (verbose) {
         console.error(`Scanned ${doc.fileCounts.files} files in ${doc.fileCounts.directories} directories`)
+        console.error(`Cache entries saved: ${cacheEntries.length}`)
+        if (cacheEntries.length === 0) {
+          console.error('No cache entries captured; cache validation may fail.')
+        }
       }
 
       return formatHeader(2, '📍 Codebase Mapped') + '\n\n' +
