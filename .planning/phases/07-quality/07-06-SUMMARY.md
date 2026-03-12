@@ -65,7 +65,7 @@ None - followed plan as specified.
 None - plan executed exactly as written.
 
 ## Issues Encountered
-None.
+- REQUIREMENTS.md missing QUAL-01 and QUAL-02 entries; requirements mark-complete failed.
 
 ## User Setup Required
 
