@@ -1,6 +1,6 @@
 /**
  * FlowsManager Tests
- * 
+ *
  * Tests for FlowsManager class
  */
 
@@ -11,6 +11,12 @@ import { FlowsManager } from '../../storage/flows-manager'
 describe('FlowsManager class', () => {
   const tempDir = join(__dirname, 'temp-flows-test')
   let flowsManager: FlowsManager
+
+  const writeFlowsFile = (content: string): void => {
+    const flowsDir = join(tempDir, '.openpaul')
+    mkdirSync(flowsDir, { recursive: true })
+    writeFileSync(join(flowsDir, 'SPECIAL-FLOWS.md'), content, 'utf-8')
+  }
 
   beforeEach(() => {
     if (existsSync(tempDir)) {
@@ -27,86 +33,101 @@ describe('FlowsManager class', () => {
   })
 
   describe('load', () => {
-    it('should return empty array when no flows file exists', () => {
+    it('should return empty enabled/disabled arrays when no flows file exists', () => {
       const flows = flowsManager.load()
-      
-      expect(flows).toEqual([])
+
+      expect(flows).toEqual({ enabled: [], disabled: [] })
     })
 
-    it('should load flows from .openpaul/SPECIAL-FLOWS.md', () => {
-      const flowsDir = join(tempDir, '.openpaul')
-      mkdirSync(flowsDir, { recursive: true })
-      const flowsContent = `# Special Flows
+    it('should parse YAML frontmatter and normalize flow IDs', () => {
+      writeFlowsFile(`---
+enabled:
+  - SECURITY-REVIEW
+  - docs-refresh
+  - "  "
+disabled:
+  - release-audit
+---
+# Special Flows
+`)
 
-| Name | Enabled | Trigger |
-|------|---------|---------|
-| security-review | true | ./**/*.spec.ts |
-| docs-update | false | docs/** |
-`
-      writeFileSync(join(flowsDir, 'SPECIAL-FLOWS.md'), flowsContent)
+      const flows = flowsManager.load()
 
-      const manager = new FlowsManager(tempDir)
-      const flows = manager.load()
-
-      expect(flows.length).toBeGreaterThan(0)
+      expect(flows.enabled).toEqual(['security-review', 'docs-refresh'])
+      expect(flows.disabled).toEqual(['release-audit'])
     })
-  })
 
-  describe('list', () => {
-    it('should return empty array when no flows file exists', () => {
-      const flows = flowsManager.list()
-      
-      expect(flows).toEqual([])
+    it('should throw when frontmatter is missing', () => {
+      writeFlowsFile(`# Special Flows\nNo frontmatter here\n`)
+
+      expect(() => flowsManager.load()).toThrow('missing YAML frontmatter')
+    })
+
+    it('should throw for unknown flow IDs', () => {
+      writeFlowsFile(`---
+enabled:
+  - unknown-flow
+disabled: []
+---
+`)
+
+      expect(() => flowsManager.load()).toThrow('Unknown flow ID')
+    })
+
+    it('should throw for conflicts between enabled and disabled arrays', () => {
+      writeFlowsFile(`---
+enabled:
+  - security-review
+disabled:
+  - security-review
+---
+`)
+
+      expect(() => flowsManager.load()).toThrow('Conflicting flow IDs')
     })
   })
 
   describe('enable/disable', () => {
-    it('should enable a flow', () => {
-      const flowsDir = join(tempDir, '.openpaul')
-      mkdirSync(flowsDir, { recursive: true })
-      writeFileSync(join(flowsDir, 'SPECIAL-FLOWS.md'), `# Special Flows
-
-| Name | Enabled | Trigger |
-|------|---------|---------|
-| test-flow | false | - |
+    it('should enable a flow and remove it from disabled', () => {
+      writeFlowsFile(`---
+enabled: []
+disabled:
+  - security-review
+---
 `)
 
-      const manager = new FlowsManager(tempDir)
-      const success = manager.enable('test-flow')
-      
-      expect(success).toBe(true)
+      flowsManager.enable('security-review')
+
+      const updated = new FlowsManager(tempDir).list()
+      expect(updated.enabled).toContain('security-review')
+      expect(updated.disabled).not.toContain('security-review')
     })
 
-    it('should disable a flow', () => {
-      const flowsDir = join(tempDir, '.openpaul')
-      mkdirSync(flowsDir, { recursive: true })
-      writeFileSync(join(flowsDir, 'SPECIAL-FLOWS.md'), `# Special Flows
-
-| Name | Enabled | Trigger |
-|------|---------|---------|
-| test-flow | true | - |
+    it('should disable a flow and remove it from enabled', () => {
+      writeFlowsFile(`---
+enabled:
+  - docs-refresh
+disabled: []
+---
 `)
 
-      const manager = new FlowsManager(tempDir)
-      const success = manager.disable('test-flow')
-      
-      expect(success).toBe(true)
-    })
+      flowsManager.disable('docs-refresh')
 
-    it('should return false for non-existent flow', () => {
-      const success = flowsManager.enable('nonexistent')
-      
-      expect(success).toBe(false)
+      const updated = new FlowsManager(tempDir).list()
+      expect(updated.disabled).toContain('docs-refresh')
+      expect(updated.enabled).not.toContain('docs-refresh')
     })
   })
 
   describe('init', () => {
-    it('should create flows file at .openpaul/SPECIAL-FLOWS.md', () => {
+    it('should create flows file at .openpaul/SPECIAL-FLOWS.md with frontmatter', () => {
       const flowsPath = FlowsManager.init(tempDir)
-      
+
       expect(existsSync(flowsPath)).toBe(true)
       const content = readFileSync(flowsPath, 'utf-8')
-      expect(content).toContain('Special Flows')
+      expect(content).toContain('enabled:')
+      expect(content).toContain('disabled:')
+      expect(content).toContain('Specialized Flows')
     })
   })
 })
