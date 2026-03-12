@@ -1,6 +1,6 @@
 <div align="center">
 
-# PAUL
+# OpenPAUL
 
 **Plan-Apply-Unify Loop** — Structured AI-assisted development for Claude Code.
 
@@ -38,7 +38,7 @@ I build with Claude Code every day. It's incredibly powerful — when you give i
 
 The problem? **Context rot.** As your session fills up, quality degrades. Subagents spawn with fresh context but return ~70% quality work that needs cleanup. Plans get created but never closed. State drifts. You end up debugging AI output instead of shipping features.
 
-PAUL fixes this with three principles:
+PAUL (now OpenPAUL) fixes this with three principles:
 
 1. **Loop integrity** — Every plan closes with UNIFY. No orphan plans. UNIFY reconciles what was planned vs what happened, updates state, logs decisions. This is the heartbeat.
 
@@ -54,7 +54,7 @@ The complexity is in the system, not your workflow. Behind the scenes: structure
 
 **AI-assisted developers** who want structure without bureaucracy.
 
-You describe what you want, Claude Code builds it, and PAUL ensures:
+You describe what you want, Claude Code builds it, and PAUL/OpenPAUL ensures:
 - Plans have clear acceptance criteria
 - Execution stays bounded
 - Every unit of work gets closed properly
@@ -74,25 +74,25 @@ npx paul-framework
 The installer prompts you to choose:
 1. **Location** — Global (all projects) or local (current project only)
 
-Verify with `/paul:help` inside Claude Code.
+Verify with `/openpaul:help` inside Claude Code.
 
 ### Quick Workflow
 
 ```bash
 # 1. Initialize PAUL in your project
-/paul:init
+/openpaul:init
 
 # 2. Create a plan for your work
-/paul:plan
+/openpaul:plan
 
 # 3. Execute the approved plan
-/paul:apply
+/openpaul:apply
 
 # 4. Close the loop (required!)
-/paul:unify
+/openpaul:unify
 
 # 5. Check progress anytime
-/paul:progress
+/openpaul:progress
 ```
 
 ### Staying Updated
@@ -110,6 +110,15 @@ npx paul-framework --local    # Install to ./.claude/
 ```
 
 </details>
+
+### Migration from PAUL
+
+If you have an existing project using `.paul/` directory:
+
+1. Rename `.paul/` to `.openpaul/`
+2. Update any hardcoded paths in your workflow
+
+OpenPAUL will automatically detect and use `.openpaul/` for new files while still reading from `.paul/` for backward compatibility.
 
 ---
 
@@ -156,73 +165,73 @@ Close the loop (required!):
 
 ## Commands
 
-PAUL provides 26 commands organized by purpose. Run `/paul:help` for the complete reference.
+OpenPAUL provides 26 commands organized by purpose. Run `/openpaul:help` for the complete reference.
 
 ### Core Loop
 
 | Command | What it does |
 |---------|--------------|
-| `/paul:init` | Initialize PAUL in a project |
-| `/paul:plan [phase]` | Create an executable plan |
-| `/paul:apply [path]` | Execute an approved plan |
-| `/paul:unify [path]` | Reconcile and close the loop |
-| `/paul:help` | Show command reference |
-| `/paul:status` | Show loop position *(deprecated — use progress)* |
+| `/openpaul:init` | Initialize PAUL in a project |
+| `/openpaul:plan [phase]` | Create an executable plan |
+| `/openpaul:apply [path]` | Execute an approved plan |
+| `/openpaul:unify [path]` | Reconcile and close the loop |
+| `/openpaul:help` | Show command reference |
+| `/openpaul:status` | Show loop position *(deprecated — use progress)* |
 
 ### Session
 
 | Command | What it does |
 |---------|--------------|
-| `/paul:pause [reason]` | Create handoff for session break |
-| `/paul:resume [path]` | Restore context and continue |
-| `/paul:progress [context]` | Smart status + ONE next action |
-| `/paul:handoff [context]` | Generate comprehensive handoff |
+| `/openpaul:pause [reason]` | Create handoff for session break |
+| `/openpaul:resume [path]` | Restore context and continue |
+| `/openpaul:progress [context]` | Smart status + ONE next action |
+| `/openpaul:handoff [context]` | Generate comprehensive handoff |
 
 ### Roadmap
 
 | Command | What it does |
 |---------|--------------|
-| `/paul:add-phase <desc>` | Append phase to roadmap |
-| `/paul:remove-phase <N>` | Remove future phase |
+| `/openpaul:add-phase <desc>` | Append phase to roadmap |
+| `/openpaul:remove-phase <N>` | Remove future phase |
 
 ### Milestone
 
 | Command | What it does |
 |---------|--------------|
-| `/paul:milestone <name>` | Create new milestone |
-| `/paul:complete-milestone` | Archive and tag milestone |
-| `/paul:discuss-milestone` | Articulate vision before starting |
+| `/openpaul:milestone <name>` | Create new milestone |
+| `/openpaul:complete-milestone` | Archive and tag milestone |
+| `/openpaul:discuss-milestone` | Articulate vision before starting |
 
 ### Pre-Planning
 
 | Command | What it does |
 |---------|--------------|
-| `/paul:discuss <phase>` | Capture decisions before planning |
-| `/paul:assumptions <phase>` | See Claude's intended approach |
-| `/paul:discover <topic>` | Explore options before planning |
-| `/paul:consider-issues` | Triage deferred issues |
+| `/openpaul:discuss <phase>` | Capture decisions before planning |
+| `/openpaul:assumptions <phase>` | See Claude's intended approach |
+| `/openpaul:discover <topic>` | Explore options before planning |
+| `/openpaul:consider-issues` | Triage deferred issues |
 
 ### Research
 
 | Command | What it does |
 |---------|--------------|
-| `/paul:research <topic>` | Deploy research agents |
-| `/paul:research-phase <N>` | Research unknowns for a phase |
+| `/openpaul:research <topic>` | Deploy research agents |
+| `/openpaul:research-phase <N>` | Research unknowns for a phase |
 
 ### Specialized
 
 | Command | What it does |
 |---------|--------------|
-| `/paul:flows` | Configure skill requirements |
-| `/paul:config` | View/modify PAUL settings |
-| `/paul:map-codebase` | Generate codebase overview |
+| `/openpaul:flows` | Configure skill requirements |
+| `/openpaul:config` | View/modify PAUL settings |
+| `/openpaul:map-codebase` | Generate codebase overview |
 
 ### Quality
 
 | Command | What it does |
 |---------|--------------|
-| `/paul:verify` | Guide manual acceptance testing |
-| `/paul:plan-fix` | Plan fixes for UAT issues |
+| `/openpaul:verify` | Guide manual acceptance testing |
+| `/openpaul:plan-fix` | Plan fixes for UAT issues |
 
 ---
 
@@ -231,7 +240,7 @@ PAUL provides 26 commands organized by purpose. Run `/paul:help` for the complet
 ### Project Structure
 
 ```
-.paul/
+.openpaul/
 ├── PROJECT.md           # Project context and requirements
 ├── ROADMAP.md           # Phase breakdown and milestones
 ├── STATE.md             # Loop position and session state
@@ -255,7 +264,7 @@ PAUL provides 26 commands organized by purpose. Run `/paul:help` for the complet
 - Accumulated decisions
 - Blockers and deferred issues
 
-When you resume work, `/paul:resume` reads STATE.md and suggests exactly ONE next action. No decision fatigue.
+When you resume work, `/openpaul:resume` reads STATE.md and suggests exactly ONE next action. No decision fatigue.
 
 ### PLAN.md Structure
 
@@ -309,18 +318,18 @@ CARL is a dynamic rule injection system. Instead of bloating your context with s
 
 | Trigger | Rules Loaded |
 |---------|--------------|
-| Working in `.paul/` directory | PAUL domain activates |
+| Working in `.openpaul/` directory | PAUL domain activates |
 | Writing code | DEVELOPMENT rules load |
 | Managing projects | PROJECTS rules load |
 
-**PAUL-specific rules CARL enforces:**
+**OpenPAUL-specific rules CARL enforces:**
 - Loop enforcement (PLAN → APPLY → UNIFY — no shortcuts)
 - Boundary protection (DO NOT CHANGE sections are real)
 - State consistency checks at phase transitions
 - Verification requirements for every task
 - Skill blocking (required skills must load before APPLY)
 
-The PAUL domain contains 14 rules that govern structured AI development. They load when you're in a PAUL project, disappear when you're not. Your context stays lean.
+The OpenPAUL domain contains 14 rules that govern structured AI development. They load when you're in a OpenPAUL project, disappear when you're not. Your context stays lean.
 
 **Without CARL:** You'd need massive static prompts in every session.
 **With CARL:** Rules activate when relevant, disappear when not.
@@ -340,7 +349,7 @@ Acceptance criteria aren't afterthoughts — they're the foundation:
 
 ### In-Session Context
 
-Why PAUL minimizes subagents for development work:
+Why OpenPAUL minimizes subagents for development work:
 
 | Issue | Impact |
 |-------|--------|
@@ -350,11 +359,11 @@ Why PAUL minimizes subagents for development work:
 | Quality gap | ~70% compared to in-session work |
 | Rework | Subagent output often needs cleanup |
 
-**When PAUL does use subagents:**
+**When OpenPAUL does use subagents:**
 - **Discovery/exploration** — Codebase mapping, parallel exploration
 - **Research** — Web searches, documentation gathering
 
-For implementation, PAUL keeps everything in-session with proper context management.
+For implementation, OpenPAUL keeps everything in-session with proper context management.
 
 ### Loop Integrity
 
@@ -375,7 +384,7 @@ PLAN ──▶ APPLY ──▶ UNIFY
 
 ### Optional Integrations
 
-PAUL supports modular integrations configured in `.paul/config.md`:
+OpenPAUL supports modular integrations configured in `.openpaul/config.md`:
 
 | Integration | Purpose |
 |-------------|---------|
@@ -384,7 +393,7 @@ PAUL supports modular integrations configured in `.paul/config.md`:
 
 ### SPECIAL-FLOWS
 
-For projects with specialized requirements, `.paul/SPECIAL-FLOWS.md` defines skills that must be loaded before execution:
+For projects with specialized requirements, `.openpaul/SPECIAL-FLOWS.md` defines skills that must be loaded before execution:
 
 ```markdown
 ## Required Skills
@@ -406,15 +415,15 @@ APPLY blocks until required skills are confirmed loaded.
 - Verify files exist in `~/.claude/commands/paul/` (global) or `./.claude/commands/paul/` (local)
 
 **Commands not working as expected?**
-- Run `/paul:help` to verify installation
+- Run `/openpaul:help` to verify installation
 - Re-run `npx paul-framework` to reinstall
 
 **Loop position seems wrong?**
-- Check `.paul/STATE.md` for current state
-- Run `/paul:progress` for guided next action
+- Check `.openpaul/STATE.md` for current state
+- Run `/openpaul:progress` for guided next action
 
 **Resuming after a break?**
-- Run `/paul:resume` — it reads state and handoffs automatically
+- Run `/openpaul:resume` — it reads state and handoffs automatically
 
 ---
 
@@ -448,7 +457,7 @@ Same comprehensive coverage, different philosophy. PAUL prioritizes quality over
 |-------------|------|
 | Documentation-first | Execution-first |
 | Human-readable specs | AI-executable prompts |
-| Separate from code | Colocated in .paul/ |
+| Separate from code | Colocated in .openpaul/ |
 
 ---
 

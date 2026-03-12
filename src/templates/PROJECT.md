@@ -1,6 +1,6 @@
 # PROJECT.md Template
 
-Template for `.paul/PROJECT.md` — the project's business context and requirements.
+Template for `.openpaul/PROJECT.md` — the project's business context and requirements.
 
 **Purpose:** Define what we're building, why it matters, and constraints. This is the "brief" that informs all planning.
 
