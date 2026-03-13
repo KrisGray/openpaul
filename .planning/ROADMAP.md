@@ -202,15 +202,26 @@ Plans:
   1. All instances of "PAUL" replaced with "OpenPAUL" in documentation, command names, and user-facing text
   2. All paulX function exports renamed to openpaulX
   3. Plugin renamed to OpenPaulPlugin with only openpaul: command prefix
-**Plans**: 6 plans (gap closure in progress)
+**Plans**: 17 plans in 3 waves (gap closure complete)
 
 Plans:
-- [x] 09-01-PLAN.md — Command function renames (paulX → openpaulX), plugin rename, remove paul: aliases
-- [x] 09-02-PLAN.md — Storage dual-path resolution (.openpaul/ primary, .paul/ fallback)
-- [x] 09-03-PLAN.md — Templates and documentation (README, package.json)
-- [x] 09-04-PLAN.md — Tests and branding consistency verification
-- [ ] 09-05-PLAN.md — Update runtime user-facing strings to OpenPAUL
-- [ ] 09-06-PLAN.md — Rebrand README and package metadata
+- [x] 09-01-PLAN.md — Command function renames part 1 (paulX → openpaulX) — Wave 1
+- [x] 09-02-PLAN.md — Storage dual-path resolution (.openpaul/ primary, .paul/ fallback) — Wave 1
+- [x] 09-03-PLAN.md — Template rebranding part 1 — Wave 1
+- [ ] 09-04-PLAN.md — Tests and branding consistency verification — Wave 3
+- [ ] 09-05-PLAN.md — Update runtime user-facing strings to OpenPAUL — Wave 2
+- [ ] 09-07-PLAN.md — Command documentation rebranding part 1 — Wave 3
+- [ ] 09-08-PLAN.md — Root doc rebranding (OPENPAUL-VS-GSD.md) — Wave 1
+- [ ] 09-09-PLAN.md — Command function renames part 2 — Wave 1
+- [ ] 09-10-PLAN.md — Index files and plugin registration — Wave 2
+- [ ] 09-11-PLAN.md — Template rebranding part 2 — Wave 1
+- [ ] 09-12-PLAN.md — README and package.json rebranding — Wave 1
+- [ ] 09-13-PLAN.md — Runtime string updates part 2 — Wave 3
+- [ ] 09-14-PLAN.md — Command documentation rebranding part 2 — Wave 3
+- [ ] 09-15-PLAN.md — Workflow documentation rebranding part 1 — Wave 3
+- [ ] 09-16-PLAN.md — Workflow documentation rebranding part 2 — Wave 3
+- [ ] 09-17-PLAN.md — Reference documentation rebranding — Wave 3
+- [ ] 09-18-PLAN.md — Rule documentation rebranding — Wave 3
 
 ### 📋 v2.0 (Planned)
 
@@ -233,7 +244,7 @@ Phases execute in numeric order: 3 → 4 → 5 → 6 → 7 → 8 → 9
 | 6. Pre-Planning + Research | v1.1 | 0/12 | Not started | - |
 | 7. Quality | v1.1 | 7/10 | In progress (gaps) | - |
 | 8. Configuration | v1.1 | 0/7 | Not started | - |
-| 9. Documentation | v1.1 | 4/6 | Gap closure in progress | - |
+| 9. Documentation | v1.1 | 4/17 | Ready for execution | - |
 
 **Overall v1.1 Progress:** 21/56 plans (38%)
 
