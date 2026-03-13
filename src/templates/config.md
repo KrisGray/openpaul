@@ -57,6 +57,7 @@ or team-specific guidance.
 - Keep keys limited to: project, integrations, preferences
 - Avoid secrets in this file; use environment variables instead
 - Review changes with `/openpaul:config action=list`
+- Keep preference flags aligned with supported CLI options
 
 ## Example Updates
 
