@@ -169,3 +169,11 @@ OpenPAUL isn't a replacement for GSD — it's an evolution for projects where **
 ---
 
 *OpenPAUL Framework — Plan. Apply. Unify. Repeat.*
+
+---
+
+## Attribution
+
+OpenPAUL is an OpenCode adaptation of the Plan-Apply-Unify Loop project, originally created by [Chris Kahler](https://github.com/ChristopherKahler) for Claude Code.
+
+The original project can be found on Chris Kahler's GitHub profile.
