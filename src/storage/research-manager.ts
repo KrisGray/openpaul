@@ -233,7 +233,7 @@ export class ResearchManager {
 
     const byTheme = this.organizeByTheme(result.findings)
 
-    for (const [theme, findings] of byTheme) {
+    for (const [theme, findings] of Array.from(byTheme)) {
       lines.push(`### ${this.capitalizeFirst(theme)}`)
       lines.push('')
 
@@ -279,7 +279,7 @@ export class ResearchManager {
     if (allSources.size > 0) {
       lines.push('## Sources')
       lines.push('')
-      for (const source of allSources) {
+      for (const source of Array.from(allSources)) {
         lines.push(`- ${source}`)
       }
       lines.push('')
