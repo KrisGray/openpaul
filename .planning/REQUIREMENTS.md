@@ -27,15 +27,15 @@ Requirements for full command implementation. Each maps to roadmap phases.
 
 ### Pre-Planning
 
-- [ ] **PLAN-01**: User can explore phase goals with `/openpaul:discuss` that creates CONTEXT.md with goals, approach, constraints, open questions
-- [ ] **PLAN-02**: User can capture and validate assumptions with `/openpaul:assumptions` that creates ASSUMPTIONS.md listing assumptions with validation status
+- [x] **PLAN-01**: User can explore phase goals with `/openpaul:discuss` that creates CONTEXT.md with goals, approach, constraints, open questions
+- [x] **PLAN-02**: User can capture and validate assumptions with `/openpaul:assumptions` that creates ASSUMPTIONS.md listing assumptions with validation status
 - [ ] **PLAN-03**: User can research technical options with `/openpaul:discover` that supports 3 depth levels: Quick (verbal, 2-5min), Standard (DISCOVERY.md, 15-30min), Deep (comprehensive, 1+hr)
-- [ ] **PLAN-04**: User can identify potential blockers with `/openpaul:consider-issues` that creates ISSUES.md with categorized risks and mitigation strategies
+- [x] **PLAN-04**: User can identify potential blockers with `/openpaul:consider-issues` that creates ISSUES.md with categorized risks and mitigation strategies
 
 ### Research
 
-- [ ] **RSCH-01**: User can research user-specified topics with `/openpaul:research` that executes research with proper verification and returns findings with confidence levels
-- [ ] **RSCH-02**: User can auto-detect and research phase unknowns with `/openpaul:research-phase` that analyzes phase description, identifies unknowns, spawns parallel research agents
+- [x] **RSCH-01**: User can research user-specified topics with `/openpaul:research` that executes research with proper verification and returns findings with confidence levels
+- [x] **RSCH-02**: User can auto-detect and research phase unknowns with `/openpaul:research-phase` that analyzes phase description, identifies unknowns, spawns parallel research agents
 
 ### Quality
 
@@ -86,12 +86,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MILE-01 | Phase 5 | Complete |
 | MILE-02 | Phase 5 | Complete |
 | MILE-03 | Phase 5 | Complete |
-| PLAN-01 | Phase 6 | Pending |
-| PLAN-02 | Phase 6 | Pending |
+| PLAN-01 | Phase 6 | Complete |
+| PLAN-02 | Phase 6 | Complete |
 | PLAN-03 | Phase 6 | Pending |
-| PLAN-04 | Phase 6 | Pending |
-| RSCH-01 | Phase 6 | Pending |
-| RSCH-02 | Phase 6 | Pending |
+| PLAN-04 | Phase 6 | Complete |
+| RSCH-01 | Phase 6 | Complete |
+| RSCH-02 | Phase 6 | Complete |
 | QUAL-01 | Phase 7 | Complete |
 | QUAL-02 | Phase 7 | Complete |
 | CONF-01 | Phase 8 | Complete |
