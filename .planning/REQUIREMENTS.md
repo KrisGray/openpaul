@@ -51,7 +51,7 @@ Requirements for full command implementation. Each maps to roadmap phases.
 ### Branding
 
 - [x] **BRND-01**: All instances of "PAUL" replaced with "OpenPAUL" in documentation, command names, and user-facing text
-- [ ] **BRND-02**: All instances of "paul" replaced with "openpaul" in command names, file paths, and configuration
+- [x] **BRND-02**: All instances of "paul" replaced with "openpaul" in command names, file paths, and configuration
 
 ## v2 Requirements
 
@@ -98,7 +98,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CONF-02 | Phase 8 | Complete |
 | CONF-03 | Phase 8 | Complete |
 | BRND-01 | Phase 9 | Complete |
-| BRND-02 | Phase 6 | Pending |
+| BRND-02 | Phase 6 | Complete |
 
 **Coverage:**
 - v1.1 requirements: 22 total
