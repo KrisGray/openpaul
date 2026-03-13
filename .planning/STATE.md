@@ -86,6 +86,7 @@ Milestone: v1.1 Full Command Implementation (v1.1)
 | Phase 09 P05 | 0 min | 2 tasks | 3 files |
 | Phase 09 P06 | 3 min | 2 tasks | 3 files |
 | Phase 09 P07 | 1 min | 2 tasks | 86 files |
+| Phase 09-documentation P12 | 3 | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -125,6 +126,7 @@ Recent decisions affecting current work:
 - [Phase 08]: Use real filesystem temp dirs for command tests to verify file outputs. — Ensures command tests validate actual filesystem writes.
 - [Phase 08]: Normalize cache timestamps to latest scan entry for valid cache checks. — Prevents cache invalidation from timestamp drift.
 - [Phase 09]: Renamed comparison doc to match OpenPAUL branding in README — Maintain consistent OpenPAUL branding across documentation links.
+- [Phase 09-documentation]: Migration section upgraded to level-2 heading with explicit .paul/ directory reference for PAUL-to-OpenPAUL migration clarity
 
 ### Pending Todos
 
@@ -142,8 +144,8 @@ None yet.
 
 ## Session Continuity
 
-**Last session:** 2026-03-13T12:39:17.504Z
-**Stopped at:** Completed 09-11-PLAN.md
+**Last session:** 2026-03-13T12:47:34.341Z
+**Stopped at:** Completed 09-12-PLAN.md
 **Resume file:** None
 
 ---
