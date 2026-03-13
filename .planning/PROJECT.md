@@ -89,18 +89,15 @@ Shipped v1.0 with 19 plans, 38 requirements covered.
 Tech stack: TypeScript, Jest, Zod, ES Modules.
 Initial user testing showed good foundation for future features.
 
-## Current Milestone: v1.1 Full Command Implementation
+## Current Milestone: v1.2 CI/CD Pipeline
 
-**Goal:** Implement all remaining PAUL commands for complete structured development workflow
+**Goal:** Add GitHub Actions workflows for automated testing, E2E tests, coverage reporting, and npm publishing
 
 **Target features:**
-- Session Management (4): pause, resume, handoff, status
-- Roadmap Management (2): add-phase, remove-phase
-- Milestone Management (3): milestone, complete-milestone, discuss-milestone
-- Pre-Planning (4): discuss, assumptions, discover, consider-issues
-- Research (2): research, research-phase
-- Quality (2): verify, plan-fix
-- Configuration (3): config, flows, map-codebase
+- CI Workflow — Unit tests on push/PR with coverage artifacts
+- E2E Tests — Docker-based E2E tests with OpenCode CLI
+- Codecov Workflow — Coverage upload after tests pass
+- Publish Workflow — npm publish on release (requires all tests + coverage)
 
 ## Key Decisions
 
@@ -117,4 +114,4 @@ Initial user testing showed good foundation for future features.
 | 8-week implementation | Comprehensive coverage, TDD approach, proper testing and documentation | ✓ Complete |
 
 ---
-*Last updated: 2026-03-05 after v1.0 milestone*
+*Last updated: 2026-03-13 after v1.2 milestone started*
