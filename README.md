@@ -111,14 +111,14 @@ npx @krisgray/openpaul --local    # Install to ./.claude/
 
 </details>
 
-### Migration from OpenPAUL v1.0
+## Migration from PAUL
 
-If you have an existing project using the legacy project directory:
+If you have an existing project using `.paul/` directory:
 
-1. Rename it to `.openpaul/`
+1. Rename `.paul/` to `.openpaul/`
 2. Update any hardcoded paths in your workflow
 
-OpenPAUL will automatically detect and use `.openpaul/` for new files while still reading legacy locations for backward compatibility.
+OpenPAUL will automatically detect and use `.openpaul/` for new files while still reading from `.paul/` for backward compatibility.
 
 ---
 
