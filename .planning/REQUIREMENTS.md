@@ -53,11 +53,44 @@ Requirements for full command implementation. Each maps to roadmap phases.
 - [x] **BRND-01**: All instances of "PAUL" replaced with "OpenPAUL" in documentation, command names, and user-facing text
 - [x] **BRND-02**: All instances of "paul" replaced with "openpaul" in command names, file paths, and configuration
 
+## v1.2 Requirements
+
+Requirements for CI/CD pipeline milestone. Each maps to roadmap phases.
+
+### CI Workflow
+
+- [ ] **CI-01**: GitHub Action runs tests on every push to main
+- [ ] **CI-02**: GitHub Action runs tests on every pull request (non-draft)
+- [ ] **CI-03**: Concurrency group cancels in-progress runs on same ref
+- [ ] **CI-04**: Coverage report generated via `npm run test:coverage`
+- [ ] **CI-05**: Coverage artifacts uploaded for downstream codecov workflow
+
+### E2E Tests
+- [ ] **E2E-01**: E2E tests run in Docker container with OpenCode CLI
+- [ ] **E2E-02**: Docker image built with layer caching for faster subsequent runs
+- [ ] **E2E-03**: E2E tests retry once on failure
+- [ ] **E2E-04**: Failure artifacts uploaded (Docker logs, .openpaul state)
+- [ ] **E2E-05**: E2E tests run on schedule (daily at 2am UTC)
+- [ ] **E2E-06**: E2E tests run on push to main and PRs (non-draft)
+
+### Codecov
+- [ ] **COV-01**: Codecov workflow runs AFTER both test.yml and e2e-tests.yml complete successfully
+- [ ] **COV-02**: Downloads coverage artifacts from test.yml
+- [ ] **COV-03**: Uploads coverage to Codecov with token
+- [ ] **COV-04**: PR coverage reports posted as comments
+- [ ] **COV-05**: codecov.yml config file with project thresholds
+
+### Publish
+- [ ] **PUB-01**: npm publish triggered on GitHub release published
+- [ ] **PUB-02**: Publish requires: unit tests + E2E tests + codecov to pass
+- [ ] **PUB-03**: npm provenance enabled for supply chain security
+- [ ] **PUB-04**: Build runs before publish
+
 ## v2 Requirements
 
-Deferred to future release. Tracked but not in current roadmap.
+Deferred to future release. Tracked though not in current roadmap.
 
-(None yet - all v1.1 requirements are in scope)
+(None yet - all v1.2 requirements are in scope)
 
 ## Out of Scope
 
@@ -70,6 +103,8 @@ Explicitly excluded. Documented to prevent scope creep.
 | Complex dependency graphs | Visual dependency management is complex and error-prone. Simple phase dependencies sufficient |
 | Built-in time tracking | Time tracking is orthogonal to OpenPAUL's core value of structured workflow |
 | Web-based project views | OpenPAUL is CLI-first for developer ergonomics. Web UI adds deployment complexity |
+| Self-hosted runners | GitHub Actions provides free runners for open-source. No need for self-hosted infrastructure |
+| Manual deployment process | Automated CI/CD pipeline eliminates need for manual npm publish steps |
 
 ## Traceability
 
@@ -77,6 +112,26 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
+| CI-01 | Phase 11 | Pending |
+| CI-02 | Phase 11 | Pending |
+| CI-03 | Phase 11 | Pending |
+| CI-04 | Phase 11 | Pending |
+| CI-05 | Phase 11 | Pending |
+| E2E-01 | Phase 11 | Pending |
+| E2E-02 | Phase 11 | Pending |
+| E2E-03 | Phase 11 | Pending |
+| E2E-04 | Phase 11 | Pending |
+| E2E-05 | Phase 11 | Pending |
+| E2E-06 | Phase 11 | Pending |
+| COV-01 | Phase 12 | Pending |
+| COV-02 | Phase 12 | Pending |
+| COV-03 | Phase 12 | Pending |
+| COV-04 | Phase 12 | Pending |
+| COV-05 | Phase 12 | Pending |
+| PUB-01 | Phase 13 | Pending |
+| PUB-02 | Phase 13 | Pending |
+| PUB-03 | Phase 13 | Pending |
+| PUB-04 | Phase 13 | Pending |
 | SESS-01 | Phase 3 | Complete |
 | SESS-02 | Phase 3 | Complete |
 | SESS-03 | Phase 3 | Complete |
@@ -101,11 +156,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BRND-02 | Phase 6 | Complete |
 
 **Coverage:**
-- v1.1 requirements: 22 total
-- Mapped to phases: 22
-- Unmapped: 0
-- Mapped for v1.1: 22/22 ✓
+- v1.1 requirements: 22 total (Complete)
+- v1.2 requirements: 20 total (Pending)
+- Mapped to phases: 42
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-03-05*
-*Last updated: 2026-03-05 after initial definition*
+*Last updated: 2026-03-13 after v1.2 requirements added*
