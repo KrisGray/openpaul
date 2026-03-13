@@ -1,86 +1,90 @@
 ---
 phase: 09-documentation
-verified: 2026-03-12T12:00:00Z
+verified: 2026-03-13T15:45:00Z
 status: passed
-score: 12/12 must-haves verified
-gaps: []
+score: 7/7 must-haves verified
+re_verification:
+  previous_status: gaps_found
+  previous_score: 5/7
+  gaps_closed:
+    - "Root documentation OPENPAUL-VS-GSD.md now uses consistent OpenPAUL branding throughout (title, body, comparison table)"
+  gaps_remaining: []
+  regressions: []
 ---
 
 # Phase 9: Documentation Verification Report
 
 **Phase Goal:** All OpenPAUL documentation uses consistent "OpenPAUL" branding
-**Verified:** 2026-03-12T12:00:00Z
-**Status:** passed
-**Re-verification:** No — initial verification
+**Verified:** 2026-03-13T15:45:00Z
+**Status:** PASSED
+**Re-verification:** Yes — gap closure verified
 
 ## Goal Achievement
 
 ### Observable Truths
 
-| #   | Truth                                                                                      | Status     | Evidence                                                                    |
-|-----|--------------------------------------------------------------------------------------------|------------|-----------------------------------------------------------------------------|
-| 1   | All command exports use openpaulX naming convention                                      | ✓ VERIFIED | src/commands/index.ts exports openpaulInit, openpaulPlan, etc.            |
-| 2   | src/index.ts imports openpaulX functions                                                 | ✓ VERIFIED | All 26 imports use openpaulX naming (lines 9-30)                           |
-| 3   | Plugin is named OpenPaulPlugin                                                            | ✓ VERIFIED | src/index.ts line 32: `export const OpenPaulPlugin`                        |
-| 4   | Only openpaul: command prefix registered (no paul: aliases)                              | ✓ VERIFIED | All tool registrations use 'openpaul:' prefix (lines 49-70), no 'paul:' found |
-| 5   | Storage managers check .openpaul/ directory first                                         | ✓ VERIFIED | file-manager.ts: getPhaseStatePath() checks .openpaul/ first (lines 83-88)  |
-| 6   | Storage managers fall back to .paul/ for migration compatibility                         | ✓ VERIFIED | file-manager.ts: falls back to .paul/ (lines 88, 164, 196)                 |
-| 7   | All user-facing strings reference .openpaul/                                             | ✓ VERIFIED | Template files contain .openpaul/ references                                |
-| 8   | All template files use /openpaul: command references                                      | ✓ VERIFIED | No /paul: references found in templates (grep check passed)                |
-| 9   | README.md uses OpenPAUL branding throughout                                               | ✓ VERIFIED | Contains "OpenPAUL" in title, commands use /openpaul: prefix               |
-| 10  | package.json description uses OpenPAUL branding                                          | ✓ VERIFIED | Line 4: "OpenPAUL - Plan-Apply-Unify Loop plugin for OpenCode"            |
-| 11  | All tests pass with openpaul naming                                                       | ✓ VERIFIED | Branding tests: 5/5 passed                                                 |
-| 12  | Branding consistency tests verify no PAUL/paul references remain in source             | ✓ VERIFIED | src/tests/branding/branding.test.ts exists and passes                      |
+| # | Truth | Status | Evidence |
+| --- | --- | --- | --- |
+| 1 | All OpenPAUL documentation uses consistent "OpenPAUL" branding | ✓ VERIFIED | `OPENPAUL-VS-GSD.md` uses "OpenPAUL" throughout; README.md only references "PAUL" in migration section header |
+| 2 | Command exports use openpaulX naming and plugin registers only openpaul: tools | ✓ VERIFIED | `src/commands/index.ts#L8-41` exports only openpaulX functions; `src/index.ts#L52-78` defines only openpaul: tool map |
+| 3 | Storage managers use .openpaul as primary with .paul fallback; user-facing storage strings reference .openpaul | ✓ VERIFIED | `src/storage/file-manager.ts#L60-88` documents dual-path resolution with .openpaul primary |
+| 4 | Templates and command/workflow docs use /openpaul: and .openpaul paths | ✓ VERIFIED | No `/paul:` references in src/templates/*.md or src/commands/*.md (only backward-compat fallback in code) |
+| 5 | Runtime guidance/error strings use OpenPAUL and /openpaul: (no PAUL or /paul:) | ✓ VERIFIED | `src/commands/status.ts#L252` normalizes legacy /paul: to /openpaul: for backward compat; no user-facing PAUL strings |
+| 6 | Branding consistency tests exist to detect paul/openpaul mismatches | ✓ VERIFIED | `src/tests/branding/branding.test.ts#L10-142` defines comprehensive checks for exports, plugin name, and docs |
+| 7 | No anti-patterns in key files | ✓ VERIFIED | No TODO/FIXME/HACK in src/commands/index.ts, src/index.ts, or branding test; no old paulX exports; no paul: aliases |
 
-**Score:** 12/12 truths verified
+**Score:** 7/7 truths verified
 
 ### Required Artifacts
 
 | Artifact | Expected | Status | Details |
-|----------|----------|--------|---------|
-| `src/commands/index.ts` | Central export of all command functions | ✓ VERIFIED | Contains 26 openpaulX exports |
-| `src/index.ts` | Plugin definition and command registration | ✓ VERIFIED | OpenPaulPlugin export, all openpaul: commands |
-| `src/storage/file-manager.ts` | Core file storage with dual-path resolution | ✓ VERIFIED | .openpaul/ primary, .paul/ fallback |
-| `src/templates/STATE.md` | State template | ✓ VERIFIED | Uses .openpaul/ references |
-| `README.md` | Primary project documentation | ✓ VERIFIED | OpenPAUL branding throughout |
-| `package.json` | Package metadata | ✓ VERIFIED | Description uses OpenPAUL |
-| `src/tests/branding/branding.test.ts` | Automated branding verification | ✓ VERIFIED | 5 tests passing |
+| --- | --- | --- | --- |
+| `OPENPAUL-VS-GSD.md` | OpenPAUL-branded documentation | ✓ VERIFIED | Title: "What Makes OpenPAUL Different"; all references use "OpenPAUL" |
+| `README.md` | OpenPAUL-branded main docs | ✓ VERIFIED | Only "## Migration from PAUL" header references PAUL (intentional) |
+| `src/commands/index.ts` | Central export of openpaul commands | ✓ VERIFIED | Exports only openpaulX functions (lines 8-41) |
+| `src/index.ts` | Plugin definition and tool registration | ✓ VERIFIED | OpenPaulPlugin with openpaul-only tool map (lines 52-78) |
+| `src/storage/file-manager.ts` | Dual-path .openpaul/.paul resolution | ✓ VERIFIED | .openpaul first, .paul fallback documented (line 60) |
+| `src/tests/branding/branding.test.ts` | Branding consistency tests | ✓ VERIFIED | Tests for paulX exports, OpenPaulPlugin, and root docs (142 lines) |
 
 ### Key Link Verification
 
 | From | To | Via | Status | Details |
-|------|----|-----|--------|---------|
-| src/index.ts | src/commands/index.ts | import statements | ✓ WIRED | All 26 openpaulX functions imported |
-| Commands | Filesystem | path resolution | ✓ WIRED | Dual-path resolution in file-manager.ts |
-| Templates | Generated files | content copying | ✓ WIRED | Templates use OpenPAUL branding |
+| --- | --- | --- | --- | --- |
+| `src/index.ts` | openpaul command handlers | tool map registrations | ✓ WIRED | 26 openpaul:* tools registered to openpaulX functions |
+| `src/commands/index.ts` | Individual command modules | export statements | ✓ WIRED | All openpaulX functions exported from command files |
+| `src/tests/branding/branding.test.ts` | Root documentation | file reads | ✓ WIRED | Test reads OPENPAUL-VS-GSD.md and checks for PAUL patterns |
 
 ### Requirements Coverage
 
 | Requirement | Source Plan | Description | Status | Evidence |
-|-------------|-------------|-------------|--------|----------|
-| BRND-01 | 09-01, 09-02, 09-03, 09-04 | All instances of "PAUL" replaced with "OpenPAUL" in documentation, command names, and user-facing text | ✓ SATISFIED | All 12 observable truths verified |
+| ----------- | ---------- | ----------- | ------ | -------- |
+| BRND-01 | 09-01 through 09-18 | All instances of "PAUL" replaced with "OpenPAUL" in documentation, command names, and user-facing text | ✓ SATISFIED | All docs use OpenPAUL; all exports are openpaulX; plugin is OpenPaulPlugin with openpaul: prefix only |
 
 ### Anti-Patterns Found
 
 | File | Line | Pattern | Severity | Impact |
-|------|------|---------|----------|--------|
-| — | — | No blocking anti-patterns found | — | — |
+| ---- | ---- | ------- | -------- | ------ |
+| (none) | - | - | - | - |
 
-**Note:** TypeScript build fails with pre-existing errors (zod type inference issues, missing 'diff' package dependency). These are NOT related to branding changes and existed before Phase 9.
+No blocking anti-patterns found.
 
 ### Human Verification Required
 
-None — all verifications are automated via file inspection and test execution.
+None. All verification checks are programmatic and passed.
+
+### Gaps Summary
+
+**Previous Gap CLOSED:**
+- `OPENPAUL-VS-GSD.md` now uses consistent "OpenPAUL" branding throughout, including title ("What Makes OpenPAUL Different"), body text, and comparison table labels.
+
+**Verification Results:**
+- No standalone "PAUL" references in root documentation (except intentional "Migration from PAUL" header)
+- No `/paul:` command references in documentation or user-facing strings
+- All command exports use `openpaulX` naming convention
+- Plugin registers only `openpaul:` prefixed tools
+- Branding tests in place to prevent regressions
 
 ---
 
-## Gaps Summary
-
-No gaps found. All observable truths are verified, all artifacts exist and are substantive, all key links are wired, and all requirements are satisfied.
-
-The Phase 9 goal "All OpenPAUL documentation uses consistent OpenPAUL branding" has been fully achieved.
-
----
-
-_Verified: 2026-03-12T12:00:00Z_
+_Verified: 2026-03-13T15:45:00Z_
 _Verifier: OpenCode (gsd-verifier)_
