@@ -4,6 +4,24 @@ import { formatHeader, formatBold, formatList } from '../output/formatter'
 import { existsSync } from 'fs'
 import { join } from 'path'
 
+const FLOWS_FILENAME = 'SPECIAL-FLOWS.md'
+const FLOWS_DIRNAME = '.openpaul'
+
+const getFlowsPath = (flowsDir: string) => join(flowsDir, FLOWS_FILENAME)
+
+const getMissingNameMessage = (action: 'enable' | 'disable') =>
+  `Error: --name required for ${action} action`
+
+const getNotInitializedMessage = () =>
+  formatHeader(2, '🌊 Special Flows') + '\n\n' +
+  formatBold('Status:') + ' Not initialized\n\n' +
+  'Run `/openpaul:flows action=init` to create flows file.'
+
+const getFlowStatusMessage = (title: string, name: string) =>
+  formatHeader(2, title) + '\n\n' +
+  formatBold('Flow:') + ` ${name}\n\n` +
+  'Run `/openpaul:flows action=list` to verify.'
+
 export const openpaulFlows: ToolDefinition = tool({
   description: 'Manage special flows (list/enable/disable/init)',
   args: {
@@ -12,8 +30,9 @@ export const openpaulFlows: ToolDefinition = tool({
   },
   execute: async ({ action = 'list', name }, context) => {
     try {
-      const flowsDir = join(context.directory, '.openpaul')
-      
+      const flowsDir = join(context.directory, FLOWS_DIRNAME)
+      const flowsPath = getFlowsPath(flowsDir)
+       
       switch (action) {
         case 'init': {
           const flowsPath = FlowsManager.init(context.directory)
@@ -23,10 +42,8 @@ export const openpaulFlows: ToolDefinition = tool({
         }
 
         case 'list': {
-          if (!existsSync(join(flowsDir, 'SPECIAL-FLOWS.md'))) {
-            return formatHeader(2, '🌊 Special Flows') + '\n\n' +
-              formatBold('Status:') + ' Not initialized\n\n' +
-              'Run `/openpaul:flows action=init` to create flows file.'
+          if (!existsSync(flowsPath)) {
+            return getNotInitializedMessage()
           }
 
           const flowsManager = new FlowsManager(context.directory)
@@ -43,36 +60,32 @@ export const openpaulFlows: ToolDefinition = tool({
 
         case 'enable': {
           if (!name) {
-            return 'Error: --name required for enable action'
+            return getMissingNameMessage('enable')
           }
 
-          if (!existsSync(join(flowsDir, 'SPECIAL-FLOWS.md'))) {
+          if (!existsSync(flowsPath)) {
             return 'Error: Flows not initialized. Run `/openpaul:flows action=init` first.'
           }
 
           const flowsManager = new FlowsManager(context.directory)
           flowsManager.enable(name)
 
-          return formatHeader(2, '⚡ Flow Enabled') + '\n\n' +
-            formatBold('Flow:') + ` ${name}\n\n` +
-            'Run `/openpaul:flows action=list` to verify.'
+          return getFlowStatusMessage('⚡ Flow Enabled', name)
         }
 
         case 'disable': {
           if (!name) {
-            return 'Error: --name required for disable action'
+            return getMissingNameMessage('disable')
           }
 
-          if (!existsSync(join(flowsDir, 'SPECIAL-FLOWS.md'))) {
+          if (!existsSync(flowsPath)) {
             return 'Error: Flows not initialized. Run `/openpaul:flows action=init` first.'
           }
 
           const flowsManager = new FlowsManager(context.directory)
           flowsManager.disable(name)
 
-          return formatHeader(2, '⚡ Flow Disabled') + '\n\n' +
-            formatBold('Flow:') + ` ${name}\n\n` +
-            'Run `/openpaul:flows action=list` to verify.'
+          return getFlowStatusMessage('⚡ Flow Disabled', name)
         }
 
         default:
