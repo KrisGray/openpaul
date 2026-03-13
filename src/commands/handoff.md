@@ -1,5 +1,5 @@
 ---
-name: paul:handoff
+name: openpaul:handoff
 description: Generate comprehensive session handoff document
 argument-hint: "[context notes]"
 allowed-tools: [Read, Write]
@@ -14,7 +14,7 @@ Generate a comprehensive handoff document synthesizing session activity, decisio
 </objective>
 
 <execution_context>
-@.paul/STATE.md
+@.openpaul/STATE.md
 </execution_context>
 
 <context>
@@ -78,10 +78,10 @@ Combine Claude's observations with user input:
 </step>
 
 <step name="generate_handoff">
-Create `.paul/HANDOFF-{date}-{context}.md`:
+Create `.openpaul/HANDOFF-{date}-{context}.md`:
 
 ```markdown
-# PAUL Session Handoff
+# OpenPAUL Session Handoff
 
 **Session:** {date} {start_time} - {end_time}
 **Phase:** {current_phase}
@@ -139,7 +139,7 @@ Create `.paul/HANDOFF-{date}-{context}.md`:
 
 **Current:** {phase, plan, loop position}
 **Next:** {recommended next action}
-**Resume:** `/paul:resume` then read this handoff
+**Resume:** `/openpaul:resume` then read this handoff
 
 ---
 
@@ -152,7 +152,7 @@ Display confirmation:
 HANDOFF CREATED
 ════════════════════════════════════════
 
-Saved: .paul/HANDOFF-{date}-{context}.md
+Saved: .openpaul/HANDOFF-{date}-{context}.md
 
 Includes:
 - {N} accomplishments
@@ -160,7 +160,7 @@ Includes:
 - {N} gaps with your decisions
 - {N} prioritized next actions
 
-Next session: /paul:resume → read handoff
+Next session: /openpaul:resume → read handoff
 ════════════════════════════════════════
 ```
 </step>

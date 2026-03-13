@@ -1,5 +1,5 @@
 ---
-name: paul:discuss-milestone
+name: openpaul:discuss-milestone
 description: Explore and articulate next milestone vision
 argument-hint: ""
 allowed-tools: [Read, Write, AskUserQuestion]
@@ -12,22 +12,22 @@ Facilitate vision discussion for the next milestone and create context handoff.
 </objective>
 
 <execution_context>
-@~/.claude/paul-framework/workflows/discuss-milestone.md
+@~/.claude/openpaul-framework/workflows/discuss-milestone.md
 </execution_context>
 
 <context>
-@.paul/PROJECT.md
-@.paul/STATE.md
-@.paul/ROADMAP.md
-@.paul/MILESTONES.md
+@.openpaul/PROJECT.md
+@.openpaul/STATE.md
+@.openpaul/ROADMAP.md
+@.openpaul/MILESTONES.md
 </context>
 
 <process>
-Follow workflow: @~/.claude/paul-framework/workflows/discuss-milestone.md
+Follow workflow: @~/.claude/openpaul-framework/workflows/discuss-milestone.md
 </process>
 
 <success_criteria>
 - [ ] MILESTONE-CONTEXT.md created with vision
 - [ ] Key themes and goals articulated
-- [ ] Ready for /paul:milestone command
+- [ ] Ready for /openpaul:milestone command
 </success_criteria>

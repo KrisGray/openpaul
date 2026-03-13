@@ -3,9 +3,9 @@ paths:
   - "src/**/*.md"
 ---
 
-# PAUL Style Rules
+# OpenPAUL Style Rules
 
-Universal conventions for all PAUL framework files.
+Universal conventions for all OpenPAUL framework files.
 
 ## Language & Tone
 
@@ -30,7 +30,7 @@ Exception: SUMMARY.md deviations section, git commits (their purpose IS tracking
 | Type | Convention | Example |
 |------|------------|---------|
 | Files | kebab-case | `plan-phase.md` |
-| Commands | `paul:kebab-case` | `paul:plan` |
+| Commands | `openpaul:kebab-case` | `openpaul:plan` |
 | Step names | snake_case | `name="load_project_state"` |
 | Bash variables | CAPS_UNDERSCORES | `PHASE_ARG` |
 | Type attributes | colon separator | `type="checkpoint:human-verify"` |
@@ -78,16 +78,16 @@ Enable secure user access
 @src/templates/PLAN.md
 
 # Project-relative (dynamic)
-@.paul/PROJECT.md
-@.paul/STATE.md
+@.openpaul/PROJECT.md
+@.openpaul/STATE.md
 
 # Conditional
-@.paul/DISCOVERY.md (if exists)
+@.openpaul/DISCOVERY.md (if exists)
 ```
 
 ## Loop Terminology
 
-PAUL uses explicit loop phase names:
+OpenPAUL uses explicit loop phase names:
 
 | Phase | Purpose | Artifacts |
 |-------|---------|-----------|

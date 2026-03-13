@@ -16,16 +16,16 @@ Next phase: APPLY (after plan approval)
 </loop_context>
 
 <required_reading>
-@.paul/STATE.md
-@.paul/ROADMAP.md
-@.paul/PROJECT.md
-@.paul/phases/{prior-phase}/{plan}-SUMMARY.md (if exists and relevant)
+@.openpaul/STATE.md
+@.openpaul/ROADMAP.md
+@.openpaul/PROJECT.md
+@.openpaul/phases/{prior-phase}/{plan}-SUMMARY.md (if exists and relevant)
 </required_reading>
 
 <references>
-@~/.claude/paul-framework/references/plan-format.md
-@~/.claude/paul-framework/references/checkpoints.md (if plan will have checkpoints)
-@~/.claude/paul-framework/templates/PLAN.md
+@~/.claude/openpaul-framework/references/plan-format.md
+@~/.claude/openpaul-framework/references/checkpoints.md (if plan will have checkpoints)
+@~/.claude/openpaul-framework/templates/PLAN.md
 </references>
 
 <process>
@@ -76,7 +76,7 @@ Next phase: APPLY (after plan approval)
 <step name="check_specialized_flows">
 **Check for SPECIAL-FLOWS.md and populate skills section.**
 
-1. Check if `.paul/SPECIAL-FLOWS.md` exists
+1. Check if `.openpaul/SPECIAL-FLOWS.md` exists
 2. If exists:
    - Read SPECIAL-FLOWS.md
    - Extract skills marked as "required" for the work type being planned
@@ -93,7 +93,7 @@ Next phase: APPLY (after plan approval)
    - /skill-1 (work type: X)
    - /skill-2 (work type: Y)
 
-   These must be loaded before /paul:apply will proceed.
+   These must be loaded before /openpaul:apply will proceed.
    ════════════════════════════════════════
    ```
 
@@ -102,7 +102,7 @@ Required skills will BLOCK apply-phase until confirmed loaded.
 </step>
 
 <step name="create_plan">
-1. Create phase directory: `.paul/phases/{NN}-{phase-name}/`
+1. Create phase directory: `.openpaul/phases/{NN}-{phase-name}/`
 2. Generate PLAN.md following template structure:
 
    **Frontmatter:**
@@ -172,7 +172,7 @@ Required skills will BLOCK apply-phase until confirmed loaded.
 
    Last session: [timestamp]
    Stopped at: Plan [NN-PP] created
-   Next action: Review and approve plan, then run /paul:apply [plan-path]
+    Next action: Review and approve plan, then run /openpaul:apply [plan-path]
    Resume file: [plan-path]
    ```
 
@@ -196,15 +196,15 @@ Required skills will BLOCK apply-phase until confirmed loaded.
 
    [1] Approved, run APPLY | [2] Questions first | [3] Pause here
    ```
-4. **Accept quick inputs:** "1", "approved", "yes", "go" → run `/paul:apply [plan-path]`
+4. **Accept quick inputs:** "1", "approved", "yes", "go" → run `/openpaul:apply [plan-path]`
 </step>
 
 </process>
 
 <output>
-PLAN.md at `.paul/phases/{NN}-{phase-name}/{NN}-{plan}-PLAN.md`
+PLAN.md at `.openpaul/phases/{NN}-{phase-name}/{NN}-{plan}-PLAN.md`
 
-Example: `.paul/phases/04-workflows-layer/04-01-PLAN.md`
+Example: `.openpaul/phases/04-workflows-layer/04-01-PLAN.md`
 </output>
 
 <error_handling>

@@ -12,14 +12,14 @@ Mark a milestone complete after all phases are done. Creates permanent milestone
 
 <loop_context>
 N/A - This is a milestone transition workflow, not a loop phase.
-After completion, project is ready for /paul:discuss-milestone or /paul:milestone.
+After completion, project is ready for /openpaul:discuss-milestone or /openpaul:milestone.
 </loop_context>
 
 <required_reading>
-@.paul/STATE.md
-@.paul/PROJECT.md
-@.paul/ROADMAP.md
-@.paul/phases/{milestone-phases}/*-SUMMARY.md
+@.openpaul/STATE.md
+@.openpaul/PROJECT.md
+@.openpaul/ROADMAP.md
+@.openpaul/phases/{milestone-phases}/*-SUMMARY.md
 </required_reading>
 
 <references>
@@ -98,7 +98,7 @@ Store as `accomplishments` list.
 </step>
 
 <step name="create_milestone_entry">
-Create or update `.paul/MILESTONES.md`:
+Create or update `.openpaul/MILESTONES.md`:
 
 **If file doesn't exist, create with header:**
 ```markdown
@@ -181,10 +181,10 @@ Create milestone archive:
 
 1. Create directory:
    ```bash
-   mkdir -p .paul/milestones
+    mkdir -p .openpaul/milestones
    ```
 
-2. Create archive file `.paul/milestones/{version}-ROADMAP.md`:
+2. Create archive file `.openpaul/milestones/{version}-ROADMAP.md`:
    - Copy current ROADMAP.md content
    - Add archive header with completion date
    - This preserves the state at milestone completion
@@ -216,7 +216,7 @@ Update ROADMAP.md to collapse completed milestone:
 2. **Add Next Milestone placeholder:**
    ```markdown
    ## Next Milestone
-   Run /paul:discuss-milestone or /paul:milestone to define.
+    Run /openpaul:discuss-milestone or /openpaul:milestone to define.
    ```
 
 3. **Move completed phases to Completed section:**
@@ -273,8 +273,8 @@ Update STATE.md for post-milestone state:
 
    Last session: {timestamp}
    Stopped at: Milestone {milestone_name} complete
-   Next action: /paul:discuss-milestone or /paul:milestone
-   Resume file: .paul/MILESTONES.md
+    Next action: /openpaul:discuss-milestone or /openpaul:milestone
+    Resume file: .openpaul/MILESTONES.md
    ```
 </step>
 
@@ -285,25 +285,25 @@ Update STATE.md for post-milestone state:
 
 | Location | Field | Example |
 |----------|-------|---------|
-| `.paul/PROJECT.md` | Current State table → Version | `0.3.0` |
-| `.paul/ROADMAP.md` | Version Overview table | `v0.3` |
-| `.paul/STATE.md` | Version field | `v0.3.0` |
-| `.paul/config.md` | version field (if exists) | `0.3.0` |
+| `.openpaul/PROJECT.md` | Current State table → Version | `0.3.0` |
+| `.openpaul/ROADMAP.md` | Version Overview table | `v0.3` |
+| `.openpaul/STATE.md` | Version field | `v0.3.0` |
+| `.openpaul/config.md` | version field (if exists) | `0.3.0` |
 | `package.json` | "version" field (if exists) | `"0.3.0"` |
 
 **1. Read current version from each location:**
 ```bash
 # PROJECT.md - extract from Current State table
-grep -A5 "Current State" .paul/PROJECT.md | grep "Version"
+grep -A5 "Current State" .openpaul/PROJECT.md | grep "Version"
 
 # ROADMAP.md - check Version Overview
-grep -A10 "Version Overview" .paul/ROADMAP.md
+grep -A10 "Version Overview" .openpaul/ROADMAP.md
 
 # STATE.md - Version field
-grep "^Version:" .paul/STATE.md
+grep "^Version:" .openpaul/STATE.md
 
 # config.md (if exists)
-[ -f .paul/config.md ] && grep "version:" .paul/config.md
+[ -f .openpaul/config.md ] && grep "version:" .openpaul/config.md
 
 # package.json (if exists)
 [ -f package.json ] && grep '"version"' package.json
@@ -351,8 +351,8 @@ npm version {version} --no-git-tag-version
 
 **4. Commit version alignment if changes made:**
 ```bash
-git add .paul/PROJECT.md .paul/ROADMAP.md .paul/STATE.md
-[ -f .paul/config.md ] && git add .paul/config.md
+git add .openpaul/PROJECT.md .openpaul/ROADMAP.md .openpaul/STATE.md
+[ -f .openpaul/config.md ] && git add .openpaul/config.md
 [ -f package.json ] && git add package.json
 git commit -m "chore: align version to {version} for milestone release
 
@@ -404,8 +404,8 @@ Key Accomplishments:
 {top 3 accomplishments}
 
 Created:
-  .paul/MILESTONES.md entry    ✓
-  .paul/milestones/{version}-ROADMAP.md    ✓
+  .openpaul/MILESTONES.md entry    ✓
+  .openpaul/milestones/{version}-ROADMAP.md    ✓
   git tag: {version}    ✓
 
 Updated:
@@ -414,11 +414,11 @@ Updated:
   STATE.md (cleared)    ✓
 
 ────────────────────────────────────────
-▶ NEXT: /paul:discuss-milestone
+▶ NEXT: /openpaul:discuss-milestone
   Define the scope for the next milestone
 ────────────────────────────────────────
 
-Or /paul:milestone to create milestone directly.
+Or /openpaul:milestone to create milestone directly.
 ```
 </step>
 
@@ -426,7 +426,7 @@ Or /paul:milestone to create milestone directly.
 
 <output>
 - MILESTONES.md entry created
-- .paul/milestones/{version}-ROADMAP.md archive created
+- .openpaul/milestones/{version}-ROADMAP.md archive created
 - PROJECT.md evolved (requirements validated/invalidated)
 - ROADMAP.md reorganized (milestone collapsed)
 - STATE.md cleared for next milestone
@@ -437,7 +437,7 @@ Or /paul:milestone to create milestone directly.
 - [ ] All phases verified complete (or user chose to skip)
 - [ ] Statistics gathered from SUMMARYs
 - [ ] MILESTONES.md entry created with accomplishments
-- [ ] Archive file created in .paul/milestones/
+- [ ] Archive file created in .openpaul/milestones/
 - [ ] PROJECT.md evolved (requirements audited)
 - [ ] ROADMAP.md reorganized (milestone collapsed)
 - [ ] STATE.md updated for post-milestone state

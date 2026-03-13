@@ -1,5 +1,5 @@
 ---
-name: paul:research
+name: openpaul:research
 description: Research a topic using subagents for discovery
 argument-hint: "<topic> [--codebase | --web]"
 allowed-tools: [Read, Task, Bash, Write]
@@ -18,8 +18,8 @@ Research a specific topic using subagents and save findings for review.
 </objective>
 
 <execution_context>
-@~/.claude/paul-framework/workflows/research.md
-@~/.claude/paul-framework/references/subagent-criteria.md
+@~/.claude/openpaul-framework/workflows/research.md
+@~/.claude/openpaul-framework/references/subagent-criteria.md
 </execution_context>
 
 <context>
@@ -30,18 +30,18 @@ Optional flags:
 - `--web`: Focus on web/documentation (uses general-purpose agent)
 - No flag: Auto-detect based on topic
 
-@.paul/PROJECT.md
-@.paul/STATE.md
+@.openpaul/PROJECT.md
+@.openpaul/STATE.md
 </context>
 
 <process>
-Follow workflow: @~/.claude/paul-framework/workflows/research.md
+Follow workflow: @~/.claude/openpaul-framework/workflows/research.md
 </process>
 
 <success_criteria>
 - [ ] Topic validated (not trivial)
 - [ ] Appropriate agent type selected
 - [ ] Subagent spawned for research
-- [ ] Findings saved to .paul/research/{topic}.md
+- [ ] Findings saved to .openpaul/research/{topic}.md
 - [ ] Summary presented for review
 </success_criteria>

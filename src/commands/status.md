@@ -1,13 +1,13 @@
 ---
-name: paul:status
-description: "[DEPRECATED] Use /paul:progress instead"
+name: openpaul:status
+description: "[DEPRECATED] Use /openpaul:progress instead"
 argument-hint:
 allowed-tools: [Read]
 ---
 
-> **⚠️ DEPRECATED:** This command is deprecated. Use `/paul:progress` instead.
+> **⚠️ DEPRECATED:** This command is deprecated. Use `/openpaul:progress` instead.
 >
-> `/paul:progress` provides the same information plus:
+> `/openpaul:progress` provides the same information plus:
 > - Visual milestone progress
 > - Smarter routing with single next-action suggestion
 > - Optional context argument for tailored suggestions
@@ -15,15 +15,15 @@ allowed-tools: [Read]
 <objective>
 Display current loop position (PLAN/APPLY/UNIFY) and phase progress.
 
-**When to use:** Use `/paul:progress` instead for better routing.
+**When to use:** Use `/openpaul:progress` instead for better routing.
 </objective>
 
 <execution_context>
 </execution_context>
 
 <context>
-@.paul/STATE.md
-@.paul/ROADMAP.md
+@.openpaul/STATE.md
+@.openpaul/ROADMAP.md
 </context>
 
 <process>
@@ -41,7 +41,7 @@ Read STATE.md and extract:
 Display formatted status:
 
 ```
-PAUL Status
+OpenPAUL Status
 ════════════════════════════════════════
 
 Milestone: [name]
@@ -63,9 +63,9 @@ Next: [recommended action]
 
 <step name="suggest_next">
 Based on loop position, suggest next action:
-- If PLAN needed: "Run /paul:plan to create plan"
-- If PLAN ready: "Approve plan, then run /paul:apply"
-- If APPLY complete: "Run /paul:unify to close loop"
+- If PLAN needed: "Run /openpaul:plan to create plan"
+- If PLAN ready: "Approve plan, then run /openpaul:apply"
+- If APPLY complete: "Run /openpaul:unify to close loop"
 - If UNIFY complete: "Loop closed. Ready for next phase."
 </step>
 
