@@ -4,21 +4,21 @@
 
 **Plan-Apply-Unify Loop** — Structured AI-assisted development for Claude Code.
 
-[![npm version](https://img.shields.io/npm/v/paul-framework?style=for-the-badge&logo=npm&logoColor=white&color=CB3837)](https://www.npmjs.com/package/paul-framework)
+[![npm version](https://img.shields.io/npm/v/@krisgray/openpaul?style=for-the-badge&logo=npm&logoColor=white&color=CB3837)](https://www.npmjs.com/package/@krisgray/openpaul)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/ChristopherKahler/paul?style=for-the-badge&logo=github&color=181717)](https://github.com/ChristopherKahler/paul)
+[![GitHub stars](https://img.shields.io/github/stars/ChristopherKahler/openpaul?style=for-the-badge&logo=github&color=181717)](https://github.com/ChristopherKahler/openpaul)
 
 <br>
 
 ```bash
-npx paul-framework
+npx @krisgray/openpaul
 ```
 
 **Works on Mac, Windows, and Linux.**
 
 <br>
 
-![PAUL Install](assets/terminal.svg)
+![OpenPAUL Install](assets/terminal.svg)
 
 <br>
 
@@ -26,23 +26,23 @@ npx paul-framework
 
 <br>
 
-[Why PAUL](#why-paul) · [Getting Started](#getting-started) · [The Loop](#the-loop) · [Commands](#commands) · [How It Works](#how-it-works)
+[Why OpenPAUL](#why-openpaul) · [Getting Started](#getting-started) · [The Loop](#the-loop) · [Commands](#commands) · [How It Works](#how-it-works)
 
 </div>
 
 ---
 
-## Why PAUL
+## Why OpenPAUL
 
 I build with Claude Code every day. It's incredibly powerful — when you give it the right context.
 
 The problem? **Context rot.** As your session fills up, quality degrades. Subagents spawn with fresh context but return ~70% quality work that needs cleanup. Plans get created but never closed. State drifts. You end up debugging AI output instead of shipping features.
 
-PAUL (now OpenPAUL) fixes this with three principles:
+OpenPAUL fixes this with three principles:
 
 1. **Loop integrity** — Every plan closes with UNIFY. No orphan plans. UNIFY reconciles what was planned vs what happened, updates state, logs decisions. This is the heartbeat.
 
-2. **In-session context** — Subagents are expensive and produce lower quality for implementation work. PAUL keeps development in-session with properly managed context. Subagents are reserved for discovery and research — their job IS to gather context.
+2. **In-session context** — Subagents are expensive and produce lower quality for implementation work. OpenPAUL keeps development in-session with properly managed context. Subagents are reserved for discovery and research — their job IS to gather context.
 
 3. **Acceptance-driven development** — Acceptance criteria are first-class citizens, not afterthoughts. Define done before starting. Every task references its AC. BDD format: `Given [precondition] / When [action] / Then [outcome]`.
 
@@ -54,7 +54,7 @@ The complexity is in the system, not your workflow. Behind the scenes: structure
 
 **AI-assisted developers** who want structure without bureaucracy.
 
-You describe what you want, Claude Code builds it, and PAUL/OpenPAUL ensures:
+You describe what you want, Claude Code builds it, and OpenPAUL ensures:
 - Plans have clear acceptance criteria
 - Execution stays bounded
 - Every unit of work gets closed properly
@@ -68,7 +68,7 @@ No sprint ceremonies. No story points. No enterprise theater. Just a system that
 ## Getting Started
 
 ```bash
-npx paul-framework
+npx @krisgray/openpaul
 ```
 
 The installer prompts you to choose:
@@ -79,7 +79,7 @@ Verify with `/openpaul:help` inside Claude Code.
 ### Quick Workflow
 
 ```bash
-# 1. Initialize PAUL in your project
+# 1. Initialize OpenPAUL in your project
 /openpaul:init
 
 # 2. Create a plan for your work
@@ -98,27 +98,27 @@ Verify with `/openpaul:help` inside Claude Code.
 ### Staying Updated
 
 ```bash
-npx paul-framework@latest
+npx @krisgray/openpaul@latest
 ```
 
 <details>
 <summary><strong>Non-interactive Install</strong></summary>
 
 ```bash
-npx paul-framework --global   # Install to ~/.claude/
-npx paul-framework --local    # Install to ./.claude/
+npx @krisgray/openpaul --global   # Install to ~/.claude/
+npx @krisgray/openpaul --local    # Install to ./.claude/
 ```
 
 </details>
 
-### Migration from PAUL
+### Migration from OpenPAUL v1.0
 
-If you have an existing project using `.paul/` directory:
+If you have an existing project using the legacy project directory:
 
-1. Rename `.paul/` to `.openpaul/`
+1. Rename it to `.openpaul/`
 2. Update any hardcoded paths in your workflow
 
-OpenPAUL will automatically detect and use `.openpaul/` for new files while still reading from `.paul/` for backward compatibility.
+OpenPAUL will automatically detect and use `.openpaul/` for new files while still reading legacy locations for backward compatibility.
 
 ---
 
@@ -171,7 +171,7 @@ OpenPAUL provides 26 commands organized by purpose. Run `/openpaul:help` for the
 
 | Command | What it does |
 |---------|--------------|
-| `/openpaul:init` | Initialize PAUL in a project |
+| `/openpaul:init` | Initialize OpenPAUL in a project |
 | `/openpaul:plan [phase]` | Create an executable plan |
 | `/openpaul:apply [path]` | Execute an approved plan |
 | `/openpaul:unify [path]` | Reconcile and close the loop |
@@ -223,7 +223,7 @@ OpenPAUL provides 26 commands organized by purpose. Run `/openpaul:help` for the
 | Command | What it does |
 |---------|--------------|
 | `/openpaul:flows` | Configure skill requirements |
-| `/openpaul:config` | View/modify PAUL settings |
+| `/openpaul:config` | View/modify OpenPAUL settings |
 | `/openpaul:map-codebase` | Generate codebase overview |
 
 ### Quality
@@ -312,13 +312,13 @@ Every task has: files, action, verify, done. If you can't specify all four, the 
 
 ### CARL Integration
 
-PAUL has a companion: **[CARL](https://github.com/ChristopherKahler/carl-core)** (Context Augmentation & Reinforcement Layer).
+OpenPAUL has a companion: **[CARL](https://github.com/ChristopherKahler/carl-core)** (Context Augmentation & Reinforcement Layer).
 
 CARL is a dynamic rule injection system. Instead of bloating your context with static prompts, CARL loads rules just-in-time based on what you're doing:
 
 | Trigger | Rules Loaded |
 |---------|--------------|
-| Working in `.openpaul/` directory | PAUL domain activates |
+| Working in `.openpaul/` directory | OpenPAUL domain activates |
 | Writing code | DEVELOPMENT rules load |
 | Managing projects | PROJECTS rules load |
 
@@ -329,7 +329,7 @@ CARL is a dynamic rule injection system. Instead of bloating your context with s
 - Verification requirements for every task
 - Skill blocking (required skills must load before APPLY)
 
-The OpenPAUL domain contains 14 rules that govern structured AI development. They load when you're in a OpenPAUL project, disappear when you're not. Your context stays lean.
+The OpenPAUL domain contains 14 rules that govern structured AI development. They load when you're in an OpenPAUL project, disappear when you're not. Your context stays lean.
 
 **Without CARL:** You'd need massive static prompts in every session.
 **With CARL:** Rules activate when relevant, disappear when not.
@@ -412,11 +412,11 @@ APPLY blocks until required skills are confirmed loaded.
 
 **Commands not found after install?**
 - Restart Claude Code to reload slash commands
-- Verify files exist in `~/.claude/commands/paul/` (global) or `./.claude/commands/paul/` (local)
+- Verify files exist in `~/.claude/commands/openpaul/` (global) or `./.claude/commands/openpaul/` (local)
 
 **Commands not working as expected?**
 - Run `/openpaul:help` to verify installation
-- Re-run `npx paul-framework` to reinstall
+- Re-run `npx @krisgray/openpaul` to reinstall
 
 **Loop position seems wrong?**
 - Check `.openpaul/STATE.md` for current state
@@ -431,7 +431,7 @@ APPLY blocks until required skills are confirmed loaded.
 
 ### vs. Ad-hoc AI Coding
 
-| Ad-hoc | PAUL |
+| Ad-hoc | OpenPAUL |
 |--------|------|
 | No structure | Explicit planning gates |
 | State drifts | STATE.md tracks everything |
@@ -440,20 +440,20 @@ APPLY blocks until required skills are confirmed loaded.
 
 ### vs. GSD
 
-PAUL takes a different approach from GSD:
+OpenPAUL takes a different approach from GSD:
 
-| Aspect | GSD | PAUL |
+| Aspect | GSD | OpenPAUL |
 |--------|-----|------|
 | Execution | Parallel subagents | In-session context |
 | Loop | Optional closure | Mandatory UNIFY |
 | Criteria | Embedded in tasks | First-class AC section |
 | Rules | Static prompts | CARL dynamic loading |
 
-Same comprehensive coverage, different philosophy. PAUL prioritizes quality over speed-for-speed's-sake. See [PAUL-VS-GSD.md](PAUL-VS-GSD.md) for full comparison.
+Same comprehensive coverage, different philosophy. OpenPAUL prioritizes quality over speed-for-speed's-sake. See [OPENPAUL-VS-GSD.md](OPENPAUL-VS-GSD.md) for full comparison.
 
 ### vs. Traditional Planning
 
-| Traditional | PAUL |
+| Traditional | OpenPAUL |
 |-------------|------|
 | Documentation-first | Execution-first |
 | Human-readable specs | AI-executable prompts |
@@ -477,6 +477,6 @@ Building tools for AI-assisted development.
 
 <div align="center">
 
-**Claude Code is powerful. PAUL makes it reliable.**
+**Claude Code is powerful. OpenPAUL makes it reliable.**
 
 </div>
