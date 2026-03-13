@@ -48,7 +48,7 @@ describe('openpaulPlan command', () => {
 
     mockLoopEnforcer = {
       enforceCanStartNewLoop: jest.fn(),
-      getRequiredNextAction: jest.fn().mockReturnValue('Run /paul:apply to execute the plan'),
+      getRequiredNextAction: jest.fn().mockReturnValue('Run /openpaul:apply to execute the plan'),
     }
 
     ;(FileManager as jest.Mock).mockImplementation(() => mockFileManager)

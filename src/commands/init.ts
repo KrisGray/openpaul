@@ -8,10 +8,10 @@ import { formatHeader, formatList, formatBold } from '../output/formatter'
 /**
  * /openpaul:init Command
  * 
- * Initialize a new OpenPAUL project with .paul/ directory structure
+ * Initialize a new OpenPAUL project with .openpaul/ directory structure
  * 
  * From CONTEXT.md:
- * - Creates .paul/ directory
+ * - Creates .openpaul/ directory
  * - Initializes model-config.json with defaults
  * - Sets up initial state for phase 1
  * - Provides clear next steps
@@ -19,7 +19,7 @@ import { formatHeader, formatList, formatBold } from '../output/formatter'
 export const openpaulInit = tool({
   description: 'Initialize OpenPAUL in the current project',
   args: {
-    force: tool.schema.boolean().optional().describe('Reinitialize even if .paul/ exists'),
+    force: tool.schema.boolean().optional().describe('Reinitialize even if .openpaul/ exists'),
   },
   execute: async ({ force }, context) => {
     try {
@@ -37,7 +37,7 @@ export const openpaulInit = tool({
           ])
       }
       
-      // Ensure .paul directory exists
+      // Ensure .openpaul directory exists
       fileManager.ensurePaulDir()
       
       // Write default model configuration
@@ -57,8 +57,8 @@ export const openpaulInit = tool({
       
       output += formatBold('Created Files:') + '\n'
       output += formatList([
-        '.paul/model-config.json - Model configuration for PAUL sub-stages',
-        '.paul/state-phase-1.json - Initial state for phase 1',
+        '.openpaul/model-config.json - Model configuration for OpenPAUL sub-stages',
+        '.openpaul/state-phase-1.json - Initial state for phase 1',
       ]) + '\n\n'
       
       output += formatBold('Next Steps:') + '\n'

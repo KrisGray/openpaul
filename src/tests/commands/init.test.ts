@@ -103,14 +103,14 @@ describe('Init Command Functionality', () => {
         'OpenPAUL has been successfully initialized.\n\n' +
         formatBold('Created Files:') + '\n' +
         formatList([
-          '.paul/model-config.json - Model configuration',
-          '.paul/state-phase-1.json - Initial state',
+          '.openpaul/model-config.json - Model configuration',
+          '.openpaul/state-phase-1.json - Initial state',
         ])
 
       // Verify structure
       expect(output).toContain('## ✅')
       expect(output).toContain('**Created Files:**')
-      expect(output).toContain('- .paul/model-config.json')
+      expect(output).toContain('- .openpaul/model-config.json')
     })
 
     it('should format warning message for existing directory', () => {
@@ -118,8 +118,8 @@ describe('Init Command Functionality', () => {
         'OpenPAUL has already been initialized.\n\n' +
         formatBold('Options:') + '\n' +
         formatList([
-          'Run `/paul:progress` to check current state',
-          'Run `/paul:init --force` to reinitialize',
+          'Run `/openpaul:progress` to check current state',
+          'Run `/openpaul:init --force` to reinitialize',
         ])
 
       // Verify structure

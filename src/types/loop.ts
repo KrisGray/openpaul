@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 /**
- * Loop Phase - The three stages of the PAUL loop
+ * Loop Phase - The three stages of the OpenPAUL loop
  * 
  * PLAN: Create executable plan with tasks and acceptance criteria
  * APPLY: Execute the approved plan sequentially

@@ -70,7 +70,7 @@ describe('ModelConfigManager', () => {
     it('should throw error when config does not exist and no default created', () => {
       manager = new ModelConfigManager(testDir)
       expect(() => manager.getModel('plan-research')).toThrow(
-        'Model configuration not found.\nRun /paul:init to initialize PAUL and create default configuration.'
+        'Model configuration not found.\nRun /openpaul:init to initialize OpenPAUL and create default configuration.'
       )
     })
     

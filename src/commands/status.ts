@@ -15,7 +15,7 @@ import { join } from 'path'
  * View current project status and loop position
  * 
  * From PLAN.md:
- * - Displays PAUL loop with position markers (◉ ✓ ○)
+ * - Displays OpenPAUL loop with position markers (◉ ✓ ○)
  * - Shows current phase and plan completion status
  * - Shows session info if paused
  * - Detects and warns about stale sessions
@@ -131,8 +131,8 @@ export const openpaulStatus: ToolDefinition = tool({
         output += formatBold('Current timestamp:') + ` ${new Date().toISOString()}\n`
         output += formatBold('File paths:') + '\n'
         output += formatList([
-          `.paul/STATE.md - Project state`,
-          `.paul/ROADMAP.md - Project roadmap`,
+          `.openpaul/STATE.md - Project state`,
+          `.openpaul/ROADMAP.md - Project roadmap`,
         ])
         output += '\n' + formatHeader(3, 'Quick Commands') + '\n'
         output += formatList([
@@ -151,7 +151,7 @@ export const openpaulStatus: ToolDefinition = tool({
         `Failed to get current status: ${errorMessage}\n\n` +
         formatBold('Troubleshooting:') + '\n' +
         formatList([
-          'Ensure .paul/ directory exists and is readable',
+          'Ensure .openpaul/ directory exists and is readable',
           'Check if state files are valid JSON',
           'Try running /openpaul:init if not initialized',
         ])

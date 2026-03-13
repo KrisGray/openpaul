@@ -3,7 +3,7 @@ import type { LoopPhase } from './loop'
 import { LoopPhaseSchema } from './loop'
 
 /**
- * State - Current position in the PAUL loop
+ * State - Current position in the OpenPAUL loop
  * 
  * Per-phase state files (state-phase-N.json) track:
  * - Current loop position (PLAN/APPLY/UNIFY)

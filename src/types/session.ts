@@ -3,10 +3,10 @@ import type { LoopPhase } from './loop'
 import { LoopPhaseSchema } from './loop'
 
 /**
- * Session State - Captures the current state of a PAUL session
+ * Session State - Captures the current state of an OpenPAUL session
  * 
  * Used for pause/resume functionality to enable:
- * - Saving session state with current PAUL loop position and work context
+ * - Saving session state with current OpenPAUL loop position and work context
  * - Loading saved session state from .openpaul/SESSIONS/ directory
  * - Validating session integrity before resuming
  * - File checksums for diff generation between sessions

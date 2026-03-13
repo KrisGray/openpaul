@@ -14,7 +14,7 @@ import type { ExecutionGraph, Plan, Task, TaskDependencies } from '../types/plan
  * /openpaul:plan command
  * 
  * Creates an executable plan with tasks, criteria, and boundaries.
- * Plans are stored in .paul/phases/{phase}-{plan}-PLAN.json
+ * Plans are stored in .openpaul/phases/{phase}-{plan}-PLAN.json
  */
 type PlanArgs = {
   phase: number
@@ -95,9 +95,9 @@ export const openpaulPlan = toolFactory({
       if (!currentPosition) {
         return formatGuidedError({
           title: 'Not Initialized',
-          message: 'PAUL has not been initialized for this project.',
+          message: 'OpenPAUL has not been initialized for this project.',
           context: `Project directory: ${context.directory}`,
-          suggestedFix: 'Run /openpaul:init to create the .paul/ directory and initial state.',
+          suggestedFix: 'Run /openpaul:init to create the .openpaul/ directory and initial state.',
           nextSteps: [
             'Run /openpaul:init',
             'Re-run /openpaul:plan once initialization completes',
@@ -127,11 +127,11 @@ export const openpaulPlan = toolFactory({
         return formatGuidedError({
           title: 'Plan Already Exists',
           message: `Plan ${args.phase}-${planId} already exists.`,
-          context: 'Plan files are stored in .paul/phases/',
+          context: 'Plan files are stored in .openpaul/phases/',
           suggestedFix: 'Use a different plan ID or remove the existing plan file.',
           nextSteps: [
             'Choose a new plan ID (e.g., 02, 03)',
-            'Or delete the existing plan file from .paul/phases/',
+            'Or delete the existing plan file from .openpaul/phases/',
           ],
         })
       }
@@ -206,9 +206,9 @@ export const openpaulPlan = toolFactory({
           title: 'Plan Write Failed',
           message: errorMessage,
           context: `Plan path: ${planPath}`,
-          suggestedFix: 'Check file permissions and ensure the .paul/ directory is writable.',
+          suggestedFix: 'Check file permissions and ensure the .openpaul/ directory is writable.',
           nextSteps: [
-            'Verify .paul/ directory permissions',
+            'Verify .openpaul/ directory permissions',
             'Retry /openpaul:plan after resolving filesystem issues',
           ],
         })
@@ -273,7 +273,7 @@ export const openpaulPlan = toolFactory({
       
       output.push('')
       output.push(formatBold('Status:') + ' ✅ Plan created successfully')
-      output.push(formatBold('Location:') + ` .paul/phases/${planIdLabel}-PLAN.json`)
+      output.push(formatBold('Location:') + ` .openpaul/phases/${planIdLabel}-PLAN.json`)
       output.push('')
       output.push(formatBold('Next action:') + ' Run /openpaul:apply to execute the plan')
       

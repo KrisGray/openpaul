@@ -71,7 +71,7 @@ describe('LoopEnforcer', () => {
         expect((error as Error).message).toContain('Invalid transition')
         expect((error as Error).message).toContain('Current state')
         expect((error as Error).message).toContain('Valid next states')
-        expect((error as Error).message).toContain('Run /paul:unify')
+        expect((error as Error).message).toContain('Run /openpaul:unify')
       }
     })
 
@@ -84,15 +84,15 @@ describe('LoopEnforcer', () => {
   
   describe('getRequiredNextAction', () => {
     it('should return correct action for PLAN', () => {
-      expect(enforcer.getRequiredNextAction('PLAN')).toContain('/paul:apply')
+      expect(enforcer.getRequiredNextAction('PLAN')).toContain('/openpaul:apply')
     })
     
     it('should return correct action for APPLY', () => {
-      expect(enforcer.getRequiredNextAction('APPLY')).toContain('/paul:unify')
+      expect(enforcer.getRequiredNextAction('APPLY')).toContain('/openpaul:unify')
     })
     
     it('should return correct action for UNIFY', () => {
-      expect(enforcer.getRequiredNextAction('UNIFY')).toContain('/paul:plan')
+      expect(enforcer.getRequiredNextAction('UNIFY')).toContain('/openpaul:plan')
     })
   })
   
@@ -132,7 +132,7 @@ describe('LoopEnforcer', () => {
       } catch (error) {
         expect((error as Error).message).toContain('PLAN')
         expect((error as Error).message).toContain('Current state: PLAN')
-        expect((error as Error).message).toContain('Run /paul:apply')
+        expect((error as Error).message).toContain('Run /openpaul:apply')
       }
     })
     
@@ -148,7 +148,7 @@ describe('LoopEnforcer', () => {
       } catch (error) {
         expect((error as Error).message).toContain('APPLY')
         expect((error as Error).message).toContain('Current state: APPLY')
-        expect((error as Error).message).toContain('Run /paul:unify')
+        expect((error as Error).message).toContain('Run /openpaul:unify')
       }
     })
 
@@ -159,7 +159,7 @@ describe('LoopEnforcer', () => {
       } catch (error) {
         expect((error as Error).message).toContain('initial state')
         expect((error as Error).message).toContain('no state')
-        expect((error as Error).message).toContain('Run /paul:plan to initialize PAUL')
+        expect((error as Error).message).toContain('Run /openpaul:plan to initialize OpenPAUL')
       }
     })
   })

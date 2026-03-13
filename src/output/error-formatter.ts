@@ -31,10 +31,10 @@ export interface GuidedErrorParams {
  *   title: 'Invalid State Transition',
  *   message: 'Cannot transition from PLAN to UNIFY',
  *   context: 'Current state: PLAN',
- *   suggestedFix: 'Run /paul:apply to execute the plan first',
+ *   suggestedFix: 'Run /openpaul:apply to execute the plan first',
  *   nextSteps: [
- *     'Check current state with /paul:progress',
- *     'Execute the current plan with /paul:apply'
+ *     'Check current state with /openpaul:progress',
+ *     'Execute the current plan with /openpaul:apply'
  *   ]
  * })
  */
@@ -59,8 +59,8 @@ export function formatGuidedError(params: GuidedErrorParams): string {
   }
   
   output += `### Quick Help\n\n`
-  output += `- Run \`/paul:help\` for command reference\n`
-  output += `- Run \`/paul:progress\` to check current state\n`
+  output += `- Run \`/openpaul:help\` for command reference\n`
+  output += `- Run \`/openpaul:progress\` to check current state\n`
   
   return output
 }

@@ -41,7 +41,7 @@ describe('openpaulPause command - change detection', () => {
         phase: 'PLAN',
         phaseNumber: 2,
       }),
-      getRequiredNextAction: jest.fn().mockReturnValue('Run /paul:apply'),
+      getRequiredNextAction: jest.fn().mockReturnValue('Run /openpaul:apply'),
       loadPhaseState: jest.fn().mockReturnValue({
         currentPlanId: '02',
         completedPlans: [],

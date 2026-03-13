@@ -76,7 +76,7 @@ export const ModelConfigSchema = z.object({
 /**
  * Model Configuration File - Top-level configuration structure
  * 
- * Stored in .paul/model-config.json
+ * Stored in .openpaul/model-config.json
  */
 export interface ModelConfigFile {
   version: '1.0' // Schema version for future migrations
@@ -97,7 +97,7 @@ export const ModelConfigFileSchema = z.object({
 
 /**
  * Create default model configuration
- * Called by /paul:init command
+ * Called by /openpaul:init command
  */
 export function createDefaultModelConfig(): ModelConfigFile {
   return {
