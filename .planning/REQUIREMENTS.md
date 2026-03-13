@@ -112,11 +112,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CI-01 | Phase 11 | Pending |
-| CI-02 | Phase 11 | Pending |
-| CI-03 | Phase 11 | Pending |
-| CI-04 | Phase 11 | Pending |
-| CI-05 | Phase 11 | Pending |
+| CI-01 | Phase 10 | Pending |
+| CI-02 | Phase 10 | Pending |
+| CI-03 | Phase 10 | Pending |
+| CI-04 | Phase 10 | Pending |
+| CI-05 | Phase 10 | Pending |
 | E2E-01 | Phase 11 | Pending |
 | E2E-02 | Phase 11 | Pending |
 | E2E-03 | Phase 11 | Pending |
