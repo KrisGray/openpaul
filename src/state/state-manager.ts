@@ -6,7 +6,7 @@ import type { LoopPhase } from '../types'
 /**
  * State Manager
  * 
- * Manages PAUL state with per-phase organization.
+ * Manages OpenPAUL state with per-phase organization.
  * Implements the decisions from CONTEXT.md:
  * - Per-phase state files (state-phase-N.json)
  * - Plans inline in phase state
@@ -85,9 +85,9 @@ export class StateManager {
    */
   getRequiredNextAction(currentPhase: LoopPhase): string {
     const actions: Record<LoopPhase, string> = {
-      PLAN: 'Run /paul:apply to execute the plan',
-      APPLY: 'Run /paul:unify to close the loop',
-      UNIFY: 'Run /paul:plan to start a new loop',
+      PLAN: 'Run /openpaul:apply to execute the plan',
+      APPLY: 'Run /openpaul:unify to close the loop',
+      UNIFY: 'Run /openpaul:plan to start a new loop',
     }
     return actions[currentPhase]
   }

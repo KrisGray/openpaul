@@ -5,7 +5,7 @@ import { RoadmapManager } from '../roadmap/roadmap-manager'
 import { formatHeader, formatBold, formatList } from '../output/formatter'
 
 /**
- * /paul:remove-phase Command
+ * /openpaul:remove-phase Command
  * 
  * Remove a phase from the roadmap with automatic renumbering of subsequent phases.
  * 
@@ -34,7 +34,7 @@ export const openpaulRemovePhase = tool({
           formatBold('What to do:') + '\n' +
           formatList([
             'Run `/openpaul:init` to initialize OpenPAUL',
-            'Or create a ROADMAP.md file in .paul/ or .openpaul/ directory',
+            'Or create a ROADMAP.md file in the .openpaul/ directory',
           ])
       }
       

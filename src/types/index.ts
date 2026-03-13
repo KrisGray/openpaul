@@ -1,5 +1,5 @@
 /**
- * PAUL Framework Type Exports
+ * OpenPAUL Framework Type Exports
  * 
  * This file exports all types for external use.
  * Users can import from '@krisgray/openpaul' and get:

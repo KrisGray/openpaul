@@ -146,8 +146,8 @@ describe('Output Formatting Utilities', () => {
       expect(result).toContain('### Next Steps')
       expect(result).toContain('1. Step 1')
       expect(result).toContain('2. Step 2')
-      expect(result).toContain('/paul:help')
-      expect(result).toContain('/paul:progress')
+      expect(result).toContain('/openpaul:help')
+      expect(result).toContain('/openpaul:progress')
     })
 
     it('should format error without context', () => {

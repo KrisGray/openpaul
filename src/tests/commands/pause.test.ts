@@ -1,7 +1,7 @@
 /**
  * Pause Command Tests
  * 
- * Tests for /paul:pause command functionality
+ * Tests for /openpaul:pause command functionality
  */
 
 import { openpaulPause } from '../../commands/pause'

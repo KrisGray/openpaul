@@ -108,25 +108,25 @@ describe('Help Command Functionality', () => {
     it('should format all commands view with proper structure', () => {
       const output = formatHeader(1, '📚 OpenPAUL Command Reference') + '\n\n' +
         formatHeader(2, 'Core Commands') + '\n' +
-        '- **/paul:init** — Initialize OpenPAUL\n' +
-        '  - Usage: `/paul:init [--force]`\n\n' +
-        formatBold('Tip:') + ' Run `/paul:help {command}` for detailed usage.'
+        '- **/openpaul:init** — Initialize OpenPAUL\n' +
+        '  - Usage: `/openpaul:init [--force]`\n\n' +
+        formatBold('Tip:') + ' Run `/openpaul:help {command}` for detailed usage.'
 
       expect(output).toContain('📚')
       expect(output).toContain('OpenPAUL Command Reference')
       expect(output).toContain('Core Commands')
-      expect(output).toContain('/paul:init')
+      expect(output).toContain('/openpaul:init')
       expect(output).toContain('Usage:')
     })
 
     it('should format specific command help with proper structure', () => {
-      const output = formatHeader(1, '📖 Command: /paul:init') + '\n\n' +
+      const output = formatHeader(1, '📖 Command: /openpaul:init') + '\n\n' +
         formatBold('Description:') + ' Initialize OpenPAUL in the current project\n' +
-        formatBold('Usage:') + ' `/paul:init [--force]`\n\n' +
-        formatBold('Tip:') + ' Run `/paul:help` to see all commands.'
+        formatBold('Usage:') + ' `/openpaul:init [--force]`\n\n' +
+        formatBold('Tip:') + ' Run `/openpaul:help` to see all commands.'
 
       expect(output).toContain('📖')
-      expect(output).toContain('Command: /paul:init')
+      expect(output).toContain('Command: /openpaul:init')
       expect(output).toContain('Description:')
       expect(output).toContain('Usage:')
       expect(output).toContain('Initialize OpenPAUL')
@@ -137,7 +137,7 @@ describe('Help Command Functionality', () => {
         'Unknown command: nonexistent\n\n' +
         formatBold('Available commands:') + '\n' +
         '- init\n- plan\n- apply\n\n' +
-        'Run `/paul:help` to see all commands'
+        'Run `/openpaul:help` to see all commands'
 
       expect(output).toContain('❓')
       expect(output).toContain('Unknown Command')
@@ -149,22 +149,22 @@ describe('Help Command Functionality', () => {
   describe('usage examples', () => {
     it('should include usage example for each command', () => {
       const usages = {
-        init: '/paul:init [--force]',
-        plan: '/paul:plan --phase N --plan NN --tasks [...]',
-        apply: '/paul:apply [--dry-run] [--task N]',
-        progress: '/paul:progress [--verbose]',
-        help: '/paul:help [command]',
+        init: '/openpaul:init [--force]',
+        plan: '/openpaul:plan --phase N --plan NN --tasks [...]',
+        apply: '/openpaul:apply [--dry-run] [--task N]',
+        progress: '/openpaul:progress [--verbose]',
+        help: '/openpaul:help [command]',
       }
 
       Object.entries(usages).forEach(([cmd, usage]) => {
-        expect(usage).toContain('/paul:' + cmd)
+        expect(usage).toContain('/openpaul:' + cmd)
       })
     })
 
     it('should show phase information when available', () => {
       const planCommand = {
         description: 'Create an executable plan with tasks',
-        usage: '/paul:plan --phase N --plan NN --tasks [...]',
+        usage: '/openpaul:plan --phase N --plan NN --tasks [...]',
         phase: '2',
       }
 

@@ -2,15 +2,15 @@ import { z } from 'zod'
 import type { LoopPhase } from './loop'
 
 /**
- * Command - User command to interact with PAUL
+ * Command - User command to interact with OpenPAUL
  * 
  * Commands include:
- * - /paul:init - Initialize PAUL in project
- * - /paul:plan - Create executable plan
- * - /paul:apply - Execute approved plan
- * - /paul:unify - Close the loop
- * - /paul:progress - View current status
- * - /paul:help - Command reference
+ * - /openpaul:init - Initialize OpenPAUL in project
+ * - /openpaul:plan - Create executable plan
+ * - /openpaul:apply - Execute approved plan
+ * - /openpaul:unify - Close the loop
+ * - /openpaul:progress - View current status
+ * - /openpaul:help - Command reference
  * - And 20 more commands from roadmap
  */
 export type CommandType =

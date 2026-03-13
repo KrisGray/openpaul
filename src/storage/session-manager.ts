@@ -7,7 +7,7 @@ import { SessionStateSchema } from '../types/session'
 /**
  * Session Manager
  * 
- * Manages PAUL session state with file-based persistence.
+ * Manages OpenPAUL session state with file-based persistence.
  * Sessions are stored in .openpaul/SESSIONS/ directory with atomic writes.
  * Current session reference is stored in .openpaul/CURRENT-SESSION.
  */

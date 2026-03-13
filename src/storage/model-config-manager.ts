@@ -27,7 +27,7 @@ export class ModelConfigManager {
     if (!config) {
       throw new Error(
         'Model configuration not found.\n' +
-        'Run /paul:init to initialize PAUL and create default configuration.'
+        'Run /openpaul:init to initialize OpenPAUL and create default configuration.'
       )
     }
     

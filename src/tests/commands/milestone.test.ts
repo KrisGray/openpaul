@@ -59,7 +59,7 @@ describe('Milestone Command', () => {
 
   const mockMilestone: Milestone = {
     name: 'v1.1 Full Command Implementation',
-    scope: 'Implement all remaining PAUL commands for complete structured development workflow',
+    scope: 'Implement all remaining OpenPAUL commands for complete structured development workflow',
     phases: [3, 4, 5, 6],
     theme: 'Full Feature Set',
     status: 'planned',
@@ -101,7 +101,7 @@ describe('Milestone Command', () => {
       const result = await openpaulMilestone.execute(
         {
           name: 'v1.1 Full Command Implementation',
-          scope: 'Implement all remaining PAUL commands',
+          scope: 'Implement all remaining OpenPAUL commands',
           phases: '3,4,5,6',
           theme: undefined,
           updateState: undefined,
@@ -111,7 +111,7 @@ describe('Milestone Command', () => {
 
       expect(mockMilestoneManager.createMilestone).toHaveBeenCalledWith(
         'v1.1 Full Command Implementation',
-        'Implement all remaining PAUL commands',
+        'Implement all remaining OpenPAUL commands',
         [3, 4, 5, 6],
         undefined
       )

@@ -2,7 +2,7 @@ import { z } from 'zod'
 import type { LoopPhase } from './loop'
 
 /**
- * Sub-stage - Three stages per PAUL loop phase
+ * Sub-stage - Three stages per OpenPAUL loop phase
  * 
  * PLAN phases: plan-research, plan-blueprint, plan-critique
  * APPLY phases: apply-slicing, apply-codegen, apply-debug
