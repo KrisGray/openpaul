@@ -113,4 +113,30 @@ describe('Branding Consistency', () => {
     }
     return files
   }
+
+  describe('Root documentation files', () => {
+    it('should have no PAUL branding in root documentation', () => {
+      const rootDir = join(srcDir, '..')
+      const rootDocFiles = [
+        join(rootDir, 'OPENPAUL-VS-GSD.md')
+      ]
+      
+      for (const file of rootDocFiles) {
+        const content = readFileSync(file, 'utf-8')
+        // Check for PAUL (not OpenPAUL) references
+        const paulMatches = content.match(/\bPAUL\b/g)
+        if (paulMatches) {
+          throw new Error(`Found ${paulMatches.length} PAUL reference(s) in ${file} (should be OpenPAUL)`)
+        }
+        // Check for /paul: command references
+        if (content.includes('/paul:')) {
+          throw new Error(`Found /paul: command reference in ${file} (should be /openpaul:)`)
+        }
+        // Check for .paul/ path references
+        if (content.includes('.paul/')) {
+          throw new Error(`Found .paul/ path reference in ${file} (should be .openpaul/)`)
+        }
+      }
+    })
+  })
 })
