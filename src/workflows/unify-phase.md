@@ -15,14 +15,14 @@ Next phase: PLAN (next plan or next phase)
 </loop_context>
 
 <required_reading>
-@.paul/STATE.md
-@.paul/phases/{phase}/{plan}-PLAN.md
+@.openpaul/STATE.md
+@.openpaul/phases/{phase}/{plan}-PLAN.md
 </required_reading>
 
 <references>
-@~/.claude/paul-framework/references/loop-phases.md
-@~/.claude/paul-framework/templates/SUMMARY.md
-@~/.claude/paul-framework/workflows/transition-phase.md (loaded when last plan in phase)
+@~/.claude/openpaul-framework/references/loop-phases.md
+@~/.claude/openpaul-framework/templates/SUMMARY.md
+@~/.claude/openpaul-framework/workflows/transition-phase.md (loaded when last plan in phase)
 </references>
 
 <process>
@@ -55,9 +55,9 @@ Next phase: PLAN (next plan or next phase)
 <step name="audit_skill_invocations">
 **Check specialized workflow usage (if configured):**
 
-1. Check if .paul/SPECIAL-FLOWS.md exists:
+1. Check if .openpaul/SPECIAL-FLOWS.md exists:
    ```bash
-   ls .paul/SPECIAL-FLOWS.md 2>/dev/null
+   ls .openpaul/SPECIAL-FLOWS.md 2>/dev/null
    ```
 
 2. If not exists: Skip this step entirely
@@ -85,7 +85,7 @@ Next phase: PLAN (next plan or next phase)
 </step>
 
 <step name="create_summary">
-1. Create SUMMARY.md at `.paul/phases/{phase}/{plan}-SUMMARY.md`
+1. Create SUMMARY.md at `.openpaul/phases/{phase}/{plan}-SUMMARY.md`
 2. Include:
 
    **Frontmatter:**
@@ -165,13 +165,13 @@ Continue to next plan?
 ════════════════════════════════════════
 ```
 
-**Accept:** "1", "yes", "continue" → run `/paul:plan` for next plan in same phase
+**Accept:** "1", "yes", "continue" → run `/openpaul:plan` for next plan in same phase
 </step>
 
 <step name="execute_transition" priority="required" gate="blocking">
 **If last plan in phase — TRANSITION IS MANDATORY:**
 
-⚠️ **NEVER skip this step. This is what makes PAUL a system, not random loops.**
+⚠️ **NEVER skip this step. This is what makes OpenPAUL a system, not random loops.**
 
 1. Announce clearly:
    ```
@@ -180,7 +180,7 @@ Continue to next plan?
    ════════════════════════════════════════
    ```
 
-2. **MUST read and execute:** @~/.claude/paul-framework/workflows/transition-phase.md
+2. **MUST read and execute:** @~/.claude/openpaul-framework/workflows/transition-phase.md
 
 3. Transition handles (do not skip any):
    - Evolve PROJECT.md (requirements validated → shipped)
@@ -191,13 +191,13 @@ Continue to next plan?
 
 4. **Only after transition completes** → offer next phase routing
 
-**Anti-pattern:** Closing UNIFY and immediately offering `/paul:plan` for next phase WITHOUT running transition. This breaks system cohesion and skips git commits.
+**Anti-pattern:** Closing UNIFY and immediately offering `/openpaul:plan` for next phase WITHOUT running transition. This breaks system cohesion and skips git commits.
 </step>
 
 </process>
 
 <output>
-- SUMMARY.md at `.paul/phases/{phase}/{plan}-SUMMARY.md`
+- SUMMARY.md at `.openpaul/phases/{phase}/{plan}-SUMMARY.md`
 - Updated STATE.md
 - Updated ROADMAP.md (if phase complete)
 </output>

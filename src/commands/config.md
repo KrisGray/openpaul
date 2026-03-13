@@ -1,5 +1,5 @@
 <objective>
-Manage PAUL project configuration and integrations. Create or update .paul/config.md at any point in the project lifecycle.
+Manage OpenPAUL project configuration and integrations. Create or update .openpaul/config.md at any point in the project lifecycle.
 </objective>
 
 <when_to_use>
@@ -14,7 +14,7 @@ Manage PAUL project configuration and integrations. Create or update .paul/confi
 **Step 1: Check for existing config**
 
 ```bash
-ls .paul/config.md 2>/dev/null
+ls .openpaul/config.md 2>/dev/null
 ```
 
 **If config exists:**
@@ -72,7 +72,7 @@ Current: [enabled/disabled/not configured]
 
 **Step 3: Write config**
 
-Create or update `.paul/config.md`:
+Create or update `.openpaul/config.md`:
 
 ```markdown
 # Project Config
@@ -120,11 +120,11 @@ CONFIG UPDATED
 Integrations:
   SonarQube: [enabled/disabled]
 
-Config saved to: .paul/config.md
+Config saved to: .openpaul/config.md
 
 ────────────────────────────────────────
 [If SonarQube just enabled:]
-▶ NEXT: /paul:quality-gate
+▶ NEXT: /openpaul:quality-gate
   Run your first code quality scan.
 
 [Otherwise:]
@@ -135,7 +135,7 @@ Configuration complete.
 </process>
 
 <output>
-- `.paul/config.md` created or updated
+- `.openpaul/config.md` created or updated
 - Integration status changed as requested
 - Clear next steps if applicable
 </output>

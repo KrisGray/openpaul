@@ -1,41 +1,41 @@
 ---
-name: paul:init
-description: Initialize PAUL in a project with conversational setup
+name: openpaul:init
+description: Initialize OpenPAUL in a project with conversational setup
 argument-hint:
 allowed-tools: [Read, Write, Bash, Glob, AskUserQuestion]
 ---
 
 <objective>
-Initialize the `.paul/` structure in a project directory through conversational setup.
+Initialize the `.openpaul/` structure in a project directory through conversational setup.
 
-**When to use:** Starting a new project with PAUL, or adding PAUL to an existing codebase.
+**When to use:** Starting a new project with OpenPAUL, or adding OpenPAUL to an existing codebase.
 
 Creates PROJECT.md, STATE.md, and ROADMAP.md populated from conversation - user does not manually edit templates.
 </objective>
 
 <execution_context>
-@~/.claude/paul-framework/workflows/init-project.md
-@~/.claude/paul-framework/templates/PROJECT.md
-@~/.claude/paul-framework/templates/STATE.md
-@~/.claude/paul-framework/templates/ROADMAP.md
+@~/.claude/openpaul-framework/workflows/init-project.md
+@~/.claude/openpaul-framework/templates/PROJECT.md
+@~/.claude/openpaul-framework/templates/STATE.md
+@~/.claude/openpaul-framework/templates/ROADMAP.md
 </execution_context>
 
 <context>
-Current directory state (check for existing .paul/)
+Current directory state (check for existing .openpaul/)
 </context>
 
 <process>
-**Follow workflow: @~/.claude/paul-framework/workflows/init-project.md**
+**Follow workflow: @~/.claude/openpaul-framework/workflows/init-project.md**
 
 The workflow implements conversational setup:
 
-1. Check for existing .paul/ (route to resume if exists)
+1. Check for existing .openpaul/ (route to resume if exists)
 2. Create directory structure
 3. Ask: "What's the core value this project delivers?"
 4. Ask: "What are you building?"
 5. Confirm project name (infer from directory)
 6. Populate PROJECT.md, ROADMAP.md, STATE.md from answers
-7. Display ONE next action: `/paul:plan`
+7. Display ONE next action: `/openpaul:plan`
 
 **Key behaviors:**
 - Ask ONE question at a time
@@ -46,7 +46,7 @@ The workflow implements conversational setup:
 </process>
 
 <success_criteria>
-- [ ] .paul/ directory created
+- [ ] .openpaul/ directory created
 - [ ] PROJECT.md populated with core value and description from conversation
 - [ ] STATE.md initialized with correct loop position
 - [ ] ROADMAP.md initialized (phases TBD until planning)

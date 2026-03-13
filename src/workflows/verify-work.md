@@ -21,7 +21,7 @@ If no arguments:
 - Find most recently modified SUMMARY.md
 
 ```bash
-find .paul/phases -name "*SUMMARY.md" -type f -exec ls -lt {} + | head -5
+find .openpaul/phases -name "*SUMMARY.md" -type f -exec ls -lt {} + | head -5
 ```
 
 Read the SUMMARY.md to understand what was built.
@@ -131,7 +131,7 @@ For each failed/partial test, gather:
 
 If any issues found:
 
-1. Create `.paul/phases/XX-name/{phase}-{plan}-UAT.md` if doesn't exist
+1. Create `.openpaul/phases/XX-name/{phase}-{plan}-UAT.md` if doesn't exist
 2. Use template from `@src/templates/UAT-ISSUES.md`
 3. Add each issue with UAT-NNN format:
 
@@ -147,7 +147,7 @@ If any issues found:
 **Actual:** [What actually happened]
 ```
 
-**Note:** Issues go to phase-scoped UAT file, NOT global `.paul/ISSUES.md`.
+**Note:** Issues go to phase-scoped UAT file, NOT global `.openpaul/ISSUES.md`.
 </step>
 
 <step name="summarize">

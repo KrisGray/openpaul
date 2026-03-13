@@ -1,5 +1,5 @@
 ---
-name: paul:apply
+name: openpaul:apply
 description: Execute an approved PLAN
 argument-hint: "[plan-path]"
 allowed-tools: [Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion]
@@ -14,14 +14,14 @@ Executes tasks in sequence, pauses at checkpoints for user input, reports comple
 </objective>
 
 <execution_context>
-@~/.claude/paul-framework/workflows/apply-phase.md
-@~/.claude/paul-framework/references/checkpoints.md
+@~/.claude/openpaul-framework/workflows/apply-phase.md
+@~/.claude/openpaul-framework/references/checkpoints.md
 </execution_context>
 
 <context>
 Plan path: $ARGUMENTS
 
-@.paul/STATE.md
+@.openpaul/STATE.md
 </context>
 
 <process>
@@ -35,7 +35,7 @@ Plan path: $ARGUMENTS
 </step>
 
 <step name="execute">
-Follow workflow: @~/.claude/paul-framework/workflows/apply-phase.md
+Follow workflow: @~/.claude/openpaul-framework/workflows/apply-phase.md
 
 Execute tasks sequentially. For each task:
 - Read task definition
@@ -68,7 +68,7 @@ When a checkpoint task is reached:
 
 <step name="complete">
 After all tasks complete:
-- Report: "APPLY complete. Run /paul:unify to close loop."
+- Report: "APPLY complete. Run /openpaul:unify to close loop."
 - Show files modified
 - Show SUMMARY path to create
 </step>
@@ -79,5 +79,5 @@ After all tasks complete:
 - [ ] All tasks executed
 - [ ] All checkpoints handled
 - [ ] User informed of completion
-- [ ] Next action clear (run /paul:unify)
+- [ ] Next action clear (run /openpaul:unify)
 </success_criteria>

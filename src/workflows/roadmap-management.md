@@ -19,8 +19,8 @@ Can be invoked at any time during a milestone.
 </loop_context>
 
 <required_reading>
-@.paul/ROADMAP.md
-@.paul/STATE.md
+@.openpaul/ROADMAP.md
+@.openpaul/STATE.md
 </required_reading>
 
 <references>
@@ -39,7 +39,7 @@ Can be invoked at any time during a milestone.
 3. Calculate next phase number = highest + 1
 
 **If no active milestone:**
-- Error: "No active milestone. Run /paul:milestone first."
+- Error: "No active milestone. Run /openpaul:milestone first."
 - Exit workflow
 </step>
 
@@ -81,7 +81,7 @@ Update ROADMAP.md:
    ### Phase {next_number}: {phase_name}
 
    Focus: {phase_description}
-   Plans: TBD (defined during /paul:plan)
+    Plans: TBD (defined during /openpaul:plan)
    Status: Not started
    ```
 
@@ -92,7 +92,7 @@ Update ROADMAP.md:
 Create phase directory:
 
 ```bash
-mkdir -p .paul/phases/{NN}-{phase-slug}
+mkdir -p .openpaul/phases/{NN}-{phase-slug}
 ```
 
 Where:
@@ -123,7 +123,7 @@ PHASE ADDED
 ════════════════════════════════════════
 
 Phase {number}: {name}
-Directory: .paul/phases/{slug}/
+Directory: .openpaul/phases/{slug}/
 
 {milestone_name} now has {total} phases.
 
@@ -176,7 +176,7 @@ Status: Not started
 
 This will:
 - Remove from ROADMAP.md
-- Delete .paul/phases/{slug}/ (if empty)
+- Delete .openpaul/phases/{slug}/ (if empty)
 - Renumber subsequent phases
 
 [1] Yes, remove | [2] Cancel
@@ -209,11 +209,11 @@ Update ROADMAP.md:
 Handle phase directory:
 
 ```bash
-rmdir .paul/phases/{NN}-{slug} 2>/dev/null
+rmdir .openpaul/phases/{NN}-{slug} 2>/dev/null
 ```
 
 **If directory not empty:**
-- Warn: "Directory not empty — preserved at .paul/phases/{slug}/"
+- Warn: "Directory not empty — preserved at .openpaul/phases/{slug}/"
 - User can manually delete if desired
 
 **If directory empty or doesn't exist:**
@@ -226,8 +226,8 @@ rmdir .paul/phases/{NN}-{slug} 2>/dev/null
 Renumber phase directories to match ROADMAP.md:
 
 ```bash
-mv .paul/phases/08-name .paul/phases/07-name
-mv .paul/phases/09-name .paul/phases/08-name
+mv .openpaul/phases/08-name .openpaul/phases/07-name
+mv .openpaul/phases/09-name .openpaul/phases/08-name
 ```
 
 **Note:** This is why we only allow removing "Not started" phases — they have no artifacts yet.
@@ -318,7 +318,7 @@ STATE.md updated ✓
 
 <error_handling>
 **No active milestone:**
-- Route to /paul:milestone or /paul:init
+- Route to /openpaul:milestone or /openpaul:init
 
 **Phase directory not empty:**
 - Preserve directory, warn user

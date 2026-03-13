@@ -1,10 +1,10 @@
 ---
-name: paul:help
-description: Show available PAUL commands and usage guide
+name: openpaul:help
+description: Show available OpenPAUL commands and usage guide
 ---
 
 <objective>
-Display the complete PAUL command reference.
+Display the complete OpenPAUL command reference.
 
 Output ONLY the reference content below. Do NOT add:
 
@@ -15,9 +15,9 @@ Output ONLY the reference content below. Do NOT add:
 </objective>
 
 <reference>
-# PAUL Command Reference
+# OpenPAUL Command Reference
 
-**PAUL** (Plan-Apply-Unify Loop) is a structured AI-assisted development framework for Claude Code.
+**OpenPAUL** (Plan-Apply-Unify Loop) is a structured AI-assisted development framework for OpenCode.
 
 ## The Loop
 
@@ -36,10 +36,10 @@ Every unit of work follows this cycle:
 
 ## Quick Start
 
-1. `/paul:init` - Initialize PAUL in your project
-2. `/paul:plan` - Create a plan for your work
-3. `/paul:apply` - Execute the approved plan
-4. `/paul:unify` - Close the loop with summary
+1. `/openpaul:init` - Initialize OpenPAUL in your project
+2. `/openpaul:plan` - Create a plan for your work
+3. `/openpaul:apply` - Execute the approved plan
+4. `/openpaul:unify` - Close the loop with summary
 
 ## Commands Overview
 
@@ -58,19 +58,19 @@ Every unit of work follows this cycle:
 
 ## Core Loop Commands
 
-### `/paul:init`
-Initialize PAUL in a project.
+### `/openpaul:init`
+Initialize OpenPAUL in a project.
 
-- Creates `.paul/` directory structure
+- Creates `.openpaul/` directory structure
 - Creates PROJECT.md, STATE.md, ROADMAP.md
 - Prompts for project context and phases
 - Optionally configures integrations (SonarQube, etc.)
 
-Usage: `/paul:init`
+Usage: `/openpaul:init`
 
 ---
 
-### `/paul:plan [phase]`
+### `/openpaul:plan [phase]`
 Enter PLAN phase - create an executable plan.
 
 - Reads current state from STATE.md
@@ -78,12 +78,12 @@ Enter PLAN phase - create an executable plan.
 - Populates skills section from SPECIAL-FLOWS.md (if configured)
 - Updates loop position
 
-Usage: `/paul:plan` (auto-detects next phase)
-Usage: `/paul:plan 3` (specific phase)
+Usage: `/openpaul:plan` (auto-detects next phase)
+Usage: `/openpaul:plan 3` (specific phase)
 
 ---
 
-### `/paul:apply [plan-path]`
+### `/openpaul:apply [plan-path]`
 Execute an approved PLAN.md file.
 
 - **Blocks if required skills not loaded** (from SPECIAL-FLOWS.md)
@@ -92,12 +92,12 @@ Execute an approved PLAN.md file.
 - Handles checkpoints (decision, human-verify, human-action)
 - Reports completion and prompts for UNIFY
 
-Usage: `/paul:apply`
-Usage: `/paul:apply .paul/phases/01-foundation/01-01-PLAN.md`
+Usage: `/openpaul:apply`
+Usage: `/openpaul:apply .openpaul/phases/01-foundation/01-01-PLAN.md`
 
 ---
 
-### `/paul:unify [plan-path]`
+### `/openpaul:unify [plan-path]`
 Reconcile plan vs actual and close the loop.
 
 - Creates SUMMARY.md documenting what was built
@@ -106,40 +106,40 @@ Reconcile plan vs actual and close the loop.
 - Updates STATE.md with loop closure
 - **Required** - never skip this step
 
-Usage: `/paul:unify`
-Usage: `/paul:unify .paul/phases/01-foundation/01-01-PLAN.md`
+Usage: `/openpaul:unify`
+Usage: `/openpaul:unify .openpaul/phases/01-foundation/01-01-PLAN.md`
 
 ---
 
-### `/paul:help`
+### `/openpaul:help`
 Show this command reference.
 
-Usage: `/paul:help`
+Usage: `/openpaul:help`
 
 ---
 
-### `/paul:status` *(deprecated)*
-> Use `/paul:progress` instead.
+### `/openpaul:status` *(deprecated)*
+> Use `/openpaul:progress` instead.
 
-Shows current loop position. Deprecated in favor of `/paul:progress` which provides better routing.
+Shows current loop position. Deprecated in favor of `/openpaul:progress` which provides better routing.
 
 ---
 
 ## Session Commands
 
-### `/paul:pause [reason]`
+### `/openpaul:pause [reason]`
 Create handoff file and prepare for session break.
 
 - Creates HANDOFF.md with complete context
 - Updates STATE.md session continuity section
 - Designed for context limits or multi-session work
 
-Usage: `/paul:pause`
-Usage: `/paul:pause "switching to other project"`
+Usage: `/openpaul:pause`
+Usage: `/openpaul:pause "switching to other project"`
 
 ---
 
-### `/paul:resume [handoff-path]`
+### `/openpaul:resume [handoff-path]`
 Restore context from handoff and continue work.
 
 - Reads STATE.md and any HANDOFF files
@@ -147,12 +147,12 @@ Restore context from handoff and continue work.
 - Suggests exactly ONE next action
 - Archives consumed handoffs
 
-Usage: `/paul:resume`
-Usage: `/paul:resume .paul/HANDOFF-context.md`
+Usage: `/openpaul:resume`
+Usage: `/openpaul:resume .openpaul/HANDOFF-context.md`
 
 ---
 
-### `/paul:progress [context]`
+### `/openpaul:progress [context]`
 Smart status with routing - suggests ONE next action.
 
 - Shows milestone and phase progress visually
@@ -161,61 +161,61 @@ Smart status with routing - suggests ONE next action.
 - Accepts optional context to tailor suggestion
 - Warns about context limits
 
-Usage: `/paul:progress`
-Usage: `/paul:progress "I only have 30 minutes"`
+Usage: `/openpaul:progress`
+Usage: `/openpaul:progress "I only have 30 minutes"`
 
 ---
 
-### `/paul:handoff [context]`
+### `/openpaul:handoff [context]`
 Generate comprehensive session handoff document.
 
 - Creates detailed handoff for complex session breaks
 - Captures decisions, progress, blockers, next steps
-- More thorough than `/paul:pause`
+- More thorough than `/openpaul:pause`
 
-Usage: `/paul:handoff`
-Usage: `/paul:handoff "phase10-audit"`
+Usage: `/openpaul:handoff`
+Usage: `/openpaul:handoff "phase10-audit"`
 
 ---
 
 ## Roadmap Commands
 
-### `/paul:add-phase <description>`
+### `/openpaul:add-phase <description>`
 Append a new phase to the roadmap.
 
 - Adds phase to end of ROADMAP.md
 - Updates phase numbering
 - Records in STATE.md decisions
 
-Usage: `/paul:add-phase "API Authentication Layer"`
+Usage: `/openpaul:add-phase "API Authentication Layer"`
 
 ---
 
-### `/paul:remove-phase <number>`
+### `/openpaul:remove-phase <number>`
 Remove a future (not started) phase from roadmap.
 
 - Cannot remove completed or in-progress phases
 - Renumbers subsequent phases
 - Updates ROADMAP.md
 
-Usage: `/paul:remove-phase 5`
+Usage: `/openpaul:remove-phase 5`
 
 ---
 
 ## Milestone Commands
 
-### `/paul:milestone <name>`
+### `/openpaul:milestone <name>`
 Create a new milestone with phases.
 
 - Guides through milestone definition
 - Creates phase structure
 - Updates ROADMAP.md with milestone grouping
 
-Usage: `/paul:milestone "v2.0 API Redesign"`
+Usage: `/openpaul:milestone "v2.0 API Redesign"`
 
 ---
 
-### `/paul:complete-milestone [version]`
+### `/openpaul:complete-milestone [version]`
 Archive milestone, tag, and reorganize roadmap.
 
 - Verifies all phases complete
@@ -223,72 +223,72 @@ Archive milestone, tag, and reorganize roadmap.
 - Archives milestone to MILESTONES.md
 - Evolves PROJECT.md for next milestone
 
-Usage: `/paul:complete-milestone`
-Usage: `/paul:complete-milestone v0.3`
+Usage: `/openpaul:complete-milestone`
+Usage: `/openpaul:complete-milestone v0.3`
 
 ---
 
-### `/paul:discuss-milestone`
+### `/openpaul:discuss-milestone`
 Explore and articulate vision before starting a milestone.
 
 - Conversational exploration of goals
 - Creates milestone context document
-- Prepares for `/paul:milestone`
+- Prepares for `/openpaul:milestone`
 
-Usage: `/paul:discuss-milestone`
+Usage: `/openpaul:discuss-milestone`
 
 ---
 
 ## Pre-Planning Commands
 
-### `/paul:discuss <phase>`
+### `/openpaul:discuss <phase>`
 Articulate vision and explore approach before planning.
 
 - Conversational discussion of phase goals
 - Creates CONTEXT.md capturing vision
-- Prepares for `/paul:plan`
+- Prepares for `/openpaul:plan`
 
-Usage: `/paul:discuss 3`
-Usage: `/paul:discuss "authentication layer"`
+Usage: `/openpaul:discuss 3`
+Usage: `/openpaul:discuss "authentication layer"`
 
 ---
 
-### `/paul:assumptions <phase>`
+### `/openpaul:assumptions <phase>`
 Surface Claude's assumptions about a phase before planning.
 
 - Shows what Claude would do if given free rein
 - Identifies gaps in understanding
 - Prevents misaligned planning
 
-Usage: `/paul:assumptions 3`
+Usage: `/openpaul:assumptions 3`
 
 ---
 
-### `/paul:discover <topic>`
+### `/openpaul:discover <topic>`
 Research technical options before planning a phase.
 
 - Explores codebase for relevant patterns
 - Documents findings for planning reference
 - Lightweight alternative to full research
 
-Usage: `/paul:discover "authentication patterns"`
+Usage: `/openpaul:discover "authentication patterns"`
 
 ---
 
-### `/paul:consider-issues [source]`
+### `/openpaul:consider-issues [source]`
 Review deferred issues with codebase context, triage and route.
 
 - Reads deferred issues from STATE.md or specified source
 - Analyzes with current codebase context
 - Suggests routing: fix now, defer, or close
 
-Usage: `/paul:consider-issues`
+Usage: `/openpaul:consider-issues`
 
 ---
 
 ## Research Commands
 
-### `/paul:research <topic>`
+### `/openpaul:research <topic>`
 Deploy research agents for documentation/web search.
 
 - Spawns subagents for parallel research
@@ -296,84 +296,84 @@ Deploy research agents for documentation/web search.
 - Creates RESEARCH.md with findings
 - Main session vets and reviews results
 
-Usage: `/paul:research "JWT best practices 2026"`
+Usage: `/openpaul:research "JWT best practices 2026"`
 
 ---
 
-### `/paul:research-phase <number>`
+### `/openpaul:research-phase <number>`
 Research unknowns for a phase using subagents.
 
 - Identifies unknowns in phase scope
 - Deploys research agents
 - Synthesizes findings for planning
 
-Usage: `/paul:research-phase 4`
+Usage: `/openpaul:research-phase 4`
 
 ---
 
 ## Specialized Commands
 
-### `/paul:flows`
+### `/openpaul:flows`
 Configure specialized workflow integrations.
 
 - Creates/updates SPECIAL-FLOWS.md
 - Defines required skills per work type
 - Skills are enforced at APPLY time
 
-Usage: `/paul:flows`
+Usage: `/openpaul:flows`
 
 ---
 
-### `/paul:config`
-View or modify PAUL configuration.
+### `/openpaul:config`
+View or modify OpenPAUL configuration.
 
 - Shows current config.md settings
 - Allows toggling integrations
 - Manages project-level settings
 
-Usage: `/paul:config`
+Usage: `/openpaul:config`
 
 ---
 
-### `/paul:map-codebase`
+### `/openpaul:map-codebase`
 Generate codebase map for context.
 
 - Creates structured overview of project
 - Identifies key files and patterns
 - Useful for research and planning
 
-Usage: `/paul:map-codebase`
+Usage: `/openpaul:map-codebase`
 
 ---
 
 ## Quality Commands
 
-### `/paul:verify`
+### `/openpaul:verify`
 Guide manual user acceptance testing of recently built features.
 
 - Generates verification checklist from SUMMARY.md
 - Guides through manual testing
 - Records verification results
 
-Usage: `/paul:verify`
+Usage: `/openpaul:verify`
 
 ---
 
-### `/paul:plan-fix`
+### `/openpaul:plan-fix`
 Plan fixes for UAT issues from verify.
 
 - Reads issues identified during verify
 - Creates targeted fix plan
 - Smaller scope than full phase plan
 
-Usage: `/paul:plan-fix`
+Usage: `/openpaul:plan-fix`
 
 ---
 
 ## Files & Structure
 
 ```
-.paul/
+.openpaul/
 ├── PROJECT.md           # Project context and value prop
 ├── ROADMAP.md           # Phase breakdown and milestones
 ├── STATE.md             # Loop position and session state
@@ -441,42 +441,42 @@ Completion checks
 
 **Starting a new project:**
 ```
-/paul:init
-/paul:plan
+/openpaul:init
+/openpaul:plan
 # Approve plan
-/paul:apply
-/paul:unify
+/openpaul:apply
+/openpaul:unify
 ```
 
 **Checking where you are:**
 ```
-/paul:progress   # State + ONE next action (recommended)
+/openpaul:progress   # State + ONE next action (recommended)
 ```
 
 **Resuming work (new session):**
 ```
-/paul:resume     # Restores context, suggests next action
+/openpaul:resume     # Restores context, suggests next action
 ```
 
 **Pausing work (before break):**
 ```
-/paul:pause      # Creates handoff, updates state
+/openpaul:pause      # Creates handoff, updates state
 ```
 
 **Pre-planning exploration:**
 ```
-/paul:discuss 3       # Articulate vision
-/paul:assumptions 3   # See Claude's assumptions
-/paul:research "topic"  # Gather external info
-/paul:plan 3          # Now create the plan
+/openpaul:discuss 3       # Articulate vision
+/openpaul:assumptions 3   # See Claude's assumptions
+/openpaul:research "topic"  # Gather external info
+/openpaul:plan 3          # Now create the plan
 ```
 
 **Managing roadmap:**
 ```
-/paul:add-phase "New Feature"    # Add phase
-/paul:remove-phase 5             # Remove future phase
-/paul:milestone "v2.0"           # Create milestone
-/paul:complete-milestone         # Archive milestone
+/openpaul:add-phase "New Feature"    # Add phase
+/openpaul:remove-phase 5             # Remove future phase
+/openpaul:milestone "v2.0"           # Create milestone
+/openpaul:complete-milestone         # Archive milestone
 ```
 
 ## Key Principles
@@ -490,12 +490,12 @@ Completion checks
 
 ## Getting Help
 
-- Run `/paul:progress` to see where you are and what to do next
-- Read `.paul/PROJECT.md` for project context
-- Read `.paul/STATE.md` for current position
-- Check `.paul/ROADMAP.md` for phase overview
+- Run `/openpaul:progress` to see where you are and what to do next
+- Read `.openpaul/PROJECT.md` for project context
+- Read `.openpaul/STATE.md` for current position
+- Check `.openpaul/ROADMAP.md` for phase overview
 
 ---
 
-*PAUL Framework v0.4+ | 26 commands | Last updated: 2026-01-29*
+*OpenPAUL Framework v0.4+ | 26 commands | Last updated: 2026-01-29*
 </reference>

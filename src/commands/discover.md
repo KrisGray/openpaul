@@ -1,5 +1,5 @@
 ---
-name: paul:discover
+name: openpaul:discover
 description: Research technical options before planning a phase
 argument-hint: "<phase or topic>"
 allowed-tools: [Read, Bash, Glob, Grep, WebSearch, WebFetch, Task, AskUserQuestion]
@@ -10,23 +10,23 @@ Execute discovery to inform planning decisions. Produces DISCOVERY.md with findi
 
 **When to use:** Before planning a phase with technical unknowns (library selection, architecture decisions, integration approaches).
 
-**Distinct from /paul:research:** Research is for gathering documentation/information. Discover is for making technical decisions.
+**Distinct from /openpaul:research:** Research is for gathering documentation/information. Discover is for making technical decisions.
 </objective>
 
 <execution_context>
-@~/.claude/paul-framework/workflows/discovery.md
-@~/.claude/paul-framework/templates/DISCOVERY.md
+@~/.claude/openpaul-framework/workflows/discovery.md
+@~/.claude/openpaul-framework/templates/DISCOVERY.md
 </execution_context>
 
 <context>
 $ARGUMENTS (phase number or topic)
 
-@.paul/STATE.md
-@.paul/ROADMAP.md
+@.openpaul/STATE.md
+@.openpaul/ROADMAP.md
 </context>
 
 <process>
-**Follow workflow: @~/.claude/paul-framework/workflows/discovery.md**
+**Follow workflow: @~/.claude/openpaul-framework/workflows/discovery.md**
 
 The workflow implements:
 1. Determine depth level (quick/standard/deep)
@@ -44,5 +44,5 @@ The workflow implements:
 - [ ] Options researched with sources
 - [ ] DISCOVERY.md created (for standard/deep)
 - [ ] Recommendation provided with confidence
-- [ ] Ready for /paul:plan
+- [ ] Ready for /openpaul:plan
 </success_criteria>

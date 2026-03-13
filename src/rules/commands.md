@@ -11,7 +11,7 @@ Rules for editing files in `src/commands/`.
 
 ```yaml
 ---
-name: paul:command-name
+name: openpaul:command-name
 description: One-line description
 argument-hint: "<required>" or "[optional]"
 allowed-tools: [Read, Write, Bash, Glob, Grep, Edit, AskUserQuestion]
@@ -46,14 +46,14 @@ A command should fit on one screen. If it grows beyond that, logic belongs in a 
 <context>
 $ARGUMENTS
 
-@.paul/PROJECT.md
-@.paul/STATE.md
-@.paul/ROADMAP.md
+@.openpaul/PROJECT.md
+@.openpaul/STATE.md
+@.openpaul/ROADMAP.md
 </context>
 ```
 
-- `execution_context`: Static resources (workflows, templates, references from PAUL framework)
-- `context`: Dynamic project state (from `.paul/` directory) and user arguments
+- `execution_context`: Static resources (workflows, templates, references from OpenPAUL framework)
+- `context`: Dynamic project state (from `.openpaul/` directory) and user arguments
 
 ## Success Criteria Format
 
@@ -70,7 +70,7 @@ Use checkbox format. Each criterion must be objectively verifiable.
 
 ```markdown
 ---
-name: paul:plan
+name: openpaul:plan
 description: Enter PLAN phase for current or new plan
 argument-hint: "[phase-plan]"
 allowed-tools: [Read, Write, Glob, AskUserQuestion]
@@ -91,9 +91,9 @@ Create or continue a PLAN for the specified phase.
 <context>
 $ARGUMENTS
 
-@.paul/PROJECT.md
-@.paul/STATE.md
-@.paul/ROADMAP.md
+@.openpaul/PROJECT.md
+@.openpaul/STATE.md
+@.openpaul/ROADMAP.md
 </context>
 
 <process>

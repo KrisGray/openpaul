@@ -1,5 +1,5 @@
 ---
-name: paul:consider-issues
+name: openpaul:consider-issues
 description: Review deferred issues with codebase context, triage and route
 allowed-tools: [Read, Bash, Grep, Glob, Edit, AskUserQuestion]
 ---
@@ -11,17 +11,17 @@ Review all open issues from ISSUES.md and phase-scoped UAT files with current co
 </objective>
 
 <execution_context>
-@~/.claude/paul-framework/workflows/consider-issues.md
+@~/.claude/openpaul-framework/workflows/consider-issues.md
 </execution_context>
 
 <context>
-@.paul/ISSUES.md (if exists)
-@.paul/STATE.md
-@.paul/ROADMAP.md
+@.openpaul/ISSUES.md (if exists)
+@.openpaul/STATE.md
+@.openpaul/ROADMAP.md
 </context>
 
 <process>
-**Follow workflow: @~/.claude/paul-framework/workflows/consider-issues.md**
+**Follow workflow: @~/.claude/openpaul-framework/workflows/consider-issues.md**
 
 The workflow implements:
 1. Find all issue files (ISSUES.md, phase-scoped UAT files)

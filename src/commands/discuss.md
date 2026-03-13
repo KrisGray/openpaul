@@ -1,5 +1,5 @@
 ---
-name: paul:discuss
+name: openpaul:discuss
 description: Explore and articulate phase vision before planning
 argument-hint: "<phase-number>"
 allowed-tools: [Read, Write, AskUserQuestion]
@@ -12,23 +12,23 @@ Facilitate vision discussion for a specific phase and create context handoff.
 </objective>
 
 <execution_context>
-@~/.claude/paul-framework/workflows/discuss-phase.md
+@~/.claude/openpaul-framework/workflows/discuss-phase.md
 </execution_context>
 
 <context>
 Phase number: $ARGUMENTS (required)
 
-@.paul/PROJECT.md
-@.paul/STATE.md
-@.paul/ROADMAP.md
+@.openpaul/PROJECT.md
+@.openpaul/STATE.md
+@.openpaul/ROADMAP.md
 </context>
 
 <process>
-Follow workflow: @~/.claude/paul-framework/workflows/discuss-phase.md
+Follow workflow: @~/.claude/openpaul-framework/workflows/discuss-phase.md
 </process>
 
 <success_criteria>
 - [ ] CONTEXT.md created in phase directory
 - [ ] Goals and approach articulated
-- [ ] Ready for /paul:plan command
+- [ ] Ready for /openpaul:plan command
 </success_criteria>
