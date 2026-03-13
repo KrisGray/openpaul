@@ -42,9 +42,9 @@ export class LoopEnforcer {
    */
   getRequiredNextAction(current: LoopPhase): string {
     const actions: Record<LoopPhase, string> = {
-      PLAN: 'Run /paul:apply to execute the plan',
-      APPLY: 'Run /paul:unify to close the loop',
-      UNIFY: 'Run /paul:plan to start a new loop',
+      PLAN: 'Run /openpaul:apply to execute the plan',
+      APPLY: 'Run /openpaul:unify to close the loop',
+      UNIFY: 'Run /openpaul:plan to start a new loop',
     }
     return actions[current]
   }
@@ -67,7 +67,7 @@ export class LoopEnforcer {
         `Cannot start a new loop from ${currentPhase || 'initial state'}.\n` +
         `You must complete the current loop first.\n` +
         `Current state: ${currentPhase || 'no state'}.\n` +
-        `Next action: ${currentPhase ? this.getRequiredNextAction(currentPhase) : 'Run /paul:plan to initialize PAUL'}`
+        `Next action: ${currentPhase ? this.getRequiredNextAction(currentPhase) : 'Run /openpaul:plan to initialize OpenPAUL'}`
       )
     }
   }
