@@ -28,6 +28,10 @@ import { openpaulResearchPhase } from './commands/research-phase'
 import { openpaulConfig } from './commands/config'
 import { openpaulFlows } from './commands/flows'
 import { openpaulMapCodebase } from './commands/map-codebase'
+import { openpaulAddPhase } from './commands/add-phase'
+import { openpaulRemovePhase } from './commands/remove-phase'
+import { openpaulVerify } from './commands/verify'
+import { openpaulPlanFix } from './commands/plan-fix'
 
 export const OpenPaulPlugin: Plugin = async ({ project, client, directory, worktree }) => {
   // Plugin initialization
@@ -68,6 +72,10 @@ export const OpenPaulPlugin: Plugin = async ({ project, client, directory, workt
       'openpaul:config': openpaulConfig,
       'openpaul:flows': openpaulFlows,
       'openpaul:map-codebase': openpaulMapCodebase,
+      'openpaul:add-phase': openpaulAddPhase,
+      'openpaul:remove-phase': openpaulRemovePhase,
+      'openpaul:verify': openpaulVerify,
+      'openpaul:plan-fix': openpaulPlanFix,
     }
   }
 }
