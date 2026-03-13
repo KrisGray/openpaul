@@ -5,18 +5,18 @@
 See: .planning/PROJECT.md (updated 2026-03-13)
 
 **Core value:** Enforce the PLAN → APPLY → UNIFY loop with mandatory reconciliation, ensuring every plan closes properly with full traceability and context preservation.
-**Current focus:** v1.2 CI/CD Pipeline
+**Current focus:** v1.2 CI/CD Pipeline - GitHub Actions workflows for automated testing, E2E tests, coverage, and npm publishing
 
 ## Current Position
 
 Milestone: v1.2
-**Current Phase:** —
-**Current Phase Name:** —
-**Total Phases:** 0 (defining requirements)
+**Current Phase:** 10
+**Current Phase Name:** CI Workflow
+**Total Phases:** 4 (phases 10-13)
 **Current Plan:** —
-**Total Plans in Phase:** 0
-**Status:** Defining requirements
-**Last Activity:** 2026-03-13 — Milestone v1.2 started
+**Total Plans in Phase:** 0 (awaiting planning)
+**Status:** Ready for planning
+**Last Activity:** 2026-03-13 — v1.2 roadmap created
 
 **Progress:** [░░░░░░░░░░] 0%
 
@@ -25,6 +25,15 @@ Milestone: v1.2
 **Shipped:** 2026-03-13
 **Total Plans:** 94
 **Total Phases:** 9
+
+## v1.2 Milestone Phases
+
+| Phase | Name | Requirements | Status |
+|-------|------|--------------|--------|
+| 10 | CI Workflow | CI-01 to CI-05 | Not started |
+| 11 | E2E Tests | E2E-01 to E2E-06 | Not started |
+| 12 | Codecov | COV-01 to COV-05 | Not started |
+| 13 | Publish | PUB-01 to PUB-04 | Not started |
 
 ## Accumulated Context
 
@@ -43,10 +52,10 @@ None.
 ## Session Continuity
 
 **Last session:** 2026-03-13
-**Stopped at:** Starting v1.2 CI/CD Pipeline
+**Stopped at:** v1.2 roadmap created, ready for Phase 10 planning
 **Resume file:** None
 
 ---
 
 *State updated: 2026-03-13*
-*Next: Define requirements for v1.2*
+*Next: `/gsd-plan-phase 10` to plan CI Workflow phase*

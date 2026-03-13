@@ -4,6 +4,7 @@
         
         - ✅ **v1.0 MVP** - Phases 1-2 (shipped 2026-03-05)
         - ✅ **v1.1 Full Command Implementation** - Phases 3-9 (94/94 plans shipped 2026-03-13)
+        - 🔵 **v1.2 CI/CD Pipeline** - Phases 10-13 (in progress)
         - 📋 **v2.0** - Future enhancements (planned)
 
 ## Phases
@@ -237,6 +238,64 @@ Plans:
 
 **Verified:** Passed (2026-03-13)
 
+### 🔵 v1.2 CI/CD Pipeline - IN PROGRESS
+
+**Milestone Goal:** Add GitHub Actions workflows for automated testing, E2E tests, coverage reporting, and npm publishing
+
+**Scope:**
+- CI Workflow (test.yml)
+- E2E Tests (e2e-tests.yml with Docker)
+- Codecov Integration (codecov.yml)
+- Publish Workflow (publish.yml)
+
+#### Phase 10: CI Workflow
+**Goal**: Automated unit tests run on every push/PR with coverage artifacts
+**Depends on**: Phase 9 (v1.1 complete)
+**Requirements**: CI-01, CI-02, CI-03, CI-04, CI-05
+**Success Criteria** (what must be TRUE):
+  1. Unit tests run automatically on every push to main branch
+  2. Unit tests run automatically on every pull request (non-draft PRs only)
+  3. In-progress workflow runs cancel when new commits arrive on the same ref
+  4. Coverage report generated via `npm run test:coverage` command
+  5. Coverage artifacts uploaded for downstream codecov workflow to consume
+**Plans**: TBD
+
+#### Phase 11: E2E Tests
+**Goal**: E2E tests run in Docker container with OpenCode CLI for realistic testing
+**Depends on**: Phase 10 (CI workflow provides base patterns)
+**Requirements**: E2E-01, E2E-02, E2E-03, E2E-04, E2E-05, E2E-06
+**Success Criteria** (what must be TRUE):
+  1. E2E tests run in Docker container with OpenCode CLI pre-installed
+  2. Docker image uses layer caching for faster subsequent runs
+  3. E2E tests retry once on failure for flaky test resilience
+  4. Failure artifacts (Docker logs, .openpaul state) uploaded for debugging
+  5. E2E tests run on schedule (daily at 2am UTC) for regression detection
+  6. E2E tests run on push to main and PRs (non-draft)
+**Plans**: TBD
+
+#### Phase 12: Codecov
+**Goal**: Coverage reports uploaded to Codecov with PR comments for visibility
+**Depends on**: Phase 10 (test.yml), Phase 11 (e2e-tests.yml)
+**Requirements**: COV-01, COV-02, COV-03, COV-04, COV-05
+**Success Criteria** (what must be TRUE):
+  1. Codecov workflow runs AFTER both test.yml and e2e-tests.yml complete successfully
+  2. Coverage artifacts downloaded from completed test.yml workflow
+  3. Coverage uploaded to Codecov.io with token authentication
+  4. PR coverage reports posted as comments showing coverage delta
+  5. codecov.yml config file present with project-specific thresholds
+**Plans**: TBD
+
+#### Phase 13: Publish
+**Goal**: npm package published automatically on GitHub release with quality gates
+**Depends on**: Phase 10 (tests), Phase 11 (E2E), Phase 12 (codecov)
+**Requirements**: PUB-01, PUB-02, PUB-03, PUB-04
+**Success Criteria** (what must be TRUE):
+  1. npm publish triggered automatically on GitHub release published event
+  2. Publish workflow requires: unit tests + E2E tests + codecov all passing
+  3. npm provenance enabled for supply chain security transparency
+  4. Build (npm run build) runs before publish to ensure fresh dist/
+**Plans**: TBD
+
 ### 📋 v2.0 (Planned)
 
 **Milestone Goal:** Future enhancements based on user feedback
@@ -246,7 +305,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 3 → 4 → 5 → 6 → 7 → 8 → 9
+Phases execute in numeric order: 10 → 11 → 12 → 13
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -259,8 +318,12 @@ Phases execute in numeric order: 3 → 4 → 5 → 6 → 7 → 8 → 9
 | 7. Quality | v1.1 | 11/11 | Complete | 2026-03-13 |
 | 8. Configuration | v1.1 | 6/6 | Complete | 2026-03-13 |
 | 9. Documentation | v1.1 | 18/18 | Complete | 2026-03-13 |
+| 10. CI Workflow | v1.2 | 0/0 | Not started | - |
+| 11. E2E Tests | v1.2 | 0/0 | Not started | - |
+| 12. Codecov | v1.2 | 0/0 | Not started | - |
+| 13. Publish | v1.2 | 0/0 | Not started | - |
 
-**Overall v1.1 Progress:** 71/71 plans (100%)
+**Overall v1.2 Progress:** 0/0 plans (0%)
 
 ## Dependencies
 
@@ -273,31 +336,35 @@ Phase 3 (Session Management) - COMPLETE
 Phase 7 (Quality) - COMPLETE
 Phase 8 (Configuration) - COMPLETE
 Phase 9 (Documentation) - COMPLETE
+
+--- v1.2 CI/CD Pipeline ---
+
+Phase 10 (CI Workflow) - NOT STARTED
+  └─> Phase 11 (E2E Tests) - NOT STARTED
+       └─> Phase 12 (Codecov) - NOT STARTED (needs test.yml + e2e-tests.yml)
+            └─> Phase 13 (Publish) - NOT STARTED (needs all above)
 ```
 
 ## Milestone Tracking
 
-**Milestone:** v1.1 Full Command Implementation
+**Milestone:** v1.2 CI/CD Pipeline
 
-**Target:** All 22 remaining PAUL commands implemented
+**Target:** Complete CI/CD infrastructure with 4 GitHub Actions workflows
 
 **Completion criteria:**
-- [x] All 7 phases complete (3-9)
-- [x] All 22 requirements verified and passing
-  - [x] Phase 3: 14/14 complete (Session Management)
-  - [x] Phase 4: 5/5 complete (Roadmap Management)
-  - [x] Phase 5: 5/5 complete (Milestone Management)
-  - [x] Phase 6: 12/12 complete (Pre-Planning + Research)
-  - [x] Phase 7: 11/11 complete (Quality)
-  - [x] Phase 8: 6/6 complete (Configuration)
-  - [x] Phase 9: 18/18 complete (Documentation)
-- [x] All commands tested with comprehensive Jest coverage
-- [x] Documentation updated with OpenPAUL branding
-- [x] npm package updated and published
+- [ ] All 4 phases complete (10-13)
+- [ ] All 20 requirements verified
+  - [ ] Phase 10: 5 requirements (CI Workflow)
+  - [ ] Phase 11: 6 requirements (E2E Tests)
+  - [ ] Phase 12: 5 requirements (Codecov)
+  - [ ] Phase 13: 4 requirements (Publish)
+- [ ] test.yml workflow runs on push/PR
+- [ ] e2e-tests.yml runs in Docker with OpenCode CLI
+- [ ] codecov.yml uploads coverage after tests pass
+- [ ] publish.yml publishes to npm on release
 
-**Started:** 2026-03-05
-**Completed:** 2026-03-13
-**Progress:** 71/71 plans (100%)
+**Started:** 2026-03-13
+**Progress:** 0/0 plans (0%)
 
 ## Notes
 
@@ -308,7 +375,12 @@ Phase 9 (Documentation) - COMPLETE
 - Research phase (Phase 6) includes parallel subagent spawning via OpenCode Task tool
 - Configuration phase (Phase 8) includes codebase mapping for documentation
 - Branding phase (Phase 9) ensures all references use "OpenPAUL" and "openpaul"
+- v1.2 phases (10-13) implement GitHub Actions CI/CD pipeline
+- CI workflow uses concurrency groups to cancel redundant runs
+- E2E tests run in Docker for isolation and reproducibility
+- Codecov workflow requires both unit and E2E tests to pass first
+- Publish workflow gates npm publish behind all quality checks
 
 ---
 *Roadmap created: 2026-03-05*
-*Last updated: 2026-03-13 (v1.1 shipped - all phases complete)*
+*Last updated: 2026-03-13 (v1.2 roadmap created - phases 10-13)*
