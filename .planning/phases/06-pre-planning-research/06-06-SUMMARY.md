@@ -105,3 +105,9 @@ None - no external service configuration required.
 ---
 *Phase: 06-pre-planning-research*
 *Completed: 2026-03-13*
+
+## Self-Check: PASSED
+
+- src/commands/consider-issues.ts: EXISTS
+- Commits cf10751, 9a45308: EXISTS
+- SUMMARY.md: CREATED
