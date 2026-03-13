@@ -107,7 +107,7 @@ export const openpaulUnify = toolFactory({
       if (!currentPosition) {
         return `${formatHeader(1, '❌ Not Initialized')}
 
-${formatBold('Error:')} Run /openpaul:init first to initialize PAUL.`
+${formatBold('Error:')} Run /openpaul:init first to initialize OpenPAUL.`
       }
       
       // Determine phase and plan
