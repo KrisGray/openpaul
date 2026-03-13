@@ -126,7 +126,7 @@ Template for `.openpaul/codebase/STRUCTURE.md` - captures physical file organiza
 ## Directory Layout
 
 ```
-paul-framework/
+openpaul-framework/
 ├── bin/                # Executable entry points
 ├── src/                # Source code
 │   ├── commands/       # Slash command definitions
@@ -230,7 +230,7 @@ paul-framework/
 ## Special Directories
 
 **src/**
-- Purpose: Resources installed to ~/.claude/paul-framework/
+- Purpose: Resources installed to ~/.claude/openpaul/
 - Source: Copied by bin/install.js during installation
 - Committed: Yes (source of truth)
 
