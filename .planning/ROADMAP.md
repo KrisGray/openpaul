@@ -202,13 +202,15 @@ Plans:
   1. All instances of "PAUL" replaced with "OpenPAUL" in documentation, command names, and user-facing text
   2. All paulX function exports renamed to openpaulX
   3. Plugin renamed to OpenPaulPlugin with only openpaul: command prefix
-**Plans**: 4 plans (executed, needs UAT verification)
+**Plans**: 6 plans (gap closure in progress)
 
 Plans:
 - [x] 09-01-PLAN.md — Command function renames (paulX → openpaulX), plugin rename, remove paul: aliases
 - [x] 09-02-PLAN.md — Storage dual-path resolution (.openpaul/ primary, .paul/ fallback)
 - [x] 09-03-PLAN.md — Templates and documentation (README, package.json)
 - [x] 09-04-PLAN.md — Tests and branding consistency verification
+- [ ] 09-05-PLAN.md — Update runtime user-facing strings to OpenPAUL
+- [ ] 09-06-PLAN.md — Rebrand README and package metadata
 
 ### 📋 v2.0 (Planned)
 
@@ -231,7 +233,7 @@ Phases execute in numeric order: 3 → 4 → 5 → 6 → 7 → 8 → 9
 | 6. Pre-Planning + Research | v1.1 | 0/12 | Not started | - |
 | 7. Quality | v1.1 | 7/10 | In progress (gaps) | - |
 | 8. Configuration | v1.1 | 0/7 | Not started | - |
-| 9. Documentation | v1.1 | 4/4 | Executed, needs UAT | - |
+| 9. Documentation | v1.1 | 4/6 | Gap closure in progress | - |
 
 **Overall v1.1 Progress:** 21/56 plans (38%)
 
@@ -259,7 +261,7 @@ Phase 9 (Documentation) - Ready to execute (can run independently)
 - [ ] All 22 requirements verified and passing
   - [x] Phase 3: 14/14 complete (Session Management)
 - [x] Phase 7: 7/10 executed, needs UAT (Quality)
-  - [x] Phase 9: 4/4 ready to execute (Documentation)
+  - [x] Phase 9: 4/6 executed, gap closure in progress (Documentation)
   - [ ] Phase 4: 0/4 (Roadmap Management)
   - [ ] Phase 5: 0/5 (Milestone Management)
   - [ ] Phase 6: 0/12 (Pre-Planning + Research)
