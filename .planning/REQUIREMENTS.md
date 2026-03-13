@@ -29,7 +29,7 @@ Requirements for full command implementation. Each maps to roadmap phases.
 
 - [x] **PLAN-01**: User can explore phase goals with `/openpaul:discuss` that creates CONTEXT.md with goals, approach, constraints, open questions
 - [x] **PLAN-02**: User can capture and validate assumptions with `/openpaul:assumptions` that creates ASSUMPTIONS.md listing assumptions with validation status
-- [ ] **PLAN-03**: User can research technical options with `/openpaul:discover` that supports 3 depth levels: Quick (verbal, 2-5min), Standard (DISCOVERY.md, 15-30min), Deep (comprehensive, 1+hr)
+- [x] **PLAN-03**: User can research technical options with `/openpaul:discover` that supports 3 depth levels: Quick (verbal, 2-5min), Standard (DISCOVERY.md, 15-30min), Deep (comprehensive, 1+hr)
 - [x] **PLAN-04**: User can identify potential blockers with `/openpaul:consider-issues` that creates ISSUES.md with categorized risks and mitigation strategies
 
 ### Research
@@ -88,7 +88,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MILE-03 | Phase 5 | Complete |
 | PLAN-01 | Phase 6 | Complete |
 | PLAN-02 | Phase 6 | Complete |
-| PLAN-03 | Phase 6 | Pending |
+| PLAN-03 | Phase 6 | Complete |
 | PLAN-04 | Phase 6 | Complete |
 | RSCH-01 | Phase 6 | Complete |
 | RSCH-02 | Phase 6 | Complete |
