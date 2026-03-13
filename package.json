@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "paul-framework": "bin/install.js"
+    "openpaul-cli": "bin/install.js"
   },
   "files": [
     "dist",
@@ -21,7 +21,7 @@
   "keywords": [
     "opencode",
     "plugin",
-    "paul",
+    "openpaul",
     "plan-apply-unify",
     "ai",
     "development",
@@ -34,12 +34,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ChristopherKahler/paul.git"
+    "url": "git+https://github.com/ChristopherKahler/openpaul.git"
   },
   "bugs": {
-    "url": "https://github.com/ChristopherKahler/paul/issues"
+    "url": "https://github.com/ChristopherKahler/openpaul/issues"
   },
-  "homepage": "https://github.com/ChristopherKahler/paul#readme",
+  "homepage": "https://github.com/ChristopherKahler/openpaul#readme",
   "engines": {
     "node": ">=16.7.0"
   },
