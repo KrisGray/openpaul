@@ -6,7 +6,7 @@
 
 [![npm version](https://img.shields.io/npm/v/@krisgray/openpaul?style=for-the-badge&logo=npm&logoColor=white&color=CB3837)](https://www.npmjs.com/package/@krisgray/openpaul)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/ChristopherKahler/openpaul?style=for-the-badge&logo=github&color=181717)](https://github.com/ChristopherKahler/openpaul)
+[![GitHub stars](https://img.shields.io/github/stars/KrisGray/openpaul?style=for-the-badge&logo=github&color=181717)](https://github.com/KrisGray/openpaul)
 
 <br>
 
@@ -33,6 +33,8 @@ npx @krisgray/openpaul
 ---
 
 ## Why OpenPAUL
+
+OpenPAUL is an OpenCode adaptation of the Plan-Apply-Unify Loop project, originally created by Chris Kahler for Claude Code.
 
 I build with Claude Code every day. It's incredibly powerful — when you give it the right context.
 
@@ -310,11 +312,11 @@ Then [outcome]
 
 Every task has: files, action, verify, done. If you can't specify all four, the task is too vague.
 
-### CARL Integration
+### OpenCARL Integration
 
-OpenPAUL has a companion: **[CARL](https://github.com/ChristopherKahler/carl-core)** (Context Augmentation & Reinforcement Layer).
+OpenPAUL has a companion: **[OpenCARL](https://github.com/KrisGray/opencarl)** (Context Augmentation & Reinforcement Layer).
 
-CARL is a dynamic rule injection system. Instead of bloating your context with static prompts, CARL loads rules just-in-time based on what you're doing:
+OpenCARL is a dynamic rule injection system. Instead of bloating your context with static prompts, OpenCARL loads rules just-in-time based on what you're doing:
 
 | Trigger | Rules Loaded |
 |---------|--------------|
@@ -322,7 +324,7 @@ CARL is a dynamic rule injection system. Instead of bloating your context with s
 | Writing code | DEVELOPMENT rules load |
 | Managing projects | PROJECTS rules load |
 
-**OpenPAUL-specific rules CARL enforces:**
+**OpenPAUL-specific rules OpenCARL enforces:**
 - Loop enforcement (PLAN → APPLY → UNIFY — no shortcuts)
 - Boundary protection (DO NOT CHANGE sections are real)
 - State consistency checks at phase transitions
@@ -331,8 +333,8 @@ CARL is a dynamic rule injection system. Instead of bloating your context with s
 
 The OpenPAUL domain contains 14 rules that govern structured AI development. They load when you're in an OpenPAUL project, disappear when you're not. Your context stays lean.
 
-**Without CARL:** You'd need massive static prompts in every session.
-**With CARL:** Rules activate when relevant, disappear when not.
+**Without OpenCARL:** You'd need massive static prompts in every session.
+**With OpenCARL:** Rules activate when relevant, disappear when not.
 
 ---
 
@@ -461,7 +463,13 @@ Same comprehensive coverage, different philosophy. OpenPAUL prioritizes quality 
 
 ---
 
-## License
+## Attribution & License
+
+Plan-Apply-Unify Loop was originally created by [Chris Kahler](https://github.com/ChristopherKahler) for Claude Code.
+
+**OpenPAUL** is an OpenCode adaptation, maintained by [Kristian Gray](https://github.com/KrisGray).
+
+The original project can be found on Chris Kahler's GitHub profile.
 
 MIT License. See [LICENSE](LICENSE) for details.
 
@@ -469,9 +477,9 @@ MIT License. See [LICENSE](LICENSE) for details.
 
 ## Author
 
-**Chris Kahler** — [Chris AI Systems](https://github.com/ChristopherKahler)
+**Kristian Gray** — OpenPAUL Maintainer
 
-Building tools for AI-assisted development.
+**Original Author** — Chris Kahler (Plan-Apply-Unify Loop creator)
 
 ---
 
