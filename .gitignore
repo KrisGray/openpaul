@@ -1,6 +1,13 @@
 # PAUL instance data (user's own usage)
 .paul/
 
+# Build output
+dist/
+
+# Test artifacts
+coverage/
+test.json
+
 # Node
 node_modules/
 
@@ -13,6 +20,9 @@ Thumbs.db
 *.swo
 .vscode/
 .idea/
+
+# OpenCode CLI config (personal workflow tooling)
+.opencode/
 
 # Handoff files in root (session-specific, not part of distribution)
 /HANDOFF*.md
