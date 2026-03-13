@@ -32,7 +32,7 @@ type PauseArgs = {
 const toolFactory = tool as unknown as (input: any) => any
 
 export const openpaulPause = toolFactory({
-  name: 'paul:pause',
+  name: 'openpaul:pause',
   description: 'Pause current development session and save context',
   parameters: z.object({
     onUnsavedChanges: z
