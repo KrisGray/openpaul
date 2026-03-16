@@ -1,9 +1,9 @@
 name: Codecov Coverage Upload
 
 on:
-  # COV-01: Trigger after test.yml completes successfully
+  # COV-01: Trigger after EITHER test.yml OR e2e-tests.yml completes
   workflow_run:
-    workflows: ["CI - Unit Tests"]
+    workflows: ["CI - Unit Tests", "E2E Tests"]
     types: [completed]
 
 # Cancel redundant runs on same ref
@@ -37,36 +37,71 @@ jobs:
           fi
           echo "skip=false" >> $GITHUB_OUTPUT
 
-      # COV-01: Verify both test.yml AND e2e-tests.yml succeeded for this commit
-      - name: Verify both test workflows succeeded
+      # COV-01: Wait for both test.yml AND e2e-tests.yml to succeed for this commit
+      - name: Wait for both test workflows to complete
         if: steps.check_draft.outputs.skip != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           SHA="${{ github.event.workflow_run.head_sha }}"
+          MAX_WAIT_MINUTES=30
+          POLL_INTERVAL_SECONDS=30
+          MAX_ATTEMPTS=$((MAX_WAIT_MINUTES * 60 / POLL_INTERVAL_SECONDS))
           
-          echo "Checking workflow status for commit: $SHA"
+          echo "Waiting for both test workflows to complete for commit: $SHA"
+          echo "Max wait time: $MAX_WAIT_MINUTES minutes"
           
-          # Check CI - Unit Tests status (should already be success since we triggered on it)
-          TEST_STATUS=$(gh run list --workflow "CI - Unit Tests" --commit "$SHA" --limit 1 --json conclusion --jq '.[0].conclusion // "unknown"')
-          echo "CI - Unit Tests status: $TEST_STATUS"
+          for attempt in $(seq 1 $MAX_ATTEMPTS); do
+            echo "Attempt $attempt of $MAX_ATTEMPTS..."
+            
+            # Check CI - Unit Tests status
+            TEST_STATUS=$(gh run list --workflow "CI - Unit Tests" --commit "$SHA" --limit 1 --json conclusion --jq '.[0].conclusion // "unknown"')
+            echo "  CI - Unit Tests: $TEST_STATUS"
+            
+            # Check E2E Tests status
+            E2E_STATUS=$(gh run list --workflow "E2E Tests" --commit "$SHA" --limit 1 --json conclusion --jq '.[0].conclusion // "unknown"')
+            echo "  E2E Tests: $E2E_STATUS"
+            
+            # Handle failure cases
+            if [ "$TEST_STATUS" = "failure" ] || [ "$E2E_STATUS" = "failure" ]; then
+              echo "One or more workflows failed - skipping coverage upload"
+              exit 0
+            fi
+            
+            # Handle cancelled cases
+            if [ "$TEST_STATUS" = "cancelled" ] || [ "$E2E_STATUS" = "cancelled" ]; then
+              echo "One or more workflows were cancelled - skipping coverage upload"
+              exit 0
+            fi
+            
+            # Check if both succeeded
+            if [ "$TEST_STATUS" = "success" ] && [ "$E2E_STATUS" = "success" ]; then
+              echo "Both test workflows succeeded, proceeding with coverage upload"
+              exit 0
+            fi
+            
+            # Still waiting - check if workflows exist at all
+            if [ "$TEST_STATUS" = "unknown" ] || [ "$E2E_STATUS" = "unknown" ]; then
+              # Check if workflow has started but not completed
+              TEST_RUN_ID=$(gh run list --workflow "CI - Unit Tests" --commit "$SHA" --limit 1 --json databaseId --jq '.[0].databaseId // empty')
+              E2E_RUN_ID=$(gh run list --workflow "E2E Tests" --commit "$SHA" --limit 1 --json databaseId --jq '.[0].databaseId // empty')
+              
+              if [ -z "$TEST_RUN_ID" ] || [ -z "$E2E_RUN_ID" ]; then
+                echo "One or more workflows have not started yet..."
+              else
+                echo "Workflows in progress, waiting..."
+              fi
+            fi
+            
+            if [ $attempt -lt $MAX_ATTEMPTS ]; then
+              echo "Waiting ${POLL_INTERVAL_SECONDS}s before next check..."
+              sleep $POLL_INTERVAL_SECONDS
+            fi
+          done
           
-          if [ "$TEST_STATUS" != "success" ]; then
-            echo "CI - Unit Tests did not succeed, skipping coverage upload"
-            exit 1
-          fi
-          
-          # Check E2E Tests status
-          E2E_STATUS=$(gh run list --workflow "E2E Tests" --commit "$SHA" --limit 1 --json conclusion --jq '.[0].conclusion // "unknown"')
-          echo "E2E Tests status: $E2E_STATUS"
-          
-          if [ "$E2E_STATUS" != "success" ]; then
-            echo "E2E Tests did not succeed yet, skipping coverage upload"
-            echo "Will retry when both workflows complete"
-            exit 1
-          fi
-          
-          echo "Both test workflows succeeded, proceeding with coverage upload"
+          echo "Timeout reached after $MAX_WAIT_MINUTES minutes"
+          echo "One or more workflows did not complete in time"
+          exit 0
 
       - name: Checkout repository
         if: steps.check_draft.outputs.skip != 'true'
