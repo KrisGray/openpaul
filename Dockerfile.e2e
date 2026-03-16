@@ -1,0 +1,40 @@
+# syntax=docker/dockerfile:1
+
+# Stage 1: Base image with Node.js (cached layer)
+FROM node:20-bookworm-slim AS base
+
+# Install system dependencies (cached layer - rarely changes)
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /app
+
+# Stage 2: Dependencies (cached layer - only rebuilds when package*.json changes)
+FROM base AS deps
+
+# Copy package files first for better caching
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci --include=dev
+
+# Stage 3: OpenCode CLI installation (cached layer)
+FROM deps AS opencode
+
+# Install OpenCode CLI globally for E2E testing
+RUN npm install -g @opencode-ai/cli
+
+# Stage 4: Final image
+FROM opencode AS runner
+
+# Copy source code (changes frequently - last layer)
+COPY . .
+
+# Build the project
+RUN npm run build
+
+# Default command for E2E testing
+CMD ["npm", "run", "test:e2e"]
