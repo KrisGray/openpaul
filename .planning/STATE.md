@@ -18,7 +18,7 @@ Milestone: v1.2
 **Status:** Milestone complete
 **Last Activity:** 2026-03-16
 
-**Progress:** [█████████░] 75%
+**Progress:** [██████████] 100%
 
 ## v1.1 Milestone Complete ✓
 
@@ -43,6 +43,8 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - [Phase 10-ci-workflow]: Node.js 20.x LTS chosen as single version for CI simplicity — OpenCode discretion per CONTEXT.md
 - [Phase 11-e2e-tests]: Node.js 20-bookworm-slim for Docker consistency with CI workflow
 - [Phase 12-codecov]: workflow_run trigger on test.yml with e2e-tests.yml verification — avoids race conditions
+- [Phase 14-codecov-fix]: Exit 0 on timeout instead of failing - coverage is optional signal — Coverage upload failure should not block builds
+- [Phase 14-codecov-fix]: 30-minute max wait with 30-second poll interval — Balances thoroughness vs. resource usage
 
 ### Pending Todos
 
@@ -54,8 +56,8 @@ None.
 
 ## Session Continuity
 
-**Last session:** 2026-03-16T15:47:11Z
-**Stopped at:** Completed 12-01-PLAN.md
+**Last session:** 2026-03-16T17:54:08.583Z
+**Stopped at:** Completed 14-01-PLAN.md
 **Resume file:** None
 
 ---
