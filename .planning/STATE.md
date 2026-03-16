@@ -10,7 +10,7 @@ See: .planning/PROJECT.md (updated 2026-03-13)
 ## Current Position
 
 Milestone: v1.2
-**Current Phase:** 12
+**Current Phase:** 14
 **Current Phase Name:** Codecov
 **Total Phases:** 4 (phases 10-13)
 **Current Plan:** Not started
