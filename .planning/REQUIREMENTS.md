@@ -68,10 +68,10 @@ Requirements for CI/CD pipeline milestone. Each maps to roadmap phases.
 ### E2E Tests
 - [x] **E2E-01**: E2E tests run in Docker container with OpenCode CLI
 - [x] **E2E-02**: Docker image built with layer caching for faster subsequent runs
-- [ ] **E2E-03**: E2E tests retry once on failure
-- [ ] **E2E-04**: Failure artifacts uploaded (Docker logs, .openpaul state)
-- [ ] **E2E-05**: E2E tests run on schedule (daily at 2am UTC)
-- [ ] **E2E-06**: E2E tests run on push to main and PRs (non-draft)
+- [x] **E2E-03**: E2E tests retry once on failure
+- [x] **E2E-04**: Failure artifacts uploaded (Docker logs, .openpaul state)
+- [x] **E2E-05**: E2E tests run on schedule (daily at 2am UTC)
+- [x] **E2E-06**: E2E tests run on push to main and PRs (non-draft)
 
 ### Codecov
 - [ ] **COV-01**: Codecov workflow runs AFTER both test.yml and e2e-tests.yml complete successfully
@@ -119,10 +119,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CI-05 | Phase 10 | Complete |
 | E2E-01 | Phase 11 | Complete |
 | E2E-02 | Phase 11 | Complete |
-| E2E-03 | Phase 11 | Pending |
-| E2E-04 | Phase 11 | Pending |
-| E2E-05 | Phase 11 | Pending |
-| E2E-06 | Phase 11 | Pending |
+| E2E-03 | Phase 11 | Complete |
+| E2E-04 | Phase 11 | Complete |
+| E2E-05 | Phase 11 | Complete |
+| E2E-06 | Phase 11 | Complete |
 | COV-01 | Phase 12 | Pending |
 | COV-02 | Phase 12 | Pending |
 | COV-03 | Phase 12 | Pending |
