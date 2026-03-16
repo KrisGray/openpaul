@@ -59,11 +59,11 @@ Requirements for CI/CD pipeline milestone. Each maps to roadmap phases.
 
 ### CI Workflow
 
-- [ ] **CI-01**: GitHub Action runs tests on every push to main
-- [ ] **CI-02**: GitHub Action runs tests on every pull request (non-draft)
-- [ ] **CI-03**: Concurrency group cancels in-progress runs on same ref
-- [ ] **CI-04**: Coverage report generated via `npm run test:coverage`
-- [ ] **CI-05**: Coverage artifacts uploaded for downstream codecov workflow
+- [x] **CI-01**: GitHub Action runs tests on every push to main
+- [x] **CI-02**: GitHub Action runs tests on every pull request (non-draft)
+- [x] **CI-03**: Concurrency group cancels in-progress runs on same ref
+- [x] **CI-04**: Coverage report generated via `npm run test:coverage`
+- [x] **CI-05**: Coverage artifacts uploaded for downstream codecov workflow
 
 ### E2E Tests
 - [ ] **E2E-01**: E2E tests run in Docker container with OpenCode CLI
@@ -112,11 +112,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CI-01 | Phase 10 | Pending |
-| CI-02 | Phase 10 | Pending |
-| CI-03 | Phase 10 | Pending |
-| CI-04 | Phase 10 | Pending |
-| CI-05 | Phase 10 | Pending |
+| CI-01 | Phase 10 | Complete |
+| CI-02 | Phase 10 | Complete |
+| CI-03 | Phase 10 | Complete |
+| CI-04 | Phase 10 | Complete |
+| CI-05 | Phase 10 | Complete |
 | E2E-01 | Phase 11 | Pending |
 | E2E-02 | Phase 11 | Pending |
 | E2E-03 | Phase 11 | Pending |
