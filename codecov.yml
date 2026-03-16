@@ -1,0 +1,63 @@
+# Codecov configuration for openpaul
+# https://docs.codecov.com/docs/codecov-yaml
+
+coverage:
+  # Precision to 2 decimal places
+  precision: 2
+
+  # Coverage range with color coding: red -> yellow -> green
+  range:
+    - 50.0
+    - 100.0
+
+  # Round coverage to nearest decimal
+  round: down
+
+  # Status checks configuration
+  status:
+    # Project-level coverage (uses historical average)
+    project:
+      default:
+        target: auto
+        threshold: 1%
+        informational: true
+
+    # Patch coverage for new code
+    patch:
+      default:
+        target: 80%
+        threshold: 1%
+        informational: true
+
+# Comment behavior on PRs
+comment:
+  layout: "reach, diff, flags, files, footer"
+  behavior: default
+  require_changes: false
+  require_head: true
+  require_base: true
+
+# Files to ignore for coverage
+ignore:
+  - "**/*.test.ts"
+  - "**/*.test.tsx"
+  - "**/*.spec.ts"
+  - "**/*.spec.tsx"
+  - "**/*.test.js"
+  - "**/*.spec.js"
+  - "**/__tests__/**"
+  - "**/test/**"
+  - "**/tests/**"
+  - "**/__mocks__/**"
+  - "**/*.d.ts"
+  - "**/types/**"
+  - "**/*.config.js"
+  - "**/*.config.ts"
+  - "coverage/**"
+  - "node_modules/**"
+  - ".planning/**"
+  - ".opencode/**"
+
+# GitHub checks configuration
+github_checks:
+  annotations: true
