@@ -81,10 +81,10 @@ Requirements for CI/CD pipeline milestone. Each maps to roadmap phases.
 - [x] **COV-05**: codecov.yml config file with project thresholds
 
 ### Publish
-- [ ] **PUB-01**: npm publish triggered on GitHub release published
-- [ ] **PUB-02**: Publish requires: unit tests + E2E tests + codecov to pass
-- [ ] **PUB-03**: npm provenance enabled for supply chain security
-- [ ] **PUB-04**: Build runs before publish
+- [x] **PUB-01**: npm publish triggered on GitHub release published
+- [x] **PUB-02**: Publish requires: unit tests + E2E tests + codecov to pass
+- [x] **PUB-03**: npm provenance enabled for supply chain security
+- [x] **PUB-04**: Build runs before publish
 
 ## v2 Requirements
 
@@ -128,10 +128,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | COV-03 | Phase 12 | Complete |
 | COV-04 | Phase 12 | Complete |
 | COV-05 | Phase 12 | Complete |
-| PUB-01 | Phase 13 | Pending |
-| PUB-02 | Phase 13 | Pending |
-| PUB-03 | Phase 13 | Pending |
-| PUB-04 | Phase 13 | Pending |
+| PUB-01 | Phase 13 | Complete |
+| PUB-02 | Phase 13 | Complete |
+| PUB-03 | Phase 13 | Complete |
+| PUB-04 | Phase 13 | Complete |
 | SESS-01 | Phase 3 | Complete |
 | SESS-02 | Phase 3 | Complete |
 | SESS-03 | Phase 3 | Complete |
