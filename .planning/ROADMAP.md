@@ -330,7 +330,7 @@ Phases execute in numeric order: 10 → 11 → 12 → 13
 | 9. Documentation | v1.1 | 18/18 | Complete | 2026-03-13 |
 | 10. CI Workflow | 1/1 | Complete    | 2026-03-16 | - |
 | 11. E2E Tests | 2/2 | Complete    | 2026-03-16 | - |
-| 12. Codecov | v1.2 | 0/1 | Not started | - |
+| 12. Codecov | 1/1 | Complete   | 2026-03-16 | - |
 | 13. Publish | v1.2 | 0/0 | Not started | - |
 
 **Overall v1.2 Progress:** 3/4 plans (75%)
@@ -366,7 +366,7 @@ Phase 10 (CI Workflow) - NOT STARTED
 - [ ] All 20 requirements verified
   - [x] Phase 10: 5 requirements (CI Workflow) (completed 2026-03-16)
   - [x] Phase 11: 6 requirements (E2E Tests) (completed 2026-03-16)
-  - [ ] Phase 12: 5 requirements (Codecov)
+  - [x] Phase 12: 5 requirements (Codecov) (completed 2026-03-16)
   - [ ] Phase 13: 4 requirements (Publish)
 - [ ] test.yml workflow runs on push/PR
 - [ ] e2e-tests.yml runs in Docker with OpenCode CLI

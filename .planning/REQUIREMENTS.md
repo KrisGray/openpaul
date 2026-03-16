@@ -74,11 +74,11 @@ Requirements for CI/CD pipeline milestone. Each maps to roadmap phases.
 - [x] **E2E-06**: E2E tests run on push to main and PRs (non-draft)
 
 ### Codecov
-- [ ] **COV-01**: Codecov workflow runs AFTER both test.yml and e2e-tests.yml complete successfully
-- [ ] **COV-02**: Downloads coverage artifacts from test.yml
-- [ ] **COV-03**: Uploads coverage to Codecov with token
-- [ ] **COV-04**: PR coverage reports posted as comments
-- [ ] **COV-05**: codecov.yml config file with project thresholds
+- [x] **COV-01**: Codecov workflow runs AFTER both test.yml and e2e-tests.yml complete successfully
+- [x] **COV-02**: Downloads coverage artifacts from test.yml
+- [x] **COV-03**: Uploads coverage to Codecov with token
+- [x] **COV-04**: PR coverage reports posted as comments
+- [x] **COV-05**: codecov.yml config file with project thresholds
 
 ### Publish
 - [ ] **PUB-01**: npm publish triggered on GitHub release published
@@ -123,11 +123,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | E2E-04 | Phase 11 | Complete |
 | E2E-05 | Phase 11 | Complete |
 | E2E-06 | Phase 11 | Complete |
-| COV-01 | Phase 12 | Pending |
-| COV-02 | Phase 12 | Pending |
-| COV-03 | Phase 12 | Pending |
-| COV-04 | Phase 12 | Pending |
-| COV-05 | Phase 12 | Pending |
+| COV-01 | Phase 12 | Complete |
+| COV-02 | Phase 12 | Complete |
+| COV-03 | Phase 12 | Complete |
+| COV-04 | Phase 12 | Complete |
+| COV-05 | Phase 12 | Complete |
 | PUB-01 | Phase 13 | Pending |
 | PUB-02 | Phase 13 | Pending |
 | PUB-03 | Phase 13 | Pending |
