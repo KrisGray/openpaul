@@ -123,7 +123,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | E2E-04 | Phase 11 | Complete |
 | E2E-05 | Phase 11 | Complete |
 | E2E-06 | Phase 11 | Complete |
-| COV-01 | Phase 12 | Complete |
+| COV-01 | Phase 12, 14 | Complete (fix pending) |
 | COV-02 | Phase 12 | Complete |
 | COV-03 | Phase 12 | Complete |
 | COV-04 | Phase 12 | Complete |
@@ -163,4 +163,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-03-05*
-*Last updated: 2026-03-13 after v1.2 requirements added*
+*Last updated: 2026-03-16 (gap closure phase 14 added for COV-01 fix)*
