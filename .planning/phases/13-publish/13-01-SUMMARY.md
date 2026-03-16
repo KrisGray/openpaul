@@ -78,7 +78,7 @@ Each task was committed atomically:
 2. **Task 2: Create publish.yml workflow** - `6e6cd99` (feat)
 3. **Bug fix: OIDC trusted publishing** - `9ce406b` (fix)
 
-**Plan metadata:** `99705c5` (docs: complete plan)
+**Plan metadata:** `9b23b9c` (docs: complete plan)
 
 _Note: TDD tasks may have multiple commits (test → feat → refactor)_
 
