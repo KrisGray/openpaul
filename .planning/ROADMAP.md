@@ -349,7 +349,7 @@ Phases execute in numeric order: 10 → 11 → 12 → 14 → 13
 | 11. E2E Tests | v1.2 | 2/2 | Complete | 2026-03-16 |
 | 12. Codecov | v1.2 | 1/1 | Complete | 2026-03-16 |
 | 14. Codecov Integration Fix | 1/1 | Complete    | 2026-03-16 | - |
-| 13. Publish | v1.2 | 0/1 | Not started | - |
+| 13. Publish | 1/1 | Complete   | 2026-03-16 | - |
 
 **Overall v1.2 Progress:** 4/5 phases complete (80%)
 

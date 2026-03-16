@@ -45,6 +45,8 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - [Phase 12-codecov]: workflow_run trigger on test.yml with e2e-tests.yml verification — avoids race conditions
 - [Phase 14-codecov-fix]: Exit 0 on timeout instead of failing - coverage is optional signal — Coverage upload failure should not block builds
 - [Phase 14-codecov-fix]: 30-minute max wait with 30-second poll interval — Balances thoroughness vs. resource usage
+- [Phase 13-publish]: Scoped package name @opencode-ai/openpaul for npmjs.org registry
+- [Phase 13-publish]: Quality gates poll all three workflows with 30-minute max wait
 
 ### Pending Todos
 
@@ -56,9 +58,9 @@ None.
 
 ## Session Continuity
 
-**Last session:** 2026-03-16T18:49:09.474Z
-**Stopped at:** Phase 13 context gathered
-**Resume file:** .planning/phases/13-publish/13-CONTEXT.md
+**Last session:** 2026-03-16T19:01:37.741Z
+**Stopped at:** Completed 13-publish-01-PLAN.md
+**Resume file:** None
 
 ---
 *State updated: 2026-03-16*
