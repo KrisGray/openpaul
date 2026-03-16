@@ -274,7 +274,11 @@ Plans:
   4. Failure artifacts (Docker logs, .openpaul state) uploaded for debugging
   5. E2E tests run on schedule (daily at 2am UTC) for regression detection
   6. E2E tests run on push to main and PRs (non-draft)
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 11-01-PLAN.md — Create Dockerfile.e2e and E2E test scaffold (E2E-01, E2E-02)
+- [ ] 11-02-PLAN.md — Create e2e-tests.yml workflow with retry and artifacts (E2E-03, E2E-04, E2E-05, E2E-06)
 
 #### Phase 12: Codecov
 **Goal**: Coverage reports uploaded to Codecov with PR comments for visibility
@@ -322,7 +326,7 @@ Phases execute in numeric order: 10 → 11 → 12 → 13
 | 8. Configuration | v1.1 | 6/6 | Complete | 2026-03-13 |
 | 9. Documentation | v1.1 | 18/18 | Complete | 2026-03-13 |
 | 10. CI Workflow | 1/1 | Complete    | 2026-03-16 | - |
-| 11. E2E Tests | v1.2 | 0/0 | Not started | - |
+| 11. E2E Tests | v1.2 | 0/2 | Not started | - |
 | 12. Codecov | v1.2 | 0/0 | Not started | - |
 | 13. Publish | v1.2 | 0/0 | Not started | - |
 
