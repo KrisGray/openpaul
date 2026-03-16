@@ -318,7 +318,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 14-01-PLAN.md — Fix codecov.yml race condition with dual triggers and wait loop (created)
+- [x] 14-01-PLAN.md — Fix codecov.yml race condition with dual triggers and wait loop (complete)
 
 ### 📋 v2.0 (Planned)
 
@@ -345,7 +345,7 @@ Phases execute in numeric order: 10 → 11 → 12 → 14 → 13
 | 10. CI Workflow | v1.2 | 1/1 | Complete | 2026-03-16 |
 | 11. E2E Tests | v1.2 | 2/2 | Complete | 2026-03-16 |
 | 12. Codecov | v1.2 | 1/1 | Complete | 2026-03-16 |
-| 14. Codecov Integration Fix | v1.2 | 0/1 | Not started | - |
+| 14. Codecov Integration Fix | 1/1 | Complete   | 2026-03-16 | - |
 | 13. Publish | v1.2 | 0/0 | Not started | - |
 
 **Overall v1.2 Progress:** 4/5 phases complete (80%)
@@ -383,7 +383,7 @@ Phase 10 (CI Workflow) - COMPLETE
   - [x] Phase 10: 5 requirements (CI Workflow) (completed 2026-03-16)
   - [x] Phase 11: 6 requirements (E2E Tests) (completed 2026-03-16)
   - [x] Phase 12: 5 requirements (Codecov) (completed 2026-03-16)
-  - [ ] Phase 14: COV-01 fix (Codecov race condition)
+  - [x] Phase 14: COV-01 fix (Codecov race condition) (completed 2026-03-16)
 - [ ] test.yml workflow runs on push/PR
 - [ ] e2e-tests.yml runs in Docker with OpenCode CLI
 - [ ] codecov.yml uploads coverage after tests pass (reliably)
