@@ -1,0 +1,191 @@
+name: Publish to npm
+
+# PUB-01: Trigger on GitHub release published event
+on:
+  release:
+    types: [published]
+
+# Cancel in-progress runs on same ref for efficiency
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # PUB-02: Quality gates - wait for all test workflows to pass
+  quality-gates:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      dist-tag: ${{ steps.dist-tag.outputs.tag }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      # PUB-02: Wait for all three workflows to complete successfully
+      - name: Wait for quality gates to pass
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          SHA="${{ github.sha }}"
+          MAX_WAIT_MINUTES=30
+          POLL_INTERVAL_SECONDS=30
+          MAX_ATTEMPTS=$((MAX_WAIT_MINUTES * 60 / POLL_INTERVAL_SECONDS))
+          
+          echo "Waiting for all quality gates to pass for commit: $SHA"
+          echo "Max wait time: $MAX_WAIT_MINUTES minutes"
+          
+          for attempt in $(seq 1 $MAX_ATTEMPTS); do
+            echo "Attempt $attempt of $MAX_ATTEMPTS..."
+            
+            # Check CI - Unit Tests status
+            TEST_STATUS=$(gh run list --workflow "CI - Unit Tests" --commit "$SHA" --limit 1 --json conclusion --jq '.[0].conclusion // "unknown"')
+            echo "  CI - Unit Tests: $TEST_STATUS"
+            
+            # Check E2E Tests status
+            E2E_STATUS=$(gh run list --workflow "E2E Tests" --commit "$SHA" --limit 1 --json conclusion --jq '.[0].conclusion // "unknown"')
+            echo "  E2E Tests: $E2E_STATUS"
+            
+            # Check Codecov Coverage Upload status
+            CODECOV_STATUS=$(gh run list --workflow "Codecov Coverage Upload" --commit "$SHA" --limit 1 --json conclusion --jq '.[0].conclusion // "unknown"')
+            echo "  Codecov Coverage Upload: $CODECOV_STATUS"
+            
+            # Fail-fast on failure or cancelled
+            if [ "$TEST_STATUS" = "failure" ] || [ "$E2E_STATUS" = "failure" ] || [ "$CODECOV_STATUS" = "failure" ]; then
+              echo "One or more workflows failed - cannot publish"
+              exit 1
+            fi
+            
+            if [ "$TEST_STATUS" = "cancelled" ] || [ "$E2E_STATUS" = "cancelled" ] || [ "$CODECOV_STATUS" = "cancelled" ]; then
+              echo "One or more workflows were cancelled - cannot publish"
+              exit 1
+            fi
+            
+            # Check if all succeeded
+            if [ "$TEST_STATUS" = "success" ] && [ "$E2E_STATUS" = "success" ] && [ "$CODECOV_STATUS" = "success" ]; then
+              echo "All quality gates passed, proceeding with publish"
+              exit 0
+            fi
+            
+            # Check if workflows exist at all
+            if [ "$TEST_STATUS" = "unknown" ] || [ "$E2E_STATUS" = "unknown" ] || [ "$CODECOV_STATUS" = "unknown" ]; then
+              TEST_RUN_ID=$(gh run list --workflow "CI - Unit Tests" --commit "$SHA" --limit 1 --json databaseId --jq '.[0].databaseId // empty')
+              E2E_RUN_ID=$(gh run list --workflow "E2E Tests" --commit "$SHA" --limit 1 --json databaseId --jq '.[0].databaseId // empty')
+              CODECOV_RUN_ID=$(gh run list --workflow "Codecov Coverage Upload" --commit "$SHA" --limit 1 --json databaseId --jq '.[0].databaseId // empty')
+              
+              if [ -z "$TEST_RUN_ID" ] || [ -z "$E2E_RUN_ID" ] || [ -z "$CODECOV_RUN_ID" ]; then
+                echo "One or more workflows have not started yet..."
+              else
+                echo "Workflows in progress, waiting..."
+              fi
+            fi
+            
+            if [ $attempt -lt $MAX_ATTEMPTS ]; then
+              echo "Waiting ${POLL_INTERVAL_SECONDS}s before next check..."
+              sleep $POLL_INTERVAL_SECONDS
+            fi
+          done
+          
+          echo "Timeout reached after $MAX_WAIT_MINUTES minutes"
+          echo "One or more workflows did not complete in time"
+          exit 1
+
+      # Extract and validate version from release tag
+      - name: Extract version from release tag
+        id: version
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          
+          # Strip 'v' prefix if present
+          VERSION="${TAG#v}"
+          
+          # Validate semver format (X.Y.Z with optional prerelease)
+          if ! echo "$VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9]+(\.[0-9]+)?)?$'; then
+            echo "Error: Tag '$TAG' does not match semver format (e.g., v1.2.3 or v1.2.3-beta.1)"
+            exit 1
+          fi
+          
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+
+      # Determine dist-tag for npm publish
+      - name: Determine npm dist-tag
+        id: dist-tag
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          
+          if echo "$TAG" | grep -qE -- '-beta\.[0-9]+$|-beta$'; then
+            DIST_TAG="beta"
+          elif echo "$TAG" | grep -qE -- '-next\.[0-9]+$|-next$|-rc\.[0-9]+$|-rc$'; then
+            DIST_TAG="next"
+          else
+            DIST_TAG="latest"
+          fi
+          
+          echo "tag=$DIST_TAG" >> $GITHUB_OUTPUT
+          echo "Dist-tag: $DIST_TAG"
+
+  # Publish to npm
+  publish:
+    needs: quality-gates
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # Sync version to match release tag
+      - name: Sync package.json version
+        run: |
+          VERSION="${{ needs.quality-gates.outputs.version }}"
+          echo "Updating package.json version to: $VERSION"
+          jq --arg v "$VERSION" '.version = $v' package.json > package.json.tmp && mv package.json.tmp package.json
+          cat package.json | grep '"version"'
+
+      # PUB-04: Build before publish
+      - name: Build package
+        run: npm run build
+
+      # PUB-03: Publish to npm with provenance
+      - name: Publish to npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          DIST_TAG: ${{ needs.quality-gates.outputs.dist-tag }}
+        run: |
+          npm config set //registry.npmjs.org/:_authToken ${NPM_TOKEN}
+          npm publish --access public --provenance --tag $DIST_TAG
+          echo "Published @opencode-ai/openpaul@$VERSION with tag: $DIST_TAG"
+
+      # Upload dist/ on failure for debugging
+      - name: Collect failure artifacts
+        if: failure()
+        run: |
+          mkdir -p publish-artifacts
+          if [ -d "dist" ]; then
+            cp -r dist publish-artifacts/
+          fi
+          # Include package.json for version reference
+          cp package.json publish-artifacts/
+
+      - name: Upload failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: publish-failure-dist
+          path: publish-artifacts/
+          retention-days: 7
