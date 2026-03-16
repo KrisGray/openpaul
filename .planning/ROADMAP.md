@@ -330,7 +330,7 @@ Phases execute in numeric order: 10 → 11 → 12 → 13
 | 9. Documentation | v1.1 | 18/18 | Complete | 2026-03-13 |
 | 10. CI Workflow | 1/1 | Complete    | 2026-03-16 | - |
 | 11. E2E Tests | 2/2 | Complete    | 2026-03-16 | - |
-| 12. Codecov | 1/1 | Complete   | 2026-03-16 | - |
+| 12. Codecov | 1/1 | Complete    | 2026-03-16 | - |
 | 13. Publish | v1.2 | 0/0 | Not started | - |
 
 **Overall v1.2 Progress:** 3/4 plans (75%)
