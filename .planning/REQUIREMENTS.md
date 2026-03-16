@@ -66,8 +66,8 @@ Requirements for CI/CD pipeline milestone. Each maps to roadmap phases.
 - [x] **CI-05**: Coverage artifacts uploaded for downstream codecov workflow
 
 ### E2E Tests
-- [ ] **E2E-01**: E2E tests run in Docker container with OpenCode CLI
-- [ ] **E2E-02**: Docker image built with layer caching for faster subsequent runs
+- [x] **E2E-01**: E2E tests run in Docker container with OpenCode CLI
+- [x] **E2E-02**: Docker image built with layer caching for faster subsequent runs
 - [ ] **E2E-03**: E2E tests retry once on failure
 - [ ] **E2E-04**: Failure artifacts uploaded (Docker logs, .openpaul state)
 - [ ] **E2E-05**: E2E tests run on schedule (daily at 2am UTC)
@@ -117,8 +117,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CI-03 | Phase 10 | Complete |
 | CI-04 | Phase 10 | Complete |
 | CI-05 | Phase 10 | Complete |
-| E2E-01 | Phase 11 | Pending |
-| E2E-02 | Phase 11 | Pending |
+| E2E-01 | Phase 11 | Complete |
+| E2E-02 | Phase 11 | Complete |
 | E2E-03 | Phase 11 | Pending |
 | E2E-04 | Phase 11 | Pending |
 | E2E-05 | Phase 11 | Pending |
