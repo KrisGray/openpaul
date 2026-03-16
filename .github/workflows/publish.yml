@@ -5,6 +5,11 @@ on:
   release:
     types: [published]
 
+# OIDC trusted publishing permissions
+permissions:
+  id-token: write
+  contents: read
+
 # Cancel in-progress runs on same ref for efficiency
 concurrency:
   group: publish-${{ github.ref }}
@@ -161,13 +166,11 @@ jobs:
       - name: Build package
         run: npm run build
 
-      # PUB-03: Publish to npm with provenance
+      # PUB-03: Publish to npm with provenance (OIDC trusted publishing - no NPM_TOKEN needed)
       - name: Publish to npm
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           DIST_TAG: ${{ needs.quality-gates.outputs.dist-tag }}
         run: |
-          npm config set //registry.npmjs.org/:_authToken ${NPM_TOKEN}
           npm publish --access public --provenance --tag $DIST_TAG
           echo "Published @opencode-ai/openpaul@$VERSION with tag: $DIST_TAG"
 
