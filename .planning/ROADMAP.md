@@ -290,7 +290,10 @@ Plans:
   3. Coverage uploaded to Codecov.io with token authentication
   4. PR coverage reports posted as comments showing coverage delta
   5. codecov.yml config file present with project-specific thresholds
-**Plans**: TBD
+**Plans**: 1 plan
+
+Plans:
+- [ ] 12-01-PLAN.md — Create codecov.yml workflow and configuration (COV-01 to COV-05)
 
 #### Phase 13: Publish
 **Goal**: npm package published automatically on GitHub release with quality gates
@@ -327,10 +330,10 @@ Phases execute in numeric order: 10 → 11 → 12 → 13
 | 9. Documentation | v1.1 | 18/18 | Complete | 2026-03-13 |
 | 10. CI Workflow | 1/1 | Complete    | 2026-03-16 | - |
 | 11. E2E Tests | 2/2 | Complete    | 2026-03-16 | - |
-| 12. Codecov | v1.2 | 0/0 | Not started | - |
+| 12. Codecov | v1.2 | 0/1 | Not started | - |
 | 13. Publish | v1.2 | 0/0 | Not started | - |
 
-**Overall v1.2 Progress:** 0/1 plans (0%)
+**Overall v1.2 Progress:** 3/4 plans (75%)
 
 ## Dependencies
 
@@ -371,7 +374,7 @@ Phase 10 (CI Workflow) - NOT STARTED
 - [ ] publish.yml publishes to npm on release
 
 **Started:** 2026-03-13
-**Progress:** 0/1 plans (0%)
+**Progress:** 3/4 plans (75%)
 
 ## Notes
 
