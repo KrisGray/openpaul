@@ -11,11 +11,11 @@ See: .planning/PROJECT.md (updated 2026-03-13)
 
 Milestone: v1.2
 **Current Phase:** 14
-**Current Phase Name:** Codecov
+**Current Phase Name:** codecov fix
 **Total Phases:** 4 (phases 10-13)
 **Current Plan:** Not started
 **Total Plans in Phase:** 1
-**Status:** Milestone complete
+**Status:** Ready to plan
 **Last Activity:** 2026-03-16
 
 **Progress:** [██████████] 100%
