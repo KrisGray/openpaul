@@ -10,15 +10,15 @@ See: .planning/PROJECT.md (updated 2026-03-13)
 ## Current Position
 
 Milestone: v1.2
-**Current Phase:** 11
-**Current Phase Name:** E2E Tests
+**Current Phase:** 12
+**Current Phase Name:** Codecov
 **Total Phases:** 4 (phases 10-13)
-**Current Plan:** Not started
-**Total Plans in Phase:** 2
-**Status:** Milestone complete
+**Current Plan:** Complete
+**Total Plans in Phase:** 1
+**Status:** Phase complete
 **Last Activity:** 2026-03-16
 
-**Progress:** [██████████] 100%
+**Progress:** [█████████░] 75%
 
 ## v1.1 Milestone Complete ✓
 
@@ -31,8 +31,8 @@ Milestone: v1.2
 | Phase | Name | Requirements | Status |
 |-------|------|--------------|--------|
 | 10 | CI Workflow | CI-01 to CI-05 | Complete (2026-03-16) |
-| 11 | E2E Tests | E2E-01 to E2E-06 | In progress (11-01 complete) |
-| 12 | Codecov | COV-01 to COV-05 | Not started |
+| 11 | E2E Tests | E2E-01 to E2E-06 | Complete (2026-03-16) |
+| 12 | Codecov | COV-01 to COV-05 | Complete (2026-03-16) |
 | 13 | Publish | PUB-01 to PUB-04 | Not started |
 
 ## Accumulated Context
@@ -42,6 +42,7 @@ Milestone: v1.2
 Decisions are logged in PROJECT.md Key Decisions table.
 - [Phase 10-ci-workflow]: Node.js 20.x LTS chosen as single version for CI simplicity — OpenCode discretion per CONTEXT.md
 - [Phase 11-e2e-tests]: Node.js 20-bookworm-slim for Docker consistency with CI workflow
+- [Phase 12-codecov]: workflow_run trigger on test.yml with e2e-tests.yml verification — avoids race conditions
 
 ### Pending Todos
 
@@ -53,10 +54,10 @@ None.
 
 ## Session Continuity
 
-**Last session:** 2026-03-16T15:11:15.013Z
-**Stopped at:** Completed 11-02-PLAN.md
+**Last session:** 2026-03-16T15:47:11Z
+**Stopped at:** Completed 12-01-PLAN.md
 **Resume file:** None
 
 ---
 *State updated: 2026-03-16*
-*Next: `/gsd-execute-phase 11` to continue E2E Tests phase (plan 02)*
+*Next: `/gsd-execute-phase 13` to start Publish phase*
