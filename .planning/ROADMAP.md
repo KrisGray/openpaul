@@ -304,7 +304,10 @@ Plans:
   2. Publish workflow requires: unit tests + E2E tests + codecov all passing
   3. npm provenance enabled for supply chain security transparency
   4. Build (npm run build) runs before publish to ensure fresh dist/
-**Plans**: TBD
+**Plans**: 1 plan
+
+Plans:
+- [ ] 13-01-PLAN.md — Create publish.yml workflow with quality gates and provenance (PUB-01 to PUB-04)
 
 #### Phase 14: Codecov Integration Fix
 **Goal**: Fix race condition in codecov.yml dual-workflow verification
