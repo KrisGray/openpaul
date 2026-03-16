@@ -1,0 +1,97 @@
+name: Codecov Coverage Upload
+
+on:
+  # COV-01: Trigger after test.yml completes successfully
+  workflow_run:
+    workflows: ["CI - Unit Tests"]
+    types: [completed]
+
+# Cancel redundant runs on same ref
+concurrency:
+  group: codecov-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  codecov:
+    # Only run when test.yml succeeded
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+
+    steps:
+      # COV-06: Skip draft PRs
+      - name: Check if draft PR
+        id: check_draft
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "${{ github.event.workflow_run.event }}" = "pull_request" ]; then
+            PR_NUMBER="${{ github.event.workflow_run.pull_requests[0].number }}"
+            if [ -n "$PR_NUMBER" ]; then
+              IS_DRAFT=$(gh pr view "$PR_NUMBER" --json isDraft --jq '.isDraft')
+              if [ "$IS_DRAFT" = "true" ]; then
+                echo "Skipping draft PR"
+                echo "skip=true" >> $GITHUB_OUTPUT
+                exit 0
+              fi
+            fi
+          fi
+          echo "skip=false" >> $GITHUB_OUTPUT
+
+      # COV-01: Verify both test.yml AND e2e-tests.yml succeeded for this commit
+      - name: Verify both test workflows succeeded
+        if: steps.check_draft.outputs.skip != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          SHA="${{ github.event.workflow_run.head_sha }}"
+          
+          echo "Checking workflow status for commit: $SHA"
+          
+          # Check CI - Unit Tests status (should already be success since we triggered on it)
+          TEST_STATUS=$(gh run list --workflow "CI - Unit Tests" --commit "$SHA" --limit 1 --json conclusion --jq '.[0].conclusion // "unknown"')
+          echo "CI - Unit Tests status: $TEST_STATUS"
+          
+          if [ "$TEST_STATUS" != "success" ]; then
+            echo "CI - Unit Tests did not succeed, skipping coverage upload"
+            exit 1
+          fi
+          
+          # Check E2E Tests status
+          E2E_STATUS=$(gh run list --workflow "E2E Tests" --commit "$SHA" --limit 1 --json conclusion --jq '.[0].conclusion // "unknown"')
+          echo "E2E Tests status: $E2E_STATUS"
+          
+          if [ "$E2E_STATUS" != "success" ]; then
+            echo "E2E Tests did not succeed yet, skipping coverage upload"
+            echo "Will retry when both workflows complete"
+            exit 1
+          fi
+          
+          echo "Both test workflows succeeded, proceeding with coverage upload"
+
+      - name: Checkout repository
+        if: steps.check_draft.outputs.skip != 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      # COV-02: Download coverage artifact from test.yml
+      - name: Download coverage artifact
+        if: steps.check_draft.outputs.skip != 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage
+          github-token: ${{ github.token }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      # COV-03: Upload coverage to Codecov with token authentication
+      - name: Upload coverage to Codecov
+        if: steps.check_draft.outputs.skip != 'true'
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage/lcov.info
+          flags: unittests
+          fail_ci_if_error: true
+          verbose: true
+          commit_parent: ${{ github.event.workflow_run.head_sha }}
