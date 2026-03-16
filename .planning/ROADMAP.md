@@ -306,6 +306,20 @@ Plans:
   4. Build (npm run build) runs before publish to ensure fresh dist/
 **Plans**: TBD
 
+#### Phase 14: Codecov Integration Fix
+**Goal**: Fix race condition in codecov.yml dual-workflow verification
+**Depends on**: Phase 12 (codecov)
+**Requirements**: COV-01 (fix)
+**Gap Closure**: Fixes integration gap from v1.2 audit
+**Success Criteria** (what must be TRUE):
+  1. Codecov workflow waits for BOTH test.yml AND e2e-tests.yml to complete before uploading
+  2. Graceful timeout handling if E2E takes longer than expected
+  3. Dual trigger support (test.yml OR e2e-tests.yml both trigger codecov.yml)
+**Plans**: 1 plan
+
+Plans:
+- [ ] 14-01-PLAN.md — Fix codecov.yml race condition with wait loop and dual triggers
+
 ### 📋 v2.0 (Planned)
 
 **Milestone Goal:** Future enhancements based on user feedback
@@ -315,7 +329,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 10 → 11 → 12 → 13
+Phases execute in numeric order: 10 → 11 → 12 → 14 → 13
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -328,12 +342,13 @@ Phases execute in numeric order: 10 → 11 → 12 → 13
 | 7. Quality | v1.1 | 11/11 | Complete | 2026-03-13 |
 | 8. Configuration | v1.1 | 6/6 | Complete | 2026-03-13 |
 | 9. Documentation | v1.1 | 18/18 | Complete | 2026-03-13 |
-| 10. CI Workflow | 1/1 | Complete    | 2026-03-16 | - |
-| 11. E2E Tests | 2/2 | Complete    | 2026-03-16 | - |
-| 12. Codecov | 1/1 | Complete    | 2026-03-16 | - |
+| 10. CI Workflow | v1.2 | 1/1 | Complete | 2026-03-16 |
+| 11. E2E Tests | v1.2 | 2/2 | Complete | 2026-03-16 |
+| 12. Codecov | v1.2 | 1/1 | Complete | 2026-03-16 |
+| 14. Codecov Integration Fix | v1.2 | 0/1 | Not started | - |
 | 13. Publish | v1.2 | 0/0 | Not started | - |
 
-**Overall v1.2 Progress:** 3/4 plans (75%)
+**Overall v1.2 Progress:** 4/5 phases complete (80%)
 
 ## Dependencies
 
@@ -349,32 +364,33 @@ Phase 9 (Documentation) - COMPLETE
 
 --- v1.2 CI/CD Pipeline ---
 
-Phase 10 (CI Workflow) - NOT STARTED
-  └─> Phase 11 (E2E Tests) - NOT STARTED
-       └─> Phase 12 (Codecov) - NOT STARTED (needs test.yml + e2e-tests.yml)
-            └─> Phase 13 (Publish) - NOT STARTED (needs all above)
+Phase 10 (CI Workflow) - COMPLETE
+  └─> Phase 11 (E2E Tests) - COMPLETE
+       └─> Phase 12 (Codecov) - COMPLETE
+            └─> Phase 14 (Codecov Integration Fix) - NOT STARTED (gap closure)
+            └─> Phase 13 (Publish) - NOT STARTED (needs all above + fix)
 ```
 
 ## Milestone Tracking
 
 **Milestone:** v1.2 CI/CD Pipeline
 
-**Target:** Complete CI/CD infrastructure with 4 GitHub Actions workflows
+**Target:** Complete CI/CD infrastructure with 5 phases (10-14, 13 optional for later)
 
 **Completion criteria:**
-- [ ] All 4 phases complete (10-13)
-- [ ] All 20 requirements verified
+- [ ] All required phases complete (10-12, 14)
+- [ ] All 16 requirements verified
   - [x] Phase 10: 5 requirements (CI Workflow) (completed 2026-03-16)
   - [x] Phase 11: 6 requirements (E2E Tests) (completed 2026-03-16)
   - [x] Phase 12: 5 requirements (Codecov) (completed 2026-03-16)
-  - [ ] Phase 13: 4 requirements (Publish)
+  - [ ] Phase 14: COV-01 fix (Codecov race condition)
 - [ ] test.yml workflow runs on push/PR
 - [ ] e2e-tests.yml runs in Docker with OpenCode CLI
-- [ ] codecov.yml uploads coverage after tests pass
-- [ ] publish.yml publishes to npm on release
+- [ ] codecov.yml uploads coverage after tests pass (reliably)
+- [ ] (Optional) publish.yml publishes to npm on release
 
 **Started:** 2026-03-13
-**Progress:** 3/4 plans (75%)
+**Progress:** 4/5 phases (80%)
 
 ## Notes
 
@@ -393,4 +409,4 @@ Phase 10 (CI Workflow) - NOT STARTED
 
 ---
 *Roadmap created: 2026-03-05*
-*Last updated: 2026-03-13 (v1.2 roadmap created - phases 10-13)*
+*Last updated: 2026-03-16 (gap closure phase 14 added from audit)*
