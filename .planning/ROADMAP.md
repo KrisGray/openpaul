@@ -258,7 +258,10 @@ Plans:
   3. In-progress workflow runs cancel when new commits arrive on the same ref
   4. Coverage report generated via `npm run test:coverage` command
   5. Coverage artifacts uploaded for downstream codecov workflow to consume
-**Plans**: TBD
+**Plans**: 1 plan
+
+Plans:
+- [ ] 10-01-PLAN.md — Create test.yml workflow with triggers, concurrency, coverage artifacts
 
 #### Phase 11: E2E Tests
 **Goal**: E2E tests run in Docker container with OpenCode CLI for realistic testing
@@ -318,12 +321,12 @@ Phases execute in numeric order: 10 → 11 → 12 → 13
 | 7. Quality | v1.1 | 11/11 | Complete | 2026-03-13 |
 | 8. Configuration | v1.1 | 6/6 | Complete | 2026-03-13 |
 | 9. Documentation | v1.1 | 18/18 | Complete | 2026-03-13 |
-| 10. CI Workflow | v1.2 | 0/0 | Not started | - |
+| 10. CI Workflow | v1.2 | 0/1 | Not started | - |
 | 11. E2E Tests | v1.2 | 0/0 | Not started | - |
 | 12. Codecov | v1.2 | 0/0 | Not started | - |
 | 13. Publish | v1.2 | 0/0 | Not started | - |
 
-**Overall v1.2 Progress:** 0/0 plans (0%)
+**Overall v1.2 Progress:** 0/1 plans (0%)
 
 ## Dependencies
 
@@ -364,7 +367,7 @@ Phase 10 (CI Workflow) - NOT STARTED
 - [ ] publish.yml publishes to npm on release
 
 **Started:** 2026-03-13
-**Progress:** 0/0 plans (0%)
+**Progress:** 0/1 plans (0%)
 
 ## Notes
 
