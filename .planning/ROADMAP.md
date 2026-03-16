@@ -318,7 +318,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 14-01-PLAN.md — Fix codecov.yml race condition with wait loop and dual triggers
+- [ ] 14-01-PLAN.md — Fix codecov.yml race condition with dual triggers and wait loop (created)
 
 ### 📋 v2.0 (Planned)
 
