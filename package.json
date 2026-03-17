@@ -54,6 +54,7 @@
     "@types/node": "^20.0.0",
     "jest": "^29.0.0",
     "ts-jest": "^29.0.0",
+    "typedoc": "^0.28.17",
     "typescript": "^5.0.0"
   },
   "scripts": {
@@ -61,6 +62,8 @@
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:e2e": "jest --testPathPattern=e2e --passWithNoTests",
+    "docs": "typedoc",
+    "docs:ci": "typedoc --gitRevision $(git rev-parse HEAD)",
     "prepublishOnly": "npm run build"
   }
 }

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["src/index.ts"],
+  "entryPointStrategy": "resolve",
+  "categorizeByGroup": true,
+  "out": "docs",
+  "readme": "./README.md",
+  "gitRemote": "origin",
+  "gitRevision": "main",
+  "sourceLinkExternal": true,
+  "defaultCategory": "Other",
+  "categoryOrder": ["Commands", "Types", "Storage", "State", "Output", "*"],
+  "navigation": {
+    "includeCategories": true
+  },
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "excludeInternal": true,
+  "hideGenerator": false,
+  "githubPages": true
+}
