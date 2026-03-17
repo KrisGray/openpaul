@@ -24,10 +24,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          REPO="${{ github.repository }}"
           if [ "${{ github.event.workflow_run.event }}" = "pull_request" ]; then
             PR_NUMBER="${{ github.event.workflow_run.pull_requests[0].number }}"
             if [ -n "$PR_NUMBER" ]; then
-              IS_DRAFT=$(gh pr view "$PR_NUMBER" --json isDraft --jq '.isDraft')
+              IS_DRAFT=$(gh pr view "$PR_NUMBER" --repo "$REPO" --json isDraft --jq '.isDraft')
               if [ "$IS_DRAFT" = "true" ]; then
                 echo "Skipping draft PR"
                 echo "skip=true" >> $GITHUB_OUTPUT
@@ -44,6 +45,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           SHA="${{ github.event.workflow_run.head_sha }}"
+          REPO="${{ github.repository }}"
           MAX_WAIT_MINUTES=30
           POLL_INTERVAL_SECONDS=30
           MAX_ATTEMPTS=$((MAX_WAIT_MINUTES * 60 / POLL_INTERVAL_SECONDS))
@@ -55,11 +57,11 @@ jobs:
             echo "Attempt $attempt of $MAX_ATTEMPTS..."
             
             # Check CI - Unit Tests status
-            TEST_STATUS=$(gh run list --workflow "CI - Unit Tests" --commit "$SHA" --limit 1 --json conclusion --jq '.[0].conclusion // "unknown"')
+            TEST_STATUS=$(gh run list --repo "$REPO" --workflow "CI - Unit Tests" --commit "$SHA" --limit 1 --json conclusion --jq '.[0].conclusion // "unknown"')
             echo "  CI - Unit Tests: $TEST_STATUS"
             
             # Check E2E Tests status
-            E2E_STATUS=$(gh run list --workflow "E2E Tests" --commit "$SHA" --limit 1 --json conclusion --jq '.[0].conclusion // "unknown"')
+            E2E_STATUS=$(gh run list --repo "$REPO" --workflow "E2E Tests" --commit "$SHA" --limit 1 --json conclusion --jq '.[0].conclusion // "unknown"')
             echo "  E2E Tests: $E2E_STATUS"
             
             # Handle failure cases
@@ -83,8 +85,8 @@ jobs:
             # Still waiting - check if workflows exist at all
             if [ "$TEST_STATUS" = "unknown" ] || [ "$E2E_STATUS" = "unknown" ]; then
               # Check if workflow has started but not completed
-              TEST_RUN_ID=$(gh run list --workflow "CI - Unit Tests" --commit "$SHA" --limit 1 --json databaseId --jq '.[0].databaseId // empty')
-              E2E_RUN_ID=$(gh run list --workflow "E2E Tests" --commit "$SHA" --limit 1 --json databaseId --jq '.[0].databaseId // empty')
+              TEST_RUN_ID=$(gh run list --repo "$REPO" --workflow "CI - Unit Tests" --commit "$SHA" --limit 1 --json databaseId --jq '.[0].databaseId // empty')
+              E2E_RUN_ID=$(gh run list --repo "$REPO" --workflow "E2E Tests" --commit "$SHA" --limit 1 --json databaseId --jq '.[0].databaseId // empty')
               
               if [ -z "$TEST_RUN_ID" ] || [ -z "$E2E_RUN_ID" ]; then
                 echo "One or more workflows have not started yet..."
