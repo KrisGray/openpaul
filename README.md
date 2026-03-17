@@ -11,7 +11,7 @@
 <br>
 
 ```bash
-npx @krisgray/openpaul
+npx openpaul
 ```
 
 **Works on Mac, Windows, and Linux.**
@@ -67,7 +67,7 @@ No sprint ceremonies. No story points. No enterprise theater. Just a system that
 ## Getting Started
 
 ```bash
-npx @krisgray/openpaul
+npx openpaul
 ```
 
 The installer prompts you to choose:
@@ -262,13 +262,13 @@ Task 3: Add avatar upload
 
 ```bash
 # Install both packages
-npm install @krisgray/opencarl @krisgray/openpaul
+npm install @krisgray/opencarl openpaul
 ```
 
 ```json
 // opencode.json
 {
-  "plugin": ["@krisgray/opencarl", "@krisgray/openpaul"]
+  "plugin": ["@krisgray/opencarl", "openpaul"]
 }
 ```
 
@@ -377,8 +377,8 @@ These rules load automatically when you're in `.openpaul/` context and disappear
 <summary><strong>Non-interactive Install</strong></summary>
 
 ```bash
-npx @krisgray/openpaul --global   # Install to ~/.claude/
-npx @krisgray/openpaul --local    # Install to ./.claude/
+npx openpaul --global   # Install to ~/.claude/
+npx openpaul --local    # Install to ./.claude/
 ```
 
 </details>
@@ -698,7 +698,7 @@ APPLY blocks until required skills are confirmed loaded.
 **Commands not working as expected?**
 
 - Run `/openpaul:help` to verify installation
-- Re-run `npx @krisgray/openpaul` to reinstall
+- Re-run `npx openpaul` to reinstall
 
 **Loop position seems wrong?**
 
