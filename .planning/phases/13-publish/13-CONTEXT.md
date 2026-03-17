@@ -33,8 +33,8 @@ npm package publishing workflow triggered by GitHub releases. Quality gates ensu
 
 ### Registry Configuration
 - npmjs.org public registry (not GitHub Packages)
-- Scoped package: `@opencode-ai/openpaul`
-- Credentials via `NPM_TOKEN` GitHub repository secret (automation token from npmjs.org)
+- Scoped package: `@krisgray/openpaul`
+- OIDC trusted publishing (no NPM_TOKEN secret needed)
 - Enable npm provenance for supply chain security transparency
 
 ### OpenCode's Discretion

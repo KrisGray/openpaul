@@ -40,7 +40,7 @@ human_verification_required:
 | Artifact | Expected | Status | Details |
 | -------- | -------- | ------ | ------- |
 | `.github/workflows/publish.yml` | npm publishing workflow with quality gates (min 80 lines, contains release trigger) | ✓ VERIFIED | 194 lines, contains `release: types: [published]`, `id-token: write`, quality-gates job, provenance flag |
-| `package.json` | Package metadata with scope `@opencode-ai/openpaul` | ✓ VERIFIED | Line 2: `"name": "@opencode-ai/openpaul"` |
+| `package.json` | Package metadata with scope `@krisgray/openpaul` | ✓ VERIFIED | Line 2: `"name": "@krisgray/openpaul"` |
 
 ### Key Link Verification
 
