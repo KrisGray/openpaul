@@ -1,4 +1,4 @@
-import { tool } from '@opencode-ai/plugin'
+import { tool, type ToolDefinition } from '@opencode-ai/plugin'
 import { RoadmapManager } from '../roadmap/roadmap-manager'
 import { formatHeader, formatBold, formatList } from '../output/formatter'
 import type { AddPhaseOptions } from '../types/roadmap'
@@ -14,7 +14,7 @@ import type { AddPhaseOptions } from '../types/roadmap'
  * - Directory name auto-generated
  * - Brief success output only
  */
-export const openpaulAddPhase = tool({
+export const openpaulAddPhase: ToolDefinition = tool({
   description: 'Add a new phase to the roadmap at a specified position',
   args: {
     name: tool.schema.string().describe('Phase name'),

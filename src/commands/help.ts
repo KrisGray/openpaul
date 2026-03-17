@@ -1,4 +1,4 @@
-import { tool } from '@opencode-ai/plugin'
+import { tool, type ToolDefinition } from '@opencode-ai/plugin'
 import { formatHeader, formatBold, formatList } from '../output/formatter'
 import type { CommandType } from '../types/command'
 
@@ -12,7 +12,7 @@ import type { CommandType } from '../types/command'
  * - Provides detailed help for specific commands
  * - Output includes 📚 emoji and usage examples
  */
-export const openpaulHelp = tool({
+export const openpaulHelp: ToolDefinition = tool({
   description: 'Show command reference',
   args: {
     command: tool.schema.string().optional().describe('Show help for specific command'),

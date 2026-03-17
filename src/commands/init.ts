@@ -1,4 +1,4 @@
-import { tool } from '@opencode-ai/plugin'
+import { tool, type ToolDefinition } from '@opencode-ai/plugin'
 import { existsSync } from 'fs'
 import { join } from 'path'
 import { FileManager } from '../storage/file-manager'
@@ -16,7 +16,7 @@ import { formatHeader, formatList, formatBold } from '../output/formatter'
  * - Sets up initial state for phase 1
  * - Provides clear next steps
  */
-export const openpaulInit = tool({
+export const openpaulInit: ToolDefinition = tool({
   description: 'Initialize OpenPAUL in the current project',
   args: {
     force: tool.schema.boolean().optional().describe('Reinitialize even if .openpaul/ exists'),

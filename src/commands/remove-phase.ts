@@ -1,4 +1,4 @@
-import { tool } from '@opencode-ai/plugin'
+import { tool, type ToolDefinition } from '@opencode-ai/plugin'
 import { existsSync } from 'fs'
 import { join } from 'path'
 import { RoadmapManager } from '../roadmap/roadmap-manager'
@@ -17,7 +17,7 @@ import { formatHeader, formatBold, formatList } from '../output/formatter'
  * - Renumbering only affects ROADMAP.md
  * - No --force override
  */
-export const openpaulRemovePhase = tool({
+export const openpaulRemovePhase: ToolDefinition = tool({
   description: 'Remove a phase from the roadmap with automatic renumbering',
   args: {
     phase: tool.schema.number().describe('Phase number to remove'),
