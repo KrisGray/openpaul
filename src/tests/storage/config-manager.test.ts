@@ -30,25 +30,27 @@ describe('ConfigManager class', () => {
     it('should return default config when no config file exists', () => {
       const config = configManager.load()
       
-      expect(config.version).toBe('1.0')
-      expect(config.project.name).toBe('My Project')
+      expect(config.project?.name).toBe('OpenPAUL Project')
+      expect(config.project?.description).toBe('A project managed with OpenPAUL')
     })
 
     it('should load config from .openpaul/config.md', () => {
       const configDir = join(tempDir, '.openpaul')
       mkdirSync(configDir, { recursive: true })
-      const configContent = `version: "2.0"
+      const configContent = `---
 project:
   name: Test Project
   description: A test project
+---
+# Config
 `
       writeFileSync(join(configDir, 'config.md'), configContent)
 
       const manager = new ConfigManager(tempDir)
       const config = manager.load()
 
-      expect(config.version).toBe('2.0')
-      expect(config.project.name).toBe('Test Project')
+      expect(config.project?.name).toBe('Test Project')
+      expect(config.project?.description).toBe('A test project')
     })
   })
 
@@ -60,9 +62,8 @@ project:
       expect(name).toBe('New Name')
     })
 
-    it('should return undefined for non-existent keys', () => {
-      const value = configManager.get('nonexistent.key')
-      expect(value).toBeUndefined()
+    it('should throw for non-existent top-level keys', () => {
+      expect(() => configManager.get('nonexistent.key')).toThrow('Unknown config key')
     })
   })
 
@@ -74,10 +75,8 @@ project:
       expect(value).toBe('Test')
     })
 
-    it('should return default if key missing', () => {
-      const value = configManager.getWithDefaults('missing.key', 'DefaultValue')
-      
-      expect(value).toBe('DefaultValue')
+    it('should throw for missing invalid keys', () => {
+      expect(() => configManager.getWithDefaults('missing.key', 'DefaultValue')).toThrow('Unknown config key')
     })
   })
 
@@ -96,7 +95,7 @@ project:
       
       expect(existsSync(configPath)).toBe(true)
       const content = readFileSync(configPath, 'utf-8')
-      expect(content).toContain('version:')
+      expect(content).toContain('project:')
     })
   })
 })
