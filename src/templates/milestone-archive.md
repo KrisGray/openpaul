@@ -191,7 +191,7 @@ Plans:
 
 ### Phase 8.6: Codebase CLAUDE.md [INSERTED]
 
-**Goal:** Project-level Claude Code configuration
+**Goal:** Project-level OpenCode configuration
 **Depends on:** Phase 8.5
 **Reason:** Improve agent context for OpenPAUL projects
 

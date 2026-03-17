@@ -20,9 +20,9 @@ Next phase: PLAN (next plan or next phase)
 </required_reading>
 
 <references>
-@~/.claude/openpaul-framework/references/loop-phases.md
-@~/.claude/openpaul-framework/templates/SUMMARY.md
-@~/.claude/openpaul-framework/workflows/transition-phase.md (loaded when last plan in phase)
+@openpaul/src/references/loop-phases.md
+@openpaul/src/templates/SUMMARY.md
+@openpaul/src/workflows/transition-phase.md (loaded when last plan in phase)
 </references>
 
 <process>
@@ -180,7 +180,7 @@ Continue to next plan?
    ════════════════════════════════════════
    ```
 
-2. **MUST read and execute:** @~/.claude/openpaul-framework/workflows/transition-phase.md
+2. **MUST read and execute:** @openpaul/src/workflows/transition-phase.md
 
 3. Transition handles (do not skip any):
    - Evolve PROJECT.md (requirements validated → shipped)

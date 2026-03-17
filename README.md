@@ -2,11 +2,12 @@
 
 # OpenPAUL
 
-**Plan-Apply-Unify Loop** — Structured AI-assisted development for Claude Code.
+**Plan-Apply-Unify Loop** — Structured AI-assisted development for OpenCode.
 
 [![npm version](https://img.shields.io/npm/v/openpaul?style=for-the-badge&logo=npm&logoColor=white&color=CB3837)](https://www.npmjs.com/package/openpaul)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/KrisGray/openpaul?style=for-the-badge&logo=github&color=181717)](https://github.com/KrisGray/openpaul)
+[![Documentation](https://img.shields.io/badge/docs-GitHub_Pages-green?style=for-the-badge&logo=github&color=2ea44f)](https://krisgray.github.io/openpaul/)
 
 <br>
 
@@ -22,7 +23,7 @@ _"Quality over speed-for-speed's-sake. In-session context over subagent sprawl."
 
 <br>
 
-[Why OpenPAUL](#why-openpaul) · [Getting Started](#getting-started) · [The Loop](#the-loop) · [Commands](#commands) · [How It Works](#how-it-works)
+[📖 Documentation](https://krisgray.github.io/openpaul/) · [Why OpenPAUL](#why-openpaul) · [Getting Started](#getting-started) · [The Loop](#the-loop) · [Commands](#commands)
 
 </div>
 
@@ -52,7 +53,7 @@ The complexity is in the system, not your workflow. Behind the scenes: structure
 
 **AI-assisted developers** who want structure without bureaucracy.
 
-You describe what you want, Claude Code builds it, and OpenPAUL ensures:
+You describe what you want, OpenCode builds it, and OpenPAUL ensures:
 
 - Plans have clear acceptance criteria
 - Execution stays bounded
@@ -66,15 +67,121 @@ No sprint ceremonies. No story points. No enterprise theater. Just a system that
 
 ## Getting Started
 
-```bash
-npx openpaul
+### Global install (all projects)
+
+This makes openpaul available in every OpenCode session on your machine.
+
+1. Run OpenCode once so it creates its config directory.
+2. Open or create the global config file: `~/.config/opencode/opencode.json`.
+3. Add openpaul under the npm plugins section:
+
+```json
+{
+  "plugins": {
+    "npm": [
+      "openpaul"
+    ]
+  }
+}
 ```
 
-The installer prompts you to choose:
+4. Restart OpenCode. On startup it will install npm plugins with Bun into `~/.cache/opencode/node_modules/` and load them.
 
-1. **Location** — Global (all projects) or local (current project only)
+### Project-local install (single repo only)
 
-Verify with `/openpaul:help` inside Claude Code.
+This limits openpaul to a specific project.
+
+1. In your project root, create or edit `opencode.json`:
+
+```json
+{
+  "plugins": {
+    "npm": [
+      "openpaul"
+    ]
+  }
+}
+```
+
+2. Start OpenCode from that project directory (or point it at the project root) so it picks up `./opencode.json`.
+3. Restart OpenCode; it will read global config first, then project config, then plugin directories, and load all plugins it finds.
+
+### Verify
+
+Run `/openpaul:help` inside OpenCode to verify installation.
+
+---
+
+## Quick Start with OpenCARL (Recommended)
+
+For the best experience, use OpenPAUL with **OpenCARL** ([github.com/KrisGray/opencarl](https://github.com/KrisGray/opencarl)) — a dynamic rule injection system that enforces OpenPAUL workflow discipline automatically.
+
+### Install Both Extensions
+
+```json
+// ~/.config/opencode/opencode.json
+{
+  "plugins": {
+    "npm": [
+      "openpaul",
+      "@krisgray/opencarl"
+    ]
+  }
+}
+```
+
+### Your First Loop (5 minutes)
+
+```
+YOU: I want to add a dark mode toggle to my React app
+
+# OpenCARL auto-loads OpenPAUL rules when it detects .openpaul/
+
+YOU: /openpaul:init
+OpenPAUL: ✓ Created .openpaul/ with PROJECT.md, ROADMAP.md, STATE.md
+
+YOU: /openpaul:plan
+OpenPAUL: Describe what you're building...
+
+YOU: Dark mode toggle that:
+  - Remembers preference in localStorage
+  - Defaults to system preference
+  - Toggles without page reload
+
+OpenPAUL: Created PLAN.md with:
+  ✓ Objective: Add persistent dark mode toggle
+  ✓ AC-1: Given user visits, When no preference, Then use system
+  ✓ AC-2: Given user clicks toggle, When in light, Then switch to dark
+  ✓ Task 1: Create ThemeContext
+  ✓ Task 2: Add CSS variables
+  ✓ Task 3: Create ThemeToggle component
+  ✓ Boundary: DO NOT change auth components
+
+YOU: Looks good. /openpaul:apply
+
+OpenPAUL: 
+  ✓ Task 1: Created ThemeContext (verified: imports work)
+  ✓ Task 2: Added CSS variables (verified: themes render)
+  ✓ Task 3: Created ThemeToggle (verified: toggle works)
+
+YOU: /openpaul:unify
+
+OpenPAUL: 
+  ✓ Created SUMMARY.md
+  ✓ Updated STATE.md
+  ✓ Recorded 3 decisions
+
+Done! Loop complete. State preserved for next session.
+```
+
+### Why OpenCARL + OpenPAUL?
+
+| Without OpenCARL | With OpenCARL |
+|------------------|---------------|
+| Manual workflow discipline | Auto-enforced loop rules |
+| Easy to skip UNIFY | Blocked from skipping |
+| Context bloat | Rules load on-demand |
+| Inconsistent quality | Consistent enforcement |
 
 ---
 
@@ -260,15 +367,31 @@ Task 3: Add avatar upload
 
 ### Installation (Both Extensions)
 
-```bash
-# Install both packages
-npm install @krisgray/opencarl openpaul
-```
+Add both to your `opencode.json`:
 
 ```json
-// opencode.json
+// ~/.config/opencode/opencode.json (global)
 {
-  "plugin": ["@krisgray/opencarl", "openpaul"]
+  "plugins": {
+    "npm": [
+      "openpaul",
+      "@krisgray/opencarl"
+    ]
+  }
+}
+```
+
+Or project-local:
+
+```json
+// ./opencode.json (project root)
+{
+  "plugins": {
+    "npm": [
+      "openpaul",
+      "@krisgray/opencarl"
+    ]
+  }
 }
 ```
 
@@ -372,16 +495,6 @@ When OpenCARL detects you're working in an OpenPAUL project:
 These rules load automatically when you're in `.openpaul/` context and disappear when you're not.
 
 ---
-
-<details>
-<summary><strong>Non-interactive Install</strong></summary>
-
-```bash
-npx openpaul --global   # Install to ~/.claude/
-npx openpaul --local    # Install to ./.claude/
-```
-
-</details>
 
 ## Migration from PAUL
 
@@ -692,13 +805,13 @@ APPLY blocks until required skills are confirmed loaded.
 
 **Commands not found after install?**
 
-- Restart Claude Code to reload slash commands
-- Verify files exist in `~/.claude/commands/openpaul/` (global) or `./.claude/commands/openpaul/` (local)
+- Restart OpenCode to reload plugins
+- Verify `openpaul` is listed in your `opencode.json` plugins section
 
 **Commands not working as expected?**
 
 - Run `/openpaul:help` to verify installation
-- Re-run `npx openpaul` to reinstall
+- Check the plugin is installed in `~/.cache/opencode/node_modules/openpaul/`
 
 **Loop position seems wrong?**
 
@@ -767,6 +880,6 @@ MIT License. See [LICENSE](LICENSE) for details.
 
 <div align="center">
 
-**Claude Code is powerful. OpenPAUL makes it reliable.**
+**OpenCode is powerful. OpenPAUL makes it reliable.**
 
 </div>

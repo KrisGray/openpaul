@@ -19,8 +19,8 @@ Any position in PLAN/APPLY/UNIFY loop. Captures state regardless of where loop i
 </required_reading>
 
 <references>
-@~/.claude/openpaul-framework/references/context-management.md
-@~/.claude/openpaul-framework/templates/HANDOFF.md
+@openpaul/src/references/context-management.md
+@openpaul/src/templates/HANDOFF.md
 </references>
 
 <process>

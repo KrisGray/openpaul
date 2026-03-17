@@ -141,15 +141,15 @@ openpaul-framework/
 ## Directory Purposes
 
 **bin/**
-- Purpose: CLI entry points
-- Contains: install.js (installer script)
-- Key files: install.js - handles npx installation
+- Purpose: CLI entry points (deprecated)
+- Contains: No longer used
+- Key files: N/A
 - Subdirectories: None
 
 **src/commands/**
-- Purpose: Slash command definitions for Claude Code
-- Contains: *.md files (one per command)
-- Key files: init.md, plan.md, apply.md, unify.md
+- Purpose: Slash command definitions for OpenCode
+- Contains: *.md and *.ts files (one pair per command)
+- Key files: init.ts/md, plan.ts/md, apply.ts/md, unify.ts/md
 - Subdirectories: None (flat structure)
 
 **src/references/**
@@ -187,7 +187,7 @@ openpaul-framework/
 
 **Documentation:**
 - `README.md` - User-facing installation and usage guide
-- `CLAUDE.md` - Instructions for Claude Code when working in this repo
+- `OPENCODE.md` - Instructions for OpenCode when working in this repo
 
 ## Naming Conventions
 
@@ -230,8 +230,8 @@ openpaul-framework/
 ## Special Directories
 
 **src/**
-- Purpose: Resources installed to ~/.claude/openpaul/
-- Source: Copied by bin/install.js during installation
+- Purpose: Plugin resources loaded from npm package
+- Source: Loaded as npm plugin via opencode.json
 - Committed: Yes (source of truth)
 
 **.openpaul/**

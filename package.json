@@ -5,13 +5,9 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "bin": {
-    "openpaul-cli": "bin/install.js"
-  },
   "files": [
     "dist",
     "README.md",
-    "bin",
     "src/commands",
     "src/templates",
     "src/references",
@@ -25,8 +21,6 @@
     "plan-apply-unify",
     "ai",
     "development",
-    "claude",
-    "claude-code",
     "planning",
     "structured-development"
   ],

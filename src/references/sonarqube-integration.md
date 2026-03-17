@@ -49,7 +49,7 @@ sonar.exclusions=**/node_modules/**,**/dist/**
 
 ### 3. SonarQube MCP Server
 
-Ensure sonarqube MCP is configured in Claude Code:
+Ensure sonarqube MCP is configured in OpenCode:
 
 ```json
 {
@@ -239,6 +239,6 @@ curl http://localhost:9000/api/system/status
 ### "MCP tools not available"
 
 Verify sonarqube MCP server is:
-- Configured in Claude Code settings
+- Configured in OpenCode settings
 - Running without errors
 - Has correct authentication token

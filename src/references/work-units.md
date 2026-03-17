@@ -2,8 +2,6 @@
 
 <purpose>
 Guide plan sizing to maintain consistent quality. Plans must complete within ~50% context to avoid quality degradation. This reference helps estimate scope and know when to split.
-
-**For CARL users:** CARL context brackets handle this operationally. This reference documents the underlying principles.
 </purpose>
 
 <quality_insight>
@@ -120,14 +118,6 @@ PLAN ──▶ APPLY ──▶ UNIFY
 - **PLAN phase:** Use work-units to size correctly
 - **APPLY phase:** Execute within context budget
 - **UNIFY phase:** Record actual duration for future estimates
-
-**With CARL (recommended):**
-CARL context brackets automate these checks:
-- FRESH (>60%): Full implementation OK
-- MODERATE (40-60%): Consider splitting
-- DEPLETED (<40%): Handoff or fresh agent
-
-OpenPAUL provides the framework. CARL provides operational automation.
 </paul_integration>
 
 <anti_patterns>
