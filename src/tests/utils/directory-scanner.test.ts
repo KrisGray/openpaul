@@ -119,15 +119,12 @@ describe('DirectoryScanner', () => {
 
     it('should check cache validity', () => {
       const cacheEntries = [
-        { path: '/test/file.ts', mtime: Date.now() - 1000, size: 100 }
+        { path: '/test/file.ts', mtime: Date.now() - 5000, size: 100 }
       ]
 
       saveCache(tempDir, cacheEntries)
 
-      const outputPath = join(tempDir, 'output.json')
-      writeFileSync(outputPath, 'fresh content')
-
-      const valid = isCacheValid(tempDir, outputPath)
+      const valid = isCacheValid(tempDir)
 
       expect(valid).toBe(true)
     })
