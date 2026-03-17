@@ -173,8 +173,9 @@ jobs:
       - name: Publish to npm
         env:
           DIST_TAG: ${{ needs.quality-gates.outputs.dist-tag }}
+          VERSION: ${{ needs.quality-gates.outputs.version }}
         run: |
-          npm publish --access public --provenance --tag $DIST_TAG
+          npm publish --provenance --tag $DIST_TAG
           echo "Published openpaul@$VERSION with tag: $DIST_TAG"
 
       # Upload dist/ on failure for debugging
