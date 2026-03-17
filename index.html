@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OpenPAUL - Plan-Apply-Unify Loop</title>
+  <meta name="description" content="Structured AI-assisted development for OpenCode">
+  <link rel="canonical" href="https://krisgray.github.io/openpaul/">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --fg: #1f2328;
+      --muted: #656d76;
+      --accent: #0969da;
+      --accent-hover: #0550ae;
+      --border: #d0d7de;
+      --code-bg: #f6f8fa;
+      --card-bg: #f6f8fa;
+      --success: #1a7f37;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d1117;
+        --fg: #e6edf3;
+        --muted: #8b949e;
+        --accent: #58a6ff;
+        --accent-hover: #79c0ff;
+        --border: #30363d;
+        --code-bg: #161b22;
+        --card-bg: #161b22;
+        --success: #3fb950;
+      }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif;
+      line-height: 1.6;
+      color: var(--fg);
+      background: var(--bg);
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+    
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      z-index: 100;
+    }
+    header .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo { font-size: 1.5rem; font-weight: 700; }
+    .logo a { color: var(--fg); text-decoration: none; }
+    nav { display: flex; gap: 1.5rem; align-items: center; }
+    nav a { color: var(--muted); text-decoration: none; font-size: 0.95rem; }
+    nav a:hover { color: var(--accent); }
+    
+    .hero {
+      padding: 4rem 0;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+    .hero .tagline {
+      font-size: 1.25rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+    .hero .cta {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+    .btn-secondary {
+      background: var(--card-bg);
+      color: var(--fg);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover {
+      border-color: var(--accent);
+    }
+    
+    .badges {
+      margin-top: 1.5rem;
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .badges img { height: 28px; }
+    
+    main { padding: 3rem 0; }
+    
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    .feature {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+    .feature h3 { margin-bottom: 0.5rem; font-size: 1.1rem; }
+    .feature p { color: var(--muted); font-size: 0.95rem; margin: 0; }
+    
+    section { margin-bottom: 3rem; }
+    section h2 {
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .loop-diagram {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2rem;
+      text-align: center;
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .loop-diagram .arrow { color: var(--accent); }
+    
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+    }
+    pre code { background: none; padding: 0; }
+    .code-comment { color: var(--muted); }
+    .code-cmd { color: var(--accent); font-weight: 500; }
+    .code-output { color: var(--success); }
+    
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1rem;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+    th { background: var(--card-bg); font-weight: 600; }
+    
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--muted);
+    }
+    footer a { color: var(--accent); }
+    
+    .pill {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo"><a href="/">OpenPAUL</a></div>
+      <nav>
+        <a href="#quick-start">Quick Start</a>
+        <a href="#opencarl">OpenCARL</a>
+        <a href="https://github.com/KrisGray/openpaul">GitHub</a>
+        <a href="api/">API</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <h1>OpenPAUL</h1>
+      <p class="tagline">Plan-Apply-Unify Loop — Structured AI-assisted development for OpenCode</p>
+      <div class="cta">
+        <a href="#quick-start" class="btn btn-primary">Get Started</a>
+        <a href="https://github.com/KrisGray/openpaul" class="btn btn-secondary">View on GitHub</a>
+      </div>
+      <div class="badges">
+        <a href="https://www.npmjs.com/package/openpaul"><img src="https://img.shields.io/npm/v/openpaul?style=flat-square&logo=npm&color=CB3837" alt="npm version"></a>
+        <a href="https://github.com/KrisGray/openpaul/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License"></a>
+        <a href="https://github.com/KrisGray/openpaul"><img src="https://img.shields.io/github/stars/KrisGray/openpaul?style=flat-square&logo=github&color=181717" alt="GitHub stars"></a>
+      </div>
+    </div>
+  </section>
+
+  <main class="container">
+    <section id="why">
+      <h2>Why OpenPAUL?</h2>
+      <div class="features">
+        <div class="feature">
+          <h3>🔄 Loop Integrity</h3>
+          <p>Every plan closes with UNIFY. No orphan plans. Every unit of work gets reconciled.</p>
+        </div>
+        <div class="feature">
+          <h3>🎯 In-Session Context</h3>
+          <p>Execution stays in-session. Subagents reserved for discovery. Better quality, less cleanup.</p>
+        </div>
+        <div class="feature">
+          <h3>✅ Acceptance-Driven</h3>
+          <p>Define done before starting. BDD format: Given/When/Then for every feature.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="quick-start">
+      <h2>Quick Start</h2>
+      
+      <h3 style="margin: 1.5rem 0 0.75rem;">Installation</h3>
+      <p style="margin-bottom: 1rem;">Add to your <code>opencode.json</code>:</p>
+      <pre><code>{
+  "plugins": {
+    "npm": ["openpaul"]
+  }
+}</code></pre>
+
+      <h3 style="margin: 1.5rem 0 0.75rem;">The Core Loop</h3>
+      <div class="loop-diagram">
+        <strong>PLAN</strong> <span class="arrow">──▶</span> <strong>APPLY</strong> <span class="arrow">──▶</span> <strong>UNIFY</strong>
+      </div>
+
+      <h3 style="margin: 1.5rem 0 0.75rem;">Your First Loop</h3>
+      <pre><code><span class="code-comment"># Initialize OpenPAUL</span>
+<span class="code-cmd">/openpaul:init</span>
+
+<span class="code-comment"># Create a plan</span>
+<span class="code-cmd">/openpaul:plan</span>
+
+<span class="code-comment"># Review and approve, then execute</span>
+<span class="code-cmd">/openpaul:apply</span>
+
+<span class="code-comment"># Close the loop (required!)</span>
+<span class="code-cmd">/openpaul:unify</span></code></pre>
+    </section>
+
+    <section id="opencarl">
+      <h2>Using with OpenCARL (Recommended)</h2>
+      <p style="margin-bottom: 1rem;">
+        <a href="https://github.com/KrisGray/opencarl">OpenCARL</a> is a dynamic rule injection system that 
+        auto-enforces OpenPAUL workflow discipline. Together, they create a powerful AI-assisted development experience.
+      </p>
+
+      <h3 style="margin: 1.5rem 0 0.75rem;">Install Both</h3>
+      <pre><code>{
+  "plugins": {
+    "npm": ["openpaul", "@krisgray/opencarl"]
+  }
+}</code></pre>
+
+      <h3 style="margin: 1.5rem 0 0.75rem;">What OpenCARL Enforces</h3>
+      <table>
+        <tr><th>Rule</th><th>What It Does</th></tr>
+        <tr><td>Loop Enforcement</td><td>No skipping UNIFY. Every plan needs closure.</td></tr>
+        <tr><td>Boundary Protection</td><td><code>DO NOT CHANGE</code> sections are sacred.</td></tr>
+        <tr><td>AC-First Development</td><td>Acceptance criteria defined before tasks.</td></tr>
+        <tr><td>Verification Required</td><td>Every task needs a verify step.</td></tr>
+        <tr><td>State Consistency</td><td>STATE.md reflects reality after each phase.</td></tr>
+      </table>
+
+      <h3 style="margin: 1.5rem 0 0.75rem;">Combined Workflow</h3>
+      <pre><code><span class="code-comment"># OpenCARL auto-loads OpenPAUL rules when it detects .openpaul/</span>
+
+<span class="code-cmd">/openpaul:init</span>
+<span class="code-output">✓ Created .openpaul/ structure</span>
+
+<span class="code-cmd">/openpaul:plan</span>
+<span class="code-output">✓ Created PLAN.md with AC, tasks, boundaries</span>
+
+<span class="code-cmd">/openpaul:apply</span>
+<span class="code-output">✓ Task 1/3: Complete
+✓ Task 2/3: Complete
+✓ Task 3/3: Complete</span>
+
+<span class="code-cmd">/openpaul:unify</span>
+<span class="code-output">✓ Created SUMMARY.md
+✓ Updated STATE.md
+✓ Loop complete</span></code></pre>
+    </section>
+
+    <section id="commands">
+      <h2>Essential Commands</h2>
+      <div class="grid-2">
+        <div>
+          <h4 style="margin-bottom: 0.5rem;">Core Loop</h4>
+          <ul style="padding-left: 1.25rem; color: var(--muted);">
+            <li><code class="pill">/openpaul:init</code> — Initialize project</li>
+            <li><code class="pill">/openpaul:plan</code> — Create plan</li>
+            <li><code class="pill">/openpaul:apply</code> — Execute plan</li>
+            <li><code class="pill">/openpaul:unify</code> — Close loop</li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="margin-bottom: 0.5rem;">Session</h4>
+          <ul style="padding-left: 1.25rem; color: var(--muted);">
+            <li><code class="pill">/openpaul:progress</code> — Status + next action</li>
+            <li><code class="pill">/openpaul:pause</code> — Create handoff</li>
+            <li><code class="pill">/openpaul:resume</code> — Restore context</li>
+            <li><code class="pill">/openpaul:help</code> — Full reference</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>
+        <a href="https://github.com/KrisGray/openpaul">OpenPAUL</a> — 
+        Quality over speed-for-speed's-sake. In-session context over subagent sprawl.
+      </p>
+      <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+        Created by <a href="https://github.com/KrisGray">Kris Gray</a> · 
+        Original PAUL by <a href="https://github.com/ChristopherKahler">Chris Kahler</a>
+      </p>
+    </div>
+  </footer>
+</body>
+</html>
