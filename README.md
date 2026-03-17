@@ -4,7 +4,7 @@
 
 **Plan-Apply-Unify Loop** — Structured AI-assisted development for Claude Code.
 
-[![npm version](https://img.shields.io/npm/v/@krisgray/openpaul?style=for-the-badge&logo=npm&logoColor=white&color=CB3837)](https://www.npmjs.com/package/@krisgray/openpaul)
+[![npm version](https://img.shields.io/npm/v/openpaul?style=for-the-badge&logo=npm&logoColor=white&color=CB3837)](https://www.npmjs.com/package/openpaul)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/KrisGray/openpaul?style=for-the-badge&logo=github&color=181717)](https://github.com/KrisGray/openpaul)
 
@@ -15,10 +15,6 @@ npx @krisgray/openpaul
 ```
 
 **Works on Mac, Windows, and Linux.**
-
-<br>
-
-![OpenPAUL Install](assets/terminal.svg)
 
 <br>
 
