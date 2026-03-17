@@ -1,4 +1,4 @@
-import { tool } from '@opencode-ai/plugin'
+import { tool, type ToolDefinition } from '@opencode-ai/plugin'
 import { StateManager } from '../state/state-manager'
 import { FileManager } from '../storage/file-manager'
 import { formatHeader, formatBold, formatList } from '../output/formatter'
@@ -19,7 +19,7 @@ import { join } from 'path'
  * - Shows position, active task name, and next action
  * - Quick visual scan + actionable context
  */
-export const openpaulProgress = tool({
+export const openpaulProgress: ToolDefinition = tool({
   description: 'View current loop status and next action',
   args: {
     verbose: tool.schema.boolean().optional().describe('Show detailed status'),

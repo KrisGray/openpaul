@@ -1,5 +1,4 @@
-import { tool } from '@opencode-ai/plugin'
-import { z } from 'zod'
+import { tool, type ToolDefinition } from '@opencode-ai/plugin'
 import { FileManager } from '../storage/file-manager'
 import { StateManager } from '../state/state-manager'
 import { LoopEnforcer } from '../state/loop-enforcer'
@@ -14,16 +13,16 @@ import type { Plan, Task } from '../types/plan'
  * This command is informational — it displays plan tasks for the user/assistant to execute.
  * The actual task execution is done by the assistant reading the plan output.
  */
-export const openpaulApply = tool({
-  name: 'openpaul:apply',
+export const openpaulApply: ToolDefinition = tool({
   description: 'Execute an approved plan with task-by-task progress tracking',
-  parameters: z.object({
-    phase: z.number().int().positive().optional().describe('Phase number (defaults to current)'),
-    plan: z.string().optional().describe('Plan identifier (defaults to current plan)'),
-    task: z.number().int().positive().optional().describe('Start from specific task'),
-    dryRun: z.boolean().optional().describe('Show tasks without executing'),
-  }),
-  execute: async (args, context) => {
+  args: {
+    phase: tool.schema.number().int().positive().optional().describe('Phase number (defaults to current)'),
+    plan: tool.schema.string().optional().describe('Plan identifier (defaults to current plan)'),
+    task: tool.schema.number().int().positive().optional().describe('Start from specific task'),
+    dryRun: tool.schema.boolean().optional().describe('Show tasks without executing'),
+  },
+  execute: async ({ phase, plan, task, dryRun }, context) => {
+    const args = { phase, plan, task, dryRun }
     try {
       const fileManager = new FileManager(context.directory)
       const stateManager = new StateManager(context.directory)
@@ -40,8 +39,8 @@ ${formatBold('Error:')} Run /openpaul:init first to initialize OpenPAUL.`
       }
       
       // Determine phase and plan
-      const phaseNumber = args.phase || currentPosition.phaseNumber
-      let planId = args.plan || ''
+      const phaseNumber = typeof args.phase === 'number' ? args.phase : currentPosition.phaseNumber
+      let planId = typeof args.plan === 'string' ? args.plan : ''
       
       // If no plan specified, try to get current plan from state
       if (!planId) {
@@ -66,7 +65,7 @@ Run /openpaul:plan first to create a plan.`
       }
       
       // Check for dry run mode
-      if (args.dryRun) {
+      if (args.dryRun === true) {
         return formatDryRunOutput(plan)
       }
       
@@ -92,7 +91,7 @@ ${formatBold('Error:')} ${error instanceof Error ? error.message : 'Unknown erro
       }
       
       // Determine starting task
-      const startTask = args.task ? args.task - 1 : 0 // Convert to 0-indexed
+      const startTask = typeof args.task === 'number' ? args.task - 1 : 0 // Convert to 0-indexed
       const tasksToExecute = plan.tasks.slice(startTask)
       
       // Format output
