@@ -1,111 +1,125 @@
-name: E2E Tests
+name: OpenPAUL E2E Tests
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 on:
-  # E2E-05: Schedule - daily at 2am UTC
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main]
+    tags-ignore: ['v*']
   schedule:
     - cron: '0 2 * * *'
-  # E2E-06: Push to main
-  push:
-    branches:
-      - main
-  # E2E-06: Pull requests (non-draft filtered in job condition)
-  pull_request:
-    types: [opened, synchronize, reopened]
 
-# Cancel in-progress runs on same ref for efficiency
+# Only run on non-draft PRs
 concurrency:
-  group: e2e-${{ github.ref }}
+  group: e2e-tests-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   e2e:
-    # E2E-06: Skip draft PRs
-    if: github.event.pull_request.draft == false || github.event_name != 'pull_request'
+    if: github.event.pull_request.draft != true
+
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
 
-      # E2E-02: Docker layer caching via GHA cache backend
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
       - name: Cache Docker layers
-        uses: actions/cache@v4
+        uses: actions/cache@v3
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-
 
-      # Build Docker image with layer caching
       - name: Build Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile.e2e
-          push: false
-          load: true
           tags: openpaul-e2e:latest
+          load: true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
 
-      # Move cache to avoid cache growing indefinitely
       - name: Move Docker cache
         run: |
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
-      # E2E-03: Run E2E tests with retry (max 2 attempts)
-      - name: Run E2E tests (attempt 1)
-        id: e2e_attempt1
-        continue-on-error: true
+      - name: Run E2E tests (with retry)
         run: |
-          docker run --rm \
-            -v ${{ github.workspace }}:/app \
-            openpaul-e2e:latest \
-            npm run test:e2e
+          MAX_RETRIES=1
+          RETRY_COUNT=0
+          TEST_PASSED=false
 
-      - name: Run E2E tests (retry on failure)
-        id: e2e_attempt2
-        if: steps.e2e_attempt1.outcome == 'failure'
-        run: |
-          echo "First attempt failed, retrying..."
-          docker run --rm \
-            -v ${{ github.workspace }}:/app \
-            openpaul-e2e:latest \
-            npm run test:e2e
+          while [ $RETRY_COUNT -le $MAX_RETRIES ]; do
+            echo "Attempt $((RETRY_COUNT + 1)) of $((MAX_RETRIES + 1))"
 
-      # E2E-04: Upload failure artifacts
-      - name: Collect failure artifacts
-        if: failure() || steps.e2e_attempt1.outcome == 'failure'
-        run: |
-          mkdir -p artifacts
-          # Collect Docker logs
-          docker logs $(docker ps -lq) > artifacts/docker-logs.txt 2>&1 || echo "No container logs available"
-          # Collect .openpaul state if exists
-          if [ -d ".openpaul" ]; then
-            cp -r .openpaul artifacts/openpaul-state
+            if docker run --rm \
+              -v ${{ github.workspace }}:/app \
+              -w /app \
+              openpaul-e2e:latest \
+              npm run test:e2e; then
+              TEST_PASSED=true
+              break
+            else
+              RETRY_COUNT=$((RETRY_COUNT + 1))
+              if [ $RETRY_COUNT -le $MAX_RETRIES ]; then
+                echo "Tests failed, retrying..."
+                sleep 5
+              fi
+            fi
+          done
+
+          if [ "$TEST_PASSED" = false ]; then
+            echo "Tests failed after $((MAX_RETRIES + 1)) attempts"
+            exit 1
           fi
-          # Collect coverage if exists
-          if [ -d "coverage" ]; then
-            cp -r coverage artifacts/coverage
-          fi
+        env:
+          OPENPAUL_DEBUG: "false"
 
-      - name: Upload failure artifacts
-        if: failure() || steps.e2e_attempt1.outcome == 'failure'
+      - name: Upload Docker container logs (on failure)
+        if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-failure-artifacts
-          path: artifacts/
-          retention-days: 7
+          name: openpaul-docker-logs
+          path: |
+            /tmp/test*_output.txt
+          retention-days: 14
 
-      # Final status check
-      - name: Check E2E test results
-        if: steps.e2e_attempt1.outcome == 'failure' && steps.e2e_attempt2.outcome == 'failure'
+      - name: Upload .openpaul directory state (on failure)
+        if: failure()
         run: |
-          echo "E2E tests failed after retry"
-          exit 1
+          if [ -d .openpaul ]; then
+            tar -czf openpaul-state.tar.gz .openpaul/
+          fi
+
+      - name: Upload .openpaul state artifact (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: openpaul-state
+          path: openpaul-state.tar.gz
+          retention-days: 14
+
+      - name: Cleanup Docker cache
+        if: always()
+        run: |
+          rm -rf /tmp/.buildx-cache
