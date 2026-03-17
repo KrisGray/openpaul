@@ -2,7 +2,7 @@
  * OpenPAUL Framework Type Exports
  * 
  * This file exports all types for external use.
- * Users can import from '@krisgray/openpaul' and get:
+ * Users can import from 'openpaul' and get:
  * - LoopPhase and state machine utilities
  * - State and PhaseState types
  * - Plan and Task types
