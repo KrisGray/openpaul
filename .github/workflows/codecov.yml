@@ -1,9 +1,9 @@
 name: Codecov Coverage Upload
 
 on:
-  # COV-01: Trigger after EITHER test.yml OR e2e-tests.yml completes
+  # COV-01: Triggered by test.yml; internal step waits for e2e-tests.yml too before uploading
   workflow_run:
-    workflows: ["CI - Unit Tests", "OpenPAUL E2E Tests"]
+    workflows: ["CI - Unit Tests"]
     types: [completed]
 
 # Cancel redundant runs on same ref
