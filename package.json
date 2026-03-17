@@ -1,5 +1,5 @@
 {
-  "name": "@krisgray/openpaul",
+  "name": "openpaul",
   "version": "1.2.2",
   "description": "OpenPAUL - Plan-Apply-Unify Loop plugin for OpenCode",
   "type": "module",
