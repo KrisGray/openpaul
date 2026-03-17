@@ -23,9 +23,9 @@ Next phase: APPLY (after plan approval)
 </required_reading>
 
 <references>
-@~/.claude/openpaul-framework/references/plan-format.md
-@~/.claude/openpaul-framework/references/checkpoints.md (if plan will have checkpoints)
-@~/.claude/openpaul-framework/templates/PLAN.md
+@openpaul/src/references/plan-format.md
+@openpaul/src/references/checkpoints.md (if plan will have checkpoints)
+@openpaul/src/templates/PLAN.md
 </references>
 
 <process>

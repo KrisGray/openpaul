@@ -104,4 +104,4 @@ References explain concepts and patterns. They are loaded by workflows/commands 
 References are NOT:
 - Step-by-step instructions (that's workflows)
 - Document structure definitions (that's templates)
-- Behavioral rules (that's CARL domains)
+- Behavioral rules (that's plugin-specific patterns)

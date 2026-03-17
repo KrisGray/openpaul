@@ -148,6 +148,11 @@ export const openpaulHelp: ToolDefinition = tool({
         usage: '/openpaul:config',
         phase: '8',
       },
+      'map-codebase': {
+        description: 'Generate codebase map for context',
+        usage: '/openpaul:map-codebase',
+        phase: '8',
+      },
     }
 
     // If specific command requested, show detailed help

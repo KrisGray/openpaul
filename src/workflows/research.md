@@ -19,7 +19,7 @@ Research informs planning but doesn't gate it.
 </loop_context>
 
 <required_reading>
-@~/.claude/openpaul-framework/references/subagent-criteria.md
+@openpaul/src/references/subagent-criteria.md
 </required_reading>
 
 <references>

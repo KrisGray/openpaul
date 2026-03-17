@@ -26,8 +26,8 @@ No multiple options. Prevents decision fatigue. User can redirect if needed.
 </required_reading>
 
 <references>
-@~/.claude/openpaul-framework/references/context-management.md
-@~/.claude/openpaul-framework/references/loop-phases.md
+@openpaul/src/references/context-management.md
+@openpaul/src/references/loop-phases.md
 </references>
 
 <process>

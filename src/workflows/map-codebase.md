@@ -163,7 +163,7 @@ Output findings for populating these sections:
 - STRUCTURE.md: Directory layout, Organization, Key locations
 
 For each finding, include the file path. Examples:
-- "CLI entry point: `bin/install.js`"
+- "Plugin entry point: `src/index.ts`"
 - "Service layer: `src/services/*.ts` (UserService, ProjectService)"
 - "API routes: `src/routes/api/*.ts`"
 

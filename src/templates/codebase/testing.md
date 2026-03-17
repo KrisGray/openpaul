@@ -370,7 +370,7 @@ Content here`;
 
 **Configuration:**
 - Vitest coverage via c8 (built-in)
-- Excludes: *.test.ts, bin/install.ts, config files
+- Excludes: *.test.ts, config files
 
 **View Coverage:**
 ```bash

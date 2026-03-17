@@ -4,8 +4,8 @@
 # Build output
 dist/
 
-# Generated documentation
-docs/
+# Generated API documentation
+docs/api/
 
 # Test artifacts
 coverage/

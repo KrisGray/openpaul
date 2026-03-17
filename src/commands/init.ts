@@ -24,7 +24,7 @@ export const openpaulInit: ToolDefinition = tool({
   execute: async ({ force }, context) => {
     try {
       const fileManager = new FileManager(context.directory)
-      const paulDir = join(context.directory, '.paul')
+      const paulDir = join(context.directory, '.openpaul')
       
       // Check if already initialized
       if (existsSync(paulDir) && !force) {

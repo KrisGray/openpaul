@@ -115,7 +115,7 @@ Before trusting any source:
 <anti_pattern name="tool_conflation">
 **DON'T:** Assume capabilities are the same across tools/environments.
 
-**Problem:** "Claude Desktop supports X" ≠ "Claude Code supports X"
+**Problem:** "Tool A supports X" ≠ "Tool B supports X"
 
 **Instead:** Document which environment supports which features explicitly.
 </anti_pattern>
