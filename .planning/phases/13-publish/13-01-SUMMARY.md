@@ -125,7 +125,7 @@ The publish workflow uses OIDC trusted publishing (no NPM_TOKEN required):
 1. **Configure trusted publisher on npmjs.org:**
    - Visit: https://www.npmjs.com/settings/{org}/settings/trusted-publishers
    - Add trusted publisher:
-     - Repository: `ChristopherKahler/openpaul`
+     - Repository: `KrisGray/openpaul`
      - Workflow: `publish.yml`
      - Environment: (leave empty for any)
 

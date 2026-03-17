@@ -95,7 +95,7 @@ The following items require manual testing or external configuration:
 **Why human:** External service configuration, requires npmjs.org organization admin access
 **Location:** https://www.npmjs.com/settings/{org}/settings/trusted-publishers
 **Configuration needed:**
-- Repository: `ChristopherKahler/openpaul`
+- Repository: `KrisGray/openpaul`
 - Workflow: `publish.yml`
 - Environment: (leave empty)
 
