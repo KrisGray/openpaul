@@ -22,7 +22,7 @@ npx @krisgray/openpaul
 
 <br>
 
-*"Quality over speed-for-speed's-sake. In-session context over subagent sprawl."*
+_"Quality over speed-for-speed's-sake. In-session context over subagent sprawl."_
 
 <br>
 
@@ -57,6 +57,7 @@ The complexity is in the system, not your workflow. Behind the scenes: structure
 **AI-assisted developers** who want structure without bureaucracy.
 
 You describe what you want, Claude Code builds it, and OpenPAUL ensures:
+
 - Plans have clear acceptance criteria
 - Execution stays bounded
 - Every unit of work gets closed properly
@@ -74,6 +75,7 @@ npx @krisgray/openpaul
 ```
 
 The installer prompts you to choose:
+
 1. **Location** — Global (all projects) or local (current project only)
 
 Verify with `/openpaul:help` inside Claude Code.
@@ -224,7 +226,7 @@ Resume work after a break:
 
 YOU: /openpaul:resume
 
-OpenPAUL: 
+OpenPAUL:
 ## Session Restored
 
 **Last Session:** 2024-01-15
@@ -251,12 +253,12 @@ Task 3: Add avatar upload
 
 ### Why Use Both?
 
-| OpenPAUL | OpenCARL |
-|----------|----------|
-| Structured workflow (PLAN → APPLY → UNIFY) | Dynamic rule injection |
-| Guides planning & execution | Loads rules based on context |
-| Ensures loop closure | Keeps context lean |
-| State persistence | Preferences persistence |
+| OpenPAUL                                   | OpenCARL                     |
+| ------------------------------------------ | ---------------------------- |
+| Structured workflow (PLAN → APPLY → UNIFY) | Dynamic rule injection       |
+| Guides planning & execution                | Loads rules based on context |
+| Ensures loop closure                       | Keeps context lean           |
+| State persistence                          | Preferences persistence      |
 
 **The synergy:** OpenCARL loads OpenPAUL-specific rules when you're working in an OpenPAUL project, enforcing workflow discipline without bloating every session.
 
@@ -270,10 +272,7 @@ npm install @krisgray/opencarl @krisgray/openpaul
 ```json
 // opencode.json
 {
-  "plugin": [
-    "@krisgray/opencarl",
-    "@krisgray/openpaul"
-  ]
+  "plugin": ["@krisgray/opencarl", "@krisgray/openpaul"]
 }
 ```
 
@@ -415,6 +414,7 @@ Every unit of work follows this cycle:
 ### PLAN
 
 Create an executable plan with:
+
 - **Objective** — What you're building and why
 - **Acceptance Criteria** — Given/When/Then definitions of done
 - **Tasks** — Specific actions with files, verification, done criteria
@@ -423,6 +423,7 @@ Create an executable plan with:
 ### APPLY
 
 Execute the approved plan:
+
 - Tasks run sequentially
 - Each task has verification
 - Checkpoints pause for human input when needed
@@ -431,6 +432,7 @@ Execute the approved plan:
 ### UNIFY
 
 Close the loop (required!):
+
 - Create SUMMARY.md documenting what was built
 - Compare plan vs actual
 - Record decisions and deferred issues
@@ -446,69 +448,69 @@ OpenPAUL provides 26 commands organized by purpose. Run `/openpaul:help` for the
 
 ### Core Loop
 
-| Command | What it does |
-|---------|--------------|
-| `/openpaul:init` | Initialize OpenPAUL in a project |
-| `/openpaul:plan [phase]` | Create an executable plan |
-| `/openpaul:apply [path]` | Execute an approved plan |
-| `/openpaul:unify [path]` | Reconcile and close the loop |
-| `/openpaul:help` | Show command reference |
-| `/openpaul:status` | Show loop position *(deprecated — use progress)* |
+| Command                  | What it does                                     |
+| ------------------------ | ------------------------------------------------ |
+| `/openpaul:init`         | Initialize OpenPAUL in a project                 |
+| `/openpaul:plan [phase]` | Create an executable plan                        |
+| `/openpaul:apply [path]` | Execute an approved plan                         |
+| `/openpaul:unify [path]` | Reconcile and close the loop                     |
+| `/openpaul:help`         | Show command reference                           |
+| `/openpaul:status`       | Show loop position _(deprecated — use progress)_ |
 
 ### Session
 
-| Command | What it does |
-|---------|--------------|
-| `/openpaul:pause [reason]` | Create handoff for session break |
-| `/openpaul:resume [path]` | Restore context and continue |
-| `/openpaul:progress [context]` | Smart status + ONE next action |
-| `/openpaul:handoff [context]` | Generate comprehensive handoff |
+| Command                        | What it does                     |
+| ------------------------------ | -------------------------------- |
+| `/openpaul:pause [reason]`     | Create handoff for session break |
+| `/openpaul:resume [path]`      | Restore context and continue     |
+| `/openpaul:progress [context]` | Smart status + ONE next action   |
+| `/openpaul:handoff [context]`  | Generate comprehensive handoff   |
 
 ### Roadmap
 
-| Command | What it does |
-|---------|--------------|
+| Command                      | What it does            |
+| ---------------------------- | ----------------------- |
 | `/openpaul:add-phase <desc>` | Append phase to roadmap |
-| `/openpaul:remove-phase <N>` | Remove future phase |
+| `/openpaul:remove-phase <N>` | Remove future phase     |
 
 ### Milestone
 
-| Command | What it does |
-|---------|--------------|
-| `/openpaul:milestone <name>` | Create new milestone |
-| `/openpaul:complete-milestone` | Archive and tag milestone |
-| `/openpaul:discuss-milestone` | Articulate vision before starting |
+| Command                        | What it does                      |
+| ------------------------------ | --------------------------------- |
+| `/openpaul:milestone <name>`   | Create new milestone              |
+| `/openpaul:complete-milestone` | Archive and tag milestone         |
+| `/openpaul:discuss-milestone`  | Articulate vision before starting |
 
 ### Pre-Planning
 
-| Command | What it does |
-|---------|--------------|
-| `/openpaul:discuss <phase>` | Capture decisions before planning |
-| `/openpaul:assumptions <phase>` | See Claude's intended approach |
-| `/openpaul:discover <topic>` | Explore options before planning |
-| `/openpaul:consider-issues` | Triage deferred issues |
+| Command                         | What it does                      |
+| ------------------------------- | --------------------------------- |
+| `/openpaul:discuss <phase>`     | Capture decisions before planning |
+| `/openpaul:assumptions <phase>` | See Claude's intended approach    |
+| `/openpaul:discover <topic>`    | Explore options before planning   |
+| `/openpaul:consider-issues`     | Triage deferred issues            |
 
 ### Research
 
-| Command | What it does |
-|---------|--------------|
-| `/openpaul:research <topic>` | Deploy research agents |
+| Command                        | What it does                  |
+| ------------------------------ | ----------------------------- |
+| `/openpaul:research <topic>`   | Deploy research agents        |
 | `/openpaul:research-phase <N>` | Research unknowns for a phase |
 
 ### Specialized
 
-| Command | What it does |
-|---------|--------------|
-| `/openpaul:flows` | Configure skill requirements |
-| `/openpaul:config` | View/modify OpenPAUL settings |
-| `/openpaul:map-codebase` | Generate codebase overview |
+| Command                  | What it does                  |
+| ------------------------ | ----------------------------- |
+| `/openpaul:flows`        | Configure skill requirements  |
+| `/openpaul:config`       | View/modify OpenPAUL settings |
+| `/openpaul:map-codebase` | Generate codebase overview    |
 
 ### Quality
 
-| Command | What it does |
-|---------|--------------|
-| `/openpaul:verify` | Guide manual acceptance testing |
-| `/openpaul:plan-fix` | Plan fixes for UAT issues |
+| Command              | What it does                    |
+| -------------------- | ------------------------------- |
+| `/openpaul:verify`   | Guide manual acceptance testing |
+| `/openpaul:plan-fix` | Plan fixes for UAT issues       |
 
 ---
 
@@ -535,6 +537,7 @@ OpenPAUL provides 26 commands organized by purpose. Run `/openpaul:help` for the
 ### State Management
 
 **STATE.md** tracks:
+
 - Current phase and plan
 - Loop position (PLAN/APPLY/UNIFY markers)
 - Session continuity (where you stopped, what's next)
@@ -562,7 +565,9 @@ Goal, Purpose, Output
 </context>
 
 <acceptance_criteria>
+
 ## AC-1: Feature Works
+
 Given [precondition]
 When [action]
 Then [outcome]
@@ -593,13 +598,14 @@ OpenPAUL has a companion: **[OpenCARL](https://github.com/KrisGray/opencarl)** (
 
 OpenCARL is a dynamic rule injection system. Instead of bloating your context with static prompts, OpenCARL loads rules just-in-time based on what you're doing:
 
-| Trigger | Rules Loaded |
-|---------|--------------|
+| Trigger                           | Rules Loaded              |
+| --------------------------------- | ------------------------- |
 | Working in `.openpaul/` directory | OpenPAUL domain activates |
-| Writing code | DEVELOPMENT rules load |
-| Managing projects | PROJECTS rules load |
+| Writing code                      | DEVELOPMENT rules load    |
+| Managing projects                 | PROJECTS rules load       |
 
 **OpenPAUL-specific rules OpenCARL enforces:**
+
 - Loop enforcement (PLAN → APPLY → UNIFY — no shortcuts)
 - Boundary protection (DO NOT CHANGE sections are real)
 - State consistency checks at phase transitions
@@ -628,15 +634,16 @@ Acceptance criteria aren't afterthoughts — they're the foundation:
 
 Why OpenPAUL minimizes subagents for development work:
 
-| Issue | Impact |
-|-------|--------|
-| Launch cost | 2,000-3,000 tokens to spawn |
+| Issue             | Impact                                |
+| ----------------- | ------------------------------------- |
+| Launch cost       | 2,000-3,000 tokens to spawn           |
 | Context gathering | Starts fresh, researches from scratch |
-| Resynthesis | Results must be integrated back |
-| Quality gap | ~70% compared to in-session work |
-| Rework | Subagent output often needs cleanup |
+| Resynthesis       | Results must be integrated back       |
+| Quality gap       | ~70% compared to in-session work      |
+| Rework            | Subagent output often needs cleanup   |
 
 **When OpenPAUL does use subagents:**
+
 - **Discovery/exploration** — Codebase mapping, parallel exploration
 - **Research** — Web searches, documentation gathering
 
@@ -663,10 +670,10 @@ PLAN ──▶ APPLY ──▶ UNIFY
 
 OpenPAUL supports modular integrations configured in `.openpaul/config.md`:
 
-| Integration | Purpose |
-|-------------|---------|
-| SonarQube | Code quality metrics and issues |
-| *Future* | Linting, CI/CD, test runners |
+| Integration | Purpose                         |
+| ----------- | ------------------------------- |
+| SonarQube   | Code quality metrics and issues |
+| _Future_    | Linting, CI/CD, test runners    |
 
 ### SPECIAL-FLOWS
 
@@ -675,10 +682,10 @@ For projects with specialized requirements, `.openpaul/SPECIAL-FLOWS.md` defines
 ```markdown
 ## Required Skills
 
-| Skill | Work Type | Priority |
-|-------|-----------|----------|
+| Skill            | Work Type     | Priority |
+| ---------------- | ------------- | -------- |
 | /frontend-design | UI components | required |
-| /revops-expert | Landing pages | required |
+| /revops-expert   | Landing pages | required |
 ```
 
 APPLY blocks until required skills are confirmed loaded.
@@ -688,18 +695,22 @@ APPLY blocks until required skills are confirmed loaded.
 ## Troubleshooting
 
 **Commands not found after install?**
+
 - Restart Claude Code to reload slash commands
 - Verify files exist in `~/.claude/commands/openpaul/` (global) or `./.claude/commands/openpaul/` (local)
 
 **Commands not working as expected?**
+
 - Run `/openpaul:help` to verify installation
 - Re-run `npx @krisgray/openpaul` to reinstall
 
 **Loop position seems wrong?**
+
 - Check `.openpaul/STATE.md` for current state
 - Run `/openpaul:progress` for guided next action
 
 **Resuming after a break?**
+
 - Run `/openpaul:resume` — it reads state and handoffs automatically
 
 ---
@@ -708,33 +719,33 @@ APPLY blocks until required skills are confirmed loaded.
 
 ### vs. Ad-hoc AI Coding
 
-| Ad-hoc | OpenPAUL |
-|--------|------|
-| No structure | Explicit planning gates |
-| State drifts | STATE.md tracks everything |
-| No closure | Mandatory UNIFY |
-| Decisions lost | Decisions logged |
+| Ad-hoc         | OpenPAUL                   |
+| -------------- | -------------------------- |
+| No structure   | Explicit planning gates    |
+| State drifts   | STATE.md tracks everything |
+| No closure     | Mandatory UNIFY            |
+| Decisions lost | Decisions logged           |
 
 ### vs. GSD
 
 OpenPAUL takes a different approach from GSD:
 
-| Aspect | GSD | OpenPAUL |
-|--------|-----|------|
-| Execution | Parallel subagents | In-session context |
-| Loop | Optional closure | Mandatory UNIFY |
-| Criteria | Embedded in tasks | First-class AC section |
-| Rules | Static prompts | CARL dynamic loading |
+| Aspect    | GSD                | OpenPAUL               |
+| --------- | ------------------ | ---------------------- |
+| Execution | Parallel subagents | In-session context     |
+| Loop      | Optional closure   | Mandatory UNIFY        |
+| Criteria  | Embedded in tasks  | First-class AC section |
+| Rules     | Static prompts     | CARL dynamic loading   |
 
 Same comprehensive coverage, different philosophy. OpenPAUL prioritizes quality over speed-for-speed's-sake. See [OPENPAUL-VS-GSD.md](OPENPAUL-VS-GSD.md) for full comparison.
 
 ### vs. Traditional Planning
 
-| Traditional | OpenPAUL |
-|-------------|------|
-| Documentation-first | Execution-first |
-| Human-readable specs | AI-executable prompts |
-| Separate from code | Colocated in .openpaul/ |
+| Traditional          | OpenPAUL                |
+| -------------------- | ----------------------- |
+| Documentation-first  | Execution-first         |
+| Human-readable specs | AI-executable prompts   |
+| Separate from code   | Colocated in .openpaul/ |
 
 ---
 
