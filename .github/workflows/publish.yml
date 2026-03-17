@@ -172,7 +172,7 @@ jobs:
           DIST_TAG: ${{ needs.quality-gates.outputs.dist-tag }}
         run: |
           npm publish --access public --provenance --tag $DIST_TAG
-          echo "Published @opencode-ai/openpaul@$VERSION with tag: $DIST_TAG"
+          echo "Published @krisgray/openpaul@$VERSION with tag: $DIST_TAG"
 
       # Upload dist/ on failure for debugging
       - name: Collect failure artifacts

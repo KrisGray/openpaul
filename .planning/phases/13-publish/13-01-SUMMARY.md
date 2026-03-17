@@ -36,7 +36,7 @@ key-files:
     - package.json
 
 key-decisions:
-  - "Scoped package name @opencode-ai/openpaul for npmjs.org"
+  - "Scoped package name @krisgray/openpaul for npmjs.org"
   - "Quality gates poll all three workflows (CI, E2E, Codecov)"
   - "30-minute max wait with 30-second intervals for quality gates"
   - "OIDC trusted publishing for passwordless npm authentication"
@@ -67,7 +67,7 @@ completed: 2026-03-16
 - **Files modified:** 2
 
 ## Accomplishments
-- Updated package scope from `@krisgray/openpaul` to `@opencode-ai/openpaul` for npmjs.org registry
+- Confirmed package scope `@krisgray/openpaul` for npmjs.org registry
 - Created publish.yml workflow with release trigger, quality gates, version sync, and provenance publishing
 
 ## Task Commits
@@ -84,10 +84,10 @@ _Note: TDD tasks may have multiple commits (test → feat → refactor)_
 
 ## Files Created/Modified
 - `.github/workflows/publish.yml` - npm publishing workflow with quality gates and provenance
-- `package.json` - Updated package name scope to @opencode-ai/openpaul
+- `package.json` - Confirmed package name scope @krisgray/openpaul
 
 ## Decisions Made
-- Scoped package name `@opencode-ai/openpaul` for npmjs.org registry (per CONTEXT.md)
+- Scoped package name `@krisgray/openpaul` for npmjs.org registry
 - Quality gates poll all three workflows (CI - Unit Tests, E2E Tests, Codecov Coverage Upload)
 - 30-minute max wait with 30-second poll intervals (same pattern as codecov.yml)
 - OIDC trusted publishing for passwordless npm authentication (updated from NPM_TOKEN)

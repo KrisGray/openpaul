@@ -1,5 +1,5 @@
 {
-  "name": "@opencode-ai/openpaul",
+  "name": "@krisgray/openpaul",
   "version": "1.0.0",
   "description": "OpenPAUL - Plan-Apply-Unify Loop plugin for OpenCode",
   "type": "module",
@@ -34,12 +34,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ChristopherKahler/openpaul.git"
+    "url": "git+https://github.com/KrisGray/openpaul.git"
   },
   "bugs": {
-    "url": "https://github.com/ChristopherKahler/openpaul/issues"
+    "url": "https://github.com/KrisGray/openpaul/issues"
   },
-  "homepage": "https://github.com/ChristopherKahler/openpaul#readme",
+  "homepage": "https://github.com/KrisGray/openpaul#readme",
   "engines": {
     "node": ">=16.7.0"
   },
