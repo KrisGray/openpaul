@@ -16,23 +16,11 @@ Enforce the PLAN → APPLY → UNIFY loop with mandatory reconciliation, ensurin
 
 - ✓ Core Loop Commands — v1.0 (All 6 core commands implemented: init, plan, apply, unify, progress, help)
 - ✓ Core Infrastructure — v1.0 (All 6 infrastructure requirements implemented: TypeScript types, storage, state manager, loop enforcer, testing, model configuration)
+- ✓ CI/CD Pipeline — v1.2 (GitHub Actions: test.yml, e2e-tests.yml, codecov.yml, publish.yml with OIDC trusted publishing)
 
 ### Active
 
-- [ ] All 26 PAUL commands implemented in TypeScript
-  - Session Management (4): pause, resume, handoff, status
-  - Roadmap Management (2): add-phase, remove-phase
-  - Milestone Management (3): milestone, complete-milestone, discuss-milestone
-  - Pre-Planning (4): discuss, assumptions, discover, consider-issues
-  - Research (2): research, research-phase
-  - Quality (2): verify. plan-fix
-  - Configuration (3): flows. config. map-codebase
-- [ ] PAUL-specific rules bundled and injected dynamically (like CARL domains)
-- [ ] File-based JSON storage for project state (.paul/ directory structure)
-- [ ] TypeScript object templates for PLAN, SUMMARY, STATE, ROADMAP, etc.
-- [ ] Comprehensive Jest test coverage following TDD approach
-- [ ] Full docstring documentation for all TypeScript functions
-- [ ] npm package distribution (@krisgray/openpaul)
+- [ ] v2.0 features (to be defined)
 
 ### Out of Scope
 
@@ -83,21 +71,21 @@ Based on OpenCode plugin documentation:
 - Context injection through hooks
 - Zod schemas for validation
 
-### Current State (After v1.0)
+### Current State (After v1.2)
 
-Shipped v1.0 with 19 plans, 38 requirements covered.
-Tech stack: TypeScript, Jest, Zod, ES Modules.
-Initial user testing showed good foundation for future features.
+Shipped v1.2 CI/CD Pipeline with 5 phases, 6 plans, 20 requirements covered.
+Tech stack: TypeScript, Jest, Zod, ES Modules, GitHub Actions, Docker, Codecov.
+CI/CD: Automated testing, E2E tests, coverage reporting, npm publishing with OIDC.
 
-## Current Milestone: v1.2 CI/CD Pipeline
+## Next Milestone: v2.0
 
-**Goal:** Add GitHub Actions workflows for automated testing, E2E tests, coverage reporting, and npm publishing
+**Goal:** Future enhancements based on user feedback
 
-**Target features:**
-- CI Workflow — Unit tests on push/PR with coverage artifacts
-- E2E Tests — Docker-based E2E tests with OpenCode CLI
-- Codecov Workflow — Coverage upload after tests pass
-- Publish Workflow — npm publish on release (requires all tests + coverage)
+**Potential features:**
+- Enhanced E2E test coverage
+- Matrix testing for parallel CI
+- Release automation (changelog generation)
+- Branch protection rules
 
 ## Key Decisions
 
@@ -112,6 +100,11 @@ Initial user testing showed good foundation for future features.
 | CARL format for rules | Consistency with OpenCARL, familiar pattern, proven approach | ✓ Complete |
 | No migration path | Clean break, no legacy baggage, simpler implementation | ✓ Complete |
 | 8-week implementation | Comprehensive coverage, TDD approach, proper testing and documentation | ✓ Complete |
+| Node.js 20.x LTS for CI | Single version simplicity, LTS stability | ✓ Complete — v1.2 |
+| Docker Node 20-bookworm-slim | Consistency with CI workflow, slim image size | ✓ Complete — v1.2 |
+| OIDC trusted publishing | No NPM_TOKEN secret, better security, passwordless | ✓ Complete — v1.2 |
+| 30-minute max wait for gates | Balance thoroughness vs resource usage | ✓ Complete — v1.2 |
+| Graceful timeout (exit 0) | Coverage is optional signal, not blocking requirement | ✓ Complete — v1.2 |
 
 ---
-*Last updated: 2026-03-13 after v1.2 milestone started*
+*Last updated: 2026-03-17 after v1.2 milestone complete*
