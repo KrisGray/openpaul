@@ -13,7 +13,6 @@ on:
   schedule:
     - cron: '0 2 * * *'
 
-# Only run on non-draft PRs
 concurrency:
   group: e2e-tests-${{ github.ref }}
   cancel-in-progress: true
@@ -37,89 +36,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: Build project
+        run: npm run build
 
-      - name: Cache Docker layers
-        uses: actions/cache@v3
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-
-      - name: Build Docker image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: ./Dockerfile.e2e
-          tags: openpaul-e2e:latest
-          load: true
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
-
-      - name: Move Docker cache
-        run: |
-          rm -rf /tmp/.buildx-cache
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
-
-      - name: Run E2E tests (with retry)
-        run: |
-          MAX_RETRIES=1
-          RETRY_COUNT=0
-          TEST_PASSED=false
-
-          while [ $RETRY_COUNT -le $MAX_RETRIES ]; do
-            echo "Attempt $((RETRY_COUNT + 1)) of $((MAX_RETRIES + 1))"
-
-            if docker run --rm \
-              -v ${{ github.workspace }}:/app \
-              -w /app \
-              openpaul-e2e:latest \
-              npm run test:e2e; then
-              TEST_PASSED=true
-              break
-            else
-              RETRY_COUNT=$((RETRY_COUNT + 1))
-              if [ $RETRY_COUNT -le $MAX_RETRIES ]; then
-                echo "Tests failed, retrying..."
-                sleep 5
-              fi
-            fi
-          done
-
-          if [ "$TEST_PASSED" = false ]; then
-            echo "Tests failed after $((MAX_RETRIES + 1)) attempts"
-            exit 1
-          fi
+      - name: Run E2E tests
+        run: npm run test:e2e
         env:
           OPENPAUL_DEBUG: "false"
-
-      - name: Upload Docker container logs (on failure)
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: openpaul-docker-logs
-          path: |
-            /tmp/test*_output.txt
-          retention-days: 14
-
-      - name: Upload .openpaul directory state (on failure)
-        if: failure()
-        run: |
-          if [ -d .openpaul ]; then
-            tar -czf openpaul-state.tar.gz .openpaul/
-          fi
-
-      - name: Upload .openpaul state artifact (on failure)
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: openpaul-state
-          path: openpaul-state.tar.gz
-          retention-days: 14
-
-      - name: Cleanup Docker cache
-        if: always()
-        run: |
-          rm -rf /tmp/.buildx-cache
