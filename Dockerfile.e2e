@@ -25,7 +25,7 @@ RUN npm ci --include=dev
 FROM deps AS opencode
 
 # Install OpenCode CLI globally for E2E testing
-RUN npm install -g @opencode-ai/cli
+RUN npm install -g opencode-ai
 
 # Stage 4: Final image
 FROM opencode AS runner
