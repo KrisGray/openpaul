@@ -50,7 +50,7 @@ jobs:
             echo "  CI - Unit Tests: $TEST_STATUS"
             
             # Check E2E Tests status
-            E2E_STATUS=$(gh run list --workflow "E2E Tests" --commit "$SHA" --limit 1 --json conclusion --jq '.[0].conclusion // "unknown"')
+            E2E_STATUS=$(gh run list --repo "${{ github.repository }}" --workflow "OpenPAUL E2E Tests" --commit "$SHA" --limit 1 --json conclusion --jq '.[0].conclusion // "unknown"')
             echo "  E2E Tests: $E2E_STATUS"
             
             # Check Codecov Coverage Upload status
@@ -76,9 +76,9 @@ jobs:
             
             # Check if workflows exist at all
             if [ "$TEST_STATUS" = "unknown" ] || [ "$E2E_STATUS" = "unknown" ] || [ "$CODECOV_STATUS" = "unknown" ]; then
-              TEST_RUN_ID=$(gh run list --workflow "CI - Unit Tests" --commit "$SHA" --limit 1 --json databaseId --jq '.[0].databaseId // empty')
-              E2E_RUN_ID=$(gh run list --workflow "E2E Tests" --commit "$SHA" --limit 1 --json databaseId --jq '.[0].databaseId // empty')
-              CODECOV_RUN_ID=$(gh run list --workflow "Codecov Coverage Upload" --commit "$SHA" --limit 1 --json databaseId --jq '.[0].databaseId // empty')
+              TEST_RUN_ID=$(gh run list --repo "${{ github.repository }}" --workflow "CI - Unit Tests" --commit "$SHA" --limit 1 --json databaseId --jq '.[0].databaseId // empty')
+              E2E_RUN_ID=$(gh run list --repo "${{ github.repository }}" --workflow "OpenPAUL E2E Tests" --commit "$SHA" --limit 1 --json databaseId --jq '.[0].databaseId // empty')
+              CODECOV_RUN_ID=$(gh run list --repo "${{ github.repository }}" --workflow "Codecov Coverage Upload" --commit "$SHA" --limit 1 --json databaseId --jq '.[0].databaseId // empty')
               
               if [ -z "$TEST_RUN_ID" ] || [ -z "$E2E_RUN_ID" ] || [ -z "$CODECOV_RUN_ID" ]; then
                 echo "One or more workflows have not started yet..."
@@ -192,3 +192,31 @@ jobs:
           name: publish-failure-dist
           path: publish-artifacts/
           retention-days: 7
+
+  docs:
+    needs: [quality-gates, publish]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build documentation
+        run: npm run docs:ci
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          force_orphan: true

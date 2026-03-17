@@ -4,6 +4,9 @@
 # Build output
 dist/
 
+# Generated documentation
+docs/
+
 # Test artifacts
 coverage/
 test.json
