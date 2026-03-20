@@ -12,8 +12,8 @@ Requirements for CLI Installer milestone. Each maps to roadmap phases.
 - [x] **CLI-01**: User can run `npx openpaul` to execute the installer
 - [x] **CLI-02**: User can run `npx openpaul --help` to see usage information
 - [x] **CLI-03**: User can run `npx openpaul --version` to see package version
-- [ ] **CLI-04**: User receives clear colored error messages on failure
-- [ ] **CLI-05**: User receives success confirmation after scaffolding completes
+- [x] **CLI-04**: User receives clear colored error messages on failure
+- [x] **CLI-05**: User receives success confirmation after scaffolding completes
 
 ### Scaffolding
 
