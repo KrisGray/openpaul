@@ -24,8 +24,8 @@ Requirements for CLI Installer milestone. Each maps to roadmap phases.
 
 ### Interactive
 
-- [ ] **INT-01**: CLI prompts for project name if not provided via argument
-- [ ] **INT-02**: CLI detects existing `.openpaul/` directory and warns user
+- [x] **INT-01**: CLI prompts for project name if not provided via argument
+- [x] **INT-02**: CLI detects existing `.openpaul/` directory and warns user
 - [x] **INT-03**: User can specify project path as positional argument (default: `.`)
 - [x] **INT-04**: User can provide project name via `--name` flag to skip prompt
 

@@ -11,9 +11,9 @@ See: .planning/PROJECT.md (updated 2026-03-20)
 
 Milestone: v1.4.0 CLI Installer
 Phase: 16 of 17 (Scaffold Core)
-Plan: 1 of 2 complete
-Status: In progress
-Last activity: 2026-03-20 — Phase 16-01 complete: scaffolding module created
+Plan: 2 of 2 complete
+Status: Complete
+Last activity: 2026-03-20 — Phase 16-02 complete: CLI scaffolding integration
 
 Progress: [██████████████████░░] 88% (15/17 phases in progress)
 
@@ -37,6 +37,7 @@ Progress: [██████████████████░░] 88% (15
 | Phase 15-cli-foundation P03 | 6min | 5 tasks | 3 files |
 | Phase 15-cli-foundation P04 | 2min | 2 tasks, 1 file | Complete |
 | Phase 16-scaffold-core P01 | 4min | 2 tasks | 2 files |
+| Phase 16-02 P02 | 2min | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -54,6 +55,8 @@ Recent decisions affecting current work:
 - [Phase 15-04]: -v reassigned from --version to --verbose, -vv enables debug level
 - [Phase 16-scaffold-core]: Use z.literal('1.0') for version field to enforce exact schema version
 - [Phase 16-scaffold-core]: Path resolution before basename for edge case handling
+- [Phase 16-02]: User cancellation exits with code 0 (not 1) - cancellation is intentional
+- [Phase 16-02]: Project name validation rejects /, \, and : characters (filesystem problematic)
 
 ### Pending Todos
 
@@ -65,8 +68,8 @@ None.
 
 ## Session Continuity
 
-**Last session:** 2026-03-20T16:34:23.895Z
-**Stopped at:** Completed 16-01-PLAN.md
+**Last session:** 2026-03-20T16:39:53.140Z
+**Stopped at:** Completed 16-02-PLAN.md
 **Resume file:** None
 
 ---
