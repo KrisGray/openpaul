@@ -1,14 +1,14 @@
 ---
-status: diagnosed
+status: resolved
 phase: 15-cli-foundation
-source: 15-01-SUMMARY.md, 15-02-SUMMARY.md, 15-03-SUMMARY.md
+source: 15-01-SUMMARY.md, 15-02-SUMMARY.md, 15-03-SUMMARY.md, 15-04-SUMMARY.md
 started: 2026-03-20T16:30:00Z
-updated: 2026-03-20T16:45:00Z
+updated: 2026-03-20T14:25:00Z
 ---
 
 ## Current Test
 
-[testing complete]
+[testing complete - all gaps resolved]
 
 ## Tests
 
@@ -17,7 +17,7 @@ expected: After running `npm run build`, the command `npx openpaul --help` shows
 result: pass
 
 ### 2. Version Flag Works
-expected: Running `npx openpaul -v` or `npx openpaul --version` outputs the package version number
+expected: Running `npx openpaul --version` outputs the package version number
 result: pass
 
 ### 3. Help Flag Shows Usage
@@ -42,9 +42,9 @@ result: pass
 
 ### 8. Verbosity Control
 expected: Running `npx openpaul -v` shows more verbose output with info icon (ℹ), and `-vv` shows debug-level output
-result: issue
-reported: "-v and -vv shows the version number so I think there is a clash"
-severity: major
+result: pass
+fixed_by: 15-04-PLAN.md (gap closure)
+verified: 2026-03-20
 
 ### 9. Errors Go to Stderr
 expected: Error messages are written to stderr (not stdout), allowing proper piping in scripts
@@ -53,15 +53,19 @@ result: pass
 ## Summary
 
 total: 9
-passed: 8
-issues: 1
+passed: 9
+issues: 0
 pending: 0
 skipped: 0
 
 ## Gaps
 
+[all gaps resolved]
+
+### Resolved Gap
+
 - truth: "Running npx openpaul -v shows more verbose output with info icon (ℹ), and -vv shows debug-level output"
-  status: failed
+  status: resolved
   reason: "User reported: -v and -vv shows the version number so I think there is a clash"
   severity: major
   test: 8
@@ -74,3 +78,5 @@ skipped: 0
     - "Add -v short flag to --verbose option with counting support"
     - "Add countVerbosity helper function for -v/-vv support"
     - "Update setVerbosity call to use numeric value from count"
+  fixed_by: 15-04-PLAN.md
+  verified: 2026-03-20
