@@ -4,7 +4,7 @@ import { readFileSync, existsSync } from 'fs'
 import { fileURLToPath } from 'url'
 import { dirname, join, resolve } from 'path'
 import { input, confirm } from '@inquirer/prompts'
-import { success, step, info, setVerbosity } from './cli/output.js'
+import { success, step, info, setVerbosity, showBanner, notice } from './cli/output.js'
 import { handleCliError } from './cli/errors.js'
 import { getDefaultProjectName, createOpenPaulDir, generateStateJson } from './cli/scaffold.js'
 
@@ -38,6 +38,7 @@ Examples:
 `)
   .action(async (options) => {
     setVerbosity(options.verbose)
+    showBanner(pkg.version)
 
     // Resolve target path
     const targetPath = resolve(options.path)
@@ -52,7 +53,7 @@ Examples:
         default: false
       })
       if (!shouldOverwrite) {
-        info('Operation cancelled')
+        notice('Operation cancelled')
         process.exit(0)
       }
     }
@@ -81,7 +82,7 @@ Examples:
         default: true
       })
       if (!confirmed) {
-        info('Operation cancelled')
+        notice('Operation cancelled')
         process.exit(0)
       }
     }
