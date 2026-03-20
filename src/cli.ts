@@ -13,7 +13,8 @@ const program = new Command()
 program
   .name('openpaul')
   .description('Initialize OpenPAUL in your project')
-  .version(pkg.version)
+  .version(pkg.version, '-v, --version', 'output the current version')
+  .helpOption('-h, --help', 'display help for command')
 
 program.parseAsync().catch(() => {
   process.exit(1)
