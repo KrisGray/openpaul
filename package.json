@@ -62,5 +62,8 @@
     "docs": "typedoc",
     "docs:ci": "typedoc --gitRevision $(git rev-parse HEAD)",
     "prepublishOnly": "npm run build"
+  },
+  "bin": {
+    "openpaul": "./dist/cli.js"
   }
 }
