@@ -15,6 +15,8 @@ program
   .description('Initialize OpenPAUL in your project')
   .version(pkg.version, '-v, --version', 'output the current version')
   .helpOption('-h, --help', 'display help for command')
+  .option('-p, --path <path>', 'target directory', '.')
+  .option('-n, --name <name>', 'project name (defaults to directory name)')
 
 program.parseAsync().catch(() => {
   process.exit(1)
