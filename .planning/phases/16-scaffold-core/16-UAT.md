@@ -1,9 +1,9 @@
 ---
-status: complete
+status: diagnosed
 phase: 16-scaffold-core
 source: [16-01-SUMMARY.md, 16-02-SUMMARY.md]
 started: 2026-03-20T16:45:00Z
-updated: 2026-03-20T17:08:00Z
+updated: 2026-03-20T17:12:00Z
 ---
 
 ## Current Test
@@ -67,9 +67,15 @@ skipped: 0
   reason: "User reported: I only get the following: ? Project name (openpaul). I would like to see some branding and a welcome message like the one found in https://github.com/ChristopherKahler/paul/blob/main/bin/install.js and https://github.com/KrisGray/opencarl/blob/main/bin/install.js"
   severity: minor
   test: 1
-  root_cause: ""
-  artifacts: []
-  missing: []
+  root_cause: "No banner implementation exists. output.ts has no showBanner() function, and cli.ts never calls one. User goes directly from invocation to project name prompt."
+  artifacts:
+    - path: "src/cli/output.ts"
+      issue: "MISSING - No banner function exists"
+    - path: "src/cli.ts"
+      issue: "MISSING - No banner display call before prompts"
+  missing:
+    - "Add showBanner(version: string) function to output.ts with ASCII art banner using picocolors"
+    - "Call showBanner(pkg.version) in cli.ts after setVerbosity(), before first info() call"
   debug_session: ""
 
 - truth: "User sees 'Operation cancelled' message when declining overwrite prompt"
@@ -77,7 +83,13 @@ skipped: 0
   reason: "User reported: Exit code correct, CLI exited cleanly, but no message like 'Operation cancelled'"
   severity: minor
   test: 7
-  root_cause: ""
-  artifacts: []
-  missing: []
+  root_cause: "info() function is gated by verbosity level (requires -v flag). Default verbosity is 0, so cancellation messages using info() are never shown to users."
+  artifacts:
+    - path: "src/cli.ts"
+      issue: "Lines 55 and 84 use info() for cancellation messages - wrong function"
+    - path: "src/cli/output.ts"
+      issue: "info() requires verbosity >= 1 to output"
+  missing:
+    - "Create notice() or warn() function in output.ts that always outputs (no verbosity gate)"
+    - "Replace info('Operation cancelled') calls at cli.ts lines 55 and 84 with the new function"
   debug_session: ""
