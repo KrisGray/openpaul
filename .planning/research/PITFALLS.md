@@ -902,6 +902,303 @@ How roadmap phases should address these pitfalls.
 
 ---
 
+## CLI Installer Pitfalls (v2.0 Milestone)
+
+**Domain:** Adding `npx openpaul` CLI installer to existing TypeScript/npm package
+**Researched:** 2026-03-20
+**Confidence:** HIGH (npm official docs + Stack Overflow verified patterns + GitHub issue research)
+
+### Overview
+
+Adding a `bin` field to package.json to enable `npx openpaul` introduces pitfalls specific to:
+1. Existing ESM package (`"type": "module"`)
+2. TypeScript compilation to `dist/`
+3. Cross-platform compatibility (Windows/Linux/macOS)
+4. Package publishing workflow
+
+### Pitfall CLI-1: Missing Shebang Line
+
+**What goes wrong:**
+CLI script runs without Node interpreter, resulting in shell syntax errors or "command not found" behavior. On Windows, npm generates a `.cmd` wrapper, but the shebang is still required for npm to detect it as a Node script and generate the wrapper correctly.
+
+**Why it happens:**
+Developers forget that `bin` files are executed directly by the OS, not automatically through Node. The shebang (`#!/usr/bin/env node`) tells npm this is a Node script that needs to be run with the node executable.
+
+**How to avoid:**
+```javascript
+// bin/cli.js - FIRST LINE must be:
+#!/usr/bin/env node
+
+import { main } from '../dist/cli.js';
+main();
+```
+
+**Warning signs:**
+- `npx openpaul` shows shell syntax errors instead of Node errors
+- Windows users get "not recognized as internal or external command"
+- Error messages contain shell syntax (`$`, `;`, etc.) instead of JavaScript
+
+**Phase to address:** CLI Implementation
+
+---
+
+### Pitfall CLI-2: Bin File Not Built Before Publish
+
+**What goes wrong:**
+`npm install` fails with `ENOENT: no such file or directory, chmod` when the bin file path points to a file in `dist/` that hasn't been built yet. This is the #1 cause of broken CLI packages.
+
+**Why it happens:**
+TypeScript projects compile to `dist/`. If `npm publish` runs before `npm run build`, or if `.npmignore` excludes the build output, the bin file won't exist in the published tarball. Users installing the package get a broken install.
+
+**How to avoid:**
+1. Ensure `prepublishOnly` script runs the build:
+   ```json
+   "scripts": {
+     "prepublishOnly": "npm run build"
+   }
+   ```
+2. Verify `files` array includes `dist/`:
+   ```json
+   "files": ["dist", "README.md", "LICENSE"]
+   ```
+3. Test locally with `npm pack` and inspect the tarball:
+   ```bash
+   npm pack
+   tar -tf openpaul-*.tgz | grep dist/cli
+   ```
+
+**Warning signs:**
+- `npm install` errors with `ENOENT ... chmod`
+- Published package size is suspiciously small
+- `npm pack --dry-run` doesn't show expected files
+
+**Phase to address:** CLI Implementation
+
+---
+
+### Pitfall CLI-3: CRLF Line Endings on *nix
+
+**What goes wrong:**
+CLI fails on Linux/macOS with cryptic error: `: No such file or directory` or `/bin/bash^M: bad interpreter`. The script runs fine on Windows but completely breaks elsewhere.
+
+**Why it happens:**
+Git on Windows defaults to converting LF to CRLF on checkout. When the bin file has Windows line endings (`\r\n`), the shebang is interpreted as `#!/usr/bin/env node\r` which doesn't exist as a program.
+
+**How to avoid:**
+1. Add `.gitattributes` to enforce LF for bin files:
+   ```
+   bin/cli.js text eol=lf
+   *.js text eol=lf
+   ```
+2. Configure git:
+   ```bash
+   git config core.autocrlf false
+   ```
+3. Verify line endings before publish:
+   ```bash
+   cat -e bin/cli.js | head -3
+   # Should show $ not ^M$
+   ```
+
+**Warning signs:**
+- Works on Windows, fails on Linux/macOS
+- Error mentions `^M` or shows weird path with carriage return
+- `file bin/cli.js` shows "CRLF" line terminators
+
+**Phase to address:** CLI Implementation
+
+---
+
+### Pitfall CLI-4: ESM + Bin Compatibility
+
+**What goes wrong:**
+CLI fails with `require() of ES Module not supported` or `SyntaxError: Cannot use import statement outside a module`. This is specific to packages using `"type": "module"`.
+
+**Why it happens:**
+ES modules (`"type": "module"`) require `.mjs` extension OR the file must be in a package marked as ESM. The bin file must either be ESM-compatible or properly import ESM modules.
+
+**How to avoid:**
+For OpenPAUL (already ESM with `"type": "module"`):
+```javascript
+#!/usr/bin/env node
+// bin/cli.js - this works because package has "type": "module"
+
+import { main } from '../dist/cli.js';
+main();
+```
+
+Alternative approaches:
+1. Use `.mjs` extension explicitly: `bin/openpaul.mjs`
+2. Dynamic import if mixing CJS/ESM: `await import('../dist/cli.js')`
+3. Use a wrapper that handles both
+
+**Warning signs:**
+- `require() of ES Module` error
+- `Cannot use import statement` error
+- Works locally but fails when installed from npm
+
+**Phase to address:** CLI Implementation
+
+---
+
+### Pitfall CLI-5: Files Array Excludes Bin Target
+
+**What goes wrong:**
+Package installs but `npx openpaul` fails because the bin file's target (e.g., `dist/cli.js`) isn't included in the published tarball.
+
+**Why it happens:**
+The `files` field in package.json controls what gets published. If `dist/` isn't explicitly listed, npm won't include it—even though npm automatically includes the bin file itself.
+
+**How to avoid:**
+```json
+{
+  "files": [
+    "dist",
+    "bin",
+    "README.md",
+    "LICENSE"
+  ],
+  "bin": {
+    "openpaul": "./bin/cli.js"
+  }
+}
+```
+
+The `bin/cli.js` wrapper is auto-included, but `dist/cli.js` (which it imports) is NOT unless in `files`.
+
+**Warning signs:**
+- `npx openpaul` fails with module not found
+- `npm pack` tarball is missing expected files
+- Installed package has `bin/` but no `dist/`
+
+**Phase to address:** CLI Implementation
+
+---
+
+### Pitfall CLI-6: npx Prompts and Install Confusion
+
+**What goes wrong:**
+First-time `npx openpaul` users see "Need to install the following packages: openpaul. Ok to proceed? (y)" and may not understand what's happening.
+
+**Why it happens:**
+npm 7+ prompts before installing packages not in the local project. This is a security/UX feature but can confuse users.
+
+**How to avoid:**
+Document clearly:
+```markdown
+## Installation
+
+# Run directly (will prompt to install)
+npx openpaul
+
+# Or install globally first
+npm install -g openpaul
+openpaul
+```
+
+**Phase to address:** Documentation
+
+---
+
+### Pitfall CLI-7: Breaking Existing Plugin Behavior
+
+**What goes wrong:**
+Adding `bin` field changes how the package is categorized. Existing users who `import` the plugin may see unexpected side effects, or build systems may start treating it as a CLI tool.
+
+**Why it happens:**
+Tools like `npm install` may warn about packages with `bin` being installed globally. Some build systems auto-discover CLI tools.
+
+**How to avoid:**
+1. Add `preferGlobal: false` (or omit — default is false)
+2. Test that `import openpaul` still works as a plugin
+3. Ensure CLI and plugin functionality are independent
+
+**Phase to address:** CLI Implementation
+
+---
+
+### Pitfall CLI-8: Permission Denied on Bin File
+
+**What goes wrong:**
+`npx openpaul` fails with `EACCES: permission denied`. The bin file lacks execute permission.
+
+**Why it happens:**
+npm attempts to `chmod +x` the bin file during install, but if the source file in git lacks execute permission and the system has restrictive umask, it can fail.
+
+**How to avoid:**
+```bash
+chmod +x bin/cli.js
+git add bin/cli.js
+git commit -m "chore: make bin executable"
+```
+
+**Phase to address:** CLI Implementation
+
+---
+
+### CLI Installer: Technical Debt Patterns
+
+| Shortcut | Immediate Benefit | Long-term Cost | When Acceptable |
+|----------|-------------------|----------------|-----------------|
+| Skip `prepublishOnly` build | Faster local dev | Broken published packages | Never |
+| Use CRLF on Windows | Works locally | Breaks on Linux/macOS | Never |
+| Hardcode node path in shebang | Avoids env lookup | Breaks on non-standard node installs | Never |
+| Skip .gitattributes | One less file | Line ending bugs in team | Never |
+| Omit from `files` array | Smaller tarball | Missing files at install | Only for dev-only files |
+
+### CLI Installer: Integration Gotchas
+
+| Integration | Common Mistake | Correct Approach |
+|-------------|----------------|------------------|
+| npm publish | Publishing without verifying bin works | `npm pack && tar -tf *.tgz && npm install -g *.tgz && openpaul --version` |
+| CI/CD | Not testing CLI invocation | Add E2E test: `npx . init --help` |
+| TypeScript | Bin importing from src/ instead of dist/ | Bin should always import compiled output |
+| Global install | Not handling multiple install scenarios | Support both `npx` and `npm install -g` |
+
+### CLI Installer: "Looks Done But Isn't" Checklist
+
+- [ ] **Shebang:** Verify `#!/usr/bin/env node` is literally the first line (no BOM, no leading spaces)
+- [ ] **Line endings:** Run `file bin/cli.js` on Linux/Mac — should show "ASCII text" not "ASCII text, with CRLF"
+- [ ] **Package contents:** `npm pack --dry-run 2>&1 | grep dist/` — should list all required dist files
+- [ ] **Actual execution:** `npm link && openpaul --version && npm unlink -g` — must actually work
+- [ ] **Cross-platform:** Test on Windows (or CI) — npx wrapper generation differs
+- [ ] **Fresh install simulation:** `npm pack && npm install -g ./openpaul-*.tgz && openpaul` — full cycle
+
+### CLI Installer: Recovery Strategies
+
+| Pitfall | Recovery Cost | Recovery Steps |
+|---------|---------------|----------------|
+| Missing shebang | LOW | Add shebang, bump patch version, republish |
+| CRLF line endings | LOW | Add .gitattributes, fix files, bump patch, republish |
+| Bin file not built | MEDIUM | Fix prepublishOnly, bump patch, verify with pack, republish |
+| Files array missing | MEDIUM | Add to files, bump patch, verify with pack, republish |
+| ESM import error | HIGH | May require restructuring bin file and/or build process |
+
+### CLI Installer: Pitfall-to-Phase Mapping
+
+| Pitfall | Prevention Phase | Verification |
+|---------|------------------|--------------|
+| Missing shebang | CLI Implementation | `head -1 bin/cli.js` shows shebang |
+| Bin file not built | CLI Implementation | `npm pack && tar -tf *.tgz | grep dist` |
+| CRLF line endings | CLI Implementation | `.gitattributes` exists, `file bin/cli.js` shows LF |
+| ESM compatibility | CLI Implementation | E2E test with `npx .` |
+| Files array | CLI Implementation | `npm pack --dry-run` shows all files |
+| npx prompt documentation | Documentation | README explains npx behavior |
+| Breaking plugin | CLI Implementation | Plugin tests still pass |
+| Permission denied | CLI Implementation | `ls -l bin/cli.js` shows execute bit |
+
+### CLI Installer: Sources
+
+- [npm package.json bin documentation](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#bin) — HIGH confidence
+- [npm npx documentation](https://docs.npmjs.com/cli/v11/commands/npx/) — HIGH confidence
+- [Stack Overflow: npm bin on Windows](https://stackoverflow.com/questions/25333570/npm-package-json-bin-wont-work-on-windows) — HIGH confidence (18+ upvotes)
+- [npm/cli GitHub Issue #4597: Install fails if bin script doesn't exist](https://github.com/npm/cli/issues/4597) — HIGH confidence (official repo)
+- [npm/cli GitHub Issue #7302: npm publish complains on bin field](https://github.com/npm/cli/issues/7302) — MEDIUM confidence
+
+---
+
 *Pitfalls research for: Full PAUL command implementation (26 commands across 8 categories)*
 *Context: OpenPAUL v1.1 - implementing remaining 20 commands after v1.0 baseline*
 *Researched: 2026-03-05*
+
+*CLI Installer pitfalls added: 2026-03-20 for v2.0 milestone*

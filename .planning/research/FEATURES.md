@@ -1,317 +1,248 @@
-# Feature Landscape
+# Feature Research: CLI Installer
 
-**Domain:** Structured Development Workflow Management
-**Researched:** 2026-03-05
-**Confidence:** HIGH
+**Domain:** NPX-based CLI installer/scaffolder for OpenCode plugin
+**Researched:** 2026-03-20
+**Confidence:** HIGH (official docs from npm, Next.js, Vite, create-t3-app)
 
 ## Executive Summary
 
-Based on research of structured development tools, project management platforms, and the existing PAUL v1.0 core commands, I've identified the feature landscape for implementing the remaining 20 PAUL commands. These commands fall into 7 categories: Session Management, Roadmap Management, Milestone Management, Pre-Planning, Research, Quality, and Configuration.
+CLI installers like `create-next-app`, `create-vite`, and `create-t3-app` follow a predictable pattern: they execute via `npx` or `npm create`, present interactive prompts (with non-interactive bypass options), scaffold files into a target directory, and optionally initialize git/install dependencies. For OpenPAUL, the CLI installer would initialize OpenPAUL configuration in a project, creating the necessary directory structure and state files.
 
-Key findings:
+**Key findings:**
 
-1. **Session management** follows the "Handoff + Resume" pattern with comprehensive state capture (MEDIUM-HIGH confidence from AKF Partners and LobeHub research)
-2. **Milestone tracking** is standard practice in project management with clear phase dependencies (HIGH confidence from Atlassian and ClickUp research)
-3. **Pre-planning** workflows (discuss, assumptions, discover, consider-issues) are critical for reducing project risks (HIGH confidence from Acropolium discovery phase research)
-4. **Research workflows** distinguish between information gathering (research) and decision-making (discover) with subagent parallelization (HIGH confidence from existing PAUL workflow patterns)
-5. **Quality verification** emphasizes manual user testing guided by Claude with systematic issue capture (MEDIUM-HIGH confidence from QA process research)
-6. **Configuration** focuses on project settings and integrations rather than complex workflow management (MEDIUM confidence from existing command patterns)
+1. **npx execution** requires `bin` field in package.json mapping command name to executable file with `#!/usr/bin/env node` shebang
+2. **Interactive prompts** are table stakes — users expect guided setup with `@inquirer/prompts` or similar
+3. **Non-interactive mode** (`--yes`) is critical for CI/automation and should skip all prompts using defaults
+4. **No git/package manager handling** — OpenPAUL is for *existing* projects, not scaffolding new ones (anti-feature)
 
-## Table Stakes
+## Feature Landscape
 
-Features users expect in structured development tools. Missing these = product feels incomplete.
+### Table Stakes (Users Expect These)
 
-### Session Management
+Features users assume exist. Missing these = product feels incomplete.
 
 | Feature | Why Expected | Complexity | Notes |
-|-----------|---------------|--------------|-------|
-| **pause** - Create handoff file | Users need to stop mid-session and resume later | MEDIUM | HANDOFF.md structure: Current State, What Was Done, What's In Progress, What's Next, Resume Instructions. Follows "Handoff + Resume" pattern from AKF Partners: Capture State → Monitor for Return → Re-activate Context → Prompt Next Step |
-| **resume** - Restore from handoff | Seamless session continuation without context loss | MEDIUM | Reads HANDOFF.md, loads STATE.md, restores context. Critical for multi-session workflows |
-| **status** - Show current position | Users expect visibility into loop position and progress | LOW | Visual display: PLAN/APPLY/UNIFY loop with markers, current phase, plan status. Table stakes for any workflow tool |
-| **handoff** - Explicit handoff creation | For team collaboration or explicit context saves | MEDIUM | Similar to pause but for user-requested handoffs (e.g., before passing work to another developer) |
+|---------|--------------|------------|-------|
+| `npx openpaul` execution | Users expect `create-*` style invocation via npx/npm create | LOW | Requires `bin` field in package.json, shebang in entry file |
+| Help flag (`-h`, `--help`) | Standard CLI expectation | LOW | Shows available options and usage |
+| Version flag (`-v`, `--version`) | Standard CLI expectation | LOW | Outputs package version |
+| Project path argument | Users specify where to initialize | LOW | `[project-path]` positional arg; defaults to current dir (`.`) |
+| Interactive prompts | Users expect guided setup | MEDIUM | Use `@inquirer/prompts` or similar; asks for configuration choices |
+| Error messages | Users need clear feedback on failures | LOW | Colored output (chalk), clear exit codes |
 
-### Roadmap Management
+### Differentiators (Competitive Advantage)
 
-| Feature | Why Expected | Complexity | Notes |
-|-----------|---------------|--------------|-------|
-| **add-phase** - Add phase to roadmap | Projects evolve; new phases get added | MEDIUM | Adds phase to ROADMAP.md table, creates phase directory, updates STATE.md. Must handle phase numbering and dependencies |
-| **remove-phase** - Remove phase from roadmap | Mistakes happen; scope changes | MEDIUM | Removes phase, renumbers subsequent phases, cleanup phase directory. Must warn about completed phases or dependencies |
-
-### Milestone Management
-
-| Feature | Why Expected | Complexity | Notes |
-|-----------|---------------|--------------|-------|
-| **milestone** - Create new milestone | Projects have natural breaks/deliverables | MEDIUM | Defines milestone with scope, phases, theme. Creates milestone section in ROADMAP.md, updates STATE.md. Standard practice per Atlassian research |
-| **complete-milestone** - Mark milestone complete | Milestone closure is required milestone tracking | MEDIUM | Archives milestone to MILESTONE-ARCHIVE.md, updates ROADMAP.md progress. Includes summary of what was delivered |
-| **discuss-milestone** - Plan upcoming milestone | Team alignment before starting work | MEDIUM | Creates MILESTONE-CONTEXT.md with Features, Scope, Phase Mapping, Constraints. Consumed by /paul:milestone command |
-
-### Pre-Planning
-
-| Feature | Why Expected | Complexity | Notes |
-|-----------|---------------|--------------|-------|
-| **discuss** - Explore phase goals | Users need to define "what" before "how" | MEDIUM | Creates CONTEXT.md with Goals, Approach, Constraints, Open Questions. Informative for /paul:plan. Critical for reducing misunderstandings per Acropolium research |
-| **assumptions** - Capture and validate assumptions | Assumptions are major risk sources if unvalidated | MEDIUM | Creates ASSUMPTIONS.md listing assumptions with validation status (validated/unvalidated/pending). Reduces rework risk |
-| **discover** - Research technical options | Pre-planning research before committing to implementation | HIGH | 3 depth levels: Quick (verbal, 2-5min), Standard (DISCOVERY.md, 15-30min), Deep (comprehensive, 1+hr). Distinct from /paul:research - Discovery makes decisions, Research gathers info |
-| **consider-issues** - Identify potential blockers | Proactive issue identification reduces surprises | MEDIUM | Creates ISSUES.md with categorized risks (technical/dependency/scope) and mitigation strategies |
-
-### Research
-
-| Feature | Why Expected | Complexity | Notes |
-|-----------|---------------|--------------|-------|
-| **research** - User-specified topic research | Users need to investigate specific topics | HIGH | User specifies what to research, Claude executes research with proper verification. Returns findings with confidence levels |
-| **research-phase** - Auto-detect and research phase unknowns | Users don't always know what needs researching | HIGH | Analyzes phase description, identifies unknowns, spawns parallel research agents (max 3 for token efficiency), consolidates into phase RESEARCH.md. Distinct from /paul:research - research-phase identifies unknowns, research investigates known topics |
-
-### Quality
-
-| Feature | Why Expected | Complexity | Notes |
-|-----------|---------------|--------------|-------|
-| **verify** - Manual user acceptance testing | Manual testing is table stakes for delivery | MEDIUM | USER performs all testing. Claude generates test checklist from SUMMARY.md acceptance criteria, guides through each test via AskUserQuestion, captures results in phase UAT-ISSUES.md. Anti-pattern: Don't run automated tests, don't make assumptions about results |
-| **plan-fix** - Fix plan based on verification issues | Failed tests require plan fixes before closing loop | MEDIUM | Reads UAT-ISSUES.md, identifies issues that require plan updates, creates new plan or modifies existing plan, re-runs /paul:apply after fixes. Critical for loop closure integrity |
-
-### Configuration
-
-| Feature | Why Expected | Complexity | Notes |
-|-----------|---------------|--------------|-------|
-| **config** - Manage project configuration | Projects need configurable settings | MEDIUM | Manage integrations (SonarQube), project settings, preferences. YAML config in .paul/config.md. Can be run at any project lifecycle point |
-| **flows** - Configure specialized flows | Some projects need custom workflows | LOW | Enable/disable specialized flows defined in SPECIAL-FLOWS.md. Simple toggle-based configuration |
-| **map-codebase** - Document codebase structure | Understanding existing code is critical for onboarding | HIGH | Creates CODEBASE.md with structure, stack, conventions, concerns, integrations, architecture. Uses discovery approach to analyze codebase |
-
-## Differentiators
-
-Features that set PAUL apart from generic project management tools.
+Features that set the product apart. Not required, but valuable.
 
 | Feature | Value Proposition | Complexity | Notes |
 |---------|-------------------|------------|-------|
-| **Loop-aware pause/resume** | PAUL-specific: capture exact loop position (PLAN/APPLY/UNIFY) and enforce it on resume | MEDIUM | Most tools don't have enforced workflow. Must prevent resuming mid-loop in wrong phase |
-| **Discovery depth levels** | Adapt research effort to risk/complexity | MEDIUM | Quick (2-5min), Standard (15-30min), Deep (1+hr). Most tools don't offer granular depth control. Enables efficient use of Claude's capabilities |
-| **Research-phase parallel subagents** | Identify and research unknowns automatically | HIGH | Analyzes phase, spawns up to 3 parallel research agents, consolidates findings. Reduces user cognitive load - they don't need to know what needs researching |
-| **Assumption validation tracking** | Explicit assumption management reduces risk | MEDIUM | Most PM tools don't track assumptions as first-class citizens. PAUL treats assumptions with validation status, preventing silent failures |
-| **Handoff-first architecture** | Session continuity as core feature | MEDIUM | HANDOFF.md as primary state transfer mechanism, not just an afterthought. Enables seamless multi-session and multi-developer workflows |
-| **Milestone context handoffs** | Milestone discussion separate from creation | MEDIUM | /paul:discuss-milestone creates MILESTONE-CONTEXT.md that /paul:milestone consumes. Separates "what we're building" from "when/how we're building it" |
+| Non-interactive mode (`--yes`, `-y`) | CI/automation friendly, skips all prompts | LOW | Uses defaults or stored preferences |
+| Template presets | Quick start with different configurations | MEDIUM | e.g., "minimal", "full", "team" setups |
+| Skip dependency install (`--skip-install`) | Faster init, user installs manually | LOW | Useful in air-gapped or custom environments |
+| Verbose mode (`--verbose`) | Debug visibility into what's happening | LOW | Shows all operations, useful for troubleshooting |
+| Dry run (`--dry-run`) | Preview changes without writing files | MEDIUM | Shows what would be created |
+| Existing project detection | Better UX when running in already-initialized project | MEDIUM | Detect existing `.paul/` and offer upgrade/reinit options |
 
-## Anti-Features
+### Anti-Features (Commonly Requested, Often Problematic)
 
-Features to explicitly NOT build.
+Features that seem good but create problems.
 
-| Anti-Feature | Why Avoid | What to Do Instead |
-|--------------|-----------|-------------------|
-| **Automated testing in verify command** | Verify is for manual user acceptance testing, not automated test suites | Use existing CI/test infrastructure. Verify focuses on user perspective, not unit/integration tests |
-| **Real-time collaboration** | PAUL is designed for structured, async workflows, not real-time collaboration | Use pause/handoff for async handoffs. Real-time collaboration increases complexity without clear benefit for PAUL's use case |
-| **Complex dependency graphs** | Visual dependency management is complex and error-prone. Simple phase dependencies in ROADMAP.md sufficient | Maintain phase dependencies in ROADMAP.md. Avoid visual graph complexity that breaks when changes occur |
-| **Built-in time tracking** | Time tracking is orthogonal to PAUL's core value of structured workflow | Use external time tracking if needed. PAUL focuses on what and how, not how long |
-| **Web-based project views** | PAUL is CLI-first for developer ergonomics. Web UI adds deployment complexity | Keep CLI-first with markdown-based human-readable files. Export to web tools if needed, but don't build web UI |
+| Feature | Why Requested | Why Problematic | Alternative |
+|---------|---------------|-----------------|-------------|
+| Git initialization (`--git`) | Create-next-app does it | OpenPAUL is for *existing* projects, not new ones; git likely exists already | Skip git handling entirely |
+| Package manager selection | Other scaffolders ask npm/yarn/pnpm | OpenPAUL doesn't install dependencies; it creates config files | No package manager interaction |
+| Example/template from GitHub | Vite/Next.js support this | Adds network dependency, complexity for what's essentially config files | Built-in presets only |
+| Force overwrite (`--force`) | "Just overwrite everything" | Destroys user state, data loss risk | Explicit confirmation prompts, backup option |
 
 ## Feature Dependencies
 
 ```
-[pause]
-    └──requires──> [existing project with STATE.md]
+npx openpaul execution
+    └──requires──> bin field in package.json
+    └──requires──> shebang (#!/usr/bin/env node) in entry file
 
-[resume]
-    └──requires──> [pause/handoff files]
+Interactive prompts
+    └──requires──> @inquirer/prompts or similar library
+    └──enhances──> Template presets (prompts ask which preset)
 
-[handoff]
-    └──requires──> [existing project with STATE.md]
-    └──enhances──> [pause] (explicit version)
+Non-interactive mode
+    └──requires──> Default values for all prompts
+    └──conflicts──> Interactive prompts (mutually exclusive per run)
 
-[status]
-    └──requires──> [existing project with STATE.md]
+Dry run mode
+    └──requires──> Same logic as normal run, just skip write operations
 
-[add-phase]
-    └──requires──> [existing milestone in ROADMAP.md]
-
-[remove-phase]
-    └──requires──> [existing milestone with phases]
-
-[milestone]
-    └──requires──> [existing project]
-    └──enhanced by──> [discuss-milestone]
-
-[complete-milestone]
-    └──requires──> [existing milestone with completed phases]
-
-[discuss-milestone]
-    └──requires──> [existing project]
-
-[discuss]
-    └──requires──> [existing phase in ROADMAP.md]
-    └──informs──> [plan]
-
-[assumptions]
-    └──requires──> [existing phase or project context]
-    └──informs──> [plan]
-
-[discover]
-    └──requires──> [existing phase or project scope]
-    └──informs──> [plan]
-
-[consider-issues]
-    └──requires──> [existing phase or project context]
-    └──informs──> [plan]
-
-[research]
-    └──requires──> [existing project context]
-
-[research-phase]
-    └──requires──> [existing phase in ROADMAP.md]
-    └──informs──> [plan]
-
-[verify]
-    └──requires──> [completed plan with SUMMARY.md]
-    └──informs──> [plan-fix]
-
-[plan-fix]
-    └──requires──> [verify with issues in UAT-ISSUES.md]
-
-[config]
-    └──requires──> [existing project]
-
-[flows]
-    └──requires──> [existing project with SPECIAL-FLOWS.md]
-
-[map-codebase]
-    └──requires──> [existing codebase to map]
-    └──informs──> [all planning and implementation]
+Existing project detection
+    └──requires──> File system checks for .paul/ directory
 ```
+
+### Dependency Notes
+
+- **npx execution requires bin field:** The `bin` field maps command name to executable file; `npx`/npm create uses this to know what to run
+- **Interactive prompts require library:** `@inquirer/prompts` is modern, tree-shakeable, well-maintained alternative to legacy `inquirer`
+- **Non-interactive conflicts with prompts:** When `--yes` is passed, skip all prompts and use defaults
+- **Dry run enhances all features:** Same logic, just don't write files - useful for debugging
 
 ## MVP Definition
 
-### Launch With (v1.1 - Full Command Implementation)
+### Launch With (v1)
 
-Minimum viable product — what's needed to validate the complete PAUL workflow.
+Minimum viable product — what's needed to validate the concept.
 
-- [ ] **Session Management** (pause, resume, status) — Core session continuity is table stakes for multi-session workflows
-- [ ] **Roadmap Management** (add-phase, remove-phase) — Basic roadmap manipulation is required for project evolution
-- [ ] **Milestone Management** (milestone, complete-milestone) — Milestone lifecycle is core to PAUL's milestone-based approach
-- [ ] **Pre-Planning** (discuss, discover) — Basic pre-planning reduces risk and improves plan quality
-- [ ] **Research** (research, research-phase) — Research capabilities are table stakes for informed development
-- [ ] **Quality** (verify, plan-fix) — Quality verification and plan fixes are required for loop closure
+- [ ] **Basic npx execution** — `npx openpaul` runs without errors
+- [ ] **Help flag** — `npx openpaul --help` shows usage
+- [ ] **Version flag** — `npx openpaul --version` shows version
+- [ ] **Project path argument** — `npx openpaul [path]` or `npx openpaul .`
+- [ ] **Interactive prompt for project name** — Asks "What is your project name?" if not provided
+- [ ] **Scaffold .paul/ directory** — Creates `.paul/state.json` with initial state
+- [ ] **Success/error feedback** — Clear colored output on completion or failure
 
-### Add After Validation (v1.2)
+### Add After Validation (v1.x)
 
 Features to add once core is working.
 
-- [ ] **discuss-milestone** — Milestone discussion before creation improves alignment (defer: requires teams to find value in explicit milestone planning)
-- [ ] **assumptions** — Assumption tracking reduces risk but may feel bureaucratic (defer: wait for user feedback on workflow overhead)
-- [ ] **consider-issues** — Proactive issue identification is valuable but not critical (defer: verify users actually use it before investing)
+- [ ] **Non-interactive mode** — `--yes` flag skips prompts (trigger: CI usage requests)
+- [ ] **Verbose mode** — `--verbose` shows detailed operations (trigger: debugging needs)
+- [ ] **Template presets** — Offer "minimal" vs "full" initial configs (trigger: user feedback on complexity)
+- [ ] **Existing project detection** — Warn if `.paul/` already exists (trigger: re-run confusion)
 
 ### Future Consideration (v2+)
 
 Features to defer until product-market fit is established.
 
-- [ ] **flows** — Specialized flows are power features with niche use cases (defer: needs concrete user scenarios)
-- [ ] **map-codebase** — Codebase mapping is valuable but time-consuming (defer: verify users actually use it for onboarding)
+- [ ] **Dry run mode** — Preview without writing (defer: low demand, implementation cost)
+- [ ] **Upgrade existing projects** — Migrate old state.json format (defer: need versioning first)
+- [ ] **Custom templates** — User-defined template directories (defer: YAGNI until power users ask)
 
 ## Feature Prioritization Matrix
 
 | Feature | User Value | Implementation Cost | Priority |
 |---------|------------|---------------------|----------|
-| pause | HIGH | MEDIUM | P1 |
-| resume | HIGH | MEDIUM | P1 |
-| status | HIGH | LOW | P1 |
-| add-phase | HIGH | MEDIUM | P1 |
-| remove-phase | MEDIUM | MEDIUM | P2 |
-| milestone | HIGH | MEDIUM | P1 |
-| complete-milestone | HIGH | MEDIUM | P1 |
-| discuss-milestone | MEDIUM | MEDIUM | P2 |
-| discuss | HIGH | MEDIUM | P1 |
-| discover | HIGH | HIGH | P1 |
-| assumptions | MEDIUM | MEDIUM | P2 |
-| consider-issues | MEDIUM | MEDIUM | P2 |
-| research | HIGH | HIGH | P1 |
-| research-phase | HIGH | HIGH | P1 |
-| verify | HIGH | MEDIUM | P1 |
-| plan-fix | HIGH | MEDIUM | P1 |
-| config | MEDIUM | MEDIUM | P2 |
-| flows | LOW | LOW | P3 |
-| map-codebase | MEDIUM | HIGH | P2 |
+| npx execution | HIGH | LOW | P1 |
+| Help flag | HIGH | LOW | P1 |
+| Version flag | HIGH | LOW | P1 |
+| Project path argument | HIGH | LOW | P1 |
+| Interactive prompts | HIGH | MEDIUM | P1 |
+| Scaffold .paul/ structure | HIGH | MEDIUM | P1 |
+| Error/success feedback | HIGH | LOW | P1 |
+| Non-interactive mode | MEDIUM | LOW | P2 |
+| Verbose mode | LOW | LOW | P2 |
+| Template presets | MEDIUM | MEDIUM | P2 |
+| Existing project detection | MEDIUM | MEDIUM | P2 |
+| Dry run | LOW | MEDIUM | P3 |
+| Git initialization | LOW | LOW | ANTI-FEATURE |
+| Package manager selection | LOW | LOW | ANTI-FEATURE |
 
 **Priority key:**
-- P1: Must have for v1.1 complete workflow
-- P2: Should have for v1.2 or early v1.1.x
+- P1: Must have for launch
+- P2: Should have, add when possible
 - P3: Nice to have, future consideration
 
 ## Competitor Feature Analysis
 
-| Feature | Atlassian Jira | ClickUp | GitHub Projects | PAUL |
-|---------|---------------|---------|----------------|------|
-| **Session Management** | No (third-party apps) | No (third-party apps) | No | Native handoff/resume |
-| **Milestone Tracking** | Yes (full-featured) | Yes (with goals) | Basic | Yes (milestone + phase hierarchy) |
-| **Pre-Planning** | Issue templates only | Custom fields only | Issues/Wiki | Native discuss/discover/assumptions commands |
-| **Research Integration** | No | AI research features | No | Native research with subagent parallelization |
-| **Quality Verification** | QA workflows | Manual checklists | CI/CD integration | Native verify with user-guided UAT |
-| **Configuration** | Extensive | Extensive | Minimal (actions) | Simple config with integrations |
+| Feature | create-next-app | create-vite | create-t3-app | OpenPAUL Approach |
+|---------|-----------------|-------------|---------------|-------------------|
+| **Invocation** | `npm create next-app` | `npm create vite` | `npm create t3-app` | `npx openpaul` or `npm create openpaul` |
+| **Path argument** | `[project-name]` optional | `[project-name]` optional | `[dir]` optional | `[project-path]` optional, default `.` |
+| **Help flag** | `-h, --help` | `-h, --help` | (implicit) | `-h, --help` |
+| **Version flag** | Not shown | `-v, --version` | Not shown | `-v, --version` |
+| **Interactive mode** | Yes (prompts) | Yes (prompts) | Yes (prompts) | Yes (prompts) |
+| **Non-interactive** | `--yes` | `--no-interactive` | `-y, --default` | `--yes, -y` |
+| **Template selection** | `--example`, `--empty` | `--template` | Built-in packages | Built-in presets |
+| **Package manager** | `--use-npm/pnpm/yarn/bun` | Auto-detect | Auto-detect | N/A (no deps) |
+| **Git init** | `--disable-git` | No | `--noGit` | N/A (existing project) |
+| **Skip install** | `--skip-install` | No | `--noInstall` | N/A (no deps) |
+| **CI mode** | Implicit | `--no-interactive` | `--CI` | `--yes` |
 
-**PAUL Differentiator:**
-- Native session continuity (not a plugin)
-- Research-first architecture (decision-making built into workflow)
-- CLI-first design for developers
-- Lightweight, human-readable markdown storage
-- Structured loop enforcement (PLAN→APPLY→UNIFY)
+## Technical Implementation Notes
 
-## Phase Implementation Recommendations
+### package.json bin Field
 
-### Phase A: Session Management (pause, resume, status, handoff)
-**Why first:** Session continuity is foundational for all other commands. Users must be able to pause and resume reliably.
-**Dependencies:** Requires existing STATE.md structure (from v1.0)
-**Complexity:** MEDIUM - Handoff file structure, state restoration logic
-**Risk:** Low - Follows established "Handoff + Resume" pattern
+```json
+{
+  "bin": {
+    "openpaul": "./dist/cli.js",
+    "create-openpaul": "./dist/cli.js"
+  }
+}
+```
 
-### Phase B: Roadmap & Milestone Management (add-phase, remove-phase, milestone, complete-milestone)
-**Why second:** Milestone/phase structure is the container for all planning work.
-**Dependencies:** ROADMAP.md structure from v1.0, Session Management
-**Complexity:** MEDIUM - Phase numbering, dependencies, archiving
-**Risk:** Low - Standard project management patterns
+Two entries enable both:
+- `npx openpaul` — Direct command
+- `npm create openpaul` — npm create convention
 
-### Phase C: Pre-Planning (discuss, discover, assumptions, consider-issues)
-**Why third:** Pre-planning improves plan quality and reduces rework.
-**Dependencies:** Roadmap/Milestone structure
-**Complexity:** HIGH - Discovery has 3 depth levels, assumption validation logic
-**Risk:** MEDIUM - Discovery depth can be misused (too much or too little research)
+### Entry File Structure
 
-### Phase D: Research (research, research-phase)
-**Why fourth:** Research supports pre-planning and discovery.
-**Dependencies:** Pre-planning workflows (to feed into)
-**Complexity:** HIGH - Subagent orchestration, parallel research, consolidation
-**Risk:** HIGH - Subagent orchestration is complex, token efficiency concerns
+```javascript
+#!/usr/bin/env node
+// dist/cli.js - compiled from src/cli.ts
 
-### Phase E: Quality (verify, plan-fix)
-**Why fifth:** Quality is critical for loop closure.
-**Dependencies:** Completed plans with SUMMARY.md
-**Complexity:** MEDIUM - User-guided testing, issue capture, plan modification
-**Risk:** MEDIUM - User compliance with manual testing
+import { parseArgs } from './args.js'
+import { runInteractive } from './interactive.js'
+import { scaffoldProject } from './scaffold.js'
 
-### Phase F: Configuration (config, flows, map-codebase)
-**Why last:** Configuration is nice-to-have for core workflow.
-**Dependencies:** None (standalone)
-**Complexity:** LOW-MEDIUM - Config is simple, map-codebase is high effort
-**Risk:** Low - Low risk if deferred
+async function main() {
+  const args = parseArgs(process.argv.slice(2))
+  
+  if (args.help) { showHelp(); process.exit(0) }
+  if (args.version) { showVersion(); process.exit(0) }
+  
+  const config = args.yes 
+    ? getDefaultConfig() 
+    : await runInteractive(args)
+  
+  await scaffoldProject(config)
+}
+
+main().catch(err => {
+  console.error(chalk.red('Error:'), err.message)
+  process.exit(1)
+})
+```
+
+### Recommended Libraries
+
+| Library | Purpose | Version | Why |
+|---------|---------|---------|-----|
+| `@inquirer/prompts` | Interactive prompts | ^5.x | Modern, tree-shakeable, well-typed |
+| `chalk` | Colored output | ^5.x | Standard, ESM-native |
+| `commander` | Argument parsing | ^12.x | Battle-tested, good TypeScript support |
+
+**Alternative:** No external arg parser — use native `util.parseArgs` (Node 18+) for zero dependencies
+
+### OpenPAUL-Specific Scaffold Files
+
+When `npx openpaul` runs, it should create:
+
+```
+.paul/
+├── state.json           # Initial project state
+├── config.json          # User preferences (optional)
+└── .gitignore           # Ignore patterns for paul files
+```
+
+**state.json initial structure:**
+```json
+{
+  "version": "1.0.0",
+  "projectName": "<from prompt or dir name>",
+  "currentPhase": null,
+  "currentMilestone": null,
+  "loopPosition": "IDLE",
+  "createdAt": "<ISO date>",
+  "updatedAt": "<ISO date>"
+}
+```
 
 ## Sources
 
-**Session Management:**
-- AKF Partners - "Agentic Pattern: Handoff + Resume" (https://akfpartners.com/growth-blog/agentic-pattern-handoff-resume) - HIGH confidence, 2025
-- LobeHub Skills Marketplace - session-handoff skill documentation (https://lobehub.com/skills/itsar-vr-goatedskills-session-handoff) - MEDIUM confidence, 2026
-- GitHub Issue #11455 - Claude Code session handoff feature request (https://github.com/anthropics/claude-code/issues/11455) - MEDIUM confidence, 2025
-
-**Milestone Management:**
-- Atlassian - "What are project milestones: benefits and examples" (https://www.atlassian.com/blog/project-management/project-milestones) - HIGH confidence, 2023
-- ClickUp - "10 Best Project Milestone Tracking Software in 2026" (https://clickup.com/blog/milestone-tracking-software/) - MEDIUM confidence, 2025
-
-**Pre-Planning:**
-- Acropolium - "Discovery Phase in Software Development: Benefits, Steps, and Team Members" (https://acropolium.com/blog/discovery-phase-in-software-development-benefits-steps-and-team-members/) - HIGH confidence, 2024
-
-**Quality Verification:**
-- VirtuosoQA - "Software QA Process - 7 Stages, Best Practices, & Examples" (https://www.virtuosoqa.com/post/software-qa-process) - MEDIUM confidence, date unknown
-- Monday.com - "Software Quality Assurance Best Practices: The 2026 Guide" (https://monday.com/blog/rnd/software-quality-assurance/) - MEDIUM confidence, 2025
-- Reddit r/QualityAssurance - JIRA QA workflow discussion (https://www.reddit.com/r/QualityAssurance/comments/ixlry1/jira_qa_workflow/) - LOW confidence, 2020
-
-**Existing PAUL Patterns:**
-- OpenPAUL source code - Command and workflow implementations (/Users/kris/Repos/openpaul/src/commands/, /Users/kris/Repos/openpaul/src/workflows/) - HIGH confidence, internal
-- OpenPAUL templates (/Users/kris/Repos/openpaul/src/templates/) - HIGH confidence, internal
+- **npm exec documentation** — https://docs.npmjs.com/cli/v10/commands/npm-exec (HIGH confidence)
+- **create-next-app CLI reference** — https://nextjs.org/docs/app/api-reference/cli/create-next-app (HIGH confidence)
+- **create-t3-app installation** — https://create.t3.gg/en/installation (HIGH confidence)
+- **Vite getting started** — https://vite.dev/guide/#scaffolding-your-first-vite-project (HIGH confidence)
+- **Building NPX CLI tools** — https://johnsedlak.com/blog/2025/03/building-an-npx-cli-tool (MEDIUM confidence, blog post)
+- **npm bin field verification** — `npm view create-vite bin` and `npm view create-next-app bin` (HIGH confidence, direct npm queries)
 
 ---
-
-*Feature research for: OpenPAUL - Remaining 20 Commands*
-*Researched: 2026-03-05*
-*Confidence: HIGH (based on external research + internal pattern analysis)*
+*Feature research for: CLI Installer (OpenPAUL)*
+*Researched: 2026-03-20*
