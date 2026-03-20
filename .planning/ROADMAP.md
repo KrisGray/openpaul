@@ -208,7 +208,7 @@ Phases execute in numeric order: 15 → 16 → 17
 | 12. Codecov | v1.2 | 1/1 | Complete | 2026-03-16 |
 | 13. Publish | v1.2 | 1/1 | Complete | 2026-03-16 |
 | 14. Codecov Integration Fix | v1.2 | 1/1 | Complete | 2026-03-16 |
-| 15. CLI Foundation | 1/3 | In Progress|  | - |
+| 15. CLI Foundation | 2/3 | In Progress|  | - |
 | 16. Scaffold Core | v1.4.0 | 0/3 | Not started | - |
 | 17. Template Presets | v1.4.0 | 0/2 | Not started | - |
 

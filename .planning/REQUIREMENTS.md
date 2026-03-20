@@ -10,8 +10,8 @@ Requirements for CLI Installer milestone. Each maps to roadmap phases.
 ### CLI Core
 
 - [x] **CLI-01**: User can run `npx openpaul` to execute the installer
-- [ ] **CLI-02**: User can run `npx openpaul --help` to see usage information
-- [ ] **CLI-03**: User can run `npx openpaul --version` to see package version
+- [x] **CLI-02**: User can run `npx openpaul --help` to see usage information
+- [x] **CLI-03**: User can run `npx openpaul --version` to see package version
 - [ ] **CLI-04**: User receives clear colored error messages on failure
 - [ ] **CLI-05**: User receives success confirmation after scaffolding completes
 
@@ -26,8 +26,8 @@ Requirements for CLI Installer milestone. Each maps to roadmap phases.
 
 - [ ] **INT-01**: CLI prompts for project name if not provided via argument
 - [ ] **INT-02**: CLI detects existing `.openpaul/` directory and warns user
-- [ ] **INT-03**: User can specify project path as positional argument (default: `.`)
-- [ ] **INT-04**: User can provide project name via `--name` flag to skip prompt
+- [x] **INT-03**: User can specify project path as positional argument (default: `.`)
+- [x] **INT-04**: User can provide project name via `--name` flag to skip prompt
 
 ## v1.1 Requirements
 
