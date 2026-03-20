@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 import { Command } from 'commander'
-import { readFileSync } from 'fs'
+import { readFileSync, existsSync } from 'fs'
 import { fileURLToPath } from 'url'
-import { dirname, join } from 'path'
+import { dirname, join, resolve } from 'path'
+import { input, confirm } from '@inquirer/prompts'
 import { success, step, info, setVerbosity } from './cli/output.js'
 import { handleCliError } from './cli/errors.js'
+import { getDefaultProjectName, createOpenPaulDir, generateStateJson } from './cli/scaffold.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const pkgPath = join(__dirname, '../package.json')
@@ -37,15 +39,57 @@ Examples:
   .action(async (options) => {
     setVerbosity(options.verbose)
 
-    info(`Target directory: ${options.path}`)
+    // Resolve target path
+    const targetPath = resolve(options.path)
+    const openpaulDir = join(targetPath, '.openpaul')
 
-    if (options.name) {
-      info(`Project name: ${options.name}`)
+    info(`Target directory: ${targetPath}`)
+
+    // Check for existing directory (skip if --force)
+    if (existsSync(openpaulDir) && !options.force) {
+      const shouldOverwrite = await confirm({
+        message: '`.openpaul/` already exists. Overwrite?',
+        default: false
+      })
+      if (!shouldOverwrite) {
+        info('Operation cancelled')
+        process.exit(0)
+      }
     }
 
-    // Phase 16 will implement actual scaffolding here
-    step('CLI initialized')
-    success('OpenPAUL ready for scaffolding')
+    // Get project name (prompt only if --name not provided)
+    let projectName = options.name
+    if (!projectName) {
+      const defaultName = getDefaultProjectName(targetPath)
+      projectName = await input({
+        message: 'Project name',
+        default: defaultName,
+        validate: (value: string) => {
+          if (!value.trim()) return 'Project name cannot be empty'
+          if (/[\/\\:]/.test(value)) return 'Project name cannot contain /, \\, or :'
+          return true
+        }
+      })
+    }
+
+    info(`Project name: ${projectName}`)
+
+    // Confirmation prompt (skip if --force)
+    if (!options.force) {
+      const confirmed = await confirm({
+        message: `Create OpenPAUL in '${targetPath}' with project name '${projectName}'?`,
+        default: true
+      })
+      if (!confirmed) {
+        info('Operation cancelled')
+        process.exit(0)
+      }
+    }
+
+    // Execute scaffolding
+    createOpenPaulDir(targetPath)
+    await generateStateJson(openpaulDir, projectName, pkg.version)
+    success('OpenPAUL initialized successfully!')
   })
 
 program.parseAsync().catch(handleCliError)
