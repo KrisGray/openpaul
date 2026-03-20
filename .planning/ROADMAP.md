@@ -160,12 +160,11 @@ Plans:
   2. User sees `state.json` file with project name and timestamps
   3. User is prompted for project name when not provided via --name
   4. User is warned when `.openpaul/` directory already exists
-**Plans**: 3 plans
+**Plans**: 2 plans
 
 Plans:
-- [ ] 16-01: Create .openpaul/ directory structure
-- [ ] 16-02: Generate initial state.json with project metadata
-- [ ] 16-03: Implement project name prompt and existing directory detection
+- [ ] 16-01-PLAN.md — Create scaffolding module with state.json schema
+- [ ] 16-02-PLAN.md — Integrate scaffolding into CLI with --force flag and prompts
 
 #### Phase 17: Template Presets
 **Goal**: Users can choose between minimal and full OpenPAUL configurations
@@ -209,7 +208,7 @@ Phases execute in numeric order: 15 → 16 → 17
 | 13. Publish | v1.2 | 1/1 | Complete | 2026-03-16 |
 | 14. Codecov Integration Fix | v1.2 | 1/1 | Complete | 2026-03-16 |
 | 15. CLI Foundation | 4/4 | Complete    | 2026-03-20 | - |
-| 16. Scaffold Core | v1.4.0 | 0/3 | Not started | - |
+| 16. Scaffold Core | v1.4.0 | 0/2 | Not started | - |
 | 17. Template Presets | v1.4.0 | 0/2 | Not started | - |
 
 ## Dependencies
