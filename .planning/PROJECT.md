@@ -77,6 +77,16 @@ Shipped v1.2 CI/CD Pipeline with 5 phases, 6 plans, 20 requirements covered.
 Tech stack: TypeScript, Jest, Zod, ES Modules, GitHub Actions, Docker, Codecov.
 CI/CD: Automated testing, E2E tests, coverage reporting, npm publishing with OIDC.
 
+## Current Milestone: v1.4.0 CLI Installer
+
+**Goal:** Add `npx openpaul` CLI installer for initializing OpenPAUL in projects
+
+**Target features:**
+- npx execution with help/version flags
+- Scaffold `.openpaul/` directory structure
+- Template presets (minimal/full)
+- Interactive prompts with existing project detection
+
 ## Next Milestone: v2.0
 
 **Goal:** Future enhancements based on user feedback
@@ -107,4 +117,4 @@ CI/CD: Automated testing, E2E tests, coverage reporting, npm publishing with OID
 | Graceful timeout (exit 0) | Coverage is optional signal, not blocking requirement | ✓ Complete — v1.2 |
 
 ---
-*Last updated: 2026-03-17 after v1.2 milestone complete*
+*Last updated: 2026-03-20 after v1.4.0 milestone started*

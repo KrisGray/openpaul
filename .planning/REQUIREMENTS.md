@@ -3,6 +3,32 @@
 **Defined:** 2026-03-05
 **Core Value:** Enforce the PLAN → APPLY → UNIFY loop with mandatory reconciliation, ensuring every plan closes properly with full traceability and context preservation.
 
+## v1.4.0 Requirements
+
+Requirements for CLI Installer milestone. Each maps to roadmap phases.
+
+### CLI Core
+
+- [ ] **CLI-01**: User can run `npx openpaul` to execute the installer
+- [ ] **CLI-02**: User can run `npx openpaul --help` to see usage information
+- [ ] **CLI-03**: User can run `npx openpaul --version` to see package version
+- [ ] **CLI-04**: User receives clear colored error messages on failure
+- [ ] **CLI-05**: User receives success confirmation after scaffolding completes
+
+### Scaffolding
+
+- [ ] **SCAF-01**: CLI creates `.openpaul/` directory in target project
+- [ ] **SCAF-02**: CLI creates initial `state.json` with project name and timestamps
+- [ ] **SCAF-03**: CLI supports template presets (minimal/full configurations)
+- [ ] **SCAF-04**: User can specify preset via `--preset minimal` or `--preset full`
+
+### Interactive
+
+- [ ] **INT-01**: CLI prompts for project name if not provided via argument
+- [ ] **INT-02**: CLI detects existing `.openpaul/` directory and warns user
+- [ ] **INT-03**: User can specify project path as positional argument (default: `.`)
+- [ ] **INT-04**: User can provide project name via `--name` flag to skip prompt
+
 ## v1.1 Requirements
 
 Requirements for full command implementation. Each maps to roadmap phases.
@@ -86,11 +112,19 @@ Requirements for CI/CD pipeline milestone. Each maps to roadmap phases.
 - [x] **PUB-03**: npm provenance enabled for supply chain security
 - [x] **PUB-04**: Build runs before publish
 
-## v2 Requirements
+## v1.x Requirements
 
-Deferred to future release. Tracked though not in current roadmap.
+Deferred to future release. Tracked but not in current roadmap.
 
-(None yet - all v1.2 requirements are in scope)
+### Non-Interactive Mode
+
+- **NI-01**: User can run `npx openpaul --yes` to skip all prompts (CI-friendly)
+- **NI-02**: Default configuration used when `--yes` flag provided
+
+### Polish
+
+- **POL-01**: User can run `npx openpaul --verbose` for detailed output
+- **POL-02**: User can run `npx openpaul --dry-run` to preview without writing
 
 ## Out of Scope
 
@@ -98,6 +132,11 @@ Explicitly excluded. Documented to prevent scope creep.
 
 | Feature | Reason |
 |---------|--------|
+| Git initialization | OpenPAUL is for existing projects, not new scaffolds |
+| Package manager selection | CLI doesn't install dependencies |
+| GitHub template import | Adds network dependency, overkill for config files |
+| Force overwrite | Destroys user state, data loss risk |
+| `.paul/` fallback directory | Focus on `.openpaul/` only for clean migration |
 | Automated testing in verify command | Verify is for manual user acceptance testing, not automated test suites |
 | Real-time collaboration | OpenPAUL is designed for structured, async workflows, not real-time collaboration |
 | Complex dependency graphs | Visual dependency management is complex and error-prone. Simple phase dependencies sufficient |
@@ -112,6 +151,19 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
+| CLI-01 | Phase 15 | Pending |
+| CLI-02 | Phase 15 | Pending |
+| CLI-03 | Phase 15 | Pending |
+| CLI-04 | Phase 15 | Pending |
+| CLI-05 | Phase 15 | Pending |
+| SCAF-01 | Phase 16 | Pending |
+| SCAF-02 | Phase 16 | Pending |
+| SCAF-03 | Phase 17 | Pending |
+| SCAF-04 | Phase 17 | Pending |
+| INT-01 | Phase 16 | Pending |
+| INT-02 | Phase 16 | Pending |
+| INT-03 | Phase 15 | Pending |
+| INT-04 | Phase 15 | Pending |
 | CI-01 | Phase 10 | Complete |
 | CI-02 | Phase 10 | Complete |
 | CI-03 | Phase 10 | Complete |
@@ -123,7 +175,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | E2E-04 | Phase 11 | Complete |
 | E2E-05 | Phase 11 | Complete |
 | E2E-06 | Phase 11 | Complete |
-| COV-01 | Phase 12, 14 | Complete (fix pending) |
+| COV-01 | Phase 12, 14 | Complete |
 | COV-02 | Phase 12 | Complete |
 | COV-03 | Phase 12 | Complete |
 | COV-04 | Phase 12 | Complete |
@@ -156,11 +208,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BRND-02 | Phase 6 | Complete |
 
 **Coverage:**
+- v1.4.0 requirements: 13 total (Pending)
 - v1.1 requirements: 22 total (Complete)
-- v1.2 requirements: 20 total (Pending)
-- Mapped to phases: 42
+- v1.2 requirements: 20 total (Complete)
+- Mapped to phases: 55
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-03-05*
-*Last updated: 2026-03-16 (gap closure phase 14 added for COV-01 fix)*
+*Last updated: 2026-03-20 after v1.4.0 CLI Installer milestone started*
