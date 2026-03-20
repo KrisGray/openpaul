@@ -1,0 +1,70 @@
+---
+status: complete
+phase: 15-cli-foundation
+source: 15-01-SUMMARY.md, 15-02-SUMMARY.md, 15-03-SUMMARY.md
+started: 2026-03-20T16:30:00Z
+updated: 2026-03-20T16:45:00Z
+---
+
+## Current Test
+
+[testing complete]
+
+## Tests
+
+### 1. CLI Builds and Runs
+expected: After running `npm run build`, the command `npx openpaul --help` shows help output without errors
+result: pass
+
+### 2. Version Flag Works
+expected: Running `npx openpaul -v` or `npx openpaul --version` outputs the package version number
+result: pass
+
+### 3. Help Flag Shows Usage
+expected: Running `npx openpaul -h` or `npx openpaul --help` shows usage information with Examples section
+result: pass
+
+### 4. Path Option with Default
+expected: Running `npx openpaul -p .` accepts the path option, and omitting -p defaults to current directory
+result: pass
+
+### 5. Name Option
+expected: Running `npx openpaul -n myproject` accepts the name option and shows it in the logged options
+result: pass
+
+### 6. Colored Success Output
+expected: When CLI runs successfully, output includes green checkmark (✓) for success messages
+result: pass
+
+### 7. Colored Error Output
+expected: When CLI encounters an error, it shows red "Error:" prefix and exits with code 1
+result: pass
+
+### 8. Verbosity Control
+expected: Running `npx openpaul -v` shows more verbose output with info icon (ℹ), and `-vv` shows debug-level output
+result: issue
+reported: "-v and -vv shows the version number so I think there is a clash"
+severity: major
+
+### 9. Errors Go to Stderr
+expected: Error messages are written to stderr (not stdout), allowing proper piping in scripts
+result: pass
+
+## Summary
+
+total: 9
+passed: 8
+issues: 1
+pending: 0
+skipped: 0
+
+## Gaps
+
+- truth: "Running npx openpaul -v shows more verbose output with info icon (ℹ), and -vv shows debug-level output"
+  status: failed
+  reason: "User reported: -v and -vv shows the version number so I think there is a clash"
+  severity: major
+  test: 8
+  root_cause: ""
+  artifacts: []
+  missing: []
