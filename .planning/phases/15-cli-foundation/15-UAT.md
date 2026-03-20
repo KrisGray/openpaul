@@ -1,5 +1,5 @@
 ---
-status: complete
+status: diagnosed
 phase: 15-cli-foundation
 source: 15-01-SUMMARY.md, 15-02-SUMMARY.md, 15-03-SUMMARY.md
 started: 2026-03-20T16:30:00Z
@@ -65,6 +65,12 @@ skipped: 0
   reason: "User reported: -v and -vv shows the version number so I think there is a clash"
   severity: major
   test: 8
-  root_cause: ""
-  artifacts: []
-  missing: []
+  root_cause: "Commander.js -v flag assigned to --version (line 18), blocking use for --verbose. Additionally, verbosity logic only supports boolean, not -vv counting."
+  artifacts:
+    - path: "src/cli.ts"
+      issue: "Line 18: -v assigned to --version; Line 23: --verbose has no short flag; Line 32: only boolean verbosity"
+  missing:
+    - "Remove -v from .version() call, keep only --version"
+    - "Add -v short flag to --verbose option with counting support"
+    - "Add countVerbosity helper function for -v/-vv support"
+    - "Update setVerbosity call to use numeric value from count"
