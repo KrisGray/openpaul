@@ -149,21 +149,28 @@ Explicitly excluded. Documented to prevent scope creep.
 
 Which phases cover which requirements. Updated during roadmap creation.
 
+### v1.4.0 CLI Installer (Phases 15-17)
+
+| Requirement | Phase | Description | Status |
+|-------------|-------|-------------|--------|
+| CLI-01 | Phase 15 | npx openpaul execution | Pending |
+| CLI-02 | Phase 15 | --help flag | Pending |
+| CLI-03 | Phase 15 | --version flag | Pending |
+| CLI-04 | Phase 15 | Colored error messages | Pending |
+| CLI-05 | Phase 15 | Success confirmation | Pending |
+| INT-03 | Phase 15 | Project path argument | Pending |
+| INT-04 | Phase 15 | --name flag | Pending |
+| SCAF-01 | Phase 16 | Create .openpaul/ directory | Pending |
+| SCAF-02 | Phase 16 | Create initial state.json | Pending |
+| INT-01 | Phase 16 | Project name prompt | Pending |
+| INT-02 | Phase 16 | Existing directory warning | Pending |
+| SCAF-03 | Phase 17 | Template presets support | Pending |
+| SCAF-04 | Phase 17 | --preset flag | Pending |
+
+### v1.2 CI/CD Pipeline (Phases 10-14)
+
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CLI-01 | Phase 15 | Pending |
-| CLI-02 | Phase 15 | Pending |
-| CLI-03 | Phase 15 | Pending |
-| CLI-04 | Phase 15 | Pending |
-| CLI-05 | Phase 15 | Pending |
-| SCAF-01 | Phase 16 | Pending |
-| SCAF-02 | Phase 16 | Pending |
-| SCAF-03 | Phase 17 | Pending |
-| SCAF-04 | Phase 17 | Pending |
-| INT-01 | Phase 16 | Pending |
-| INT-02 | Phase 16 | Pending |
-| INT-03 | Phase 15 | Pending |
-| INT-04 | Phase 15 | Pending |
 | CI-01 | Phase 10 | Complete |
 | CI-02 | Phase 10 | Complete |
 | CI-03 | Phase 10 | Complete |
