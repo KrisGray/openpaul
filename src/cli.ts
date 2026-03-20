@@ -19,6 +19,13 @@ program
   .option('-n, --name <name>', 'project name (defaults to directory name)')
   .option('-i, --interactive', 'force interactive mode')
   .option('--verbose', 'enable verbose output')
+  .addHelpText('after', `
+Examples:
+  $ npx openpaul                    # Interactive mode
+  $ npx openpaul --name my-project  # Skip name prompt
+  $ npx openpaul --path ./app       # Target directory
+  $ npx openpaul -n my-project -p ./app  # Combined options
+`)
   .action(async (options) => {
     // Options available: options.path, options.name, options.interactive, options.verbose
     // For now, just log that we received the command
