@@ -33,3 +33,20 @@ export function debug(message: string): void {
     console.log(pc.dim('[debug]') + ' ' + message)
   }
 }
+
+export function showBanner(version: string): void {
+  const banner = `
+  ____  ____   __   ______  ____   ______  __  __  ______
+ / __ \\/  _/  / /  / ____/ / __ \\ / ____/ / / / / / ____/
+/ / / // /   / /  / /_    / /_/ // /     / /_/ / / /_    
+/ /_/ // /   / /  / __/   / _, _// /___  / __  / / __/    
+/_____/___/  /_/  /_/     /_/ |_| \\____/ /_/ /_/ /_/       
+`
+  console.log(pc.cyan(pc.bold(banner)))
+  console.log(pc.dim(`  v${version}`))
+  console.log()
+}
+
+export function notice(message: string): void {
+  console.log(pc.yellow('ℹ') + ' ' + message)
+}
