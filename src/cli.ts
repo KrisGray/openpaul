@@ -26,6 +26,7 @@ program
   .option('-n, --name <name>', 'project name (defaults to directory name)')
   .option('-i, --interactive', 'force interactive mode')
   .option('-v, --verbose', 'enable verbose output (use -vv for debug)', countVerbosity, 0)
+  .option('-f, --force', 'skip prompts and overwrite existing files')
   .addHelpText('after', `
 Examples:
   $ npx openpaul                    # Interactive mode
