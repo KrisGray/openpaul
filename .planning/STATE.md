@@ -10,12 +10,12 @@ See: .planning/PROJECT.md (updated 2026-03-20)
 ## Current Position
 
 Milestone: v1.4.0 CLI Installer
-Phase: 15 of 17 (CLI Foundation)
-Plan: 4 of 4 complete
-Status: Phase 15 complete
-Last activity: 2026-03-20 — -v flag clash resolved, CLI foundation complete
+Phase: 16 of 17 (Scaffold Core)
+Plan: 1 of 2 complete
+Status: In progress
+Last activity: 2026-03-20 — Phase 16-01 complete: scaffolding module created
 
-Progress: [██████████████████░░] 82% (14/17 phases complete)
+Progress: [██████████████████░░] 88% (15/17 phases in progress)
 
 ## Performance Metrics
 
@@ -36,6 +36,7 @@ Progress: [██████████████████░░] 82% (14
 | Phase 15-cli-foundation P02 | 4min | 4 tasks, 1 file | Complete |
 | Phase 15-cli-foundation P03 | 6min | 5 tasks | 3 files |
 | Phase 15-cli-foundation P04 | 2min | 2 tasks, 1 file | Complete |
+| Phase 16-scaffold-core P01 | 4min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -51,6 +52,8 @@ Recent decisions affecting current work:
 - [Phase 15-02]: All CLI options support short and long flags (-h/--help, -v/--version, -p/--path, -n/--name)
 - [Phase 15-03]: Colored output with picocolors, errors to stderr, binary exit codes (0/1)
 - [Phase 15-04]: -v reassigned from --version to --verbose, -vv enables debug level
+- [Phase 16-scaffold-core]: Use z.literal('1.0') for version field to enforce exact schema version
+- [Phase 16-scaffold-core]: Path resolution before basename for edge case handling
 
 ### Pending Todos
 
@@ -62,9 +65,9 @@ None.
 
 ## Session Continuity
 
-**Last session:** 2026-03-20T15:57:46.206Z
-**Stopped at:** Phase 16 context gathered
-**Resume file:** .planning/phases/16-scaffold-core/16-CONTEXT.md
+**Last session:** 2026-03-20T16:34:23.895Z
+**Stopped at:** Completed 16-01-PLAN.md
+**Resume file:** None
 
 ---
 *State updated: 2026-03-20*
