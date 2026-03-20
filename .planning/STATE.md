@@ -62,9 +62,9 @@ None.
 
 ## Session Continuity
 
-**Last session:** 2026-03-20T14:22:46Z
-**Stopped at:** Completed 15-04-PLAN.md (Phase 15 complete)
-**Resume file:** None
+**Last session:** 2026-03-20T15:57:46.206Z
+**Stopped at:** Phase 16 context gathered
+**Resume file:** .planning/phases/16-scaffold-core/16-CONTEXT.md
 
 ---
 *State updated: 2026-03-20*
