@@ -3,6 +3,8 @@ import { Command } from 'commander'
 import { readFileSync } from 'fs'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
+import { success, step, info, setVerbosity } from './cli/output.js'
+import { handleCliError } from './cli/errors.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const pkgPath = join(__dirname, '../package.json')
@@ -27,16 +29,17 @@ Examples:
   $ npx openpaul -n my-project -p ./app  # Combined options
 `)
   .action(async (options) => {
-    // Options available: options.path, options.name, options.interactive, options.verbose
-    // For now, just log that we received the command
-    // Phase 16 will implement actual scaffolding
-    console.log('OpenPAUL CLI initialized')
-    console.log(`Path: ${options.path}`)
+    setVerbosity(options.verbose ? 1 : 0)
+
+    info(`Target directory: ${options.path}`)
+
     if (options.name) {
-      console.log(`Name: ${options.name}`)
+      info(`Project name: ${options.name}`)
     }
+
+    // Phase 16 will implement actual scaffolding here
+    step('CLI initialized')
+    success('OpenPAUL ready for scaffolding')
   })
 
-program.parseAsync().catch(() => {
-  process.exit(1)
-})
+program.parseAsync().catch(handleCliError)
