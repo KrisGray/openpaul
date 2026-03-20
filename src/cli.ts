@@ -17,6 +17,18 @@ program
   .helpOption('-h, --help', 'display help for command')
   .option('-p, --path <path>', 'target directory', '.')
   .option('-n, --name <name>', 'project name (defaults to directory name)')
+  .option('-i, --interactive', 'force interactive mode')
+  .option('--verbose', 'enable verbose output')
+  .action(async (options) => {
+    // Options available: options.path, options.name, options.interactive, options.verbose
+    // For now, just log that we received the command
+    // Phase 16 will implement actual scaffolding
+    console.log('OpenPAUL CLI initialized')
+    console.log(`Path: ${options.path}`)
+    if (options.name) {
+      console.log(`Name: ${options.name}`)
+    }
+  })
 
 program.parseAsync().catch(() => {
   process.exit(1)
