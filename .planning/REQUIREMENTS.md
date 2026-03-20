@@ -9,7 +9,7 @@ Requirements for CLI Installer milestone. Each maps to roadmap phases.
 
 ### CLI Core
 
-- [ ] **CLI-01**: User can run `npx openpaul` to execute the installer
+- [x] **CLI-01**: User can run `npx openpaul` to execute the installer
 - [ ] **CLI-02**: User can run `npx openpaul --help` to see usage information
 - [ ] **CLI-03**: User can run `npx openpaul --version` to see package version
 - [ ] **CLI-04**: User receives clear colored error messages on failure
