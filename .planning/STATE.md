@@ -5,24 +5,24 @@
 See: .planning/PROJECT.md (updated 2026-03-20)
 
 **Core value:** Enforce the PLAN → APPLY → UNIFY loop with mandatory reconciliation, ensuring every plan closes properly with full traceability and context preservation.
-**Current focus:** Phase 15 - CLI Foundation
+**Current focus:** Phase 17 - TBD
 
 ## Current Position
 
 Milestone: v1.4.0 CLI Installer
 Phase: 16 of 17 (Scaffold Core)
-Plan: 2 of 2 complete
+Plan: 3 of 3 complete
 Status: Complete
-Last activity: 2026-03-20 — Phase 16-02 complete: CLI scaffolding integration
+Last activity: 2026-03-20 — Phase 16-03 complete: CLI welcome banner and cancellation feedback
 
 Progress: [██████████████████░░] 88% (15/17 phases in progress)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 103
-- Total phases completed: 15
-- v1.4.0 plans: 4/8
+- Total plans completed: 104
+- Total phases completed: 16
+- v1.4.0 plans: 5/8
 
 **By Milestone:**
 
@@ -57,6 +57,8 @@ Recent decisions affecting current work:
 - [Phase 16-scaffold-core]: Path resolution before basename for edge case handling
 - [Phase 16-02]: User cancellation exits with code 0 (not 1) - cancellation is intentional
 - [Phase 16-02]: Project name validation rejects /, \, and : characters (filesystem problematic)
+- [Phase 16-03]: notice() function bypasses verbosity gate for critical user-facing messages
+- [Phase 16-03]: Banner displays immediately after setVerbosity() for consistent branding
 
 ### Pending Todos
 
@@ -68,10 +70,10 @@ None.
 
 ## Session Continuity
 
-**Last session:** 2026-03-20T16:39:53.140Z
-**Stopped at:** Completed 16-02-PLAN.md
+**Last session:** 2026-03-20T17:36:34Z
+**Stopped at:** Completed 16-03-PLAN.md
 **Resume file:** None
 
 ---
 *State updated: 2026-03-20*
-*Next: Phase 16 - Scaffolding implementation*
+*Next: Phase 17 - Final milestone phase*
