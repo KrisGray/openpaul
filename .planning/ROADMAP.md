@@ -142,7 +142,7 @@ Plans:
   1. User can run `npx openpaul` and see the CLI execute
   2. User can run `npx openpaul --help` and see usage information
   3. User can run `npx openpaul --version` and see the package version
-  4. User can run `npx openpaul ./my-project` to specify target directory
+  4. User can run `npx openpaul --path ./my-project` to specify target directory
   5. User can run `npx openpaul --name my-project` to specify project name
 **Plans**: 3 plans
 
