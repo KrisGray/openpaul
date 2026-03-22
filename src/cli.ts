@@ -30,7 +30,7 @@ program
   .option('-i, --interactive', 'force interactive mode')
   .option('-v, --verbose', 'enable verbose output (use -vv for debug)', countVerbosity, 0)
   .option('-f, --force', 'skip prompts and overwrite existing files')
-  .option('--preset <preset>', 'template preset (minimal|full)', 'minimal')
+  .option('--preset <preset>', 'template preset (minimal|full)')
   .addHelpText('after', `
 Examples:
   $ npx openpaul                    # Interactive mode
@@ -82,8 +82,21 @@ Examples:
 
     // Confirmation prompt (skip if --force)
     if (!options.force) {
+      // Check for existing .opencode/ directory
+      const opencodeDir = join(targetPath, '.opencode')
+      if (existsSync(opencodeDir)) {
+        const shouldOverwriteConfig = await confirm({
+          message: '`.opencode/` already exists. Overwrite preset files?',
+          default: false
+        })
+        if (!shouldOverwriteConfig) {
+          notice('Operation cancelled')
+          process.exit(0)
+        }
+      }
+
       const confirmed = await confirm({
-        message: `Create OpenPAUL in '${targetPath}' with project name '${projectName}'?`,
+        message: `Create OpenPAUL in '${targetPath}' with project name '${projectName}' (preset: ${preset.name})?`,
         default: true
       })
       if (!confirmed) {
@@ -95,6 +108,8 @@ Examples:
     // Execute scaffolding
     createOpenPaulDir(targetPath)
     await generateStateJson(openpaulDir, projectName, pkg.version)
+    step('Creating .opencode/ preset files...')
+    generatePresetFiles(targetPath, preset)
     success('OpenPAUL initialized successfully!')
   })
 
