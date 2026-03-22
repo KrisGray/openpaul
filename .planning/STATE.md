@@ -10,19 +10,19 @@ See: .planning/PROJECT.md (updated 2026-03-20)
 ## Current Position
 
 Milestone: v1.4.0 CLI Installer
-Phase: 16 of 17 (Scaffold Core)
-Plan: 3 of 3 complete
-Status: Complete
-Last activity: 2026-03-20 — Phase 16-03 complete: CLI welcome banner and cancellation feedback
+Phase: 17 of 17 (Template Presets)
+Plan: 1 of 2 complete
+Status: In progress
+Last activity: 2026-03-22 — Phase 17-01 complete: Preset types and templates
 
 Progress: [██████████████████░░] 88% (15/17 phases in progress)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 104
+- Total plans completed: 105
 - Total phases completed: 16
-- v1.4.0 plans: 5/8
+- v1.4.0 plans: 6/8
 
 **By Milestone:**
 
@@ -38,6 +38,7 @@ Progress: [██████████████████░░] 88% (15
 | Phase 15-cli-foundation P04 | 2min | 2 tasks, 1 file | Complete |
 | Phase 16-scaffold-core P01 | 4min | 2 tasks | 2 files |
 | Phase 16-02 P02 | 2min | 2 tasks | 1 files |
+| Phase 17-template-presets P01 | 2min | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -59,6 +60,8 @@ Recent decisions affecting current work:
 - [Phase 16-02]: Project name validation rejects /, \, and : characters (filesystem problematic)
 - [Phase 16-03]: notice() function bypasses verbosity gate for critical user-facing messages
 - [Phase 16-03]: Banner displays immediately after setVerbosity() for consistent branding
+- [Phase 17-01]: Dynamic imports in resolvePreset() to avoid circular dependency with template files
+- [Phase 17-01]: PRESETS record updated at runtime with actual preset data from templates
 
 ### Pending Todos
 
@@ -70,10 +73,10 @@ None.
 
 ## Session Continuity
 
-**Last session:** 2026-03-20T18:15:16.260Z
-**Stopped at:** Phase 17 context gathered
-**Resume file:** .planning/phases/17-template-presets/17-CONTEXT.md
+**Last session:** 2026-03-22T18:43:43Z
+**Stopped at:** Phase 17-01 complete
+**Resume file:** .planning/phases/17-template-presets/17-02-PLAN.md
 
 ---
-*State updated: 2026-03-20*
+*State updated: 2026-03-22*
 *Next: Phase 17 - Final milestone phase*

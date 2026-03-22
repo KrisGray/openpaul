@@ -19,7 +19,7 @@ Requirements for CLI Installer milestone. Each maps to roadmap phases.
 
 - [x] **SCAF-01**: CLI creates `.openpaul/` directory in target project
 - [x] **SCAF-02**: CLI creates initial `state.json` with project name and timestamps
-- [ ] **SCAF-03**: CLI supports template presets (minimal/full configurations)
+- [x] **SCAF-03**: CLI supports template presets (minimal/full configurations)
 - [ ] **SCAF-04**: User can specify preset via `--preset minimal` or `--preset full`
 
 ### Interactive
