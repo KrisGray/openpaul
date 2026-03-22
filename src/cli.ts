@@ -6,7 +6,8 @@ import { dirname, join, resolve } from 'path'
 import { input, confirm } from '@inquirer/prompts'
 import { success, step, info, setVerbosity, showBanner, notice } from './cli/output.js'
 import { handleCliError } from './cli/errors.js'
-import { getDefaultProjectName, createOpenPaulDir, generateStateJson } from './cli/scaffold.js'
+import { getDefaultProjectName, createOpenPaulDir, generateStateJson, generatePresetFiles } from './cli/scaffold.js'
+import { resolvePreset } from './cli/presets.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const pkgPath = join(__dirname, '../package.json')
@@ -29,6 +30,7 @@ program
   .option('-i, --interactive', 'force interactive mode')
   .option('-v, --verbose', 'enable verbose output (use -vv for debug)', countVerbosity, 0)
   .option('-f, --force', 'skip prompts and overwrite existing files')
+  .option('--preset <preset>', 'template preset (minimal|full)', 'minimal')
   .addHelpText('after', `
 Examples:
   $ npx openpaul                    # Interactive mode
@@ -74,6 +76,9 @@ Examples:
     }
 
     info(`Project name: ${projectName}`)
+
+    // Resolve preset (after project name, before confirmation)
+    const preset = await resolvePreset(options.preset)
 
     // Confirmation prompt (skip if --force)
     if (!options.force) {
