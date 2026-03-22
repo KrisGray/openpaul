@@ -177,8 +177,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 17-01: Define minimal and full preset templates
-- [ ] 17-02: Implement --preset flag with template selection
+- [ ] 17-01-PLAN.md — Define preset types, templates, and resolution logic
+- [ ] 17-02-PLAN.md — Integrate --preset flag with CLI scaffolding
 
 ### 📋 v2.0 (Planned)
 
