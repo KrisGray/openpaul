@@ -11,18 +11,18 @@ See: .planning/PROJECT.md (updated 2026-03-20)
 
 Milestone: v1.4.0 CLI Installer
 Phase: 17 of 17 (Template Presets)
-Plan: 1 of 2 complete
-Status: In progress
-Last activity: 2026-03-22 — Phase 17-01 complete: Preset types and templates
+Plan: 2 of 2 complete
+Status: Complete
+Last activity: 2026-03-22 — Phase 17-02 complete: CLI preset integration
 
-Progress: [██████████████████░░] 88% (15/17 phases in progress)
+Progress: [████████████████████] 100% (17/17 phases complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 105
-- Total phases completed: 16
-- v1.4.0 plans: 6/8
+- Total plans completed: 106
+- Total phases completed: 17
+- v1.4.0 plans: 7/8
 
 **By Milestone:**
 
@@ -31,7 +31,7 @@ Progress: [██████████████████░░] 88% (15
 | v1.0 MVP | 2 | 23 | Complete |
 | v1.1 Full Commands | 7 | 71 | Complete |
 | v1.2 CI/CD | 5 | 6 | Complete |
-| v1.4.0 CLI Installer | 4 | 4/8 | In progress |
+| v1.4.0 CLI Installer | 4 | 7/8 | In progress |
 | Phase 15-cli-foundation P01 | 3min | 4 tasks, 2 files | Complete |
 | Phase 15-cli-foundation P02 | 4min | 4 tasks, 1 file | Complete |
 | Phase 15-cli-foundation P03 | 6min | 5 tasks | 3 files |
@@ -39,6 +39,7 @@ Progress: [██████████████████░░] 88% (15
 | Phase 16-scaffold-core P01 | 4min | 2 tasks | 2 files |
 | Phase 16-02 P02 | 2min | 2 tasks | 1 files |
 | Phase 17-template-presets P01 | 2min | 3 tasks | 3 files |
+| Phase 17-template-presets P02 | 4min | 3 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -62,6 +63,8 @@ Recent decisions affecting current work:
 - [Phase 16-03]: Banner displays immediately after setVerbosity() for consistent branding
 - [Phase 17-01]: Dynamic imports in resolvePreset() to avoid circular dependency with template files
 - [Phase 17-01]: PRESETS record updated at runtime with actual preset data from templates
+- [Phase 17-02]: No commander default value for --preset to allow "Defaulting to minimal" message
+- [Phase 17-02]: generatePresetFiles uses synchronous fs operations for simplicity
 
 ### Pending Todos
 
@@ -73,10 +76,10 @@ None.
 
 ## Session Continuity
 
-**Last session:** 2026-03-22T18:43:43Z
-**Stopped at:** Phase 17-01 complete
-**Resume file:** .planning/phases/17-template-presets/17-02-PLAN.md
+**Last session:** 2026-03-22T18:51:30Z
+**Stopped at:** Phase 17-02 complete
+**Resume file:** None - milestone complete
 
 ---
 *State updated: 2026-03-22*
-*Next: Phase 17 - Final milestone phase*
+*Next: v1.4.0 CLI Installer milestone complete*
