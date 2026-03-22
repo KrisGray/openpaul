@@ -1,8 +1,9 @@
-import { resolve, basename, join } from 'path'
-import { existsSync, mkdirSync } from 'fs'
+import { resolve, basename, join, dirname } from 'path'
+import { existsSync, mkdirSync, writeFileSync } from 'fs'
 import { atomicWrite } from '../storage/atomic-writes.js'
 import { step } from './output.js'
 import type { StateFile } from '../types/state-file.js'
+import type { Preset } from './presets.js'
 
 /**
  * Get Default Project Name
@@ -60,4 +61,26 @@ export async function generateStateJson(
   step('Creating state.json...')
   const statePath = join(openpaulDir, 'state.json')
   await atomicWrite(statePath, JSON.stringify(state, null, 2))
+}
+
+/**
+ * Generate Preset Files
+ *
+ * Creates the .opencode/ directory structure with files from the selected preset.
+ * Overwrites existing files without merging.
+ *
+ * @param targetPath - The target directory path (project root)
+ * @param preset - The preset configuration to generate files from
+ */
+export function generatePresetFiles(targetPath: string, preset: Preset): void {
+  const opencodeDir = join(targetPath, '.opencode')
+
+  for (const file of preset.files) {
+    const filePath = join(opencodeDir, file.path)
+    const dir = dirname(filePath)
+    if (!existsSync(dir)) {
+      mkdirSync(dir, { recursive: true })
+    }
+    writeFileSync(filePath, file.content)
+  }
 }
