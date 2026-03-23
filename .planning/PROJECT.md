@@ -17,6 +17,9 @@ Enforce the PLAN → APPLY → UNIFY loop with mandatory reconciliation, ensurin
 - ✓ Core Loop Commands — v1.0 (All 6 core commands implemented: init, plan, apply, unify, progress, help)
 - ✓ Core Infrastructure — v1.0 (All 6 infrastructure requirements implemented: TypeScript types, storage, state manager, loop enforcer, testing, model configuration)
 - ✓ CI/CD Pipeline — v1.2 (GitHub Actions: test.yml, e2e-tests.yml, codecov.yml, publish.yml with OIDC trusted publishing)
+- ✓ CLI Installer — v1.4.0 (npx openpaul, interactive scaffolding, template presets)
+- ✓ Scaffolding — v1.4.0 (Project initialization with state.json, .opencode/ directory structure)
+- ✓ Template Presets — v1.4.0 (minimal and full configurations via --preset flag)
 
 ### Active
 
@@ -71,21 +74,13 @@ Based on OpenCode plugin documentation:
 - Context injection through hooks
 - Zod schemas for validation
 
-### Current State (After v1.2)
+### Current State (After v1.4.0)
 
-Shipped v1.2 CI/CD Pipeline with 5 phases, 6 plans, 20 requirements covered.
-Tech stack: TypeScript, Jest, Zod, ES Modules, GitHub Actions, Docker, Codecov.
+Shipped v1.4.0 CLI Installer with 3 phases, 9 plans, 13 requirements covered.
+Tech stack: TypeScript, Jest, Zod, ES Modules, GitHub Actions, Docker, Codecov, Commander, @inquirer/prompts, picocolors.
+CLI: `npx openpaul` with interactive prompts, template presets, colored output.
 CI/CD: Automated testing, E2E tests, coverage reporting, npm publishing with OIDC.
-
-## Current Milestone: v1.4.0 CLI Installer
-
-**Goal:** Add `npx openpaul` CLI installer for initializing OpenPAUL in projects
-
-**Target features:**
-- npx execution with help/version flags
-- Scaffold `.openpaul/` directory structure
-- Template presets (minimal/full)
-- Interactive prompts with existing project detection
+LOC: ~28,000 TypeScript.
 
 ## Next Milestone: v2.0
 
@@ -115,6 +110,11 @@ CI/CD: Automated testing, E2E tests, coverage reporting, npm publishing with OID
 | OIDC trusted publishing | No NPM_TOKEN secret, better security, passwordless | ✓ Complete — v1.2 |
 | 30-minute max wait for gates | Balance thoroughness vs resource usage | ✓ Complete — v1.2 |
 | Graceful timeout (exit 0) | Coverage is optional signal, not blocking requirement | ✓ Complete — v1.2 |
+| Commander for CLI | Industry-standard argument parsing, well-documented | ✓ Complete — v1.4.0 |
+| @inquirer/prompts | Modern interactive prompts, TypeScript native | ✓ Complete — v1.4.0 |
+| picocolors for output | Minimal dependency colored output | ✓ Complete — v1.4.0 |
+| -v/-vv verbosity flags | Counting pattern for info/debug levels | ✓ Complete — v1.4.0 |
+| Exit 0 on cancellation | User cancellation is intentional, not an error | ✓ Complete — v1.4.0 |
 
 ---
-*Last updated: 2026-03-20 after v1.4.0 milestone started*
+*Last updated: 2026-03-23 after v1.4.0 milestone complete*
