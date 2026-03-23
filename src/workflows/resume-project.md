@@ -38,7 +38,7 @@ No multiple options. Prevents decision fatigue. User can redirect if needed.
    ls .openpaul/STATE.md 2>/dev/null
    ```
 2. If not found:
-   - "No OpenPAUL project found. Run /openpaul:init first."
+   - "No OpenPAUL project found. Run `npx openpaul` first."
    - Exit workflow
 3. If found: proceed with resume
 </step>
@@ -182,7 +182,7 @@ When user confirms next action (e.g., "yes", "1", "approved"):
 <error_handling>
 **STATE.md corrupted or incomplete:**
 - Report what's missing
-- Suggest: `/openpaul:init` to reinitialize (destructive) or manual repair
+- Suggest: `npx openpaul` to reinitialize (destructive) or manual repair
 
 **Conflicting information:**
 - STATE.md says X, but files suggest Y

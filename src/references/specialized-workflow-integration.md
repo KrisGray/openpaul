@@ -159,7 +159,7 @@ When intentional deviation becomes the norm:
 ## Integration Points
 
 ### With Init
-During `/openpaul:init`, optionally configure specialized flows:
+During `npx openpaul` initialization, optionally configure specialized flows:
 - "Do you have specialized skills for this project?"
 - If yes, route to configuration workflow
 - If no, skip (can add later via `/openpaul:flows`)

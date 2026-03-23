@@ -242,5 +242,5 @@ Type "yes" to proceed, or ask questions first.
 
 **ROADMAP.md missing:**
 - Create basic structure
-- Or route to /openpaul:init if project not initialized
+- Or route to `npx openpaul` if project not initialized
 </error_handling>

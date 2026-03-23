@@ -274,7 +274,7 @@ Enter skill names (comma-separated) or "skip":
 **No .openpaul/ directory:**
 ```
 OpenPAUL not initialized in this project.
-Run /openpaul:init first, or create .openpaul/ manually.
+Run `npx openpaul` first, or create .openpaul/ manually.
 ```
 
 **User provides invalid skill name:**

@@ -67,14 +67,44 @@ No sprint ceremonies. No story points. No enterprise theater. Just a system that
 
 ## Getting Started
 
-### Global install (all projects)
+### Initialize OpenPAUL in your project
 
-This makes openpaul available in every OpenCode session on your machine.
+```bash
+npx openpaul
+```
 
-1. Run OpenCode once so it creates its config directory.
-2. Open or create the global config file: `~/.config/opencode/opencode.json`.
-3. Add openpaul under the npm plugins section:
+This scaffolds the `.openpaul/` directory with everything you need:
+- `PROJECT.md` — Project context and requirements
+- `ROADMAP.md` — Phase breakdown and milestones
+- `STATE.md` — Loop position and session state
 
+#### CLI Options
+
+| Option | Description |
+|--------|-------------|
+| `-n, --name <name>` | Project name (defaults to directory name) |
+| `-p, --path <path>` | Target directory (default: ".") |
+| `--preset <preset>` | Template preset: `minimal` or `full` |
+| `-f, --force` | Skip prompts and overwrite existing files |
+| `-i, --interactive` | Force interactive mode |
+| `-v, --verbose` | Enable verbose output |
+
+#### Examples
+
+```bash
+npx openpaul                           # Interactive mode
+npx openpaul --name my-project         # Skip name prompt
+npx openpaul --path ./app              # Target directory
+npx openpaul -n my-project -p ./app    # Combined options
+npx openpaul --preset minimal          # Minimal template
+npx openpaul --preset full             # Full template with examples
+```
+
+### Install as OpenCode Plugin (Optional)
+
+To use OpenPAUL commands inside OpenCode (like `/openpaul:plan`):
+
+1. Open or create `~/.config/opencode/opencode.json`:
 ```json
 {
   "plugins": {
@@ -85,30 +115,12 @@ This makes openpaul available in every OpenCode session on your machine.
 }
 ```
 
-4. Restart OpenCode. On startup it will install npm plugins with Bun into `~/.cache/opencode/node_modules/` and load them.
-
-### Project-local install (single repo only)
-
-This limits openpaul to a specific project.
-
-1. In your project root, create or edit `opencode.json`:
-
-```json
-{
-  "plugins": {
-    "npm": [
-      "openpaul"
-    ]
-  }
-}
-```
-
-2. Start OpenCode from that project directory (or point it at the project root) so it picks up `./opencode.json`.
-3. Restart OpenCode; it will read global config first, then project config, then plugin directories, and load all plugins it finds.
+2. Restart OpenCode to load the plugin.
 
 ### Verify
 
-Run `/openpaul:help` inside OpenCode to verify installation.
+- **CLI**: Run `npx openpaul --version`
+- **Plugin**: Run `/openpaul:help` inside OpenCode
 
 ---
 
@@ -132,13 +144,15 @@ For the best experience, use OpenPAUL with **OpenCARL** ([github.com/KrisGray/op
 
 ### Your First Loop (5 minutes)
 
+```bash
+# Initialize OpenPAUL in your project
+npx openpaul
+```
+
 ```
 YOU: I want to add a dark mode toggle to my React app
 
 # OpenCARL auto-loads OpenPAUL rules when it detects .openpaul/
-
-YOU: /openpaul:init
-OpenPAUL: ✓ Created .openpaul/ with PROJECT.md, ROADMAP.md, STATE.md
 
 YOU: /openpaul:plan
 OpenPAUL: Describe what you're building...
@@ -200,7 +214,7 @@ Here's a complete workflow example showing OpenPAUL in action:
 ┌─────────────────────────────────────────────────────────────────┐
 │  STEP 1: Initialize OpenPAUL                                   │
 │                                                                 │
-│  /openpaul:init                                                 │
+│  npx openpaul                                                   │
 │                                                                 │
 │  Creates: .openpaul/ directory with PROJECT.md, ROADMAP.md,    │
 │  STATE.md, and phases/ folder                                   │
@@ -398,9 +412,8 @@ Or project-local:
 ### Combined Workflow Example
 
 ```
-# 1. Initialize both systems
-/openpaul:init
-/opencarl setup
+# 1. Initialize OpenPAUL
+npx openpaul
 
 # 2. OpenCARL detects .openpaul/ directory
 #    → Automatically loads OpenPAUL-specific rules:
@@ -559,7 +572,7 @@ OpenPAUL provides 26 commands organized by purpose. Run `/openpaul:help` for the
 
 | Command                  | What it does                                     |
 | ------------------------ | ------------------------------------------------ |
-| `/openpaul:init`         | Initialize OpenPAUL in a project                 |
+| `npx openpaul`           | Initialize OpenPAUL in a project (CLI)           |
 | `/openpaul:plan [phase]` | Create an executable plan                        |
 | `/openpaul:apply [path]` | Execute an approved plan                         |
 | `/openpaul:unify [path]` | Reconcile and close the loop                     |

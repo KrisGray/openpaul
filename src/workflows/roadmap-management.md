@@ -318,7 +318,7 @@ STATE.md updated ✓
 
 <error_handling>
 **No active milestone:**
-- Route to /openpaul:milestone or /openpaul:init
+- Route to /openpaul:milestone or `npx openpaul` CLI
 
 **Phase directory not empty:**
 - Preserve directory, warn user

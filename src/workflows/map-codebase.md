@@ -428,7 +428,9 @@ Created .openpaul/codebase/:
 
 **Initialize OpenPAUL project** — use codebase context for planning
 
-`/openpaul:init`
+```bash
+npx openpaul
+```
 
 <sub>`/clear` first → fresh context window</sub>
 
