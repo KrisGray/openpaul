@@ -61,7 +61,7 @@ jobs:
             echo "  CI - Unit Tests: $TEST_STATUS"
             
             # Check E2E Tests status
-            E2E_STATUS=$(gh run list --repo "$REPO" --workflow "OpenPAUL E2E Tests" --commit "$SHA" --limit 1 --json conclusion --jq '.[0].conclusion // "unknown"')
+            E2E_STATUS=$(gh run list --repo "$REPO" --workflow "E2E Tests" --commit "$SHA" --limit 1 --json conclusion --jq '.[0].conclusion // "unknown"')
             echo "  E2E Tests: $E2E_STATUS"
             
             # Handle failure cases
@@ -86,7 +86,7 @@ jobs:
             if [ "$TEST_STATUS" = "unknown" ] || [ "$E2E_STATUS" = "unknown" ]; then
               # Check if workflow has started but not completed
               TEST_RUN_ID=$(gh run list --repo "$REPO" --workflow "CI - Unit Tests" --commit "$SHA" --limit 1 --json databaseId --jq '.[0].databaseId // empty')
-              E2E_RUN_ID=$(gh run list --repo "$REPO" --workflow "OpenPAUL E2E Tests" --commit "$SHA" --limit 1 --json databaseId --jq '.[0].databaseId // empty')
+              E2E_RUN_ID=$(gh run list --repo "$REPO" --workflow "E2E Tests" --commit "$SHA" --limit 1 --json databaseId --jq '.[0].databaseId // empty')
               
               if [ -z "$TEST_RUN_ID" ] || [ -z "$E2E_RUN_ID" ]; then
                 echo "One or more workflows have not started yet..."
