@@ -1,4 +1,4 @@
-name: OpenPAUL E2E Tests
+name: E2E Tests
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -39,7 +39,25 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Run E2E tests
+      - name: Run E2E tests (direct)
         run: npm run test:e2e
         env:
           OPENPAUL_DEBUG: "false"
+
+      - name: Build Docker image
+        run: docker build -f Dockerfile.e2e -t openpaul-e2e:test .
+
+      - name: Run E2E tests (Docker)
+        run: docker run --rm openpaul-e2e:test
+        continue-on-error: true
+
+      - name: Collect failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-failure-artifacts
+          path: |
+            /tmp/openpaul-e2e-*
+            .openpaul/
+          retention-days: 7
+          if-no-files-found: ignore

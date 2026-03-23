@@ -58,7 +58,7 @@
     "build": "tsc",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "test:e2e": "jest --testPathPattern=e2e --passWithNoTests",
+    "test:e2e": "jest --config jest.config.e2e.js",
     "docs": "typedoc",
     "docs:ci": "typedoc --gitRevision $(git rev-parse HEAD)",
     "prepublishOnly": "npm run build"

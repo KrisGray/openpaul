@@ -1,0 +1,26 @@
+# E2E Test Environment for OpenPAUL CLI
+# Multi-stage build for efficient caching
+
+# Stage 1: Build
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+# Stage 2: Test runner
+FROM node:20-alpine AS runner
+WORKDIR /app
+
+# Copy built artifacts and all deps (need jest for testing)
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/e2e ./e2e
+COPY --from=builder /app/jest.config.e2e.js ./
+
+ENV NODE_ENV=test
+ENV OPENPAUL_E2E=true
+
+ENTRYPOINT ["npm", "run", "test:e2e"]
