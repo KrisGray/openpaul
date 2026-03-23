@@ -128,19 +128,17 @@ To use OpenPAUL commands inside OpenCode (like `/openpaul:plan`):
 
 For the best experience, use OpenPAUL with **OpenCARL** ([github.com/KrisGray/opencarl](https://github.com/KrisGray/opencarl)) — a dynamic rule injection system that enforces OpenPAUL workflow discipline automatically.
 
-### Install Both Extensions
+### Install Both
 
-```json
-// ~/.config/opencode/opencode.json
-{
-  "plugins": {
-    "npm": [
-      "openpaul",
-      "@krisgray/opencarl"
-    ]
-  }
-}
+```bash
+# 1. Initialize OpenPAUL
+npx openpaul
+
+# 2. Initialize OpenCARL
+npx opencarl --local
 ```
+
+OpenCARL auto-loads OpenPAUL rules when it detects `.openpaul/` directory.
 
 ### Your First Loop (5 minutes)
 
@@ -379,34 +377,15 @@ Task 3: Add avatar upload
 
 **The synergy:** OpenCARL loads OpenPAUL-specific rules when you're working in an OpenPAUL project, enforcing workflow discipline without bloating every session.
 
-### Installation (Both Extensions)
+### Installation
 
-Add both to your `opencode.json`:
+```bash
+# Initialize OpenPAUL
+npx openpaul
 
-```json
-// ~/.config/opencode/opencode.json (global)
-{
-  "plugins": {
-    "npm": [
-      "openpaul",
-      "@krisgray/opencarl"
-    ]
-  }
-}
-```
-
-Or project-local:
-
-```json
-// ./opencode.json (project root)
-{
-  "plugins": {
-    "npm": [
-      "openpaul",
-      "@krisgray/opencarl"
-    ]
-  }
-}
+# Initialize OpenCARL (local or global)
+npx opencarl --local   # Current project only
+npx opencarl --global  # All projects
 ```
 
 ### Combined Workflow Example
