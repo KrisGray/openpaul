@@ -1,6 +1,14 @@
 MIT License
 
-Copyright (c) 2026 Chris Kahler
+Original work Copyright (c) 2026 Chris Kahler
+OpenPAUL adaptation Copyright (c) 2026 Kristian Gray
+
+PAUL (Plan-Apply-Unify Loop) was originally 
+designed and implemented by Chris Kahler for Claude Code.
+https://github.com/ChristopherKahler/paul
+
+This is an OpenCode adaptation called OpenPAUL, maintained by Kristian Gray.
+https://github.com/KrisGray/openpaul
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
