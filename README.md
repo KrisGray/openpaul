@@ -4,10 +4,12 @@
 
 **Plan-Apply-Unify Loop** — Structured AI-assisted development for OpenCode.
 
+[![Coverage](https://codecov.io/gh/KrisGray/openpaul/branch/main/graph/badge.svg)](https://codecov.io/gh/KrisGray/openpaul)
+
 [![npm version](https://img.shields.io/npm/v/openpaul?style=for-the-badge&logo=npm&logoColor=white&color=CB3837)](https://www.npmjs.com/package/openpaul)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/KrisGray/openpaul?style=for-the-badge&logo=github&color=181717)](https://github.com/KrisGray/openpaul)
-[![Documentation](https://img.shields.io/badge/docs-GitHub_Pages-green?style=for-the-badge&logo=github&color=2ea44f)](https://krisgray.github.io/openpaul/)
+[![Docs](https://img.shields.io/badge/docs-live-brightgreen?style=for-the-badge)](https://krisgray.github.io/openpaul/)
 
 <br>
 
