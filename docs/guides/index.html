@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>OpenPAUL - Plan-Apply-Unify Loop</title>
-  <meta name="description" content="OpenPAUL - Structured AI-assisted development for OpenCode">
+  <title>Guides | OpenPAUL</title>
+  <meta name="description" content="OpenPAUL - Plan-Apply-Unify Loop for structured AI-assisted development">
   <style>
 :root {
   --bg: #ffffff;
@@ -192,69 +192,62 @@ footer a { color: var(--accent); }
 <body>
   <header>
     <div class="container">
-      <div class="logo"><a href="./">OpenPAUL</a></div>
+      <div class="logo"><a href="../">OpenPAUL</a></div>
       <nav>
-        <a href="./#quick-start" class="active">Quick Start</a>
-        <a href="./guides/">Guides</a>
-        <a href="./tutorials/">Tutorials</a>
-        <a href="./api/">API</a>
+        <a href="../#quick-start">Quick Start</a>
+        <a href="../guides/" class="active">Guides</a>
+        <a href="../tutorials/">Tutorials</a>
+        <a href="../api/">API</a>
         <a href="https://github.com/KrisGray/openpaul">GitHub</a>
       </nav>
     </div>
   </header>
 
   <main class="container">
-    <div class="hero">
-      <h1>OpenPAUL</h1>
-      <p class="tagline">Plan-Apply-Unify Loop — Structured AI-assisted development</p>
-      <div class="cta">
-        <a href="./install/" class="primary">Get Started</a>
-        <a href="./guides/" class="secondary">Read Guides</a>
-      </div>
+    <div class="page-title">
+      <h1>Guides</h1>
     </div>
-
-    <div class="features">
-      <div class="feature">
-        <h3>Loop Integrity</h3>
-        <p>Every plan closes with UNIFY. No orphan plans, no forgotten decisions.</p>
-      </div>
-      <div class="feature">
-        <h3>In-Session Context</h3>
-        <p>Keep development in-session with properly managed context. Quality over subagent sprawl.</p>
-      </div>
-      <div class="feature">
-        <h3>Acceptance-Driven</h3>
-        <p>Acceptance criteria are first-class citizens. Define done before starting.</p>
-      </div>
-      <div class="feature">
-        <h3>State Persistence</h3>
-        <p>Resume work across sessions. State, decisions, and progress are always preserved.</p>
-      </div>
-    </div>
-
     <div class="content">
-      <h2 id="quick-start">Quick Start</h2>
-      <pre><code># Initialize OpenPAUL in your project
-npx openpaul
+      <h1>Guides</h1>
+<p>Comprehensive guides for using OpenPAUL.</p>
+<h2>Available Guides</h2>
+<table>
+<thead>
+<tr>
+<th>Guide</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="openpaul-overview/">OpenPAUL Overview</a></td>
+<td>Core concepts, the loop, quick examples</td>
+</tr>
+<tr>
+<td><a href="the-loop/">The Loop</a></td>
+<td>PLAN → APPLY → UNIFY workflow explained</td>
+</tr>
+<tr>
+<td><a href="state-management/">State Management</a></td>
+<td>How state persists across sessions</td>
+</tr>
+<tr>
+<td><a href="commands-reference/">Commands Reference</a></td>
+<td>All 26+ commands organized by purpose</td>
+</tr>
+<tr>
+<td><a href="plan-format/">Plan Format</a></td>
+<td>Structured PLAN.md format with XML tags</td>
+</tr>
+<tr>
+<td><a href="acceptance-criteria/">Acceptance Criteria</a></td>
+<td>BDD-style Given/When/Then definitions</td>
+</tr>
+<tr>
+<td><a href="with-opencarl/">With OpenCARL</a></td>
+<td>Using OpenPAUL with dynamic rule injection</td>
+</tr>
+</tbody></table>
 
-# Inside OpenCode, use the loop
-/openpaul:plan     # Create an executable plan
-/openpaul:apply    # Execute the plan
-/openpaul:unify    # Close the loop (required!)</code></pre>
-
-      <h2>Documentation</h2>
-      <ul>
-        <li><a href="./install/">Installation Guide</a> — Get OpenPAUL running</li>
-        <li><a href="./guides/">Guides</a> — Core concepts and workflows</li>
-        <li><a href="./tutorials/">Tutorials</a> — Step-by-step learning</li>
-        <li><a href="./api/">API Reference</a> — TypeDoc generated docs</li>
-      </ul>
-
-      <h2>With OpenCARL (Recommended)</h2>
-      <p>For the best experience, use OpenPAUL with <a href="https://github.com/KrisGray/opencarl">OpenCARL</a> — a dynamic rule injection system that enforces workflow discipline automatically.</p>
-      <pre><code># Initialize both
-npx openpaul
-npx opencarl --local</code></pre>
     </div>
   </main>
 

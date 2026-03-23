@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>OpenPAUL - Plan-Apply-Unify Loop</title>
-  <meta name="description" content="OpenPAUL - Structured AI-assisted development for OpenCode">
+  <title>Installation Guide | OpenPAUL</title>
+  <meta name="description" content="OpenPAUL - Plan-Apply-Unify Loop for structured AI-assisted development">
   <style>
 :root {
   --bg: #ffffff;
@@ -192,69 +192,89 @@ footer a { color: var(--accent); }
 <body>
   <header>
     <div class="container">
-      <div class="logo"><a href="./">OpenPAUL</a></div>
+      <div class="logo"><a href="../">OpenPAUL</a></div>
       <nav>
-        <a href="./#quick-start" class="active">Quick Start</a>
-        <a href="./guides/">Guides</a>
-        <a href="./tutorials/">Tutorials</a>
-        <a href="./api/">API</a>
+        <a href="../#quick-start">Quick Start</a>
+        <a href="../guides/">Guides</a>
+        <a href="../tutorials/">Tutorials</a>
+        <a href="../api/">API</a>
         <a href="https://github.com/KrisGray/openpaul">GitHub</a>
       </nav>
     </div>
   </header>
 
   <main class="container">
-    <div class="hero">
-      <h1>OpenPAUL</h1>
-      <p class="tagline">Plan-Apply-Unify Loop — Structured AI-assisted development</p>
-      <div class="cta">
-        <a href="./install/" class="primary">Get Started</a>
-        <a href="./guides/" class="secondary">Read Guides</a>
-      </div>
+    <div class="page-title">
+      <h1>Installation Guide</h1>
     </div>
-
-    <div class="features">
-      <div class="feature">
-        <h3>Loop Integrity</h3>
-        <p>Every plan closes with UNIFY. No orphan plans, no forgotten decisions.</p>
-      </div>
-      <div class="feature">
-        <h3>In-Session Context</h3>
-        <p>Keep development in-session with properly managed context. Quality over subagent sprawl.</p>
-      </div>
-      <div class="feature">
-        <h3>Acceptance-Driven</h3>
-        <p>Acceptance criteria are first-class citizens. Define done before starting.</p>
-      </div>
-      <div class="feature">
-        <h3>State Persistence</h3>
-        <p>Resume work across sessions. State, decisions, and progress are always preserved.</p>
-      </div>
-    </div>
-
     <div class="content">
-      <h2 id="quick-start">Quick Start</h2>
-      <pre><code># Initialize OpenPAUL in your project
+      <h1>Installation Guide</h1>
+<p>Get OpenPAUL running in your project.</p>
+<h2>Quick Start</h2>
+<pre><code class="language-bash">npx openpaul
+</code></pre>
+<p>This scaffolds the .openpaul/ directory with everything you need.</p>
+<hr>
+<h2>CLI Options</h2>
+<ul>
+<li>-n, --name <name> - Project name (defaults to directory name)</li>
+<li>-p, --path <path> - Target directory (default: current)</li>
+<li>--preset <preset> - Template preset: minimal or full</li>
+<li>-f, --force - Skip prompts and overwrite existing files</li>
+<li>-i, --interactive - Force interactive mode</li>
+<li>-v, --verbose - Enable verbose output</li>
+</ul>
+<hr>
+<h2>Examples</h2>
+<pre><code class="language-bash">npx openpaul                           # Interactive mode
+npx openpaul --name my-project         # Skip name prompt
+npx openpaul --path ./app              # Target directory
+npx openpaul -n my-project -p ./app    # Combined options
+npx openpaul --preset minimal          # Minimal template
+npx openpaul --preset full             # Full template
+</code></pre>
+<hr>
+<h2>What Gets Created</h2>
+<p>.openpaul/
+├── PROJECT.md           # Project context and requirements
+├── ROADMAP.md           # Phase breakdown and milestones
+├── STATE.md             # Loop position and session state
+└── phases/              # Phase directories (created as needed)</p>
+<hr>
+<h2>Install as OpenCode Plugin</h2>
+<p>To use OpenPAUL commands inside OpenCode (like /openpaul:plan):</p>
+<ol>
+<li>Open or create ~/.config/opencode/opencode.json:</li>
+</ol>
+<pre><code class="language-json">{
+  &quot;plugins&quot;: {
+    &quot;npm&quot;: [
+      &quot;openpaul&quot;
+    ]
+  }
+}
+</code></pre>
+<ol start="2">
+<li>Restart OpenCode to load the plugin.</li>
+</ol>
+<hr>
+<h2>Verify Installation</h2>
+<ul>
+<li>CLI: Run npx openpaul --version</li>
+<li>Plugin: Run /openpaul:help inside OpenCode</li>
+</ul>
+<hr>
+<h2>With OpenCARL (Recommended)</h2>
+<p>For the best experience, use OpenPAUL with OpenCARL:</p>
+<pre><code class="language-bash"># Initialize OpenPAUL
 npx openpaul
 
-# Inside OpenCode, use the loop
-/openpaul:plan     # Create an executable plan
-/openpaul:apply    # Execute the plan
-/openpaul:unify    # Close the loop (required!)</code></pre>
+# Initialize OpenCARL
+npx opencarl --local   # Current project only
+npx opencarl --global  # All projects
+</code></pre>
+<p>OpenCARL auto-loads OpenPAUL rules when it detects .openpaul/ directory.</p>
 
-      <h2>Documentation</h2>
-      <ul>
-        <li><a href="./install/">Installation Guide</a> — Get OpenPAUL running</li>
-        <li><a href="./guides/">Guides</a> — Core concepts and workflows</li>
-        <li><a href="./tutorials/">Tutorials</a> — Step-by-step learning</li>
-        <li><a href="./api/">API Reference</a> — TypeDoc generated docs</li>
-      </ul>
-
-      <h2>With OpenCARL (Recommended)</h2>
-      <p>For the best experience, use OpenPAUL with <a href="https://github.com/KrisGray/opencarl">OpenCARL</a> — a dynamic rule injection system that enforces workflow discipline automatically.</p>
-      <pre><code># Initialize both
-npx openpaul
-npx opencarl --local</code></pre>
     </div>
   </main>
 

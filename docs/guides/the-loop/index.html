@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>THE LOOP | OpenPAUL</title>
+  <meta name="description" content="OpenPAUL - Plan-Apply-Unify Loop for structured AI-assisted development">
+  <style>
+:root {
+  --bg: #ffffff;
+  --fg: #1f2328;
+  --muted: #656d76;
+  --accent: #0969da;
+  --accent-hover: #0550ae;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --card-bg: #f6f8fa;
+  --success: #1a7f37;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d1117;
+    --fg: #e6edf3;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --accent-hover: #79c0ff;
+    --border: #30363d;
+    --code-bg: #161b22;
+    --card-bg: #161b22;
+    --success: #3fb950;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif;
+  line-height: 1.6;
+  color: var(--fg);
+  background: var(--bg);
+}
+.container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+header {
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 100;
+}
+header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.logo { font-size: 1.5rem; font-weight: 700; }
+.logo a { color: var(--fg); text-decoration: none; }
+nav { display: flex; gap: 1.5rem; align-items: center; }
+nav a { color: var(--muted); text-decoration: none; font-size: 0.95rem; }
+nav a:hover, nav a.active { color: var(--accent); }
+
+main { padding: 3rem 0; }
+
+.page-title {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.page-title h1 { font-size: 2rem; }
+
+.content h2 { font-size: 1.5rem; margin: 2rem 0 1rem; }
+.content h3 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; }
+.content h4 { font-size: 1.1rem; margin: 1.25rem 0 0.5rem; }
+.content p { margin-bottom: 1rem; }
+.content ul, .content ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+.content li { margin-bottom: 0.5rem; }
+.content a { color: var(--accent); }
+
+pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  overflow-x: auto;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+code {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  font-size: 0.9em;
+}
+pre code { background: none; padding: 0; font-size: inherit; }
+:not(pre) > code {
+  background: var(--code-bg);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+th, td {
+  border: 1px solid var(--border);
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+th { background: var(--card-bg); font-weight: 600; }
+
+blockquote {
+  border-left: 4px solid var(--accent);
+  padding-left: 1rem;
+  margin: 1rem 0;
+  color: var(--muted);
+}
+
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem 0;
+  text-align: center;
+  color: var(--muted);
+}
+footer a { color: var(--accent); }
+
+.pill {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+}
+
+.hero {
+  text-align: center;
+  padding: 3rem 0;
+}
+.hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+.hero .tagline {
+  font-size: 1.25rem;
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+.hero .cta {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.hero .cta a {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+}
+.hero .cta .primary {
+  background: var(--accent);
+  color: #fff;
+}
+.hero .cta .secondary {
+  border: 1px solid var(--border);
+  color: var(--fg);
+}
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 3rem 0;
+}
+.feature {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+.feature h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+.feature p {
+  margin-bottom: 0;
+  color: var(--muted);
+}
+</style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo"><a href="../../">OpenPAUL</a></div>
+      <nav>
+        <a href="../../#quick-start">Quick Start</a>
+        <a href="../../guides/" class="active">Guides</a>
+        <a href="../../tutorials/">Tutorials</a>
+        <a href="../../api/">API</a>
+        <a href="https://github.com/KrisGray/openpaul">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-title">
+      <h1>THE LOOP</h1>
+    </div>
+    <div class="content">
+      <h1>The Loop</h1>
+<p>The core workflow of OpenPAUL is the PLAN → APPLY → UNIFY loop.</p>
+<h2>Overview</h2>
+<pre><code>┌─────────────────────────────────────┐
+│  PLAN ──▶ APPLY ──▶ UNIFY          │
+│                                     │
+│  Define    Execute    Reconcile     │
+│  work      tasks      &amp; close       │
+└─────────────────────────────────────┘
+</code></pre>
+<p>Every unit of work follows this cycle. <strong>Never skip UNIFY.</strong></p>
+<hr>
+<h2>PLAN</h2>
+<p>Create an executable plan with structured sections.</p>
+<h3>Structure</h3>
+<pre><code class="language-markdown">---
+phase: 01-foundation
+plan: 01
+type: execute
+autonomous: true
+---
+
+&lt;objective&gt;
+What you&#39;re building and why.
+&lt;/objective&gt;
+
+&lt;context&gt;
+@-references to relevant files.
+&lt;/context&gt;
+
+&lt;acceptance_criteria&gt;
+
+## AC-1: Feature Works
+
+Given [precondition]
+When [action]
+Then [outcome]
+&lt;/acceptance_criteria&gt;
+
+&lt;tasks&gt;
+&lt;task type=&quot;auto&quot;&gt;
+  &lt;name&gt;Task name&lt;/name&gt;
+  &lt;files&gt;path/to/file.ts&lt;/files&gt;
+  &lt;action&gt;Implementation details...&lt;/action&gt;
+  &lt;verify&gt;How to verify completion&lt;/verify&gt;
+  &lt;done&gt;AC-1 satisfied&lt;/done&gt;
+&lt;/task&gt;
+&lt;/tasks&gt;
+
+&lt;boundaries&gt;
+## DO NOT CHANGE
+- database/migrations/*
+- src/lib/auth.ts
+&lt;/boundaries&gt;
+</code></pre>
+<h3>Key Sections</h3>
+<table>
+<thead>
+<tr>
+<th>Section</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>objective</td>
+<td>What and why</td>
+</tr>
+<tr>
+<td>context</td>
+<td>File references (@-syntax)</td>
+</tr>
+<tr>
+<td>acceptance_criteria</td>
+<td>Given/When/Then definitions</td>
+</tr>
+<tr>
+<td>tasks</td>
+<td>Sequential actions with verification</td>
+</tr>
+<tr>
+<td>boundaries</td>
+<td>What NOT to change</td>
+</tr>
+</tbody></table>
+<h3>How to Create</h3>
+<pre><code>/openpaul:plan
+</code></pre>
+<p>OpenPAUL prompts you to describe what you want to build, then generates a structured PLAN.md.</p>
+<hr>
+<h2>APPLY</h2>
+<p>Execute the approved plan.</p>
+<h3>Execution Rules</h3>
+<ol>
+<li><strong>Sequential</strong> — Tasks run one at a time</li>
+<li><strong>Verified</strong> — Each task has a verify step</li>
+<li><strong>Checkpointed</strong> — Pause for human input when needed</li>
+<li><strong>Logged</strong> — Deviations are recorded</li>
+</ol>
+<h3>Checkpoints</h3>
+<pre><code>✓ Task 1: Create model (verified: tests pass)
+✓ Task 2: Add endpoint (verified: curl returns 200)
+⏸ Task 3: Checkpoint — Verify login flow manually?
+
+YOU: approved
+
+✓ Task 3: Login flow works
+</code></pre>
+<h3>How to Execute</h3>
+<pre><code>/openpaul:apply
+</code></pre>
+<p>Or specify a path:</p>
+<pre><code>/openpaul:apply .openpaul/phases/01-foundation/01-01-PLAN.md
+</code></pre>
+<hr>
+<h2>UNIFY</h2>
+<p>Close the loop (required!).</p>
+<h3>What UNIFY Does</h3>
+<ol>
+<li><p><strong>Creates SUMMARY.md</strong></p>
+<ul>
+<li>What was built</li>
+<li>Plan vs actual comparison</li>
+<li>Decisions made</li>
+<li>Issues deferred</li>
+</ul>
+</li>
+<li><p><strong>Updates STATE.md</strong></p>
+<ul>
+<li>Current position</li>
+<li>Accumulated decisions</li>
+<li>Next phase/plan</li>
+</ul>
+</li>
+<li><p><strong>Logs Decisions</strong></p>
+<ul>
+<li>Architecture choices</li>
+<li>Trade-offs</li>
+<li>Future considerations</li>
+</ul>
+</li>
+</ol>
+<h3>Why UNIFY Matters</h3>
+<table>
+<thead>
+<tr>
+<th>Without UNIFY</th>
+<th>With UNIFY</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Orphan plans</td>
+<td>Every plan closed</td>
+</tr>
+<tr>
+<td>Lost decisions</td>
+<td>Decisions logged</td>
+</tr>
+<tr>
+<td>Drifted state</td>
+<td>Reconciled state</td>
+</tr>
+<tr>
+<td>No handoff</td>
+<td>Clear summary</td>
+</tr>
+</tbody></table>
+<h3>How to Close</h3>
+<pre><code>/openpaul:unify
+</code></pre>
+<hr>
+<h2>Loop Integrity</h2>
+<p>The loop is not optional:</p>
+<pre><code>PLAN ──▶ APPLY ──▶ UNIFY
+  ✓        ✓        ✓     [Loop complete]
+</code></pre>
+<h3>Enforced Rules</h3>
+<ul>
+<li><strong>No orphan plans</strong> — Every PLAN gets a SUMMARY</li>
+<li><strong>State reconciliation</strong> — UNIFY catches drift</li>
+<li><strong>Decision logging</strong> — Choices are recorded</li>
+</ul>
+<h3>With OpenCARL</h3>
+<p>OpenCARL can enforce loop discipline automatically:</p>
+<pre><code># Detects .openpaul/ and loads rules
+- Loop enforcement (no skipping UNIFY)
+- Boundary protection (DO NOT CHANGE sections)
+- State consistency checks
+</code></pre>
+<hr>
+<h2>Common Patterns</h2>
+<h3>New Feature</h3>
+<pre><code>/openpaul:plan      # Describe the feature
+[review plan]
+/openpaul:apply     # Execute tasks
+/openpaul:unify     # Close the loop
+</code></pre>
+<h3>Bug Fix</h3>
+<pre><code>/openpaul:plan-fix  # Plan fixes for UAT issues
+[review plan]
+/openpaul:apply
+/openpaul:unify
+</code></pre>
+<h3>Research First</h3>
+<pre><code>/openpaul:research &lt;topic&gt;  # Explore options
+[review findings]
+/openpaul:plan              # Create informed plan
+/openpaul:apply
+/openpaul:unify
+</code></pre>
+<h3>Multi-Phase Project</h3>
+<pre><code>/openpaul:milestone &lt;name&gt;  # Start milestone
+/openpaul:plan              # Phase 1 plan
+/openpaul:apply
+/openpaul:unify
+/openpaul:plan              # Phase 2 plan
+...
+/openpaul:complete-milestone  # Archive milestone
+</code></pre>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>
+        <a href="https://github.com/KrisGray/openpaul">OpenPAUL</a> — 
+        Plan-Apply-Unify Loop for structured AI development.
+      </p>
+      <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+        Created by <a href="https://github.com/KrisGray">Kris Gray</a>
+      </p>
+    </div>
+  </footer>
+</body>
+</html>

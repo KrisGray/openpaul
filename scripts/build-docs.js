@@ -1,18 +1,12 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
-let marked;
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { marked } from 'marked';
 
-async function loadMarked() {
-  try {
-    const mod = await import('marked');
-    marked = mod.marked ?? mod.default ?? mod;
-  } catch (error) {
-    const mod = require('marked');
-    marked = mod.marked ?? mod;
-  }
-}
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const CSS = `
 :root {
@@ -376,11 +370,6 @@ function buildFile(inputPath, outputPath, title, basePath, activeNav) {
 }
 
 async function main() {
-  await loadMarked();
-  if (!marked) {
-    throw new Error('Failed to load marked for docs build');
-  }
-
   const rootDir = path.join(__dirname, '..');
   const docsDir = path.join(rootDir, 'docs');
 

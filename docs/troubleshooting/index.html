@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>OpenPAUL - Plan-Apply-Unify Loop</title>
-  <meta name="description" content="OpenPAUL - Structured AI-assisted development for OpenCode">
+  <title>Troubleshooting | OpenPAUL</title>
+  <meta name="description" content="OpenPAUL - Plan-Apply-Unify Loop for structured AI-assisted development">
   <style>
 :root {
   --bg: #ffffff;
@@ -192,69 +192,73 @@ footer a { color: var(--accent); }
 <body>
   <header>
     <div class="container">
-      <div class="logo"><a href="./">OpenPAUL</a></div>
+      <div class="logo"><a href="../">OpenPAUL</a></div>
       <nav>
-        <a href="./#quick-start" class="active">Quick Start</a>
-        <a href="./guides/">Guides</a>
-        <a href="./tutorials/">Tutorials</a>
-        <a href="./api/">API</a>
+        <a href="../#quick-start">Quick Start</a>
+        <a href="../guides/">Guides</a>
+        <a href="../tutorials/">Tutorials</a>
+        <a href="../api/">API</a>
         <a href="https://github.com/KrisGray/openpaul">GitHub</a>
       </nav>
     </div>
   </header>
 
   <main class="container">
-    <div class="hero">
-      <h1>OpenPAUL</h1>
-      <p class="tagline">Plan-Apply-Unify Loop — Structured AI-assisted development</p>
-      <div class="cta">
-        <a href="./install/" class="primary">Get Started</a>
-        <a href="./guides/" class="secondary">Read Guides</a>
-      </div>
+    <div class="page-title">
+      <h1>Troubleshooting</h1>
     </div>
-
-    <div class="features">
-      <div class="feature">
-        <h3>Loop Integrity</h3>
-        <p>Every plan closes with UNIFY. No orphan plans, no forgotten decisions.</p>
-      </div>
-      <div class="feature">
-        <h3>In-Session Context</h3>
-        <p>Keep development in-session with properly managed context. Quality over subagent sprawl.</p>
-      </div>
-      <div class="feature">
-        <h3>Acceptance-Driven</h3>
-        <p>Acceptance criteria are first-class citizens. Define done before starting.</p>
-      </div>
-      <div class="feature">
-        <h3>State Persistence</h3>
-        <p>Resume work across sessions. State, decisions, and progress are always preserved.</p>
-      </div>
-    </div>
-
     <div class="content">
-      <h2 id="quick-start">Quick Start</h2>
-      <pre><code># Initialize OpenPAUL in your project
-npx openpaul
+      <h1>Troubleshooting</h1>
+<p>Common issues and solutions for OpenPAUL.</p>
+<h2>Commands not found after install?</h2>
+<ul>
+<li>Restart OpenCode to reload plugins</li>
+<li>Verify openpaul is listed in your opencode.json plugins section</li>
+</ul>
+<h2>Commands not working as expected?</h2>
+<ul>
+<li>Run /openpaul:help to verify installation</li>
+<li>Check the plugin is installed in ~/.cache/opencode/node_modules/openpaul/</li>
+</ul>
+<h2>Loop position seems wrong?</h2>
+<ul>
+<li>Check .openpaul/STATE.md for current state</li>
+<li>Run /openpaul:progress for guided next action</li>
+</ul>
+<h2>Resuming after a break?</h2>
+<ul>
+<li>Run /openpaul:resume - it reads state and handoffs automatically</li>
+</ul>
+<h2>CLI not scaffolding files?</h2>
+<ul>
+<li>Ensure you have write permissions in the target directory</li>
+<li>Try with --force to overwrite existing files</li>
+<li>Check for .openpaul/ directory conflicts</li>
+</ul>
+<h2>Plugin loading issues?</h2>
+<ol>
+<li>Verify opencode.json syntax is valid JSON</li>
+<li>Check npm package installed correctly</li>
+<li>Restart OpenCode completely</li>
+</ol>
+<h2>State file corrupted?</h2>
+<ol>
+<li>Backup .openpaul/STATE.md</li>
+<li>Review for missing required fields</li>
+<li>Run npx openpaul --force to reinitialize (destructive)</li>
+</ol>
+<h2>Plan execution failed?</h2>
+<ol>
+<li>Check .openpaul/phases/{phase}/{plan}-PLAN.md for details</li>
+<li>Review task verification steps</li>
+<li>Run /openpaul:apply with specific plan path</li>
+</ol>
+<h2>Need more help?</h2>
+<ul>
+<li>GitHub Issues: <a href="https://github.com/KrisGray/openpaul/issues">https://github.com/KrisGray/openpaul/issues</a></li>
+<li>Documentation: <a href="https://krisgray.github.io/openpaul/">https://krisgray.github.io/openpaul/</a></li>
+</ul>
 
-# Inside OpenCode, use the loop
-/openpaul:plan     # Create an executable plan
-/openpaul:apply    # Execute the plan
-/openpaul:unify    # Close the loop (required!)</code></pre>
-
-      <h2>Documentation</h2>
-      <ul>
-        <li><a href="./install/">Installation Guide</a> — Get OpenPAUL running</li>
-        <li><a href="./guides/">Guides</a> — Core concepts and workflows</li>
-        <li><a href="./tutorials/">Tutorials</a> — Step-by-step learning</li>
-        <li><a href="./api/">API Reference</a> — TypeDoc generated docs</li>
-      </ul>
-
-      <h2>With OpenCARL (Recommended)</h2>
-      <p>For the best experience, use OpenPAUL with <a href="https://github.com/KrisGray/opencarl">OpenCARL</a> — a dynamic rule injection system that enforces workflow discipline automatically.</p>
-      <pre><code># Initialize both
-npx openpaul
-npx opencarl --local</code></pre>
     </div>
   </main>
 
