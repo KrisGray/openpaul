@@ -20,7 +20,7 @@ Where GSD focuses on *getting work done*, OpenPAUL focuses on *getting work done
 
 **OpenPAUL:** PLAN → APPLY → UNIFY (enforced)
 
-The UNIFY phase isn't optional. Every plan produces a SUMMARY.md that captures:
+The UNIFY phase isn't optional. Every plan produces a SUMMARY.json that captures:
 - What actually happened vs. what was planned
 - Decisions made during execution
 - Issues deferred for later
@@ -66,7 +66,7 @@ Decision fatigue is real. OpenPAUL analyzes project state and recommends the mos
 
 **GSD:** Implicit state via `.continue-here.md` in phase directories.
 
-**OpenPAUL:** Explicit `HANDOFF-{date}.md` files with loop position, decisions, and prioritized next actions.
+**OpenPAUL:** Explicit `.openpaul/HANDOFF.md` with loop position, decisions, and prioritized next actions.
 
 OpenPAUL handoffs are designed for zero-context resumption. They capture not just *where* you stopped, but *why* you were doing what you were doing and *what* decisions led there.
 
@@ -80,7 +80,7 @@ OpenPAUL handoffs are designed for zero-context resumption. They capture not jus
 
 **OpenPAUL:** Tasks link to numbered acceptance criteria (AC-1, AC-2, AC-3) with Given/When/Then format.
 
-Every PLAN.md includes explicit acceptance criteria. Every SUMMARY.md reports pass/fail against those criteria. This creates verifiable quality gates, not just completion checkboxes.
+Every PLAN.json includes explicit acceptance criteria. Every SUMMARY.json reports pass/fail against those criteria. This creates verifiable quality gates, not just completion checkboxes.
 
 *Why it matters:* "Done" is ambiguous. "AC-3: PASS" is not.
 
@@ -90,7 +90,7 @@ Every PLAN.md includes explicit acceptance criteria. Every SUMMARY.md reports pa
 
 **GSD:** Scope guidance in plans.
 
-**OpenPAUL:** Explicit `## Boundaries` section in every PLAN.md with DO NOT CHANGE declarations.
+**OpenPAUL:** Explicit boundaries field in every PLAN.json with DO NOT CHANGE declarations.
 
 When you specify boundaries, OpenPAUL treats them as hard constraints, not suggestions. Modifications to protected items require explicit confirmation.
 

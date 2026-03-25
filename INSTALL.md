@@ -38,11 +38,13 @@ npx openpaul --preset full             # Full template
 
 ## What Gets Created
 
+Running `npx openpaul` scaffolds:
+
 .openpaul/
-├── PROJECT.md           # Project context and requirements
-├── ROADMAP.md           # Phase breakdown and milestones
-├── STATE.md             # Loop position and session state
-└── phases/              # Phase directories (created as needed)
+└── state.json           # Project registry (name, version, timestamps)
+
+.opencode/
+└── opencode.json        # OpenCode config and preset files
 
 ---
 

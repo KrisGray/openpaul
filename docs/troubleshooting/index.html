@@ -197,7 +197,6 @@ footer a { color: var(--accent); }
         <a href="../#quick-start">Quick Start</a>
         <a href="../guides/">Guides</a>
         <a href="../tutorials/">Tutorials</a>
-        <a href="../api/">API</a>
         <a href="https://github.com/KrisGray/openpaul">GitHub</a>
       </nav>
     </div>
@@ -223,7 +222,7 @@ footer a { color: var(--accent); }
 <h2>Loop position seems wrong?</h2>
 <ul>
 <li>Check <code>.openpaul/state-phase-N.json</code> for machine-readable loop state (PLAN/APPLY/UNIFY)</li>
-<li>Check <code>.openpaul/STATE.md</code> for human-readable loop position (if initialized via <code>/openpaul:init</code>)</li>
+<li>Check <code>.openpaul/STATE.md</code> if you maintain a human-readable companion</li>
 <li>Run /openpaul:progress for guided next action</li>
 </ul>
 <h2>Resuming after a break?</h2>
@@ -251,9 +250,9 @@ footer a { color: var(--accent); }
 </ol>
 <h2>Plan execution failed?</h2>
 <ol>
-<li>Check .openpaul/phases/{phase}/{plan}-PLAN.md for details</li>
+<li>Check .openpaul/phases/{phase}-{plan}-PLAN.json for details</li>
 <li>Review task verification steps</li>
-<li>Run /openpaul:apply with specific plan path</li>
+<li>Run /openpaul:apply --phase N --plan NN</li>
 </ol>
 <h2>Need more help?</h2>
 <ul>

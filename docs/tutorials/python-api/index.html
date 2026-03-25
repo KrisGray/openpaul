@@ -197,7 +197,6 @@ footer a { color: var(--accent); }
         <a href="../../#quick-start">Quick Start</a>
         <a href="../../guides/">Guides</a>
         <a href="../../tutorials/" class="active">Tutorials</a>
-        <a href="../../api/">API</a>
         <a href="https://github.com/KrisGray/openpaul">GitHub</a>
       </nav>
     </div>
@@ -242,7 +241,7 @@ npx openpaul
 <li><code>.openpaul/state.json</code> — project registry (name, version, timestamps)</li>
 <li><code>.opencode/</code> — OpenCode configuration and preset files</li>
 </ul>
-<p>It does <strong>not</strong> create <code>PROJECT.md</code>, <code>ROADMAP.md</code>, or <code>STATE.md</code> — those are created in the next step.</p>
+<p>It does <strong>not</strong> create loop state files — those are created in the next step.</p>
 <hr>
 <h2>Step 2: Install the OpenPAUL Plugin in OpenCode</h2>
     <p><code>npx openpaul</code> already created <code>.opencode/opencode.json</code> in your project. Open it and add the <code>plugin</code> key:</p>
@@ -273,12 +272,9 @@ npx openpaul
 <ul>
 <li><code>.openpaul/model-config.json</code> — model configuration</li>
 <li><code>.openpaul/state-phase-1.json</code> — initial loop state</li>
-<li><code>.openpaul/PROJECT.md</code> — project context (from conversation)</li>
-<li><code>.openpaul/ROADMAP.md</code> — phase structure (skeleton for planning)</li>
-<li><code>.openpaul/STATE.md</code> — loop position tracker</li>
-<li><code>.openpaul/phases/</code> — directory for plans and summaries</li>
+<li><code>.openpaul/phases/</code> — directory for plans and summaries (created when you plan)</li>
 </ul>
-<p>You can now edit <code>.openpaul/ROADMAP.md</code> to define your phases, or leave it for the planner to fill in.</p>
+<p>If you maintain a roadmap, create or edit <code>.openpaul/ROADMAP.md</code> now, or leave it for later.</p>
 <hr>
 <h2>Step 4: PLAN — Create First Plan</h2>
 <p>Run the plan command with structured parameters. OpenPAUL stores the plan as a JSON file in <code>.openpaul/phases/</code>.</p>
@@ -490,7 +486,7 @@ Next Action: Run /openpaul:apply to execute the plan
 <ol>
 <li><strong>Scaffold</strong> — <code>npx openpaul</code> creates <code>.openpaul/state.json</code> and <code>.opencode/</code> config</li>
 <li><strong>Install plugin</strong> — add <code>&quot;plugin&quot;: [&quot;openpaul&quot;]</code> to <code>.opencode/opencode.json</code> and restart OpenCode</li>
-<li><strong>Initialize</strong> — <code>/openpaul:init</code> sets up loop state and creates context files (<code>PROJECT.md</code>, <code>ROADMAP.md</code>, <code>STATE.md</code>)</li>
+<li><strong>Initialize</strong> — <code>/openpaul:init</code> sets up loop state files</li>
 <li><strong>Plan</strong> — <code>/openpaul:plan</code> creates structured JSON plans with criteria and tasks</li>
 <li><strong>Apply</strong> — <code>/openpaul:apply</code> displays tasks for sequential execution with verification</li>
 <li><strong>Unify</strong> — <code>/openpaul:unify</code> closes the loop and writes a JSON summary</li>

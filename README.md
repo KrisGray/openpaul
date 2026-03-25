@@ -79,7 +79,7 @@ This creates two things:
 - `.openpaul/state.json` — project registry (name, version, timestamps)
 - `.opencode/` — OpenCode configuration and preset files
 
-Then run `/openpaul:init` inside OpenCode to initialize the loop state and create `PROJECT.md`, `ROADMAP.md`, `STATE.md`, and `phases/`.
+Then run `/openpaul:init` inside OpenCode to initialize loop state and create `.openpaul/model-config.json` and `.openpaul/state-phase-1.json`.
 
 #### CLI Options
 
@@ -161,7 +161,7 @@ YOU: Dark mode toggle that:
   - Defaults to system preference
   - Toggles without page reload
 
-OpenPAUL: Created PLAN.md with:
+OpenPAUL: Created PLAN.json with:
   ✓ Objective: Add persistent dark mode toggle
   ✓ AC-1: Given user visits, When no preference, Then use system
   ✓ AC-2: Given user clicks toggle, When in light, Then switch to dark
@@ -180,8 +180,8 @@ OpenPAUL:
 YOU: /openpaul:unify
 
 OpenPAUL: 
-  ✓ Created SUMMARY.md
-  ✓ Updated STATE.md
+  ✓ Created SUMMARY.json
+  ✓ Updated loop state
   ✓ Recorded 3 decisions
 
 Done! Loop complete. State preserved for next session.
@@ -217,7 +217,7 @@ Here's a complete workflow example showing OpenPAUL in action:
 │                                                                 │
 │  Creates: .openpaul/state.json (project registry) and          │
 │  .opencode/ (OpenCode config). Then run /openpaul:init in       │
-│  OpenCode to create PROJECT.md, ROADMAP.md, STATE.md, phases/  │
+│  OpenCode to create model-config.json and state-phase-1.json   │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -227,7 +227,7 @@ Here's a complete workflow example showing OpenPAUL in action:
 │  /openpaul:plan                                                 │
 │                                                                 │
 │  OpenPAUL prompts you to describe what you want to build,      │
-│  then generates a structured PLAN.md with:                      │
+│  then generates a structured PLAN.json with:                    │
 │  - Objective (what & why)                                       │
 │  - Acceptance Criteria (Given/When/Then)                        │
 │  - Tasks with files, actions, verification steps                │
@@ -273,7 +273,7 @@ Here's a complete workflow example showing OpenPAUL in action:
 │  - Criteria results                                             │
 │                                                                 │
 │  Advances state-phase-N.json to UNIFY, then readies            │
-│  next phase for PLAN. Updates STATE.md if it exists.           │
+│  next phase for PLAN. Updates loop state (STATE.md if present).│
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -299,7 +299,7 @@ YOU: I need to add a dark mode toggle to my React app. It should:
 - Default to system preference on first visit
 - Toggle without page reload
 
-OpenPAUL: [Creates PLAN.md]
+OpenPAUL: [Creates PLAN.json]
 
 ## Plan: Dark Mode Toggle
 
@@ -326,7 +326,7 @@ OpenPAUL: [Executes tasks one by one with verification...]
 
 YOU: /openpaul:unify
 
-OpenPAUL: [Creates SUMMARY.md, updates STATE.md]
+OpenPAUL: [Creates SUMMARY.json, updates loop state]
 
 Done. Loop complete.
 ```
@@ -356,7 +356,7 @@ Task 3: Add avatar upload
   File: src/components/AvatarUpload.tsx
   Action: Create component with drag-drop and crop preview
 
-**Suggested command:** /openpaul:apply .openpaul/phases/02-profile/02-03-PLAN.md
+**Suggested command:** /openpaul:apply --phase 2 --plan 03
 ```
 
 ---
@@ -419,7 +419,7 @@ npx openpaul
 /openpaul:unify
 
 # OpenCARL injects closure rules:
-# - "Create SUMMARY.md documenting what was built"
+# - "Create SUMMARY.json documenting what was built"
 # - "Compare plan vs actual"
 # - "Record decisions for future sessions"
 ```
@@ -438,7 +438,7 @@ OpenCARL: [Injects OpenPAUL + Development rules]
 
 YOU: [Describe the feature you want]
 
-OpenPAUL: Generates PLAN.md with:
+OpenPAUL: Generates PLAN.json with:
   - Objective
   - Acceptance Criteria (Given/When/Then)
   - Tasks with verification steps
@@ -464,7 +464,7 @@ OpenCARL: [Context depleting → Injects fresh session rules]
 
 YOU: /openpaul:unify
 
-OpenPAUL: Creates SUMMARY.md, updates STATE.md
+OpenPAUL: Creates SUMMARY.json, updates loop state
 OpenCARL: [Injects closure rules]
   ✓ Document what was built
   ✓ Compare plan vs actual
@@ -481,7 +481,7 @@ When OpenCARL detects you're working in an OpenPAUL project:
 2. **Boundary Protection** — `DO NOT CHANGE` sections in plans are sacred.
 3. **AC-First Development** — Acceptance criteria defined before tasks.
 4. **Verification Requirements** — Every task needs a verify step.
-5. **State Consistency** — STATE.md must reflect reality after each phase.
+5. **State Consistency** — Loop state JSON reflects reality after each phase (STATE.md if present).
 
 These rules load automatically when you're in `.openpaul/` context and disappear when you're not.
 
@@ -536,7 +536,7 @@ Close the loop (required!):
 - Write `{N}-{plan}-SUMMARY.json` with task results and criteria
 - Compare plan vs actual
 - Advance loop state to ready for next PLAN
-- Update STATE.md (if present)
+- Update loop state (STATE.md if present)
 
 **Never skip UNIFY.** Every plan needs closure. This is what separates structured development from chaos.
 
@@ -551,9 +551,9 @@ OpenPAUL provides 26 commands organized by purpose. Run `/openpaul:help` for the
 | Command                  | What it does                                     |
 | ------------------------ | ------------------------------------------------ |
 | `npx openpaul`           | Initialize OpenPAUL in a project (CLI)           |
-| `/openpaul:plan [phase]` | Create an executable plan                        |
-| `/openpaul:apply [path]` | Execute an approved plan                         |
-| `/openpaul:unify [path]` | Reconcile and close the loop                     |
+| `/openpaul:plan --phase N --plan NN` | Create an executable plan                        |
+| `/openpaul:apply --phase N --plan NN` | Execute an approved plan                         |
+| `/openpaul:unify --phase N --plan NN` | Reconcile and close the loop                     |
 | `/openpaul:help`         | Show command reference                           |
 | `/openpaul:status`       | Show loop position _(deprecated — use progress)_ |
 
@@ -625,9 +625,6 @@ After `npx openpaul` + `/openpaul:init`:
 ├── state.json             # Project registry (npx openpaul)
 ├── model-config.json      # Model configuration (/openpaul:init)
 ├── state-phase-N.json     # Loop state per phase (/openpaul:init)
-├── PROJECT.md             # Project context (/openpaul:init)
-├── ROADMAP.md             # Phase structure (/openpaul:init)
-├── STATE.md               # Loop position tracker (/openpaul:init)
 ├── config.md              # Optional integrations
 ├── SPECIAL-FLOWS.md       # Optional skill requirements
 ├── HANDOFF.md             # Session handoff (/openpaul:pause)
@@ -643,7 +640,7 @@ After `npx openpaul` + `/openpaul:init`:
 
 Machine-readable loop state lives in **`state-phase-N.json`** (one per phase), tracking the current loop position (PLAN/APPLY/UNIFY), active plan ID, and timestamps.
 
-**`STATE.md`** (created by `/openpaul:init`) is the human-readable companion:
+If you maintain a human-readable **`STATE.md`**, OpenPAUL will update it when present:
 
 - Current phase and plan
 - Loop position (PLAN/APPLY/UNIFY markers)
@@ -787,7 +784,7 @@ APPLY blocks until required skills are confirmed loaded.
 **Loop position seems wrong?**
 
 - Check `.openpaul/state-phase-N.json` for machine-readable loop state (PLAN/APPLY/UNIFY)
-- Check `.openpaul/STATE.md` for human-readable position (if initialized via `/openpaul:init`)
+- Check `.openpaul/STATE.md` if you maintain a human-readable companion
 - Run `/openpaul:progress` for guided next action
 
 **Resuming after a break?**
@@ -803,7 +800,7 @@ APPLY blocks until required skills are confirmed loaded.
 | Ad-hoc         | OpenPAUL                   |
 | -------------- | -------------------------- |
 | No structure   | Explicit planning gates    |
-| State drifts   | STATE.md tracks everything |
+| State drifts   | Loop state JSON tracks everything |
 | No closure     | Mandatory UNIFY            |
 | Decisions lost | Decisions logged           |
 

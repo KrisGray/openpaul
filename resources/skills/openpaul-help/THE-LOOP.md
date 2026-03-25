@@ -23,46 +23,25 @@ Create an executable plan with structured sections.
 
 ### Structure
 
-```markdown
----
-phase: 01-foundation
-plan: 01
-type: execute
-autonomous: true
----
-
-<objective>
-What you're building and why.
-</objective>
-
-<context>
-@-references to relevant files.
-</context>
-
-<acceptance_criteria>
-
-## AC-1: Feature Works
-
-Given [precondition]
-When [action]
-Then [outcome]
-</acceptance_criteria>
-
-<tasks>
-<task type="auto">
-  <name>Task name</name>
-  <files>path/to/file.ts</files>
-  <action>Implementation details...</action>
-  <verify>How to verify completion</verify>
-  <done>AC-1 satisfied</done>
-</task>
-</tasks>
-
-<boundaries>
-## DO NOT CHANGE
-- database/migrations/*
-- src/lib/auth.ts
-</boundaries>
+```json
+{
+  "phase": "1",
+  "plan": "01",
+  "criteria": [
+    "AC-1: Feature works",
+    "AC-2: Errors handled"
+  ],
+  "tasks": [
+    {
+      "name": "Implement login endpoint",
+      "files": ["src/api/auth/login.ts"],
+      "action": "Add POST /auth/login with JWT response",
+      "verify": "curl /auth/login returns 200",
+      "done": "AC-1 satisfied"
+    }
+  ],
+  "boundaries": ["DO NOT change database/migrations/*"]
+}
 ```
 
 ### Key Sections
@@ -81,7 +60,7 @@ Then [outcome]
 /openpaul:plan
 ```
 
-OpenPAUL prompts you to describe what you want to build, then generates a structured PLAN.md.
+OpenPAUL prompts you to describe what you want to build, then generates a structured PLAN.json.
 
 ---
 
@@ -114,9 +93,9 @@ YOU: approved
 /openpaul:apply
 ```
 
-Or specify a path:
+Or specify phase and plan:
 ```
-/openpaul:apply .openpaul/phases/01-foundation/01-01-PLAN.md
+/openpaul:apply --phase 1 --plan 01
 ```
 
 ---
@@ -127,16 +106,17 @@ Close the loop (required!).
 
 ### What UNIFY Does
 
-1. **Creates SUMMARY.md**
+1. **Creates SUMMARY.json**
    - What was built
    - Plan vs actual comparison
    - Decisions made
    - Issues deferred
 
-2. **Updates STATE.md**
+2. **Updates loop state**
    - Current position
    - Accumulated decisions
    - Next phase/plan
+   - Updates STATE.md if present
 
 3. **Logs Decisions**
    - Architecture choices

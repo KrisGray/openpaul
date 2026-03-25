@@ -14,7 +14,7 @@ Common issues and solutions for OpenPAUL.
 
 ## Loop position seems wrong?
 
-- Check .openpaul/STATE.md for current state
+- Check .openpaul/state-phase-N.json for current loop state
 - Run /openpaul:progress for guided next action
 
 ## Resuming after a break?
@@ -35,15 +35,16 @@ Common issues and solutions for OpenPAUL.
 
 ## State file corrupted?
 
-1. Backup .openpaul/STATE.md
+1. Backup .openpaul/state-phase-N.json
 2. Review for missing required fields
-3. Run npx openpaul --force to reinitialize (destructive)
+3. Run /openpaul:init --force in OpenCode to reinitialize loop state
+4. Or run npx openpaul --force to re-scaffold .openpaul/state.json and .opencode/
 
 ## Plan execution failed?
 
-1. Check .openpaul/phases/{phase}/{plan}-PLAN.md for details
+1. Check .openpaul/phases/{phase}-{plan}-PLAN.json for details
 2. Review task verification steps
-3. Run /openpaul:apply with specific plan path
+3. Run /openpaul:apply --phase N --plan NN
 
 ## Need more help?
 

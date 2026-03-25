@@ -197,7 +197,6 @@ footer a { color: var(--accent); }
         <a href="../../#quick-start">Quick Start</a>
         <a href="../../guides/" class="active">Guides</a>
         <a href="../../tutorials/">Tutorials</a>
-        <a href="../../api/">API</a>
         <a href="https://github.com/KrisGray/openpaul">GitHub</a>
       </nav>
     </div>
@@ -239,10 +238,10 @@ footer a { color: var(--accent); }
 <h3>UNIFY</h3>
 <p>Close the loop (required!):</p>
 <ul>
-<li>Create SUMMARY.md documenting what was built</li>
+<li>Create SUMMARY.json documenting what was built</li>
 <li>Compare plan vs actual</li>
 <li>Record decisions and deferred issues</li>
-<li>Update STATE.md</li>
+<li>Update loop state (STATE.md if present)</li>
 </ul>
 <p><strong>Never skip UNIFY.</strong> Every plan needs closure.</p>
 <h2>How It Works</h2>
@@ -252,7 +251,7 @@ footer a { color: var(--accent); }
 /openpaul:plan
    │
    ▼
-OpenPAUL generates PLAN.md with:
+OpenPAUL generates PLAN.json with:
 - Objective
 - Acceptance Criteria (Given/When/Then)
 - Tasks (files, actions, verify, done)
@@ -271,12 +270,12 @@ Tasks execute sequentially with verification
 /openpaul:unify
    │
    ▼
-SUMMARY.md created, STATE.md updated
+SUMMARY.json created, loop state updated
 Decisions logged for future sessions
 </code></pre>
 <h2>Core Concepts</h2>
 <h3>State Management</h3>
-<p>STATE.md tracks:</p>
+<p>Loop state JSON tracks:</p>
 <ul>
 <li>Current phase and plan</li>
 <li>Loop position (PLAN/APPLY/UNIFY markers)</li>
@@ -284,6 +283,7 @@ Decisions logged for future sessions
 <li>Accumulated decisions</li>
 <li>Blockers and deferred issues</li>
 </ul>
+<p>If you maintain a human-readable <code>STATE.md</code>, OpenPAUL updates it when present.</p>
 <h3>Acceptance-Driven Development</h3>
 <p>Acceptance criteria are first-class citizens:</p>
 <ol>
@@ -312,11 +312,9 @@ Decisions logged for future sessions
 ├── state.json             # Project registry (created by npx openpaul)
 ├── model-config.json      # Model configuration (created by /openpaul:init)
 ├── state-phase-N.json     # Loop state per phase (created by /openpaul:init)
-├── PROJECT.md             # Project context (created by /openpaul:init)
-├── ROADMAP.md             # Phase structure (created by /openpaul:init)
-├── STATE.md               # Loop position tracker (created by /openpaul:init)
 ├── config.md              # Optional integrations
 ├── SPECIAL-FLOWS.md       # Optional skill requirements
+├── HANDOFF.md             # Session handoff (/openpaul:pause)
 └── phases/
     ├── 1-01-PLAN.json     # Plan from /openpaul:plan
     └── 1-01-SUMMARY.json  # Summary from /openpaul:unify
@@ -331,7 +329,7 @@ Decisions logged for future sessions
 <h3>Create a Plan</h3>
 <pre><code>/openpaul:plan
 </code></pre>
-<p>OpenPAUL prompts you to describe what you want to build, then generates a structured PLAN.md.</p>
+<p>OpenPAUL prompts you to describe what you want to build, then generates a structured PLAN.json.</p>
 <h3>Execute the Plan</h3>
 <pre><code>/openpaul:apply
 </code></pre>
@@ -339,11 +337,11 @@ Decisions logged for future sessions
 <h3>Close the Loop</h3>
 <pre><code>/openpaul:unify
 </code></pre>
-<p>Creates SUMMARY.md, updates STATE.md, records decisions.</p>
+<p>Creates SUMMARY.json, updates loop state, records decisions.</p>
 <h3>Resume After Break</h3>
 <pre><code>/openpaul:resume
 </code></pre>
-<p>Reads STATE.md and suggests exactly ONE next action.</p>
+<p>Reads loop state and suggests exactly ONE next action.</p>
 <h2>With OpenCARL</h2>
 <p>For the best experience, use OpenPAUL with <strong>OpenCARL</strong> — a dynamic rule injection system:</p>
 <pre><code class="language-bash"># Initialize both

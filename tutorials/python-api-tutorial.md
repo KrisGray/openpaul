@@ -40,7 +40,7 @@ npx openpaul
 - `.openpaul/state.json` — project registry (name, version, timestamps)
 - `.opencode/` — OpenCode configuration and preset files
 
-It does **not** create `PROJECT.md`, `ROADMAP.md`, or `STATE.md` — those are created in the next step.
+It does **not** create loop state files — those are created in the next step.
 
 ---
 
@@ -82,12 +82,9 @@ Example answers:
 After the conversation, OpenPAUL creates:
 - `.openpaul/model-config.json` — model configuration
 - `.openpaul/state-phase-1.json` — initial loop state
-- `.openpaul/PROJECT.md` — project context (from conversation)
-- `.openpaul/ROADMAP.md` — phase structure (skeleton for planning)
-- `.openpaul/STATE.md` — loop position tracker
-- `.openpaul/phases/` — directory for plans and summaries
+- `.openpaul/phases/` — directory for plans and summaries (created when you plan)
 
-You can now edit `.openpaul/ROADMAP.md` to define your phases, or leave it for the planner to fill in.
+If you maintain a roadmap, create or edit `.openpaul/ROADMAP.md` now, or leave it for later.
 
 ---
 
@@ -350,7 +347,7 @@ Next Action: Run /openpaul:apply to execute the plan
 You've learned:
 1. **Scaffold** — `npx openpaul` creates `.openpaul/state.json` and `.opencode/` config
 2. **Install plugin** — add `"plugin": ["openpaul"]` to `.opencode/opencode.json` and restart OpenCode
-3. **Initialize** — `/openpaul:init` sets up loop state and creates context files
+3. **Initialize** — `/openpaul:init` sets up loop state files
 4. **Plan** — `/openpaul:plan` creates structured JSON plans with criteria and tasks
 5. **Apply** — `/openpaul:apply` displays tasks for sequential execution with verification
 6. **Unify** — `/openpaul:unify` closes the loop and writes a JSON summary

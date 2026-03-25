@@ -33,10 +33,10 @@ Execute the approved plan:
 
 ### UNIFY
 Close the loop (required!):
-- Create SUMMARY.md documenting what was built
+- Create SUMMARY.json documenting what was built
 - Compare plan vs actual
 - Record decisions and deferred issues
-- Update STATE.md
+- Update loop state (STATE.md if present)
 
 **Never skip UNIFY.** Every plan needs closure.
 
@@ -49,7 +49,7 @@ You: I want to add user authentication
 /openpaul:plan
    │
    ▼
-OpenPAUL generates PLAN.md with:
+OpenPAUL generates PLAN.json with:
 - Objective
 - Acceptance Criteria (Given/When/Then)
 - Tasks (files, actions, verify, done)
@@ -68,19 +68,21 @@ Tasks execute sequentially with verification
 /openpaul:unify
    │
    ▼
-SUMMARY.md created, STATE.md updated
+SUMMARY.json created, loop state updated
 Decisions logged for future sessions
 ```
 
 ## Core Concepts
 
 ### State Management
-STATE.md tracks:
+Loop state JSON tracks:
 - Current phase and plan
 - Loop position (PLAN/APPLY/UNIFY markers)
 - Session continuity
 - Accumulated decisions
 - Blockers and deferred issues
+
+If you maintain a human-readable `STATE.md`, OpenPAUL updates it when present.
 
 ### Acceptance-Driven Development
 Acceptance criteria are first-class citizens:
@@ -106,18 +108,15 @@ For implementation, OpenPAUL keeps everything in-session.
 
 ```
 .openpaul/
-├── PROJECT.md           # Project context and requirements
-├── ROADMAP.md           # Phase breakdown and milestones
-├── STATE.md             # Loop position and session state
+├── state.json           # Project registry (npx openpaul)
+├── model-config.json    # Model configuration (/openpaul:init)
+├── state-phase-N.json   # Loop state per phase (/openpaul:init)
 ├── config.md            # Optional integrations
 ├── SPECIAL-FLOWS.md     # Optional skill requirements
+├── HANDOFF.md           # Session handoff (/openpaul:pause)
 └── phases/
-    ├── 01-foundation/
-    │   ├── 01-01-PLAN.md
-    │   └── 01-01-SUMMARY.md
-    └── 02-features/
-        ├── 02-01-PLAN.md
-        └── 02-01-SUMMARY.md
+    ├── 1-01-PLAN.json
+    └── 1-01-SUMMARY.json
 ```
 
 ## Quick Examples
@@ -131,7 +130,7 @@ npx openpaul
 ```
 /openpaul:plan
 ```
-OpenPAUL prompts you to describe what you want to build, then generates a structured PLAN.md.
+OpenPAUL prompts you to describe what you want to build, then generates a structured PLAN.json.
 
 ### Execute the Plan
 ```
@@ -143,13 +142,13 @@ Tasks execute sequentially with verification at each step.
 ```
 /openpaul:unify
 ```
-Creates SUMMARY.md, updates STATE.md, records decisions.
+Creates SUMMARY.json, updates loop state, records decisions.
 
 ### Resume After Break
 ```
 /openpaul:resume
 ```
-Reads STATE.md and suggests exactly ONE next action.
+Reads loop state and suggests exactly ONE next action.
 
 ## With OpenCARL
 

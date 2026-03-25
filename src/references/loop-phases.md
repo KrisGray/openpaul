@@ -53,11 +53,11 @@ PLAN ──▶ APPLY ──▶ UNIFY
 **Purpose:** Execute the approved plan by completing tasks in order, verifying each.
 
 **Artifacts Created:**
-- Code/files specified in PLAN.md
+- Code/files specified in PLAN.json
 - APPLY-LOG (optional, for complex plans)
 
 **Activities:**
-1. Read PLAN.md to load task definitions
+1. Read PLAN.json to load task definitions
 2. For each task:
    - Execute the action
    - Run verification
@@ -89,10 +89,10 @@ PLAN ──▶ APPLY ──▶ UNIFY
 - `.openpaul/phases/{phase}-{plan}-SUMMARY.json`
 - Updated `state-phase-N.json`
 - Updated `STATE.md` (if present)
-- Updated `ROADMAP.md` (if phase complete)
+- Updated `ROADMAP.md` (if present and phase complete)
 
 **Activities:**
-1. Compare PLAN.md tasks to actual execution
+1. Compare PLAN.json tasks to actual execution
 2. Document what was built (files, lines)
 3. Record acceptance criteria results (PASS/FAIL)
 4. Note any deviations and why
@@ -122,7 +122,7 @@ PLAN ──▶ APPLY ──▶ UNIFY
 "Let me just quickly implement this without a plan"
 
 # GOOD
-"Let me create a PLAN.md first, even for small work"
+"Let me create a PLAN.json first, even for small work"
 ```
 Why: No plan = no acceptance criteria = no way to verify completion.
 
@@ -152,7 +152,7 @@ Why: No UNIFY = no record of what was built = lost traceability.
 Trigger: User approves plan (explicit signal)
 
 Validation:
-- [ ] PLAN.md has all required sections
+- [ ] PLAN.json has all required fields
 - [ ] Acceptance criteria are testable
 - [ ] Tasks have Files, Action, Verify, Done
 - [ ] Boundaries are clear
@@ -175,7 +175,7 @@ Validation:
 
 ## Visual Loop Position Format
 
-STATE.md displays loop position visually:
+STATE.md (if present) displays loop position visually:
 
 ```markdown
 ## Loop Position

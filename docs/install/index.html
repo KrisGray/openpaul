@@ -197,7 +197,6 @@ footer a { color: var(--accent); }
         <a href="../#quick-start">Quick Start</a>
         <a href="../guides/">Guides</a>
         <a href="../tutorials/">Tutorials</a>
-        <a href="../api/">API</a>
         <a href="https://github.com/KrisGray/openpaul">GitHub</a>
       </nav>
     </div>
@@ -242,15 +241,17 @@ npx openpaul --preset full             # Full template
 ├── opencode.json    # OpenCode schema reference
 └── (preset files)   # Commands, rules, agents — varies by preset
 </code></pre>
-<p>After <code>/openpaul:init</code> in OpenCode (initializes loop state and context):</p>
+<p>After <code>/openpaul:init</code> in OpenCode (initializes loop state):</p>
 <pre><code>.openpaul/
 ├── state.json           # Project registry
 ├── model-config.json    # Model configuration
-├── state-phase-1.json   # Initial loop state
-├── PROJECT.md           # Project context (from conversation)
-├── ROADMAP.md           # Phase structure skeleton
-├── STATE.md             # Loop position tracker
-└── phases/              # Plans and summaries (created as needed)
+└── state-phase-1.json   # Initial loop state
+</code></pre>
+<p>Plans and summaries are created when you run <code>/openpaul:plan</code> and <code>/openpaul:unify</code>:</p>
+<pre><code>.openpaul/
+└── phases/
+    ├── 1-01-PLAN.json
+    └── 1-01-SUMMARY.json
 </code></pre>
 <hr>
 <h2>Install as OpenCode Plugin</h2>
