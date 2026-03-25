@@ -78,11 +78,11 @@ describe('ModelConfigManager', () => {
       manager = new ModelConfigManager(testDir)
       await manager.initializeDefault()
       
-      // Verify .paul directory was created
-      expect(existsSync(join(testDir, '.paul'))).toBe(true)
+      // Verify .openpaul directory was created
+      expect(existsSync(join(testDir, '.openpaul'))).toBe(true)
       
       // Verify config file exists
-      expect(existsSync(join(testDir, '.paul', 'model-config.json'))).toBe(true)
+      expect(existsSync(join(testDir, '.openpaul', 'model-config.json'))).toBe(true)
       
       // Verify we can load the config
       const config = manager.getModel('plan-research')
@@ -171,7 +171,7 @@ describe('ModelConfigManager', () => {
       })
       
       // Read file directly to check timestamp
-      const configPath = join(testDir, '.paul', 'model-config.json')
+      const configPath = join(testDir, '.openpaul', 'model-config.json')
       const fileContent = readFileSync(configPath, 'utf-8')
       const fileConfig = JSON.parse(fileContent)
       
@@ -323,7 +323,7 @@ describe('ModelConfigManager', () => {
         ref: { provider: 'atomic', model: 'test' },
       })
       
-      const configPath = join(testDir, '.paul', 'model-config.json')
+      const configPath = join(testDir, '.openpaul', 'model-config.json')
       expect(existsSync(configPath)).toBe(true)
     })
     
