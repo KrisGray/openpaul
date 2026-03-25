@@ -26,10 +26,13 @@ export const openpaulProgress: ToolDefinition = tool({
   },
   execute: async ({ verbose }, context) => {
     try {
+      // Check if initialized — .openpaul/ is primary, .paul/ is migration fallback
+      const openPaulDir = join(context.directory, '.openpaul')
       const paulDir = join(context.directory, '.paul')
-      
-      // Check if initialized
-      if (!existsSync(paulDir)) {
+      const isInitialized = existsSync(join(openPaulDir, 'model-config.json'))
+        || existsSync(join(paulDir, 'model-config.json'))
+
+      if (!isInitialized) {
         return formatHeader(2, '📍 OpenPAUL Status') + '\n\n' +
           formatBold('Status:') + ' Not initialized\n\n' +
           formatHeader(3, 'What to do') + '\n' +

@@ -24,10 +24,14 @@ export const openpaulInit: ToolDefinition = tool({
   execute: async ({ force }, context) => {
     try {
       const fileManager = new FileManager(context.directory)
-      const paulDir = join(context.directory, '.openpaul')
       
-      // Check if already initialized
-      if (existsSync(paulDir) && !force) {
+      // Check if already initialized by looking for the model-config file,
+      // NOT just the directory — .openpaul/ is created by `npx openpaul`
+      // before /openpaul:init is ever run.
+      // Check both locations for robustness with migrated .paul/ projects.
+      const modelConfigInOpenPaul = join(context.directory, '.openpaul', 'model-config.json')
+      const modelConfigInPaul = join(context.directory, '.paul', 'model-config.json')
+      if ((existsSync(modelConfigInOpenPaul) || existsSync(modelConfigInPaul)) && !force) {
         return formatHeader(2, '⚠️ OpenPAUL Already Initialized') + '\n\n' +
           'OpenPAUL has already been initialized in this project.\n\n' +
           formatBold('Options:') + '\n' +

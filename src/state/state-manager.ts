@@ -1,3 +1,5 @@
+import { existsSync, readdirSync } from 'fs'
+import { join } from 'path'
 import { FileManager } from '../storage/file-manager'
 import type { State } from '../types'
 import { StateSchema } from '../types'
@@ -43,40 +45,36 @@ export class StateManager {
   
   /**
    * Get current loop position
-   * 
-   * Derives current position from existing state files.
-   * Returns undefined if no phase states exist.
+   *
+   * Searches .openpaul/ for phase state files.
+   * Returns undefined if no phase state files exist.
    */
   getCurrentPosition(): { phaseNumber: number; phase: LoopPhase } | undefined {
-    // Find all phase state files
-    const fs = require('fs')
-    const path = require('path')
-    const paulDir = path.join(this.projectRoot, '.paul')
-    
-    if (!fs.existsSync(paulDir)) {
-      return undefined
+    const stateFilePattern = /state-phase-\d+\.json/
+
+    const scanDir = (dir: string): string[] => {
+      if (!existsSync(dir)) return []
+      return readdirSync(dir)
+        .filter((f) => stateFilePattern.test(f))
+        .sort()
     }
-    
-    // Get all state-phase-N.json files
-    const files = fs.readdirSync(paulDir)
-      .filter((f: string) => f.match(/state-phase-\d+\.json/))
-      .sort()
-    
+
+    const openPaulDir = join(this.projectRoot, '.openpaul')
+    const files = scanDir(openPaulDir)
+
     if (files.length === 0) {
       return undefined
     }
-    
-    // Load the latest phase state
+
     const latestFile = files[files.length - 1]
-    // Files are filtered by the same regex pattern above, so match is guaranteed
     const match = latestFile.match(/state-phase-(\d+)\.json/)!
     const phaseNumber = parseInt(match[1], 10)
     const state = this.loadPhaseState(phaseNumber)
-    
+
     if (!state) {
       return undefined
     }
-    
+
     return { phaseNumber, phase: state.phase }
   }
   

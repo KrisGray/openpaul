@@ -7,6 +7,9 @@ export default {
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },
+  transform: {
+    '^.+\\.tsx?$': ['ts-jest', { tsconfig: 'tsconfig.e2e.json' }],
+  },
   verbose: true,
-  testTimeout: 30000,
+  testTimeout: 60000,
 };

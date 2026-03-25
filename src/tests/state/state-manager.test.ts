@@ -99,22 +99,22 @@ describe('StateManager', () => {
       expect(position).toBeUndefined()
     })
     
-    it('should return undefined when .paul directory exists but has no state files', () => {
-      // Create .paul directory with files that don't match the pattern
-      const paulDir = join(testDir, '.paul')
-      mkdirSync(paulDir)
-      writeFileSync(join(paulDir, 'other.json'), '{}')
-      writeFileSync(join(paulDir, 'config.json'), '{}')
+    it('should return undefined when .openpaul directory exists but has no state files', () => {
+      // Create .openpaul directory with files that don't match the pattern
+      const openPaulDir = join(testDir, '.openpaul')
+      mkdirSync(openPaulDir)
+      writeFileSync(join(openPaulDir, 'other.json'), '{}')
+      writeFileSync(join(openPaulDir, 'config.json'), '{}')
       
       const position = stateManager.getCurrentPosition()
       expect(position).toBeUndefined()
     })
     
     it('should return undefined when state file is corrupted', () => {
-      // Create .paul directory with corrupted state file
-      const paulDir = join(testDir, '.paul')
-      mkdirSync(paulDir)
-      writeFileSync(join(paulDir, 'state-phase-1.json'), 'invalid json')
+      // Create .openpaul directory with corrupted state file
+      const openPaulDir = join(testDir, '.openpaul')
+      mkdirSync(openPaulDir)
+      writeFileSync(join(openPaulDir, 'state-phase-1.json'), 'invalid json')
       
       const position = stateManager.getCurrentPosition()
       expect(position).toBeUndefined()

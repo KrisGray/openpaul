@@ -72,20 +72,26 @@ export class FileManager {
   }
   
   /**
-   * Get phase state file path
-   * 
-   * Pattern: .openpaul/state-phase-{N}.json (primary) or .paul/state-phase-{N}.json (fallback)
-   * Reads check .openpaul first, fall back to .paul for migration compatibility.
-   * Writes always go to .openpaul/.
+   * Get phase state file path for READS
+   * Checks .openpaul first, falls back to .paul for migration compatibility.
    */
-  private getPhaseStatePath(phaseNumber: number): string {
-    // Check .openpaul first (primary)
+  private getPhaseStateReadPath(phaseNumber: number): string {
     const openPaulPath = join(this.openPaulDir, `state-phase-${phaseNumber}.json`)
     if (existsSync(openPaulPath)) {
       return openPaulPath
     }
-    // Fall back to .paul for migration compatibility
-    return join(this.paulDir, `state-phase-${phaseNumber}.json`)
+    const paulPath = join(this.paulDir, `state-phase-${phaseNumber}.json`)
+    if (existsSync(paulPath)) {
+      return paulPath
+    }
+    return openPaulPath
+  }
+
+  /**
+   * Get phase state file path for WRITES — always .openpaul/
+   */
+  private getPhaseStateWritePath(phaseNumber: number): string {
+    return join(this.openPaulDir, `state-phase-${phaseNumber}.json`)
   }
   
   /**
@@ -120,15 +126,15 @@ export class FileManager {
    * Read phase state
    */
   readPhaseState(phaseNumber: number): State | null {
-    const filePath = this.getPhaseStatePath(phaseNumber)
+    const filePath = this.getPhaseStateReadPath(phaseNumber)
     return this.readJSON(filePath, StateSchema)
   }
   
   /**
-   * Write phase state with atomic writes
+   * Write phase state with atomic writes — always to .openpaul/
    */
   async writePhaseState(phaseNumber: number, state: State): Promise<void> {
-    const filePath = this.getPhaseStatePath(phaseNumber)
+    const filePath = this.getPhaseStateWritePath(phaseNumber)
     await this.writeJSON(filePath, state, StateSchema)
   }
   
@@ -136,7 +142,7 @@ export class FileManager {
    * Check if phase state exists
    */
   phaseStateExists(phaseNumber: number): boolean {
-    const filePath = this.getPhaseStatePath(phaseNumber)
+    const filePath = this.getPhaseStateReadPath(phaseNumber)
     return existsSync(filePath)
   }
   
@@ -150,65 +156,78 @@ export class FileManager {
   }
   
   /**
-   * Get model config file path
-   * 
-   * Pattern: .openpaul/model-config.json (primary) or .paul/model-config.json (fallback)
+   * Get model config path for READS — checks .openpaul first, falls back to .paul
    */
-  private getModelConfigPath(): string {
-    // Check .openpaul first (primary)
+  private getModelConfigReadPath(): string {
     const openPaulPath = join(this.openPaulDir, 'model-config.json')
     if (existsSync(openPaulPath)) {
       return openPaulPath
     }
-    // Fall back to .paul for migration compatibility
-    return join(this.paulDir, 'model-config.json')
+    const paulPath = join(this.paulDir, 'model-config.json')
+    if (existsSync(paulPath)) {
+      return paulPath
+    }
+    return openPaulPath
+  }
+
+  /**
+   * Get model config path for WRITES — always .openpaul/
+   */
+  private getModelConfigWritePath(): string {
+    return join(this.openPaulDir, 'model-config.json')
   }
   
   /**
    * Read model configuration
    */
   readModelConfig(): ModelConfigFile | null {
-    const filePath = this.getModelConfigPath()
+    const filePath = this.getModelConfigReadPath()
     return this.readJSON(filePath, ModelConfigFileSchema)
   }
   
   /**
-   * Write model configuration with atomic writes
+   * Write model configuration with atomic writes — always to .openpaul/
    */
   async writeModelConfig(config: ModelConfigFile): Promise<void> {
-    const filePath = this.getModelConfigPath()
+    const filePath = this.getModelConfigWritePath()
     await this.writeJSON(filePath, config, ModelConfigFileSchema)
   }
   
   /**
-   * Get plan file path
-   * 
-   * Pattern: .openpaul/phases/{phaseNumber}-{planId}-PLAN.json
-   * Note: phasesDir is set to .openpaul/phases, but reads check both locations
+   * Get plan path for READS — checks .openpaul/phases first, falls back to .paul/phases
    */
-  private getPlanPath(phaseNumber: number, planId: string): string {
-    // Check .openpaul/phases first (primary)
+  private getPlanReadPath(phaseNumber: number, planId: string): string {
     const openPaulPath = join(this.openPaulDir, 'phases', `${phaseNumber}-${planId}-PLAN.json`)
     if (existsSync(openPaulPath)) {
       return openPaulPath
     }
-    // Fall back to .paul/phases for migration compatibility
-    return join(this.paulDir, 'phases', `${phaseNumber}-${planId}-PLAN.json`)
+    const paulPath = join(this.paulDir, 'phases', `${phaseNumber}-${planId}-PLAN.json`)
+    if (existsSync(paulPath)) {
+      return paulPath
+    }
+    return openPaulPath
+  }
+
+  /**
+   * Get plan path for WRITES — always .openpaul/phases/
+   */
+  private getPlanWritePath(phaseNumber: number, planId: string): string {
+    return join(this.openPaulDir, 'phases', `${phaseNumber}-${planId}-PLAN.json`)
   }
   
   /**
    * Read plan
    */
   readPlan(phaseNumber: number, planId: string): Plan | null {
-    const filePath = this.getPlanPath(phaseNumber, planId)
+    const filePath = this.getPlanReadPath(phaseNumber, planId)
     return this.readJSON(filePath, PlanSchema)
   }
   
   /**
-   * Write plan with atomic writes
+   * Write plan with atomic writes — always to .openpaul/phases/
    */
   async writePlan(phaseNumber: number, planId: string, plan: Plan): Promise<void> {
-    const filePath = this.getPlanPath(phaseNumber, planId)
+    const filePath = this.getPlanWritePath(phaseNumber, planId)
     await this.writeJSON(filePath, plan, PlanSchema)
   }
   
@@ -216,7 +235,7 @@ export class FileManager {
    * Check if plan exists
    */
   planExists(phaseNumber: number, planId: string): boolean {
-    const filePath = this.getPlanPath(phaseNumber, planId)
+    const filePath = this.getPlanReadPath(phaseNumber, planId)
     return existsSync(filePath)
   }
   
@@ -230,33 +249,40 @@ export class FileManager {
   }
   
   /**
-   * Get summary file path
-   * 
-   * Pattern: .openpaul/phases/{phaseNumber}-{planId}-SUMMARY.json
+   * Get summary path for READS — checks .openpaul/phases first, falls back to .paul/phases
    */
-  private getSummaryPath(phaseNumber: number, planId: string): string {
-    // Check .openpaul/phases first (primary)
+  private getSummaryReadPath(phaseNumber: number, planId: string): string {
     const openPaulPath = join(this.openPaulDir, 'phases', `${phaseNumber}-${planId}-SUMMARY.json`)
     if (existsSync(openPaulPath)) {
       return openPaulPath
     }
-    // Fall back to .paul/phases for migration compatibility
-    return join(this.paulDir, 'phases', `${phaseNumber}-${planId}-SUMMARY.json`)
+    const paulPath = join(this.paulDir, 'phases', `${phaseNumber}-${planId}-SUMMARY.json`)
+    if (existsSync(paulPath)) {
+      return paulPath
+    }
+    return openPaulPath
+  }
+
+  /**
+   * Get summary path for WRITES — always .openpaul/phases/
+   */
+  private getSummaryWritePath(phaseNumber: number, planId: string): string {
+    return join(this.openPaulDir, 'phases', `${phaseNumber}-${planId}-SUMMARY.json`)
   }
   
   /**
    * Read summary
    */
   readSummary(phaseNumber: number, planId: string): Summary | null {
-    const filePath = this.getSummaryPath(phaseNumber, planId)
+    const filePath = this.getSummaryReadPath(phaseNumber, planId)
     return this.readJSON(filePath, SummarySchema)
   }
   
   /**
-   * Write summary with atomic writes
+   * Write summary with atomic writes — always to .openpaul/phases/
    */
   async writeSummary(phaseNumber: number, planId: string, summary: Summary): Promise<void> {
-    const filePath = this.getSummaryPath(phaseNumber, planId)
+    const filePath = this.getSummaryWritePath(phaseNumber, planId)
     await this.writeJSON(filePath, summary, SummarySchema)
   }
 }
