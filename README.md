@@ -75,10 +75,11 @@ No sprint ceremonies. No story points. No enterprise theater. Just a system that
 npx openpaul
 ```
 
-This scaffolds the `.openpaul/` directory with everything you need:
-- `PROJECT.md` — Project context and requirements
-- `ROADMAP.md` — Phase breakdown and milestones
-- `STATE.md` — Loop position and session state
+This creates two things:
+- `.openpaul/state.json` — project registry (name, version, timestamps)
+- `.opencode/` — OpenCode configuration and preset files
+
+Then run `/openpaul:init` inside OpenCode to initialize the loop state and create `PROJECT.md`, `ROADMAP.md`, `STATE.md`, and `phases/`.
 
 #### CLI Options
 
@@ -216,8 +217,9 @@ Here's a complete workflow example showing OpenPAUL in action:
 │                                                                 │
 │  npx openpaul                                                   │
 │                                                                 │
-│  Creates: .openpaul/ directory with PROJECT.md, ROADMAP.md,    │
-│  STATE.md, and phases/ folder                                   │
+│  Creates: .openpaul/state.json (project registry) and          │
+│  .opencode/ (OpenCode config). Then run /openpaul:init in       │
+│  OpenCode to create PROJECT.md, ROADMAP.md, STATE.md, phases/  │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -267,16 +269,13 @@ Here's a complete workflow example showing OpenPAUL in action:
 │                                                                 │
 │  /openpaul:unify                                                │
 │                                                                 │
-│  Creates SUMMARY.md:                                            │
-│  - What was built                                               │
+│  Writes .openpaul/phases/{N}-{plan}-SUMMARY.json with:         │
+│  - Task completion status (completed/skipped/failed)            │
 │  - Plan vs actual comparison                                    │
-│  - Decisions made                                               │
-│  - Issues deferred                                              │
+│  - Criteria results                                             │
 │                                                                 │
-│  Updates STATE.md with:                                         │
-│  - Current position                                             │
-│  - Accumulated decisions                                        │
-│  - Next phase/plan                                              │
+│  Advances state-phase-N.json to UNIFY, then readies            │
+│  next phase for PLAN. Updates STATE.md if it exists.           │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -536,10 +535,10 @@ Execute the approved plan:
 
 Close the loop (required!):
 
-- Create SUMMARY.md documenting what was built
+- Write `{N}-{plan}-SUMMARY.json` with task results and criteria
 - Compare plan vs actual
-- Record decisions and deferred issues
-- Update STATE.md
+- Advance loop state to ready for next PLAN
+- Update STATE.md (if present)
 
 **Never skip UNIFY.** Every plan needs closure. This is what separates structured development from chaos.
 
@@ -621,25 +620,32 @@ OpenPAUL provides 26 commands organized by purpose. Run `/openpaul:help` for the
 
 ### Project Structure
 
+After `npx openpaul` + `/openpaul:init`:
+
 ```
 .openpaul/
-├── PROJECT.md           # Project context and requirements
-├── ROADMAP.md           # Phase breakdown and milestones
-├── STATE.md             # Loop position and session state
-├── config.md            # Optional integrations
-├── SPECIAL-FLOWS.md     # Optional skill requirements
+├── state.json             # Project registry (npx openpaul)
+├── model-config.json      # Model configuration (/openpaul:init)
+├── state-phase-N.json     # Loop state per phase (/openpaul:init)
+├── PROJECT.md             # Project context (/openpaul:init)
+├── ROADMAP.md             # Phase structure (/openpaul:init)
+├── STATE.md               # Loop position tracker (/openpaul:init)
+├── config.md              # Optional integrations
+├── SPECIAL-FLOWS.md       # Optional skill requirements
+├── HANDOFF.md             # Session handoff (/openpaul:pause)
 └── phases/
-    ├── 01-foundation/
-    │   ├── 01-01-PLAN.md
-    │   └── 01-01-SUMMARY.md
-    └── 02-features/
-        ├── 02-01-PLAN.md
-        └── 02-01-SUMMARY.md
+    ├── 1-01-PLAN.json     # Plan (/openpaul:plan)
+    └── 1-01-SUMMARY.json  # Summary (/openpaul:unify)
+.opencode/
+├── opencode.json          # OpenCode config (npx openpaul)
+└── (preset files)         # Commands, rules, agents
 ```
 
 ### State Management
 
-**STATE.md** tracks:
+Machine-readable loop state lives in **`state-phase-N.json`** (one per phase), tracking the current loop position (PLAN/APPLY/UNIFY), active plan ID, and timestamps.
+
+**`STATE.md`** (created by `/openpaul:init`) is the human-readable companion:
 
 - Current phase and plan
 - Loop position (PLAN/APPLY/UNIFY markers)
@@ -647,53 +653,26 @@ OpenPAUL provides 26 commands organized by purpose. Run `/openpaul:help` for the
 - Accumulated decisions
 - Blockers and deferred issues
 
-When you resume work, `/openpaul:resume` reads STATE.md and suggests exactly ONE next action. No decision fatigue.
+When you resume work, `/openpaul:resume` loads your saved session from `.openpaul/SESSIONS/` and `HANDOFF.md`, then suggests exactly ONE next action. No decision fatigue.
 
-### PLAN.md Structure
+### Plan Structure
 
-```markdown
----
-phase: 01-foundation
-plan: 01
-type: execute
-autonomous: true
----
+Plans are created via `/openpaul:plan` and stored as JSON in `.openpaul/phases/`:
 
-<objective>
-Goal, Purpose, Output
-</objective>
-
-<context>
-@-references to relevant files
-</context>
-
-<acceptance_criteria>
-
-## AC-1: Feature Works
-
-Given [precondition]
-When [action]
-Then [outcome]
-</acceptance_criteria>
-
-<tasks>
-<task type="auto">
-  <name>Create login endpoint</name>
-  <files>src/api/auth/login.ts</files>
-  <action>Implementation details...</action>
-  <verify>curl command returns 200</verify>
-  <done>AC-1 satisfied</done>
-</task>
-</tasks>
-
-<boundaries>
-## DO NOT CHANGE
-- database/migrations/*
-- src/lib/auth.ts
-</boundaries>
+```
+/openpaul:plan --phase 1 --plan 01 \
+  --criteria "AC-1: login returns 200" \
+  --boundaries "DO NOT change database/migrations/*" \
+  --tasks '[{
+    "name": "Create login endpoint",
+    "files": ["src/api/auth/login.ts"],
+    "action": "Implement POST /auth/login with JWT response",
+    "verify": "curl -X POST /auth/login returns 200",
+    "done": "AC-1 satisfied"
+  }]'
 ```
 
-Every task has: files, action, verify, done. If you can't specify all four, the task is too vague.
+Stored at `.openpaul/phases/1-01-PLAN.json`. Every task has: `files`, `action`, `verify`, `done`. If you can't specify all four, the task is too vague.
 
 ### OpenCARL Integration
 
@@ -809,7 +788,8 @@ APPLY blocks until required skills are confirmed loaded.
 
 **Loop position seems wrong?**
 
-- Check `.openpaul/STATE.md` for current state
+- Check `.openpaul/state-phase-N.json` for machine-readable loop state (PLAN/APPLY/UNIFY)
+- Check `.openpaul/STATE.md` for human-readable position (if initialized via `/openpaul:init`)
 - Run `/openpaul:progress` for guided next action
 
 **Resuming after a break?**

@@ -222,7 +222,8 @@ footer a { color: var(--accent); }
 </ul>
 <h2>Loop position seems wrong?</h2>
 <ul>
-<li>Check .openpaul/STATE.md for current state</li>
+<li>Check <code>.openpaul/state-phase-N.json</code> for machine-readable loop state (PLAN/APPLY/UNIFY)</li>
+<li>Check <code>.openpaul/STATE.md</code> for human-readable loop position (if initialized via <code>/openpaul:init</code>)</li>
 <li>Run /openpaul:progress for guided next action</li>
 </ul>
 <h2>Resuming after a break?</h2>
@@ -243,9 +244,10 @@ footer a { color: var(--accent); }
 </ol>
 <h2>State file corrupted?</h2>
 <ol>
-<li>Backup .openpaul/STATE.md</li>
-<li>Review for missing required fields</li>
-<li>Run npx openpaul --force to reinitialize (destructive)</li>
+<li>Backup <code>.openpaul/state-phase-N.json</code> (the JSON loop state files)</li>
+<li>Backup <code>.openpaul/STATE.md</code> if it exists</li>
+<li>Run <code>/openpaul:init --force</code> in OpenCode to reinitialize loop state</li>
+<li>Or run <code>npx openpaul --force</code> to re-scaffold the project registry and <code>.opencode/</code> preset files</li>
 </ol>
 <h2>Plan execution failed?</h2>
 <ol>

@@ -2,154 +2,112 @@
 
 ## Purpose
 
-PLAN.md IS the executable prompt. It contains everything needed to execute a phase: objective, context, acceptance criteria, tasks, boundaries, verification, and output specification.
+Plans are created via `/openpaul:plan` and stored as JSON at `.openpaul/phases/{N}-{planId}-PLAN.json`.
 
-**Core principle:** A plan is Claude-executable when Claude can read the PLAN.md and immediately start implementing without asking clarifying questions.
+**Core principle:** A plan is executable when every task has a precise `action` instruction, a measurable `verify` step, and a clear `done` criterion. If you can't specify all three, the task is too vague.
 
-If Claude has to guess, interpret, or make assumptions - the task is too vague.
+## Command
 
-## Frontmatter
-
-Every PLAN.md starts with YAML frontmatter:
-
-```yaml
----
-phase: XX-name
-plan: NN
-type: execute
-wave: N
-depends_on: []
-files_modified: []
-autonomous: true
----
+```
+/openpaul:plan --phase N --plan NN \
+  --criteria "AC-1: [expected behavior]" \
+  --boundaries "DO NOT change [protected areas]" \
+  --tasks '[{
+    "name": "Task name",
+    "files": ["path/to/file.ts"],
+    "action": "Specific implementation instructions",
+    "verify": "How to test completion",
+    "done": "AC-N satisfied"
+  }]'
 ```
 
-| Field | Required | Purpose |
-|-------|----------|---------|
-| `phase` | Yes | Phase identifier (e.g., `02-rules-layer`) |
-| `plan` | Yes | Plan number within phase (e.g., `01`, `02`) |
-| `type` | Yes | `execute` for standard, `tdd` for test-driven, `research` for exploration |
-| `wave` | Yes | Execution wave number (pre-computed at plan time) |
-| `depends_on` | Yes | Array of plan IDs this plan requires |
-| `files_modified` | Yes | Files this plan touches (for conflict detection) |
-| `autonomous` | Yes | `true` if no checkpoints, `false` if has checkpoints |
+| Parameter | Required | Description |
+|-----------|----------|-------------|
+| `--phase` | Yes | Phase number (integer) |
+| `--plan` | Yes | Plan identifier (e.g., `01`, `02`) |
+| `--criteria` | No | Acceptance criterion — repeat for multiple |
+| `--boundaries` | No | What NOT to change — repeat for multiple |
+| `--tasks` | Yes | JSON array of 1–5 task objects |
+| `--requirements` | No | Requirement IDs satisfied by this plan |
 
-## Plan Structure
+## Plan JSON Structure
 
-```markdown
----
-[frontmatter]
----
-
-<objective>
-## Goal
-[What this plan accomplishes - specific, measurable]
-
-## Purpose
-[Why this matters for the project]
-
-## Output
-[What artifacts will be created/modified]
-</objective>
-
-<context>
-@.openpaul/PROJECT.md
-@.openpaul/ROADMAP.md
-@.openpaul/STATE.md
-@relevant/source/files.ts
-</context>
-
-<acceptance_criteria>
-## AC-1: [Criterion Name]
-Given [precondition]
-When [action]
-Then [expected outcome]
-</acceptance_criteria>
-
-<tasks>
-[Task definitions]
-</tasks>
-
-<boundaries>
-## DO NOT CHANGE
-[Protected files/patterns]
-
-## SCOPE LIMITS
-[What's explicitly out of scope]
-</boundaries>
-
-<verification>
-[Overall phase checks]
-</verification>
-
-<success_criteria>
-[Measurable completion criteria]
-</success_criteria>
-
-<output>
-[SUMMARY.md specification]
-</output>
+```json
+{
+  "phase": "1",
+  "plan": "01",
+  "type": "execute",
+  "wave": 1,
+  "autonomous": true,
+  "criteria": ["AC-1: login returns 200 with JWT cookie"],
+  "boundaries": ["DO NOT change database/migrations/*"],
+  "files_modified": ["src/api/auth/login.ts"],
+  "tasks": [
+    {
+      "type": "auto",
+      "name": "Create login endpoint",
+      "files": ["src/api/auth/login.ts"],
+      "action": "POST endpoint accepting {email,password}...",
+      "verify": "curl -X POST /auth/login returns 200",
+      "done": "AC-1 satisfied"
+    }
+  ]
+}
 ```
 
 ## Task Anatomy
 
-Every `auto` task has four required fields:
+Every task has four required fields:
 
 ### files
 **What it is:** Exact file paths created or modified.
 
-```xml
-<!-- GOOD -->
-<files>src/app/api/auth/login/route.ts, prisma/schema.prisma</files>
+```json
+// GOOD
+"files": ["src/app/api/auth/login/route.ts", "prisma/schema.prisma"]
 
-<!-- BAD -->
-<files>the auth files, relevant components</files>
+// BAD
+"files": ["the auth files", "relevant components"]
 ```
 
 ### action
 **What it is:** Specific implementation instructions, including what to avoid and WHY.
 
-```xml
-<!-- GOOD -->
-<action>
-  Create POST endpoint accepting {email, password}.
-  Query User by email, compare password with bcrypt.
-  On match, create JWT with jose library (15-min expiry).
-  Return 200. On mismatch, return 401.
-  Avoid: jsonwebtoken (CommonJS issues with Edge runtime)
-</action>
+```json
+// GOOD
+"action": "Create POST endpoint accepting {email, password}. Query User by email, compare password with bcrypt. On match, create JWT with jose library (15-min expiry). Return 200. On mismatch, return 401. Avoid: jsonwebtoken (CommonJS issues with Edge runtime)"
 
-<!-- BAD -->
-<action>Add authentication</action>
+// BAD
+"action": "Add authentication"
 ```
 
 ### verify
 **What it is:** How to prove the task is complete.
 
-```xml
-<!-- GOOD -->
-<verify>curl -X POST localhost:3000/api/auth/login returns 200 with Set-Cookie header</verify>
+```json
+// GOOD
+"verify": "curl -X POST localhost:3000/api/auth/login returns 200 with Set-Cookie header"
 
-<!-- BAD -->
-<verify>It works</verify>
+// BAD
+"verify": "It works"
 ```
 
 ### done
-**What it is:** Acceptance criteria - links to AC-N for traceability.
+**What it is:** Acceptance criteria — links to AC-N for traceability.
 
-```xml
-<!-- GOOD -->
-<done>AC-1 satisfied: Valid credentials return 200 + JWT cookie</done>
+```json
+// GOOD
+"done": "AC-1 satisfied: Valid credentials return 200 + JWT cookie"
 
-<!-- BAD -->
-<done>Authentication is complete</done>
+// BAD
+"done": "Authentication is complete"
 ```
 
-**If you can't specify Files + Action + Verify + Done, the task is too vague.**
+**If you can't specify files + action + verify + done, the task is too vague.**
 
 ## Acceptance Criteria Format
 
-Use Given/When/Then (BDD) format:
+Pass via `--criteria`. Use Given/When/Then (BDD) format:
 
 ```gherkin
 Given [precondition / initial state]
@@ -161,54 +119,41 @@ Then [expected outcome]
 - Each criterion should be independently testable
 - Include error states and edge cases
 - Avoid implementation details (describe behavior, not code)
-- Link tasks to criteria via `<done>AC-N satisfied</done>`
+- Link tasks to criteria via `"done": "AC-N satisfied"`
 
-## Boundaries Section
+## Boundaries
 
-OpenPAUL plans include explicit boundaries:
+Pass via `--boundaries`. Prevents scope creep:
 
-```markdown
-<boundaries>
-## DO NOT CHANGE
-- database/migrations/* (schema locked for this phase)
-- src/lib/auth.ts (auth system stable)
-
-## SCOPE LIMITS
-- This plan creates API only - no UI
-- Do not add new dependencies
-</boundaries>
 ```
-
-Boundaries prevent scope creep by making off-limits areas explicit.
+/openpaul:plan ... \
+  --boundaries "DO NOT change database/migrations/* — schema locked for this phase" \
+  --boundaries "DO NOT add new npm dependencies"
+```
 
 ## Specificity Levels
 
 ### Too Vague
-```xml
-<task type="auto">
-  <name>Add authentication</name>
-  <files>???</files>
-  <action>Implement auth</action>
-  <verify>???</verify>
-  <done>Users can authenticate</done>
-</task>
+```json
+{
+  "name": "Add authentication",
+  "files": [],
+  "action": "Implement auth",
+  "verify": "???",
+  "done": "Users can authenticate"
+}
 ```
 Claude: "How? What type? What library? Where?"
 
 ### Just Right
-```xml
-<task type="auto">
-  <name>Create login endpoint with JWT</name>
-  <files>src/app/api/auth/login/route.ts</files>
-  <action>
-    POST endpoint accepting {email, password}.
-    Query User by email, compare password with bcrypt.
-    On match, create JWT with jose (15-min expiry).
-    Return 200. On mismatch, return 401.
-  </action>
-  <verify>curl -X POST returns 200 with Set-Cookie header</verify>
-  <done>AC-1 satisfied: Valid credentials → 200 + cookie</done>
-</task>
+```json
+{
+  "name": "Create login endpoint with JWT",
+  "files": ["src/app/api/auth/login/route.ts"],
+  "action": "POST endpoint accepting {email, password}. Query User by email, compare password with bcrypt. On match, create JWT with jose (15-min expiry). Return 200. On mismatch, return 401.",
+  "verify": "curl -X POST returns 200 with Set-Cookie header",
+  "done": "AC-1 satisfied: Valid credentials → 200 + cookie"
+}
 ```
 Claude can implement immediately.
 
@@ -217,13 +162,12 @@ Writing the actual code in the plan. Trust Claude to implement from clear instru
 
 ## Sizing Guidance
 
-**Good plan size:** 2-3 tasks, ~50% context usage, single concern.
+**Good plan size:** 2–3 tasks, single concern. Maximum 5 tasks per plan.
 
 **When to split into multiple plans:**
 - Different subsystems (auth vs API vs UI)
 - More than 3 tasks
-- Risk of context overflow
-- TDD candidates (separate plans)
+- TDD candidates (separate red/green/refactor plans)
 
 **Prefer vertical slices:**
 ```
@@ -250,14 +194,5 @@ AVOID:  Plan 01 = All models
 - "Use the standard approach"
 - "Follow best practices"
 - "Like the other endpoints"
-
-**Reflexive dependencies:**
-```yaml
-# BAD - chaining just because sequential
-depends_on: ["01-01"]  # Plan 02 doesn't actually need 01's output
-
-# GOOD - genuine dependency
-depends_on: ["01-01"]  # Plan 02 imports User type from 01-01
-```
 
 </plan_format>

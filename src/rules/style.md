@@ -35,7 +35,7 @@ Exception: SUMMARY.md deviations section, git commits (their purpose IS tracking
 | Bash variables | CAPS_UNDERSCORES | `PHASE_ARG` |
 | Type attributes | colon separator | `type="checkpoint:human-verify"` |
 | Phase directories | `NN-kebab-name` | `02-rules-layer` |
-| Plan files | `NN-NN-PLAN.md` | `02-01-PLAN.md` |
+| Plan files | `N-NN-PLAN.json` | `2-01-PLAN.json` |
 
 ## XML Conventions
 
@@ -91,9 +91,9 @@ OpenPAUL uses explicit loop phase names:
 
 | Phase | Purpose | Artifacts |
 |-------|---------|-----------|
-| PLAN | Define work, acceptance criteria | PLAN.md |
-| APPLY | Execute approved plan | Code changes, APPLY-LOG |
-| UNIFY | Reconcile plan vs actual | SUMMARY.md, STATE.md updates |
+| PLAN | Define work, acceptance criteria | `{N}-{plan}-PLAN.json` |
+| APPLY | Execute approved plan | Code changes |
+| UNIFY | Reconcile plan vs actual | `{N}-{plan}-SUMMARY.json`, `state-phase-N.json` |
 
 Always reference the current loop position when relevant.
 

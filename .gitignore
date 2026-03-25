@@ -1,5 +1,7 @@
 # PAUL instance data (user's own usage)
 .paul/
+.openpaul/
+.planning/
 
 # Build output
 dist/

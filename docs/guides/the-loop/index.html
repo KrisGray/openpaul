@@ -222,80 +222,44 @@ footer a { color: var(--accent); }
 <hr>
 <h2>PLAN</h2>
 <p>Create an executable plan with structured sections.</p>
-<h3>Structure</h3>
-<pre><code class="language-markdown">---
-phase: 01-foundation
-plan: 01
-type: execute
-autonomous: true
----
-
-&lt;objective&gt;
-What you&#39;re building and why.
-&lt;/objective&gt;
-
-&lt;context&gt;
-@-references to relevant files.
-&lt;/context&gt;
-
-&lt;acceptance_criteria&gt;
-
-## AC-1: Feature Works
-
-Given [precondition]
-When [action]
-Then [outcome]
-&lt;/acceptance_criteria&gt;
-
-&lt;tasks&gt;
-&lt;task type=&quot;auto&quot;&gt;
-  &lt;name&gt;Task name&lt;/name&gt;
-  &lt;files&gt;path/to/file.ts&lt;/files&gt;
-  &lt;action&gt;Implementation details...&lt;/action&gt;
-  &lt;verify&gt;How to verify completion&lt;/verify&gt;
-  &lt;done&gt;AC-1 satisfied&lt;/done&gt;
-&lt;/task&gt;
-&lt;/tasks&gt;
-
-&lt;boundaries&gt;
-## DO NOT CHANGE
-- database/migrations/*
-- src/lib/auth.ts
-&lt;/boundaries&gt;
+<h3>Command</h3>
+<pre><code>/openpaul:plan --phase 1 --plan 01 \
+  --criteria &quot;AC-1: login returns 200 with JWT cookie&quot; \
+  --boundaries &quot;DO NOT change database/migrations/*&quot; \
+  --tasks &#39;[{
+    &quot;name&quot;: &quot;Create login endpoint&quot;,
+    &quot;files&quot;: [&quot;src/api/auth/login.ts&quot;],
+    &quot;action&quot;: &quot;POST endpoint accepting {email,password}, validate with bcrypt, return JWT&quot;,
+    &quot;verify&quot;: &quot;curl -X POST /auth/login returns 200 with Set-Cookie header&quot;,
+    &quot;done&quot;: &quot;AC-1 satisfied&quot;
+  }]&#39;
 </code></pre>
-<h3>Key Sections</h3>
+<p>Stores the plan at <code>.openpaul/phases/1-01-PLAN.json</code>. Plans support 1–5 tasks; add more plans for larger work.</p>
+<h3>Key Parameters</h3>
 <table>
 <thead>
 <tr>
-<th>Section</th>
+<th>Parameter</th>
 <th>Purpose</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>objective</td>
-<td>What and why</td>
+<td>--criteria</td>
+<td>Acceptance criterion — repeat for multiple (Given/When/Then)</td>
 </tr>
 <tr>
-<td>context</td>
-<td>File references (@-syntax)</td>
+<td>--tasks</td>
+<td>JSON array of tasks — each needs name, action, verify, done</td>
 </tr>
 <tr>
-<td>acceptance_criteria</td>
-<td>Given/When/Then definitions</td>
+<td>--boundaries</td>
+<td>What NOT to change — repeat for multiple</td>
 </tr>
 <tr>
-<td>tasks</td>
-<td>Sequential actions with verification</td>
-</tr>
-<tr>
-<td>boundaries</td>
-<td>What NOT to change</td>
+<td>--requirements</td>
+<td>Optional requirement IDs satisfied by this plan</td>
 </tr>
 </tbody></table>
-<h3>How to Create</h3>
-<pre><code>/openpaul:plan
-</code></pre>
-<p>OpenPAUL prompts you to describe what you want to build, then generates a structured PLAN.md.</p>
 <hr>
 <h2>APPLY</h2>
 <p>Execute the approved plan.</p>
@@ -318,27 +282,25 @@ YOU: approved
 <h3>How to Execute</h3>
 <pre><code>/openpaul:apply
 </code></pre>
-<p>Or specify a path:</p>
-<pre><code>/openpaul:apply .openpaul/phases/01-foundation/01-01-PLAN.md
+<p>Or specify phase and plan explicitly:</p>
+<pre><code>/openpaul:apply --phase 1 --plan 01
 </code></pre>
 <hr>
 <h2>UNIFY</h2>
 <p>Close the loop (required!).</p>
 <h3>What UNIFY Does</h3>
 <ol>
-<li><p><strong>Creates SUMMARY.md</strong></p>
+<li><p><strong>Writes <code>{N}-{plan}-SUMMARY.json</code></strong></p>
 <ul>
-<li>What was built</li>
+<li>Task completion status (completed/skipped/failed)</li>
 <li>Plan vs actual comparison</li>
-<li>Decisions made</li>
-<li>Issues deferred</li>
+<li>Criteria results (pass/fail)</li>
 </ul>
 </li>
-<li><p><strong>Updates STATE.md</strong></p>
+<li><p><strong>Advances loop state</strong></p>
 <ul>
-<li>Current position</li>
-<li>Accumulated decisions</li>
-<li>Next phase/plan</li>
+<li>Updates <code>state-phase-N.json</code> to UNIFY, then readies next phase</li>
+<li>Updates <code>STATE.md</code> if present</li>
 </ul>
 </li>
 <li><p><strong>Logs Decisions</strong></p>

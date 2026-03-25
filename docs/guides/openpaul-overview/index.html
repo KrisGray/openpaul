@@ -307,19 +307,22 @@ Decisions logged for future sessions
 </ul>
 <p>For implementation, OpenPAUL keeps everything in-session.</p>
 <h2>File Structure</h2>
+<p>After <code>npx openpaul</code> + <code>/openpaul:init</code>:</p>
 <pre><code>.openpaul/
-├── PROJECT.md           # Project context and requirements
-├── ROADMAP.md           # Phase breakdown and milestones
-├── STATE.md             # Loop position and session state
-├── config.md            # Optional integrations
-├── SPECIAL-FLOWS.md     # Optional skill requirements
+├── state.json             # Project registry (created by npx openpaul)
+├── model-config.json      # Model configuration (created by /openpaul:init)
+├── state-phase-N.json     # Loop state per phase (created by /openpaul:init)
+├── PROJECT.md             # Project context (created by /openpaul:init)
+├── ROADMAP.md             # Phase structure (created by /openpaul:init)
+├── STATE.md               # Loop position tracker (created by /openpaul:init)
+├── config.md              # Optional integrations
+├── SPECIAL-FLOWS.md       # Optional skill requirements
 └── phases/
-    ├── 01-foundation/
-    │   ├── 01-01-PLAN.md
-    │   └── 01-01-SUMMARY.md
-    └── 02-features/
-        ├── 02-01-PLAN.md
-        └── 02-01-SUMMARY.md
+    ├── 1-01-PLAN.json     # Plan from /openpaul:plan
+    └── 1-01-SUMMARY.json  # Summary from /openpaul:unify
+.opencode/
+├── opencode.json          # OpenCode config (created by npx openpaul)
+└── (preset files)         # Commands, rules, agents
 </code></pre>
 <h2>Quick Examples</h2>
 <h3>Initialize a Project</h3>

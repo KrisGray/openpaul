@@ -22,7 +22,7 @@ Explain the semantics of OpenPAUL's three loop phases: PLAN, APPLY, UNIFY. Every
 **Purpose:** Define what will be built, how it will be verified, and what's out of scope.
 
 **Artifacts Created:**
-- `{phase}-{plan}-PLAN.md` in `.openpaul/phases/{phase-name}/`
+- `.openpaul/phases/{phase}-{plan}-PLAN.json`
 
 **Activities:**
 1. Analyze requirements and context
@@ -38,9 +38,9 @@ Explain the semantics of OpenPAUL's three loop phases: PLAN, APPLY, UNIFY. Every
 - ROADMAP indicates this phase is next
 
 **Exit Condition:**
-- PLAN.md created with all required sections
+- `{phase}-{plan}-PLAN.json` created with all required sections
 - User has approved the plan
-- STATE.md updated to show "ready for APPLY"
+- `state-phase-N.json` updated to PLAN phase
 
 **Loop Position:**
 ```
@@ -67,8 +67,8 @@ PLAN ──▶ APPLY ──▶ UNIFY
 4. Track deviations from plan
 
 **Entry Condition:**
-- PLAN.md exists and is approved
-- STATE.md shows loop position at PLAN complete
+- `{phase}-{plan}-PLAN.json` exists and is approved
+- `state-phase-N.json` shows loop position at PLAN
 
 **Exit Condition:**
 - All tasks completed (or blocked with documentation)
@@ -86,8 +86,9 @@ PLAN ──▶ APPLY ──▶ UNIFY
 **Purpose:** Reconcile what was planned vs. what was built. Close the loop.
 
 **Artifacts Created:**
-- `{phase}-{plan}-SUMMARY.md` in `.openpaul/phases/{phase-name}/`
-- Updated `STATE.md`
+- `.openpaul/phases/{phase}-{plan}-SUMMARY.json`
+- Updated `state-phase-N.json`
+- Updated `STATE.md` (if present)
 - Updated `ROADMAP.md` (if phase complete)
 
 **Activities:**
@@ -95,18 +96,16 @@ PLAN ──▶ APPLY ──▶ UNIFY
 2. Document what was built (files, lines)
 3. Record acceptance criteria results (PASS/FAIL)
 4. Note any deviations and why
-5. Update STATE.md:
-   - Loop position
-   - Progress percentages
-   - Session continuity
-6. Update ROADMAP.md if phase is complete
+5. Advance `state-phase-N.json` to UNIFY, then ready next phase for PLAN
+6. Update `STATE.md` if present
+7. Update ROADMAP.md if phase is complete
 
 **Entry Condition:**
 - APPLY phase complete (all tasks done or documented blockers)
 
 **Exit Condition:**
-- SUMMARY.md created with results
-- STATE.md updated with new position
+- `{phase}-{plan}-SUMMARY.json` created with results
+- `state-phase-N.json` advanced to UNIFY
 - Loop closed, ready for next PLAN
 
 **Loop Position:**
@@ -143,7 +142,7 @@ Why: Plans may have incorrect assumptions. Approval catches issues early.
 "Tasks done. Moving to next phase."
 
 # GOOD
-"Tasks done. Creating SUMMARY.md and updating STATE.md."
+"Tasks done. Creating SUMMARY.json and advancing state."
 ```
 Why: No UNIFY = no record of what was built = lost traceability.
 
@@ -167,11 +166,11 @@ Validation:
 - [ ] Deviations noted
 
 ### UNIFY → PLAN (next)
-Trigger: SUMMARY.md created, STATE.md updated
+Trigger: SUMMARY.json created, state-phase-N.json advanced
 
 Validation:
-- [ ] SUMMARY.md has AC results
-- [ ] STATE.md reflects new position
+- [ ] SUMMARY.json has AC results
+- [ ] `state-phase-N.json` reflects new position
 - [ ] ROADMAP.md updated if phase complete
 
 ## Visual Loop Position Format

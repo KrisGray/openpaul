@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Python Api Tutorial | OpenPAUL</title>
+  <title>Python API Tutorial | OpenPAUL</title>
   <meta name="description" content="OpenPAUL - Plan-Apply-Unify Loop for structured AI-assisted development">
   <style>
 :root {
@@ -205,7 +205,7 @@ footer a { color: var(--accent); }
 
   <main class="container">
     <div class="page-title">
-      <h1>Python Api Tutorial</h1>
+      <h1>Python API Tutorial</h1>
     </div>
     <div class="content">
       <h1>Python API Project Tutorial</h1>
@@ -214,139 +214,107 @@ footer a { color: var(--accent); }
 <ul>
 <li>Python client for HGNC REST API (<code>rest.genenames.org</code>)</li>
 <li>NCBI Gene API integration</li>
-<li>Full pytest test suite with mocks</li>
+<li>Full pytest test suite with pytest-mock</li>
 <li>Test-driven development workflow with structured planning</li>
 </ul>
 <p><strong>Prerequisites:</strong></p>
 <ul>
 <li>Python 3.10+</li>
-<li>pytest installed</li>
+<li><a href="https://docs.astral.sh/uv/">uv</a> package manager</li>
+<li>OpenCode (for running <code>/openpaul:</code> commands)</li>
 <li>Basic understanding of REST APIs</li>
 </ul>
 <hr>
-<h2>Step 1: Initialize OpenPAUL</h2>
-<pre><code class="language-bash"># Create project directory
+<h2>Step 1: Initialize the Project</h2>
+<pre><code class="language-bash"># Create and initialize the project
 mkdir gene-api-client
 cd gene-api-client
+uv init
 
-# Initialize Python project
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+# Add dependencies
+uv add pytest pytest-mock requests
 
-# Install dependencies
-pip install pytest pytest-mock requests
-
-# Initialize OpenPAUL
+# Scaffold OpenPAUL
 npx openpaul
 </code></pre>
-<p>This creates the <code>.openpaul/</code> directory with:</p>
+<p><code>npx openpaul</code> creates two things:</p>
 <ul>
-<li><code>PROJECT.md</code> — Project context</li>
-<li><code>ROADMAP.md</code> — Phase breakdown</li>
-<li><code>STATE.md</code> — Loop position</li>
+<li><code>.openpaul/state.json</code> — project registry (name, version, timestamps)</li>
+<li><code>.opencode/</code> — OpenCode configuration and preset files</li>
 </ul>
+<p>It does <strong>not</strong> create <code>PROJECT.md</code>, <code>ROADMAP.md</code>, or <code>STATE.md</code> — those are created in the next step.</p>
 <hr>
-<h2>Step 2: Create the Roadmap</h2>
-<p>Open <code>.openpaul/ROADMAP.md</code> and define your phases:</p>
-<pre><code class="language-markdown"># Roadmap
-
-## Phase 1: HGNC Client
-Implement the HGNC REST API client with TDD.
-
-## Phase 2: NCBI Integration
-Integrate NCBI Gene API using entrez_id from HGNC.
-
-## Phase 3: CLI Tool
-Create command-line interface for gene lookups.
+<h2>Step 2: Initialize OpenPAUL in OpenCode</h2>
+<p>Open the project in OpenCode, then run:</p>
+<pre><code>/openpaul:init
 </code></pre>
+<p>This initializes the loop state and starts a brief conversation. OpenPAUL asks two questions:</p>
+<blockquote>
+<p>&quot;What&#39;s the core value this project delivers?&quot;</p>
+<p>&quot;What are you building? (1-2 sentences)&quot;</p>
+</blockquote>
+<p>Example answers:</p>
+<ul>
+<li>Core value: &quot;Developers can look up gene metadata by HGNC ID in a single function call&quot;</li>
+<li>Description: &quot;A Python client library for querying the HGNC and NCBI Gene REST APIs&quot;</li>
+</ul>
+<p>After the conversation, OpenPAUL creates:</p>
+<ul>
+<li><code>.openpaul/model-config.json</code> — model configuration</li>
+<li><code>.openpaul/state-phase-1.json</code> — initial loop state</li>
+<li><code>.openpaul/PROJECT.md</code> — project context (from conversation)</li>
+<li><code>.openpaul/ROADMAP.md</code> — phase structure (skeleton for planning)</li>
+<li><code>.openpaul/STATE.md</code> — loop position tracker</li>
+<li><code>.openpaul/phases/</code> — directory for plans and summaries</li>
+</ul>
+<p>You can now edit <code>.openpaul/ROADMAP.md</code> to define your phases, or leave it for the planner to fill in.</p>
 <hr>
 <h2>Step 3: PLAN — Create First Plan</h2>
-<pre><code>/openpaul:plan
+<p>Run the plan command with structured parameters. OpenPAUL stores the plan as a JSON file in <code>.openpaul/phases/</code>.</p>
+<pre><code>/openpaul:plan --phase 1 --plan 01 \
+  --criteria &quot;fetch_by_hgnc_id returns gene data dict with symbol, name, entrez_id&quot; \
+  --criteria &quot;network errors raise RequestException with context&quot; \
+  --criteria &quot;all tests pass with 100% coverage of client code&quot; \
+  --tasks &#39;[
+    {&quot;name&quot;: &quot;Write failing test for HGNC fetch&quot;, &quot;files&quot;: [&quot;tests/test_hgnc_client.py&quot;], &quot;action&quot;: &quot;Create TestHGNCClient class using mocker fixture to patch requests.get&quot;, &quot;verify&quot;: &quot;pytest tests/test_hgnc_client.py -v (expect failure — no implementation yet)&quot;, &quot;done&quot;: &quot;Test file exists and test fails&quot;},
+    {&quot;name&quot;: &quot;Implement HGNCClient&quot;, &quot;files&quot;: [&quot;src/hgnc_client.py&quot;], &quot;action&quot;: &quot;Implement fetch_by_hgnc_id with proper headers, timeout, and error handling&quot;, &quot;verify&quot;: &quot;pytest tests/test_hgnc_client.py -v&quot;, &quot;done&quot;: &quot;AC-1 and AC-2 satisfied&quot;},
+    {&quot;name&quot;: &quot;Add edge case tests&quot;, &quot;files&quot;: [&quot;tests/test_hgnc_client.py&quot;], &quot;action&quot;: &quot;Test not-found (empty docs), network timeout, and malformed response&quot;, &quot;verify&quot;: &quot;pytest tests/test_hgnc_client.py --cov=src -v&quot;, &quot;done&quot;: &quot;AC-3 satisfied — 100% coverage&quot;}
+  ]&#39;
 </code></pre>
-<p><strong>You:</strong> &quot;I need to implement an HGNC API client that:</p>
-<ul>
-<li>Fetches gene data by HGNC ID</li>
-<li>Handles errors gracefully</li>
-<li>Is fully tested with mocked responses&quot;</li>
-</ul>
-<p>OpenPAUL generates <code>.openpaul/phases/01-hgnc-client/01-01-PLAN.md</code>:</p>
-<pre><code class="language-markdown">---
-phase: 01-hgnc-client
-plan: 01
-type: execute
-autonomous: true
----
+<p>OpenPAUL stores the plan at <code>.openpaul/phases/1-01-PLAN.json</code> and outputs a summary:</p>
+<pre><code># 📋 Plan: 1-01
 
-&lt;objective&gt;
-Implement HGNC REST API client with TDD for gene data lookups.
-&lt;/objective&gt;
+Type: execute | Wave: 1 | Tasks: 3
+Structure: simple
 
-&lt;acceptance_criteria&gt;
+## Criteria
+- fetch_by_hgnc_id returns gene data dict with symbol, name, entrez_id
+- network errors raise RequestException with context
+- all tests pass with 100% coverage of client code
 
-## AC-1: Fetch by HGNC ID
+## Tasks
+1. Write failing test for HGNC fetch: Test file exists and test fails
+2. Implement HGNCClient: AC-1 and AC-2 satisfied
+3. Add edge case tests: AC-3 satisfied — 100% coverage
 
-Given a valid HGNC ID (e.g., &quot;HGNC:5&quot;)
-When fetch_by_hgnc_id is called
-Then return gene data dictionary with symbol, name, entrez_id
-
-## AC-2: Error Handling
-
-Given a network error or invalid response
-When fetch_by_hgnc_id is called
-Then raise appropriate exception with context
-
-## AC-3: Test Coverage
-
-Given the implementation is complete
-When tests are run
-Then all tests pass with 100% coverage of client code
-&lt;/acceptance_criteria&gt;
-
-&lt;tasks&gt;
-&lt;task type=&quot;auto&quot;&gt;
-  &lt;name&gt;Write test for successful HGNC fetch&lt;/name&gt;
-  &lt;files&gt;tests/test_hgnc_client.py&lt;/files&gt;
-  &lt;action&gt;Create test class with mocked requests.get&lt;/action&gt;
-  &lt;verify&gt;pytest tests/test_hgnc_client.py -v&lt;/verify&gt;
-  &lt;done&gt;Test file exists, test fails (no implementation yet)&lt;/done&gt;
-&lt;/task&gt;
-
-&lt;task type=&quot;auto&quot;&gt;
-  &lt;name&gt;Implement HGNCClient class&lt;/name&gt;
-  &lt;files&gt;src/hgnc_client.py&lt;/files&gt;
-  &lt;action&gt;Implement fetch_by_hgnc_id with proper headers and error handling&lt;/action&gt;
-  &lt;verify&gt;pytest tests/test_hgnc_client.py -v&lt;/verify&gt;
-  &lt;done&gt;AC-1 and AC-2 satisfied&lt;/done&gt;
-&lt;/task&gt;
-
-&lt;task type=&quot;auto&quot;&gt;
-  &lt;name&gt;Add edge case tests&lt;/name&gt;
-  &lt;files&gt;tests/test_hgnc_client.py&lt;/files&gt;
-  &lt;action&gt;Test for not found, timeout, malformed response&lt;/action&gt;
-  &lt;verify&gt;pytest tests/test_hgnc_client.py --cov=src -v&lt;/verify&gt;
-  &lt;done&gt;AC-3 satisfied&lt;/done&gt;
-&lt;/task&gt;
-&lt;/tasks&gt;
-
-&lt;boundaries&gt;
-## DO NOT CHANGE
-- .openpaul/ROADMAP.md
-- .openpaul/STATE.md
-&lt;/boundaries&gt;
+Status: ✅ Plan created successfully
+Location: .openpaul/phases/1-01-PLAN.json
+Next action: Run /openpaul:apply to execute the plan
 </code></pre>
 <hr>
 <h2>Step 4: APPLY — Execute the Plan</h2>
 <pre><code>/openpaul:apply
 </code></pre>
-<p>OpenPAUL executes tasks sequentially:</p>
-<h3>Task 1: Write Test</h3>
+<p>OpenPAUL displays each task in sequence with its action, verification step, and done criteria. Execute them one by one.</p>
+<h3>Task 1: Write Failing Test</h3>
 <pre><code class="language-python"># tests/test_hgnc_client.py
 import pytest
-from unittest.mock import Mock, patch
+import requests
 from hgnc_client import HGNCClient
 
+
 class TestHGNCClient:
-    def test_fetch_gene_by_id_success(self):
+    def test_fetch_gene_by_id_success(self, mocker):
         &quot;&quot;&quot;Test successful gene fetch by HGNC ID.&quot;&quot;&quot;
         mock_response = {
             &quot;responseHeader&quot;: {&quot;status&quot;: 0},
@@ -359,199 +327,169 @@ class TestHGNCClient:
                 }]
             }
         }
-        
-        with patch(&#39;requests.get&#39;) as mock_get:
-            mock_get.return_value = Mock(
-                status_code=200,
-                json=lambda: mock_response
-            )
-            
-            client = HGNCClient()
-            result = client.fetch_by_hgnc_id(&quot;HGNC:5&quot;)
-            
-            assert result[&quot;symbol&quot;] == &quot;A1BG&quot;
-            assert result[&quot;entrez_id&quot;] == &quot;1&quot;
-            mock_get.assert_called_once_with(
-                &quot;https://rest.genenames.org/fetch/hgnc_id/HGNC:5&quot;,
-                headers={&quot;Accept&quot;: &quot;application/json&quot;}
-            )
+        mock_get = mocker.patch(&quot;requests.get&quot;)
+        mock_get.return_value = mocker.Mock(
+            status_code=200,
+            json=lambda: mock_response,
+        )
+
+        client = HGNCClient()
+        result = client.fetch_by_hgnc_id(&quot;HGNC:5&quot;)
+
+        assert result[&quot;symbol&quot;] == &quot;A1BG&quot;
+        assert result[&quot;entrez_id&quot;] == &quot;1&quot;
+        mock_get.assert_called_once_with(
+            &quot;https://rest.genenames.org/fetch/hgnc_id/HGNC:5&quot;,
+            headers={&quot;Accept&quot;: &quot;application/json&quot;},
+            timeout=30,
+        )
 </code></pre>
-<p><strong>OpenPAUL:</strong> <code>✓ Task 1 complete: Test file created, test fails (expected)</code></p>
-<h3>Task 2: Implement Client</h3>
+<p>Verify: <code>pytest tests/test_hgnc_client.py -v</code> — test should fail (no implementation yet). ✓</p>
+<h3>Task 2: Implement HGNCClient</h3>
 <pre><code class="language-python"># src/hgnc_client.py
 import requests
 from typing import Optional, Dict, Any
 
+
 class HGNCClient:
     BASE_URL = &quot;https://rest.genenames.org&quot;
-    
+
     def __init__(self, timeout: int = 30):
         self.timeout = timeout
         self.headers = {&quot;Accept&quot;: &quot;application/json&quot;}
-    
+
     def fetch_by_hgnc_id(self, hgnc_id: str) -&gt; Optional[Dict[str, Any]]:
         &quot;&quot;&quot;Fetch gene data by HGNC ID.
-        
+
         Args:
             hgnc_id: HGNC identifier (e.g., &quot;HGNC:5&quot;)
-            
+
         Returns:
             Gene data dictionary or None if not found
-            
+
         Raises:
             requests.RequestException: On network errors
         &quot;&quot;&quot;
         url = f&quot;{self.BASE_URL}/fetch/hgnc_id/{hgnc_id}&quot;
-        
+
         try:
             response = requests.get(url, headers=self.headers, timeout=self.timeout)
             response.raise_for_status()
-            
-            data = response.json()
-            docs = data.get(&quot;response&quot;, {}).get(&quot;docs&quot;, [])
-            
-            if docs:
-                return docs[0]
-            return None
-            
+            docs = response.json().get(&quot;response&quot;, {}).get(&quot;docs&quot;, [])
+            return docs[0] if docs else None
+
         except requests.RequestException as e:
             raise requests.RequestException(f&quot;Failed to fetch {hgnc_id}: {e}&quot;)
 </code></pre>
-<p><strong>OpenPAUL:</strong> <code>✓ Task 2 complete: HGNCClient implemented, AC-1 and AC-2 satisfied</code></p>
-<h3>Task 3: Edge Cases</h3>
+<p>Verify: <code>pytest tests/test_hgnc_client.py -v</code> — AC-1 and AC-2 satisfied. ✓</p>
+<h3>Task 3: Edge Case Tests</h3>
 <pre><code class="language-python"># tests/test_hgnc_client.py (continued)
-    
-    def test_fetch_gene_not_found(self):
+
+    def test_fetch_gene_not_found(self, mocker):
         &quot;&quot;&quot;Test gene not found returns None.&quot;&quot;&quot;
-        mock_response = {
-            &quot;responseHeader&quot;: {&quot;status&quot;: 0},
-            &quot;response&quot;: {&quot;docs&quot;: []}
-        }
-        
-        with patch(&#39;requests.get&#39;) as mock_get:
-            mock_get.return_value = Mock(
-                status_code=200,
-                json=lambda: mock_response
-            )
-            
-            client = HGNCClient()
-            result = client.fetch_by_hgnc_id(&quot;HGNC:999999&quot;)
-            
-            assert result is None
-    
-    def test_fetch_network_error(self):
+        mock_get = mocker.patch(&quot;requests.get&quot;)
+        mock_get.return_value = mocker.Mock(
+            status_code=200,
+            json=lambda: {&quot;responseHeader&quot;: {&quot;status&quot;: 0}, &quot;response&quot;: {&quot;docs&quot;: []}},
+        )
+        client = HGNCClient()
+        assert client.fetch_by_hgnc_id(&quot;HGNC:999999&quot;) is None
+
+    def test_fetch_network_error(self, mocker):
         &quot;&quot;&quot;Test network error raises exception.&quot;&quot;&quot;
-        with patch(&#39;requests.get&#39;) as mock_get:
-            mock_get.side_effect = requests.ConnectionError(&quot;Network error&quot;)
-            
-            client = HGNCClient()
-            
-            with pytest.raises(requests.RequestException):
-                client.fetch_by_hgnc_id(&quot;HGNC:5&quot;)
+        mock_get = mocker.patch(&quot;requests.get&quot;)
+        mock_get.side_effect = requests.ConnectionError(&quot;Network error&quot;)
+        client = HGNCClient()
+        with pytest.raises(requests.RequestException):
+            client.fetch_by_hgnc_id(&quot;HGNC:5&quot;)
 </code></pre>
-<p><strong>OpenPAUL:</strong> <code>✓ Task 3 complete: All tests pass with 100% coverage, AC-3 satisfied</code></p>
-<p><strong>OpenPAUL:</strong> <code>✓ All tasks complete! Run /openpaul:unify to close the loop.</code></p>
+<p>Verify: <code>pytest tests/test_hgnc_client.py --cov=src -v</code> — AC-3 satisfied. ✓</p>
 <hr>
 <h2>Step 5: UNIFY — Close the Loop</h2>
-<pre><code>/openpaul:unify
+<pre><code>/openpaul:unify --status success \
+  --actuals &#39;[
+    {&quot;name&quot;: &quot;Write failing test for HGNC fetch&quot;, &quot;status&quot;: &quot;completed&quot;},
+    {&quot;name&quot;: &quot;Implement HGNCClient&quot;, &quot;status&quot;: &quot;completed&quot;},
+    {&quot;name&quot;: &quot;Add edge case tests&quot;, &quot;status&quot;: &quot;completed&quot;}
+  ]&#39;
 </code></pre>
-<p>OpenPAUL creates SUMMARY.md and updates STATE.md:</p>
-<pre><code class="language-markdown"># Summary: HGNC Client
+<p>OpenPAUL closes the loop, writes <code>.openpaul/phases/1-01-SUMMARY.json</code>, and advances state ready for the next plan. Output:</p>
+<pre><code># 🔗 Loop Closed: 1-01
 
-**Phase:** 01-hgnc-client
-**Plan:** 01
-**Completed:** 2024-01-15
+## Summary
+Status: ✅ success
+Tasks: ████████████ completed
 
-## What Was Built
-- HGNCClient class with fetch_by_hgnc_id method
-- Full test suite with 3 test cases
-- 100% code coverage
+### Tasks Completed
+1. ✅ Write failing test for HGNC fetch
+2. ✅ Implement HGNCClient
+3. ✅ Add edge case tests
 
-## Plan vs Actual
-| Task | Planned | Actual | Status |
-|------|---------|--------|--------|
-| Write test | 1 file | 1 file | ✓ |
-| Implement client | 1 file | 1 file | ✓ |
-| Edge cases | 2 tests | 2 tests | ✓ |
-
-## Decisions Made
-1. Used requests library (standard for HTTP in Python)
-2. Timeout defaults to 30 seconds
-3. Returns None for not found (not exception)
-
-## Issues Deferred
-- None
-
-## Next Phase
-Phase 2: NCBI Integration
+## Next Steps
+✅ Loop successfully closed
+Ready for: Next loop iteration
+Run: /openpaul:plan to start planning the next phase
 </code></pre>
 <hr>
 <h2>Step 6: Continue Development</h2>
 <h3>Phase 2: NCBI Integration</h3>
-<pre><code>/openpaul:plan
-
-You: &quot;Now integrate NCBI Gene API to fetch additional data using the entrez_id from HGNC results&quot;
-</code></pre>
-<p>OpenPAUL creates a new plan in <code>02-ncbi-integration/</code>:</p>
-<pre><code class="language-markdown">&lt;acceptance_criteria&gt;
-
-## AC-1: Fetch NCBI Data
-
-Given an entrez_id from HGNC result
-When fetch_ncbi_gene is called
-Then return gene details from NCBI
-
-## AC-2: Combined Lookup
-
-Given an HGNC ID
-When fetch_full_gene is called
-Then return combined data from both APIs
-&lt;/acceptance_criteria&gt;
+<pre><code>/openpaul:plan --phase 2 --plan 01 \
+  --criteria &quot;given an entrez_id, fetch_ncbi_gene returns gene details from NCBI&quot; \
+  --criteria &quot;given an HGNC ID, fetch_full_gene returns combined data from both APIs&quot; \
+  --tasks &#39;[
+    {&quot;name&quot;: &quot;Write NCBI client tests&quot;, &quot;files&quot;: [&quot;tests/test_ncbi_client.py&quot;], &quot;action&quot;: &quot;Create tests with mocker-patched requests for NCBI Entrez efetch API&quot;, &quot;verify&quot;: &quot;pytest tests/test_ncbi_client.py -v (expect failure)&quot;, &quot;done&quot;: &quot;Tests exist and fail&quot;},
+    {&quot;name&quot;: &quot;Implement NCBIClient&quot;, &quot;files&quot;: [&quot;src/ncbi_client.py&quot;], &quot;action&quot;: &quot;Implement fetch_ncbi_gene using Entrez efetch API&quot;, &quot;verify&quot;: &quot;pytest tests/test_ncbi_client.py -v&quot;, &quot;done&quot;: &quot;AC-1 satisfied&quot;},
+    {&quot;name&quot;: &quot;Add combined lookup&quot;, &quot;files&quot;: [&quot;src/gene_client.py&quot;], &quot;action&quot;: &quot;Implement GeneClient.fetch_full_gene combining HGNC + NCBI&quot;, &quot;verify&quot;: &quot;pytest tests/ -v&quot;, &quot;done&quot;: &quot;AC-2 satisfied&quot;}
+  ]&#39;
 </code></pre>
 <p>Execute and close:</p>
 <pre><code>/openpaul:apply
 /openpaul:unify
 </code></pre>
 <h3>Phase 3: CLI Tool</h3>
-<pre><code>/openpaul:plan
-
-You: &quot;Create a CLI tool that accepts a gene symbol and outputs combined data&quot;
+<pre><code>/openpaul:plan --phase 3 --plan 01 \
+  --criteria &quot;uv run gene-lookup HGNC:5 returns combined gene data&quot; \
+  --tasks &#39;[{&quot;name&quot;: &quot;Implement CLI entry point&quot;, &quot;files&quot;: [&quot;src/cli.py&quot;], &quot;action&quot;: &quot;Create CLI with argparse accepting --gene and --format options&quot;, &quot;verify&quot;: &quot;uv run python -m src.cli --gene HGNC:5&quot;, &quot;done&quot;: &quot;CLI returns JSON gene data&quot;}]&#39;
 </code></pre>
 <hr>
 <h2>Session Continuity</h2>
 <p>After a break:</p>
 <pre><code>/openpaul:resume
 </code></pre>
-<p>Output:</p>
-<pre><code>## Session Restored
+<p>OpenPAUL loads your saved session, shows any file changes since you paused, and tells you exactly what to do next:</p>
+<pre><code>## 📋 Session Resume
 
-**Last Session:** 2024-01-15
-**Current Phase:** 03-cli-tool
-**Status:** 2/4 tasks complete
+Session ID: sess-...
+Paused: 2024-01-15T14:30:00.000Z
+Current Phase: 2 - APPLY
 
-**What&#39;s Next:**
-Task 3: Add argument parsing with argparse
-  File: src/cli.py
-  Action: Implement CLI with --gene and --format options
+Work in Progress:
+- Implementing NCBIClient.fetch_ncbi_gene
 
-**Suggested:** /openpaul:apply .openpaul/phases/03-cli-tool/03-01-PLAN.md
+Next Steps:
+- Resume task 2/3: Implement NCBIClient
+
+📍 Loop: ✓ PLAN → ◉ APPLY → ○ UNIFY
+
+Next Action: Run /openpaul:apply to execute the plan
 </code></pre>
 <hr>
 <h2>Summary</h2>
 <p>You&#39;ve learned:</p>
 <ol>
-<li><strong>Initialize</strong> — <code>npx openpaul</code> creates project structure</li>
-<li><strong>Plan</strong> — <code>/openpaul:plan</code> generates structured plans with AC and tasks</li>
-<li><strong>Apply</strong> — <code>/openpaul:apply</code> executes tasks with verification</li>
-<li><strong>Unify</strong> — <code>/openpaul:unify</code> closes the loop and preserves state</li>
+<li><strong>Scaffold</strong> — <code>npx openpaul</code> creates <code>.openpaul/state.json</code> and <code>.opencode/</code> config</li>
+<li><strong>Initialize</strong> — <code>/openpaul:init</code> sets up loop state and creates context files (<code>PROJECT.md</code>, <code>ROADMAP.md</code>, <code>STATE.md</code>)</li>
+<li><strong>Plan</strong> — <code>/openpaul:plan</code> creates structured JSON plans with criteria and tasks</li>
+<li><strong>Apply</strong> — <code>/openpaul:apply</code> displays tasks for sequential execution with verification</li>
+<li><strong>Unify</strong> — <code>/openpaul:unify</code> closes the loop and writes a JSON summary</li>
 <li><strong>Resume</strong> — <code>/openpaul:resume</code> restores context after breaks</li>
 </ol>
 <p>The loop ensures:</p>
 <ul>
-<li>Every unit of work is planned</li>
-<li>Execution stays bounded</li>
-<li>State persists across sessions</li>
-<li>Decisions are logged</li>
+<li>Every unit of work is planned with acceptance criteria</li>
+<li>Execution stays bounded by task verification</li>
+<li>State persists across sessions as JSON</li>
+<li>Decisions and summaries are logged</li>
 <li>No orphan plans</li>
 </ul>
 
