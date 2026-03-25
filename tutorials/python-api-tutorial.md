@@ -46,7 +46,7 @@ It does **not** create `PROJECT.md`, `ROADMAP.md`, or `STATE.md` — those are c
 
 ## Step 2: Install the OpenPAUL Plugin in OpenCode
 
-`npx openpaul` already created `.opencode/opencode.json` in your project. Open it and add the `plugins` key:
+`npx openpaul` already created `.opencode/opencode.json` in your project. Open it and add the `plugin` key:
 
 ```json
 {

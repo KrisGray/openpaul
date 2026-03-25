@@ -9,16 +9,32 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-# Stage 2: Test runner
-FROM node:20-alpine AS runner
+# Stage 2: Test runner (OpenCode preinstalled)
+FROM openeuler/opencode:latest AS runner
 WORKDIR /app
+
+# Ensure Node.js + npm are available for test execution
+RUN set -eux; \
+    if command -v dnf >/dev/null 2>&1; then \
+      dnf install -y nodejs npm; \
+      dnf clean all; \
+    elif command -v yum >/dev/null 2>&1; then \
+      yum install -y nodejs npm; \
+      yum clean all; \
+    else \
+      echo "No supported package manager found" >&2; \
+      exit 1; \
+    fi
 
 # Copy built artifacts and all deps (need jest for testing)
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/e2e ./e2e
+COPY --from=builder /app/src ./src
 COPY --from=builder /app/jest.config.e2e.js ./
+COPY --from=builder /app/tsconfig.json ./
+COPY --from=builder /app/tsconfig.e2e.json ./
 
 ENV NODE_ENV=test
 ENV OPENPAUL_E2E=true
