@@ -244,7 +244,19 @@ npx openpaul
 </ul>
 <p>It does <strong>not</strong> create <code>PROJECT.md</code>, <code>ROADMAP.md</code>, or <code>STATE.md</code> — those are created in the next step.</p>
 <hr>
-<h2>Step 2: Initialize OpenPAUL in OpenCode</h2>
+<h2>Step 2: Install the OpenPAUL Plugin in OpenCode</h2>
+<p>Before you can use <code>/openpaul:</code> commands, install the plugin. Create or edit <code>~/.config/opencode/opencode.json</code>:</p>
+<pre><code class="language-json">{
+  &quot;plugins&quot;: {
+    &quot;npm&quot;: [
+      &quot;openpaul&quot;
+    ]
+  }
+}
+</code></pre>
+<p>Restart OpenCode to load the plugin. You can verify it loaded with <code>/openpaul:help</code>.</p>
+<hr>
+<h2>Step 3: Initialize the Project in OpenCode</h2>
 <p>Open the project in OpenCode, then run:</p>
 <pre><code>/openpaul:init
 </code></pre>
@@ -269,7 +281,7 @@ npx openpaul
 </ul>
 <p>You can now edit <code>.openpaul/ROADMAP.md</code> to define your phases, or leave it for the planner to fill in.</p>
 <hr>
-<h2>Step 3: PLAN — Create First Plan</h2>
+<h2>Step 4: PLAN — Create First Plan</h2>
 <p>Run the plan command with structured parameters. OpenPAUL stores the plan as a JSON file in <code>.openpaul/phases/</code>.</p>
 <pre><code>/openpaul:plan --phase 1 --plan 01 \
   --criteria &quot;fetch_by_hgnc_id returns gene data dict with symbol, name, entrez_id&quot; \
@@ -302,7 +314,7 @@ Location: .openpaul/phases/1-01-PLAN.json
 Next action: Run /openpaul:apply to execute the plan
 </code></pre>
 <hr>
-<h2>Step 4: APPLY — Execute the Plan</h2>
+<h2>Step 5: APPLY — Execute the Plan</h2>
 <pre><code>/openpaul:apply
 </code></pre>
 <p>OpenPAUL displays each task in sequence with its action, verification step, and done criteria. Execute them one by one.</p>
@@ -405,7 +417,7 @@ class HGNCClient:
 </code></pre>
 <p>Verify: <code>pytest tests/test_hgnc_client.py --cov=src -v</code> — AC-3 satisfied. ✓</p>
 <hr>
-<h2>Step 5: UNIFY — Close the Loop</h2>
+<h2>Step 6: UNIFY — Close the Loop</h2>
 <pre><code>/openpaul:unify --status success \
   --actuals &#39;[
     {&quot;name&quot;: &quot;Write failing test for HGNC fetch&quot;, &quot;status&quot;: &quot;completed&quot;},
@@ -431,7 +443,7 @@ Ready for: Next loop iteration
 Run: /openpaul:plan to start planning the next phase
 </code></pre>
 <hr>
-<h2>Step 6: Continue Development</h2>
+<h2>Step 7: Continue Development</h2>
 <h3>Phase 2: NCBI Integration</h3>
 <pre><code>/openpaul:plan --phase 2 --plan 01 \
   --criteria &quot;given an entrez_id, fetch_ncbi_gene returns gene details from NCBI&quot; \
@@ -478,6 +490,7 @@ Next Action: Run /openpaul:apply to execute the plan
 <p>You&#39;ve learned:</p>
 <ol>
 <li><strong>Scaffold</strong> — <code>npx openpaul</code> creates <code>.openpaul/state.json</code> and <code>.opencode/</code> config</li>
+<li><strong>Install plugin</strong> — add <code>openpaul</code> to <code>~/.config/opencode/opencode.json</code> plugins and restart OpenCode</li>
 <li><strong>Initialize</strong> — <code>/openpaul:init</code> sets up loop state and creates context files (<code>PROJECT.md</code>, <code>ROADMAP.md</code>, <code>STATE.md</code>)</li>
 <li><strong>Plan</strong> — <code>/openpaul:plan</code> creates structured JSON plans with criteria and tasks</li>
 <li><strong>Apply</strong> — <code>/openpaul:apply</code> displays tasks for sequential execution with verification</li>

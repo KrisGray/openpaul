@@ -44,7 +44,25 @@ It does **not** create `PROJECT.md`, `ROADMAP.md`, or `STATE.md` — those are c
 
 ---
 
-## Step 2: Initialize OpenPAUL in OpenCode
+## Step 2: Install the OpenPAUL Plugin in OpenCode
+
+Before you can use `/openpaul:` commands, install the plugin. Create or edit `~/.config/opencode/opencode.json`:
+
+```json
+{
+  "plugins": {
+    "npm": [
+      "openpaul"
+    ]
+  }
+}
+```
+
+Restart OpenCode to load the plugin. Verify it loaded with `/openpaul:help`.
+
+---
+
+## Step 3: Initialize the Project in OpenCode
 
 Open the project in OpenCode, then run:
 
@@ -74,7 +92,7 @@ You can now edit `.openpaul/ROADMAP.md` to define your phases, or leave it for t
 
 ---
 
-## Step 3: PLAN — Create First Plan
+## Step 4: PLAN — Create First Plan
 
 Run the plan command with structured parameters. OpenPAUL stores the plan as a JSON file in `.openpaul/phases/`.
 
@@ -115,7 +133,7 @@ Next action: Run /openpaul:apply to execute the plan
 
 ---
 
-## Step 4: APPLY — Execute the Plan
+## Step 5: APPLY — Execute the Plan
 
 ```
 /openpaul:apply
@@ -235,7 +253,7 @@ Verify: `pytest tests/test_hgnc_client.py --cov=src -v` — AC-3 satisfied. ✓
 
 ---
 
-## Step 5: UNIFY — Close the Loop
+## Step 6: UNIFY — Close the Loop
 
 ```
 /openpaul:unify --status success \
@@ -268,7 +286,7 @@ Run: /openpaul:plan to start planning the next phase
 
 ---
 
-## Step 6: Continue Development
+## Step 7: Continue Development
 
 ### Phase 2: NCBI Integration
 
@@ -332,11 +350,12 @@ Next Action: Run /openpaul:apply to execute the plan
 
 You've learned:
 1. **Scaffold** — `npx openpaul` creates `.openpaul/state.json` and `.opencode/` config
-2. **Initialize** — `/openpaul:init` sets up loop state and creates context files (`PROJECT.md`, `ROADMAP.md`, `STATE.md`)
-3. **Plan** — `/openpaul:plan` creates structured JSON plans with criteria and tasks
-4. **Apply** — `/openpaul:apply` displays tasks for sequential execution with verification
-5. **Unify** — `/openpaul:unify` closes the loop and writes a JSON summary
-6. **Resume** — `/openpaul:resume` restores context after breaks
+2. **Install plugin** — add `openpaul` to `~/.config/opencode/opencode.json` and restart OpenCode
+3. **Initialize** — `/openpaul:init` sets up loop state and creates context files
+4. **Plan** — `/openpaul:plan` creates structured JSON plans with criteria and tasks
+5. **Apply** — `/openpaul:apply` displays tasks for sequential execution with verification
+6. **Unify** — `/openpaul:unify` closes the loop and writes a JSON summary
+7. **Resume** — `/openpaul:resume` restores context after breaks
 
 The loop ensures:
 - Every unit of work is planned with acceptance criteria
