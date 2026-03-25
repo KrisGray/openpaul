@@ -245,8 +245,9 @@ npx openpaul
 <p>It does <strong>not</strong> create <code>PROJECT.md</code>, <code>ROADMAP.md</code>, or <code>STATE.md</code> — those are created in the next step.</p>
 <hr>
 <h2>Step 2: Install the OpenPAUL Plugin in OpenCode</h2>
-<p>Before you can use <code>/openpaul:</code> commands, install the plugin. Create or edit <code>~/.config/opencode/opencode.json</code>:</p>
+<p><code>npx openpaul</code> already created <code>.opencode/opencode.json</code> in your project. Open it and add the <code>plugins</code> key:</p>
 <pre><code class="language-json">{
+  &quot;$schema&quot;: &quot;https://opencode.ai/config.json&quot;,
   &quot;plugins&quot;: {
     &quot;npm&quot;: [
       &quot;openpaul&quot;

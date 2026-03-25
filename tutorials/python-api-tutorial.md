@@ -46,10 +46,11 @@ It does **not** create `PROJECT.md`, `ROADMAP.md`, or `STATE.md` — those are c
 
 ## Step 2: Install the OpenPAUL Plugin in OpenCode
 
-Before you can use `/openpaul:` commands, install the plugin. Create or edit `~/.config/opencode/opencode.json`:
+`npx openpaul` already created `.opencode/opencode.json` in your project. Open it and add the `plugins` key:
 
 ```json
 {
+  "$schema": "https://opencode.ai/config.json",
   "plugins": {
     "npm": [
       "openpaul"
