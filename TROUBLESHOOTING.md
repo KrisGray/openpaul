@@ -5,7 +5,7 @@ Common issues and solutions for OpenPAUL.
 ## Commands not found after install?
 
 - Restart OpenCode to reload plugins
-- Verify openpaul is listed in your opencode.json plugins section
+- Verify openpaul is listed in the `plugin` array in `.opencode/opencode.json`
 
 ## Commands not working as expected?
 

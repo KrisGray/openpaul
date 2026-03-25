@@ -51,11 +51,9 @@ It does **not** create `PROJECT.md`, `ROADMAP.md`, or `STATE.md` — those are c
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
-  "plugins": {
-    "npm": [
-      "openpaul"
-    ]
-  }
+  "plugin": [
+    "openpaul"
+  ]
 }
 ```
 
@@ -351,7 +349,7 @@ Next Action: Run /openpaul:apply to execute the plan
 
 You've learned:
 1. **Scaffold** — `npx openpaul` creates `.openpaul/state.json` and `.opencode/` config
-2. **Install plugin** — add `openpaul` to `~/.config/opencode/opencode.json` and restart OpenCode
+2. **Install plugin** — add `"plugin": ["openpaul"]` to `.opencode/opencode.json` and restart OpenCode
 3. **Initialize** — `/openpaul:init` sets up loop state and creates context files
 4. **Plan** — `/openpaul:plan` creates structured JSON plans with criteria and tasks
 5. **Apply** — `/openpaul:apply` displays tasks for sequential execution with verification

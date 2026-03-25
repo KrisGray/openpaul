@@ -48,21 +48,18 @@ npx openpaul --preset full             # Full template
 
 ## Install as OpenCode Plugin
 
-To use OpenPAUL commands inside OpenCode (like /openpaul:plan):
-
-1. Open or create ~/.config/opencode/opencode.json:
+Add the `plugin` key to `.opencode/opencode.json` in your project (created by `npx openpaul`):
 
 ```json
 {
-  "plugins": {
-    "npm": [
-      "openpaul"
-    ]
-  }
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": [
+    "openpaul"
+  ]
 }
 ```
 
-2. Restart OpenCode to load the plugin.
+Restart OpenCode to load the plugin.
 
 ---
 

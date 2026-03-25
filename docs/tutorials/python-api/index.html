@@ -248,11 +248,9 @@ npx openpaul
 <p><code>npx openpaul</code> already created <code>.opencode/opencode.json</code> in your project. Open it and add the <code>plugins</code> key:</p>
 <pre><code class="language-json">{
   &quot;$schema&quot;: &quot;https://opencode.ai/config.json&quot;,
-  &quot;plugins&quot;: {
-    &quot;npm&quot;: [
-      &quot;openpaul&quot;
-    ]
-  }
+  &quot;plugin&quot;: [
+    &quot;openpaul&quot;
+  ]
 }
 </code></pre>
 <p>Restart OpenCode to load the plugin. You can verify it loaded with <code>/openpaul:help</code>.</p>
@@ -491,7 +489,7 @@ Next Action: Run /openpaul:apply to execute the plan
 <p>You&#39;ve learned:</p>
 <ol>
 <li><strong>Scaffold</strong> — <code>npx openpaul</code> creates <code>.openpaul/state.json</code> and <code>.opencode/</code> config</li>
-<li><strong>Install plugin</strong> — add <code>openpaul</code> to <code>~/.config/opencode/opencode.json</code> plugins and restart OpenCode</li>
+<li><strong>Install plugin</strong> — add <code>&quot;plugin&quot;: [&quot;openpaul&quot;]</code> to <code>.opencode/opencode.json</code> and restart OpenCode</li>
 <li><strong>Initialize</strong> — <code>/openpaul:init</code> sets up loop state and creates context files (<code>PROJECT.md</code>, <code>ROADMAP.md</code>, <code>STATE.md</code>)</li>
 <li><strong>Plan</strong> — <code>/openpaul:plan</code> creates structured JSON plans with criteria and tasks</li>
 <li><strong>Apply</strong> — <code>/openpaul:apply</code> displays tasks for sequential execution with verification</li>

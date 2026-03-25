@@ -254,21 +254,15 @@ npx openpaul --preset full             # Full template
 </code></pre>
 <hr>
 <h2>Install as OpenCode Plugin</h2>
-<p>To use OpenPAUL commands inside OpenCode (like /openpaul:plan):</p>
-<ol>
-<li>Open or create ~/.config/opencode/opencode.json:</li>
-</ol>
+<p>Add the <code>plugin</code> key to <code>.opencode/opencode.json</code> in your project (created by <code>npx openpaul</code>):</p>
 <pre><code class="language-json">{
-  &quot;plugins&quot;: {
-    &quot;npm&quot;: [
-      &quot;openpaul&quot;
-    ]
-  }
+  &quot;$schema&quot;: &quot;https://opencode.ai/config.json&quot;,
+  &quot;plugin&quot;: [
+    &quot;openpaul&quot;
+  ]
 }
 </code></pre>
-<ol start="2">
-<li>Restart OpenCode to load the plugin.</li>
-</ol>
+<p>Restart OpenCode to load the plugin.</p>
 <hr>
 <h2>Verify Installation</h2>
 <ul>
