@@ -57,7 +57,7 @@ It does **not** create loop state files — those are created in the next step.
 }
 ```
 
-Restart OpenCode to load the plugin. Verify it loaded with `/openpaul:help`.
+Restart OpenCode to load the plugin. The plugin registers slash commands on load, so `/openpaul:help` should autocomplete in the TUI.
 
 ---
 

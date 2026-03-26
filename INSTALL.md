@@ -50,7 +50,7 @@ opencode.json           # OpenCode config
 
 ## Install as OpenCode Plugin
 
-Add the `plugin` key to `opencode.json` in your project (created by `npx openpaul`):
+Add the `plugin` key to `opencode.json` in your project (created by `npx openpaul`). OpenPAUL registers its slash commands on load, so `/openpaul:*` should appear in the TUI command list after restart:
 
 ```json
 {
@@ -68,7 +68,7 @@ Restart OpenCode to load the plugin.
 ## Verify Installation
 
 - CLI: Run npx openpaul --version
-- Plugin: Run /openpaul:help inside OpenCode
+- Plugin: Run /openpaul:help inside OpenCode (it should autocomplete)
 
 ---
 

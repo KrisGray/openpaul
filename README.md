@@ -105,7 +105,7 @@ npx openpaul --preset full             # Full template with examples
 
 ### Install as OpenCode Plugin (Optional)
 
-To use OpenPAUL commands inside OpenCode (like `/openpaul:plan`), add the `plugin` key to `opencode.json` in your project (created by `npx openpaul`):
+To use OpenPAUL slash commands inside OpenCode (like `/openpaul:plan`), add the `plugin` key to `opencode.json` in your project (created by `npx openpaul`). OpenPAUL injects its commands into OpenCode on load, so `/openpaul:*` appears in the TUI command list once the plugin is loaded.
 
 ```json
 {
@@ -121,7 +121,7 @@ Restart OpenCode to load the plugin.
 ### Verify
 
 - **CLI**: Run `npx openpaul --version`
-- **Plugin**: Run `/openpaul:help` inside OpenCode
+- **Plugin**: Run `/openpaul:help` inside OpenCode (it should autocomplete in the command list)
 
 ---
 
@@ -544,7 +544,7 @@ Close the loop (required!):
 
 ## Commands
 
-OpenPAUL provides 26 commands organized by purpose. Run `/openpaul:help` for the complete reference.
+OpenPAUL provides 26 commands organized by purpose. The plugin registers them as OpenCode slash commands, so `/openpaul:*` appears in the TUI command list. Run `/openpaul:help` for the complete reference.
 
 ### Core Loop
 
@@ -775,10 +775,11 @@ APPLY blocks until required skills are confirmed loaded.
 
 - Restart OpenCode to reload plugins
 - Verify `openpaul` is listed in the `plugin` array in `opencode.json`
+- Run `opencode debug config` and confirm `openpaul` is in the resolved plugin list
 
 **Commands not working as expected?**
 
-- Run `/openpaul:help` to verify installation
+- Run `/openpaul:help` to verify installation (it should autocomplete in the TUI)
 - Check the plugin is installed in `~/.cache/opencode/node_modules/openpaul/`
 
 **Loop position seems wrong?**

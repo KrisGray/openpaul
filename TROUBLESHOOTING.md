@@ -6,10 +6,11 @@ Common issues and solutions for OpenPAUL.
 
 - Restart OpenCode to reload plugins
 - Verify openpaul is listed in the `plugin` array in `opencode.json`
+- Run `opencode debug config` and confirm `openpaul` is in the resolved plugin list
 
 ## Commands not working as expected?
 
-- Run /openpaul:help to verify installation
+- Run /openpaul:help to verify installation (it should autocomplete in the TUI)
 - Check the plugin is installed in ~/.cache/opencode/node_modules/openpaul/
 
 ## Loop position seems wrong?

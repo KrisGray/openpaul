@@ -51,6 +51,7 @@ jobs:
         run: npm run test:e2e
         env:
           OPENPAUL_DEBUG: "false"
+          OPENCODE_IMAGE: "ghcr.io/anomalyco/opencode:latest"
 
       - name: Build Docker image
         run: docker build -f Dockerfile.e2e -t openpaul-e2e:test .

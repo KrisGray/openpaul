@@ -33,6 +33,113 @@ import { openpaulRemovePhase } from './commands/remove-phase'
 import { openpaulVerify } from './commands/verify'
 import { openpaulPlanFix } from './commands/plan-fix'
 
+const OPENPAUL_COMMANDS: Record<string, { description: string; template: string }> = {
+  'openpaul:init': {
+    description: 'Initialize OpenPAUL project state',
+    template: 'Run the OpenCode tool `openpaul:init`. $ARGUMENTS',
+  },
+  'openpaul:plan': {
+    description: 'Create a structured OpenPAUL plan',
+    template: 'Run the OpenCode tool `openpaul:plan`. $ARGUMENTS',
+  },
+  'openpaul:apply': {
+    description: 'Apply the current OpenPAUL plan',
+    template: 'Run the OpenCode tool `openpaul:apply`. $ARGUMENTS',
+  },
+  'openpaul:unify': {
+    description: 'Close the loop with an OpenPAUL summary',
+    template: 'Run the OpenCode tool `openpaul:unify`. $ARGUMENTS',
+  },
+  'openpaul:progress': {
+    description: 'Show OpenPAUL progress summary',
+    template: 'Run the OpenCode tool `openpaul:progress`. $ARGUMENTS',
+  },
+  'openpaul:status': {
+    description: 'Show OpenPAUL current status',
+    template: 'Run the OpenCode tool `openpaul:status`. $ARGUMENTS',
+  },
+  'openpaul:help': {
+    description: 'Show OpenPAUL command reference',
+    template: 'Run the OpenCode tool `openpaul:help`. $ARGUMENTS',
+  },
+  'openpaul:pause': {
+    description: 'Pause the current OpenPAUL session',
+    template: 'Run the OpenCode tool `openpaul:pause`. $ARGUMENTS',
+  },
+  'openpaul:resume': {
+    description: 'Resume the last OpenPAUL session',
+    template: 'Run the OpenCode tool `openpaul:resume`. $ARGUMENTS',
+  },
+  'openpaul:handoff': {
+    description: 'Create an OpenPAUL handoff summary',
+    template: 'Run the OpenCode tool `openpaul:handoff`. $ARGUMENTS',
+  },
+  'openpaul:milestone': {
+    description: 'Manage OpenPAUL milestones',
+    template: 'Run the OpenCode tool `openpaul:milestone`. $ARGUMENTS',
+  },
+  'openpaul:complete-milestone': {
+    description: 'Complete the current OpenPAUL milestone',
+    template: 'Run the OpenCode tool `openpaul:complete-milestone`. $ARGUMENTS',
+  },
+  'openpaul:discuss-milestone': {
+    description: 'Discuss the current OpenPAUL milestone',
+    template: 'Run the OpenCode tool `openpaul:discuss-milestone`. $ARGUMENTS',
+  },
+  'openpaul:discuss': {
+    description: 'Discuss the current OpenPAUL phase',
+    template: 'Run the OpenCode tool `openpaul:discuss`. $ARGUMENTS',
+  },
+  'openpaul:assumptions': {
+    description: 'Capture OpenPAUL assumptions',
+    template: 'Run the OpenCode tool `openpaul:assumptions`. $ARGUMENTS',
+  },
+  'openpaul:discover': {
+    description: 'Run OpenPAUL discovery prompts',
+    template: 'Run the OpenCode tool `openpaul:discover`. $ARGUMENTS',
+  },
+  'openpaul:consider-issues': {
+    description: 'Review issues and risks',
+    template: 'Run the OpenCode tool `openpaul:consider-issues`. $ARGUMENTS',
+  },
+  'openpaul:research': {
+    description: 'Start OpenPAUL research flow',
+    template: 'Run the OpenCode tool `openpaul:research`. $ARGUMENTS',
+  },
+  'openpaul:research-phase': {
+    description: 'Research a specific OpenPAUL phase',
+    template: 'Run the OpenCode tool `openpaul:research-phase`. $ARGUMENTS',
+  },
+  'openpaul:config': {
+    description: 'Configure OpenPAUL settings',
+    template: 'Run the OpenCode tool `openpaul:config`. $ARGUMENTS',
+  },
+  'openpaul:flows': {
+    description: 'List OpenPAUL workflow flows',
+    template: 'Run the OpenCode tool `openpaul:flows`. $ARGUMENTS',
+  },
+  'openpaul:map-codebase': {
+    description: 'Map the project codebase',
+    template: 'Run the OpenCode tool `openpaul:map-codebase`. $ARGUMENTS',
+  },
+  'openpaul:add-phase': {
+    description: 'Add a new OpenPAUL phase',
+    template: 'Run the OpenCode tool `openpaul:add-phase`. $ARGUMENTS',
+  },
+  'openpaul:remove-phase': {
+    description: 'Remove an OpenPAUL phase',
+    template: 'Run the OpenCode tool `openpaul:remove-phase`. $ARGUMENTS',
+  },
+  'openpaul:verify': {
+    description: 'Verify OpenPAUL phase completion',
+    template: 'Run the OpenCode tool `openpaul:verify`. $ARGUMENTS',
+  },
+  'openpaul:plan-fix': {
+    description: 'Fix a broken OpenPAUL plan',
+    template: 'Run the OpenCode tool `openpaul:plan-fix`. $ARGUMENTS',
+  },
+}
+
 export const OpenPaulPlugin: Plugin = async ({ project, client, directory, worktree }) => {
   // Plugin initialization
   await client.app.log({
@@ -76,7 +183,13 @@ export const OpenPaulPlugin: Plugin = async ({ project, client, directory, workt
       'openpaul:remove-phase': openpaulRemovePhase,
       'openpaul:verify': openpaulVerify,
       'openpaul:plan-fix': openpaulPlanFix,
-    }
+    },
+    config: async (config) => {
+      config.command = {
+        ...(config.command ?? {}),
+        ...OPENPAUL_COMMANDS,
+      }
+    },
   }
 }
 

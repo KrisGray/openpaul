@@ -255,7 +255,7 @@ npx openpaul --preset full             # Full template
 </code></pre>
 <hr>
 <h2>Install as OpenCode Plugin</h2>
-<p>Add the <code>plugin</code> key to <code>opencode.json</code> in your project (created by <code>npx openpaul</code>):</p>
+<p>Add the <code>plugin</code> key to <code>opencode.json</code> in your project (created by <code>npx openpaul</code>). OpenPAUL registers its slash commands on load, so <code>/openpaul:*</code> should appear in the TUI command list after restart:</p>
 <pre><code class="language-json">{
   &quot;$schema&quot;: &quot;https://opencode.ai/config.json&quot;,
   &quot;plugin&quot;: [
@@ -268,7 +268,7 @@ npx openpaul --preset full             # Full template
 <h2>Verify Installation</h2>
 <ul>
 <li>CLI: Run npx openpaul --version</li>
-<li>Plugin: Run /openpaul:help inside OpenCode</li>
+<li>Plugin: Run /openpaul:help inside OpenCode (it should autocomplete)</li>
 </ul>
 <hr>
 <h2>With OpenCARL (Recommended)</h2>
