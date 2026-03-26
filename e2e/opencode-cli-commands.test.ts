@@ -23,6 +23,20 @@ function packOpenpaul(): string {
   return join(REPO_ROOT, tarball)
 }
 
+function ensureWorkspaceWritable(path: string): void {
+  const uid = typeof process.getuid === 'function' ? process.getuid() : 1000
+  const gid = typeof process.getgid === 'function' ? process.getgid() : 1000
+  const command = [
+    'docker run --rm',
+    `-v "${path}:/workspace"`,
+    '--entrypoint sh',
+    OPENCODE_IMAGE,
+    `-c "chown -R ${uid}:${gid} /workspace"`,
+  ].join(' ')
+
+  execSync(command, { stdio: 'ignore' })
+}
+
 const describeIf = dockerAvailable() ? describe : describe.skip
 
 describeIf('OpenCode CLI commands (docker)', () => {
@@ -60,6 +74,10 @@ describeIf('OpenCode CLI commands (docker)', () => {
       rmSync(tarballPath, { force: true })
     }
     if (workspace) {
+      try {
+        ensureWorkspaceWritable(workspace)
+      } catch {
+      }
       rmSync(workspace, { recursive: true, force: true })
     }
   })
