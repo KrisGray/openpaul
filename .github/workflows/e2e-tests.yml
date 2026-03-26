@@ -39,7 +39,7 @@ jobs:
           bun-version: 'latest'
 
       - name: Install OpenCode CLI
-        run: npm install -g opencode
+        run: npm install -g opencode-ai
 
       - name: Install dependencies
         run: npm ci
