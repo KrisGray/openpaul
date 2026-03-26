@@ -10,7 +10,7 @@
  * or the code is broken.
  *
  * Steps mirrored from the tutorial:
- *   1. npx openpaul       → .openpaul/state.json + .opencode/opencode.json
+ *   1. npx openpaul       → .openpaul/state.json + opencode.json
  *   2. /openpaul:init     → model-config.json + state-phase-1.json
  *   3. /openpaul:plan     → .openpaul/phases/1-01-PLAN.json
  *   4. /openpaul:apply    → task list output
@@ -130,9 +130,9 @@ describe('Tutorial Workflow E2E', () => {
       expect(state.name).toBe('gene-api-client')
     })
 
-    it('creates .opencode/opencode.json', () => {
+    it('creates opencode.json', () => {
       scaffold(dir)
-      expect(existsSync(join(dir, '.opencode', 'opencode.json'))).toBe(true)
+      expect(existsSync(join(dir, 'opencode.json'))).toBe(true)
     })
 
     it('does NOT create PROJECT.md, ROADMAP.md, or STATE.md', () => {

@@ -16,19 +16,19 @@ export const minimalPreset: Preset = {
       content: JSON.stringify({ $schema: 'https://opencode.ai/config.json' }, null, 2)
     },
     {
-      path: 'agents/.gitkeep',
+      path: '.opencode/agents/.gitkeep',
       content: ''
     },
     {
-      path: 'commands/.gitkeep',
+      path: '.opencode/commands/.gitkeep',
       content: ''
     },
     {
-      path: 'rules/.gitkeep',
+      path: '.opencode/rules/.gitkeep',
       content: ''
     },
     {
-      path: 'skills/.gitkeep',
+      path: '.opencode/skills/.gitkeep',
       content: ''
     }
   ]

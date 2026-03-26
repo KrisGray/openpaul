@@ -43,14 +43,14 @@ Running `npx openpaul` scaffolds:
 .openpaul/
 └── state.json           # Project registry (name, version, timestamps)
 
-.opencode/
-└── opencode.json        # OpenCode config and preset files
+opencode.json           # OpenCode config
+.opencode/              # OpenCode folders (commands, rules, skills, etc.)
 
 ---
 
 ## Install as OpenCode Plugin
 
-Add the `plugin` key to `.opencode/opencode.json` in your project (created by `npx openpaul`):
+Add the `plugin` key to `opencode.json` in your project (created by `npx openpaul`):
 
 ```json
 {

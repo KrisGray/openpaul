@@ -105,7 +105,7 @@ npx openpaul --preset full             # Full template with examples
 
 ### Install as OpenCode Plugin (Optional)
 
-To use OpenPAUL commands inside OpenCode (like `/openpaul:plan`), add the `plugin` key to `.opencode/opencode.json` in your project (created by `npx openpaul`):
+To use OpenPAUL commands inside OpenCode (like `/openpaul:plan`), add the `plugin` key to `opencode.json` in your project (created by `npx openpaul`):
 
 ```json
 {
@@ -216,7 +216,7 @@ Here's a complete workflow example showing OpenPAUL in action:
 │  npx openpaul                                                   │
 │                                                                 │
 │  Creates: .openpaul/state.json (project registry) and          │
-│  .opencode/ (OpenCode config). Then run /openpaul:init in       │
+│  opencode.json (OpenCode config). Then run /openpaul:init in     │
 │  OpenCode to create model-config.json and state-phase-1.json   │
 └─────────────────────────────────────────────────────────────────┘
                               │
@@ -631,8 +631,8 @@ After `npx openpaul` + `/openpaul:init`:
 └── phases/
     ├── 1-01-PLAN.json     # Plan (/openpaul:plan)
     └── 1-01-SUMMARY.json  # Summary (/openpaul:unify)
+opencode.json              # OpenCode config (npx openpaul)
 .opencode/
-├── opencode.json          # OpenCode config (npx openpaul)
 └── (preset files)         # Commands, rules, agents
 ```
 
@@ -774,7 +774,7 @@ APPLY blocks until required skills are confirmed loaded.
 **Commands not found after install?**
 
 - Restart OpenCode to reload plugins
-- Verify `openpaul` is listed in the `plugin` array in `.opencode/opencode.json`
+- Verify `openpaul` is listed in the `plugin` array in `opencode.json`
 
 **Commands not working as expected?**
 

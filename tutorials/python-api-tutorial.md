@@ -46,7 +46,7 @@ It does **not** create loop state files — those are created in the next step.
 
 ## Step 2: Install the OpenPAUL Plugin in OpenCode
 
-`npx openpaul` already created `.opencode/opencode.json` in your project. Open it and add the `plugin` key:
+`npx openpaul` already created `opencode.json` in your project. Open it and add the `plugin` key:
 
 ```json
 {
@@ -346,7 +346,7 @@ Next Action: Run /openpaul:apply to execute the plan
 
 You've learned:
 1. **Scaffold** — `npx openpaul` creates `.openpaul/state.json` and `.opencode/` config
-2. **Install plugin** — add `"plugin": ["openpaul"]` to `.opencode/opencode.json` and restart OpenCode
+2. **Install plugin** — add `"plugin": ["openpaul"]` to `opencode.json` and restart OpenCode
 3. **Initialize** — `/openpaul:init` sets up loop state files
 4. **Plan** — `/openpaul:plan` creates structured JSON plans with criteria and tasks
 5. **Apply** — `/openpaul:apply` displays tasks for sequential execution with verification

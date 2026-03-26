@@ -1,6 +1,6 @@
 {
   "name": "openpaul",
-  "version": "1.4.17",
+  "version": "1.4.18",
   "description": "OpenPAUL - Plan-Apply-Unify Loop plugin for OpenCode",
   "type": "module",
   "main": "dist/index.js",

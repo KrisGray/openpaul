@@ -21,7 +21,7 @@ export const fullPreset: Preset = {
       content: JSON.stringify({ $schema: 'https://opencode.ai/tui.json' }, null, 2)
     },
     {
-      path: 'commands/example.md',
+      path: '.opencode/commands/example.md',
       content: `---
 description: Example custom command
 agent: build
@@ -31,18 +31,18 @@ This is an example command. Customize it for your project needs.
 `
     },
     {
-      path: 'rules/example.md',
+      path: '.opencode/rules/example.md',
       content: `# Example Rule
 
 This is an example rule file. Add your project-specific guidelines here.
 `
     },
     {
-      path: 'agents/.gitkeep',
+      path: '.opencode/agents/.gitkeep',
       content: ''
     },
     {
-      path: 'skills/.gitkeep',
+      path: '.opencode/skills/.gitkeep',
       content: ''
     }
   ]

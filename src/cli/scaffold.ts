@@ -73,10 +73,8 @@ export async function generateStateJson(
  * @param preset - The preset configuration to generate files from
  */
 export function generatePresetFiles(targetPath: string, preset: Preset): void {
-  const opencodeDir = join(targetPath, '.opencode')
-
   for (const file of preset.files) {
-    const filePath = join(opencodeDir, file.path)
+    const filePath = join(targetPath, file.path)
     const dir = dirname(filePath)
     if (!existsSync(dir)) {
       mkdirSync(dir, { recursive: true })
