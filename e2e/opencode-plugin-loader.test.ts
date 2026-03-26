@@ -137,8 +137,11 @@ function parseJsonOutput(output: string): unknown[] {
 
 function collectOpenpaulTools(value: unknown, tools: Set<string>): void {
   if (typeof value === 'string') {
-    if (value.startsWith('openpaul:')) {
-      tools.add(value)
+    const matches = value.match(/openpaul:[a-z-]+/g)
+    if (matches) {
+      for (const match of matches) {
+        tools.add(match)
+      }
     }
     return
   }
