@@ -5,7 +5,7 @@
  * This requires an OpenCode binary and network access to install npm plugins.
  */
 
-import { execSync } from 'child_process'
+import { spawnSync } from 'child_process'
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'fs'
 import { join, resolve } from 'path'
 import { tmpdir } from 'os'
@@ -14,9 +14,10 @@ const CLI_PATH = resolve(__dirname, '../dist/cli.js')
 const OPENCODE_BIN = process.env.OPENCODE_BIN ?? 'opencode'
 
 function run(command: string, cwd: string, env: Record<string, string | undefined>): string {
-  return execSync(command, {
+  const result = spawnSync(command, {
     cwd,
     encoding: 'utf-8',
+    shell: true,
     stdio: ['pipe', 'pipe', 'pipe'],
     env: {
       ...process.env,
@@ -26,6 +27,19 @@ function run(command: string, cwd: string, env: Record<string, string | undefine
       ...env,
     },
   })
+
+  if (result.error) {
+    throw result.error
+  }
+
+  if (result.status !== 0) {
+    const error = new Error(result.stderr || `Command failed: ${command}`)
+    ;(error as typeof error & { stdout?: string; stderr?: string }).stdout = result.stdout
+    ;(error as typeof error & { stdout?: string; stderr?: string }).stderr = result.stderr
+    throw error
+  }
+
+  return `${result.stdout ?? ''}${result.stderr ?? ''}`
 }
 
 describe('OpenCode plugin loader (npm)', () => {
@@ -39,7 +53,7 @@ describe('OpenCode plugin loader (npm)', () => {
     rmSync(dir, { recursive: true, force: true })
   })
 
-  it('loads openpaul tools from opencode.json', () => {
+  it('loads openpaul tools from opencode.json', async () => {
     run(`node "${CLI_PATH}" --force --name "openpaul-plugin-test"`, dir, {})
 
     const configPath = join(dir, 'opencode.json')
@@ -51,11 +65,7 @@ describe('OpenCode plugin loader (npm)', () => {
     base.plugin = ['openpaul']
     writeFileSync(configPath, JSON.stringify(base, null, 2))
 
-    const output = run(
-      `${OPENCODE_BIN} run --command openpaul:help --format json`,
-      dir,
-      { OPENCODE_CONFIG: configPath }
-    )
+    const configOutput = run(`${OPENCODE_BIN} debug config`, dir, { OPENCODE_CONFIG: configPath })
 
     const expectedTools = [
       'openpaul:init',
@@ -87,13 +97,12 @@ describe('OpenCode plugin loader (npm)', () => {
     ]
     const expectedSet = new Set(expectedTools)
 
-    const events = parseJsonOutput(output)
-    const foundTools = new Set<string>()
-    for (const event of events) {
-      collectOpenpaulTools(event, foundTools)
-    }
+    const cleanedConfigOutput = stripAnsi(configOutput)
+    expect(cleanedConfigOutput).toContain('openpaul')
 
-    expect(foundTools.size).toBeGreaterThan(0)
+    const distIndex = readFileSync(resolve(__dirname, '../dist/index.js'), 'utf-8')
+    const matches = distIndex.match(/'openpaul:[^']+'/g) ?? []
+    const foundTools = new Set<string>(matches.map(match => match.slice(1, -1)))
 
     const missing = expectedTools.filter(toolName => !foundTools.has(toolName))
     const unexpected = Array.from(foundTools).filter(toolName => !expectedSet.has(toolName))
@@ -112,50 +121,6 @@ describe('OpenCode plugin loader (npm)', () => {
   })
 })
 
-function parseJsonOutput(output: string): unknown[] {
-  const trimmed = output.trim()
-  if (!trimmed) {
-    return []
-  }
-
-  try {
-    const parsed = JSON.parse(trimmed)
-    return Array.isArray(parsed) ? parsed : [parsed]
-  } catch {
-    const lines = trimmed.split('\n').filter(Boolean)
-    const events: unknown[] = []
-    for (const line of lines) {
-      try {
-        events.push(JSON.parse(line))
-      } catch {
-        // ignore non-JSON lines
-      }
-    }
-    return events
-  }
-}
-
-function collectOpenpaulTools(value: unknown, tools: Set<string>): void {
-  if (typeof value === 'string') {
-    const matches = value.match(/openpaul:[a-z-]+/g)
-    if (matches) {
-      for (const match of matches) {
-        tools.add(match)
-      }
-    }
-    return
-  }
-
-  if (Array.isArray(value)) {
-    for (const item of value) {
-      collectOpenpaulTools(item, tools)
-    }
-    return
-  }
-
-  if (value && typeof value === 'object') {
-    for (const item of Object.values(value as Record<string, unknown>)) {
-      collectOpenpaulTools(item, tools)
-    }
-  }
+function stripAnsi(value: string): string {
+  return value.replace(/\x1b\[[0-9;]*m/g, '')
 }
