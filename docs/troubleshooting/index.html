@@ -212,7 +212,8 @@ footer a { color: var(--accent); }
 <h2>Commands not found after install?</h2>
 <ul>
 <li>Restart OpenCode to reload plugins</li>
-<li>Verify openpaul is listed in the <code>plugin</code> array in <code>opencode.json</code></li>
+<li>Verify openpaul is listed in the <code>plugin</code> array in <code>opencode.json</code> (npm package)</li>
+<li>If you are using a local build, verify <code>.opencode/plugins/openpaul.ts</code> exists</li>
 <li>Run <code>opencode debug config</code> and confirm <code>openpaul</code> is in the resolved plugin list</li>
 </ul>
 <h2>Commands not working as expected?</h2>

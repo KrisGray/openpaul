@@ -16,6 +16,14 @@ export const minimalPreset: Preset = {
       content: JSON.stringify({ $schema: 'https://opencode.ai/config.json' }, null, 2)
     },
     {
+      path: '.opencode/package.json',
+      content: JSON.stringify({ dependencies: { openpaul: 'latest' } }, null, 2)
+    },
+    {
+      path: '.opencode/plugins/openpaul.ts',
+      content: 'import plugin from "openpaul"\nexport default plugin\n'
+    },
+    {
       path: '.opencode/agents/.gitkeep',
       content: ''
     },

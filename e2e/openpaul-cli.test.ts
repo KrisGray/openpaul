@@ -103,6 +103,8 @@ describe('OpenPAUL CLI E2E Tests', () => {
       expect(result.code).toBe(0);
       expect(existsSync(join(tempDir, '.opencode'))).toBe(true);
       expect(existsSync(join(tempDir, 'opencode.json'))).toBe(true);
+      expect(existsSync(join(tempDir, '.opencode', 'package.json'))).toBe(true);
+      expect(existsSync(join(tempDir, '.opencode', 'plugins', 'openpaul.ts'))).toBe(true);
     });
 
     it('should create full preset when --preset full is specified', () => {
@@ -111,6 +113,8 @@ describe('OpenPAUL CLI E2E Tests', () => {
       expect(existsSync(join(tempDir, 'tui.json'))).toBe(true);
       expect(existsSync(join(tempDir, '.opencode', 'commands', 'example.md'))).toBe(true);
       expect(existsSync(join(tempDir, '.opencode', 'rules', 'example.md'))).toBe(true);
+      expect(existsSync(join(tempDir, '.opencode', 'package.json'))).toBe(true);
+      expect(existsSync(join(tempDir, '.opencode', 'plugins', 'openpaul.ts'))).toBe(true);
     });
 
     it('should create minimal preset when --preset minimal is specified', () => {

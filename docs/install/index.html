@@ -255,7 +255,8 @@ npx openpaul --preset full             # Full template
 </code></pre>
 <hr>
 <h2>Install as OpenCode Plugin</h2>
-<p>Add the <code>plugin</code> key to <code>opencode.json</code> in your project (created by <code>npx openpaul</code>). OpenPAUL registers its slash commands on load, so <code>/openpaul:*</code> should appear in the TUI command list after restart:</p>
+<p>Add the <code>plugin</code> key to <code>opencode.json</code> in your project (created by <code>npx openpaul</code>). The <code>plugin</code> array is for npm packages (for example, <code>openpaul</code>). OpenPAUL registers its slash commands on load, so <code>/openpaul:*</code> should appear in the TUI command list after restart:</p>
+<p>If you scaffolded the project with <code>npx openpaul</code>, it already includes <code>.opencode/plugins/openpaul.ts</code> plus <code>.opencode/package.json</code> to load the npm package locally, so you can skip the <code>plugin</code> entry and just restart OpenCode.</p>
 <pre><code class="language-json">{
   &quot;$schema&quot;: &quot;https://opencode.ai/config.json&quot;,
   &quot;plugin&quot;: [
@@ -271,6 +272,13 @@ npx openpaul --preset full             # Full template
 <li>Plugin: Run /openpaul:help inside OpenCode (it should autocomplete)</li>
 </ul>
 <hr>
+<h2>Local development (from source)</h2>
+<p>If you are working on OpenPAUL locally, add a local plugin file under <code>.opencode/plugins/</code>:</p>
+<pre><code>.opencode/plugins/openpaul.ts
+</code></pre>
+<pre><code class="language-ts">import plugin from "/absolute/path/to/openpaul/dist/index.js"
+export default plugin
+</code></pre>
 <h2>With OpenCARL (Recommended)</h2>
 <p>For the best experience, use OpenPAUL with OpenCARL:</p>
 <pre><code class="language-bash"># Initialize OpenPAUL

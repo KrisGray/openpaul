@@ -1,12 +1,20 @@
 {
   "name": "openpaul",
-  "version": "1.4.23",
+  "version": "1.4.24",
   "description": "OpenPAUL - Plan-Apply-Unify Loop plugin for OpenCode",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "plugin.cjs",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./plugin.cjs"
+    }
+  },
   "files": [
     "dist",
+    "plugin.cjs",
     "README.md",
     "src/commands",
     "src/templates",
@@ -56,10 +64,10 @@
     "typescript": "^5.0.0"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && bun build src/index.ts --outdir dist --target node --bundle --format esm && bun build src/index.ts --target node --bundle --format cjs --outfile dist/index.cjs",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "test:e2e": "jest --config jest.config.e2e.js",
+    "test:e2e": "npm run build && jest --config jest.config.e2e.js",
     "docs": "typedoc",
     "docs:ci": "typedoc --gitRevision $(git rev-parse HEAD)",
     "prepublishOnly": "npm run build"

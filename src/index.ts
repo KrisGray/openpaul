@@ -141,18 +141,22 @@ const OPENPAUL_COMMANDS: Record<string, { description: string; template: string 
 }
 
 export const OpenPaulPlugin: Plugin = async ({ project, client, directory, worktree }) => {
-  // Plugin initialization
-  await client.app.log({
-    body: {
-      service: 'openpaul-plugin',
-      level: 'info',
-      message: 'OpenPAUL plugin initialized',
-      extra: {
-        project: project.id,
-        directory,
-      },
-    },
-  })
+  if (client?.app?.log) {
+    try {
+      await client.app.log({
+        body: {
+          service: 'openpaul-plugin',
+          level: 'info',
+          message: 'OpenPAUL plugin initialized',
+          extra: {
+            project: project.id,
+            directory,
+          },
+        },
+      })
+    } catch {
+    }
+  }
   
   return {
     // Register commands - openpaul: prefix only (clean break)
@@ -195,3 +199,5 @@ export const OpenPaulPlugin: Plugin = async ({ project, client, directory, workt
 
 // Export types for external use
 export * from './types'
+
+export default OpenPaulPlugin

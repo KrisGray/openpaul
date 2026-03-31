@@ -253,6 +253,10 @@ npx openpaul
 }
 </code></pre>
 <p>Restart OpenCode to load the plugin. The plugin registers slash commands on load, so <code>/openpaul:help</code> should autocomplete in the TUI.</p>
+<p>If you are working from a local checkout, load OpenPAUL via <code>.opencode/plugins/openpaul.ts</code>:</p>
+<pre><code class="language-ts">import plugin from "/absolute/path/to/openpaul/dist/index.js"
+export default plugin
+</code></pre>
 <hr>
 <h2>Step 3: Initialize the Project in OpenCode</h2>
 <p>Open the project in OpenCode, then run:</p>

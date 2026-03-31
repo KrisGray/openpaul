@@ -105,7 +105,9 @@ npx openpaul --preset full             # Full template with examples
 
 ### Install as OpenCode Plugin (Optional)
 
-To use OpenPAUL slash commands inside OpenCode (like `/openpaul:plan`), add the `plugin` key to `opencode.json` in your project (created by `npx openpaul`). OpenPAUL injects its commands into OpenCode on load, so `/openpaul:*` appears in the TUI command list once the plugin is loaded.
+To use OpenPAUL slash commands inside OpenCode (like `/openpaul:plan`), add the `plugin` key to `opencode.json` in your project (created by `npx openpaul`). The `plugin` array is for npm packages (for example, `openpaul`). OpenPAUL injects its commands into OpenCode on load, so `/openpaul:*` appears in the TUI command list once the plugin is loaded.
+
+If you scaffolded the project with `npx openpaul`, it already includes `.opencode/plugins/openpaul.ts` plus `.opencode/package.json` to load the npm package locally, so you can skip the `plugin` entry and just restart OpenCode.
 
 ```json
 {
@@ -122,6 +124,19 @@ Restart OpenCode to load the plugin.
 
 - **CLI**: Run `npx openpaul --version`
 - **Plugin**: Run `/openpaul:help` inside OpenCode (it should autocomplete in the command list)
+
+### Local development (from source)
+
+If you are iterating on OpenPAUL locally, load it as a local plugin file (OpenCode only auto-loads local plugins from the plugins directory):
+
+```
+.opencode/plugins/openpaul.ts
+```
+
+```ts
+import plugin from "/absolute/path/to/openpaul/dist/index.js"
+export default plugin
+```
 
 ---
 
@@ -774,7 +789,8 @@ APPLY blocks until required skills are confirmed loaded.
 **Commands not found after install?**
 
 - Restart OpenCode to reload plugins
-- Verify `openpaul` is listed in the `plugin` array in `opencode.json`
+- Verify `openpaul` is listed in the `plugin` array in `opencode.json` (npm package)
+- If you are using a local build, verify `.opencode/plugins/openpaul.ts` exists
 - Run `opencode debug config` and confirm `openpaul` is in the resolved plugin list
 
 **Commands not working as expected?**

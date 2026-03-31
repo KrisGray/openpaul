@@ -59,6 +59,13 @@ It does **not** create loop state files — those are created in the next step.
 
 Restart OpenCode to load the plugin. The plugin registers slash commands on load, so `/openpaul:help` should autocomplete in the TUI.
 
+If you are working from a local checkout, load OpenPAUL via `.opencode/plugins/openpaul.ts`:
+
+```ts
+import plugin from "/absolute/path/to/openpaul/dist/index.js"
+export default plugin
+```
+
 ---
 
 ## Step 3: Initialize the Project in OpenCode
