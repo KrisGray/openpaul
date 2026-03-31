@@ -33,112 +33,148 @@ import { openpaulRemovePhase } from './commands/remove-phase'
 import { openpaulVerify } from './commands/verify'
 import { openpaulPlanFix } from './commands/plan-fix'
 
+const toToolName = (command: string): string => command.replace(/:/g, '_')
+const toolTemplate = (command: string): string => `Run the OpenCode tool \`${toToolName(command)}\`. $ARGUMENTS`
+
 const OPENPAUL_COMMANDS: Record<string, { description: string; template: string }> = {
   'openpaul:init': {
     description: 'Initialize OpenPAUL project state',
-    template: 'Run the OpenCode tool `openpaul:init`. $ARGUMENTS',
+    template: toolTemplate('openpaul:init'),
   },
   'openpaul:plan': {
     description: 'Create a structured OpenPAUL plan',
-    template: 'Run the OpenCode tool `openpaul:plan`. $ARGUMENTS',
+    template: toolTemplate('openpaul:plan'),
   },
   'openpaul:apply': {
     description: 'Apply the current OpenPAUL plan',
-    template: 'Run the OpenCode tool `openpaul:apply`. $ARGUMENTS',
+    template: toolTemplate('openpaul:apply'),
   },
   'openpaul:unify': {
     description: 'Close the loop with an OpenPAUL summary',
-    template: 'Run the OpenCode tool `openpaul:unify`. $ARGUMENTS',
+    template: toolTemplate('openpaul:unify'),
   },
   'openpaul:progress': {
     description: 'Show OpenPAUL progress summary',
-    template: 'Run the OpenCode tool `openpaul:progress`. $ARGUMENTS',
+    template: toolTemplate('openpaul:progress'),
   },
   'openpaul:status': {
     description: 'Show OpenPAUL current status',
-    template: 'Run the OpenCode tool `openpaul:status`. $ARGUMENTS',
+    template: toolTemplate('openpaul:status'),
   },
   'openpaul:help': {
     description: 'Show OpenPAUL command reference',
-    template: 'Run the OpenCode tool `openpaul:help`. $ARGUMENTS',
+    template: toolTemplate('openpaul:help'),
   },
   'openpaul:pause': {
     description: 'Pause the current OpenPAUL session',
-    template: 'Run the OpenCode tool `openpaul:pause`. $ARGUMENTS',
+    template: toolTemplate('openpaul:pause'),
   },
   'openpaul:resume': {
     description: 'Resume the last OpenPAUL session',
-    template: 'Run the OpenCode tool `openpaul:resume`. $ARGUMENTS',
+    template: toolTemplate('openpaul:resume'),
   },
   'openpaul:handoff': {
     description: 'Create an OpenPAUL handoff summary',
-    template: 'Run the OpenCode tool `openpaul:handoff`. $ARGUMENTS',
+    template: toolTemplate('openpaul:handoff'),
   },
   'openpaul:milestone': {
     description: 'Manage OpenPAUL milestones',
-    template: 'Run the OpenCode tool `openpaul:milestone`. $ARGUMENTS',
+    template: toolTemplate('openpaul:milestone'),
   },
   'openpaul:complete-milestone': {
     description: 'Complete the current OpenPAUL milestone',
-    template: 'Run the OpenCode tool `openpaul:complete-milestone`. $ARGUMENTS',
+    template: toolTemplate('openpaul:complete-milestone'),
   },
   'openpaul:discuss-milestone': {
     description: 'Discuss the current OpenPAUL milestone',
-    template: 'Run the OpenCode tool `openpaul:discuss-milestone`. $ARGUMENTS',
+    template: toolTemplate('openpaul:discuss-milestone'),
   },
   'openpaul:discuss': {
     description: 'Discuss the current OpenPAUL phase',
-    template: 'Run the OpenCode tool `openpaul:discuss`. $ARGUMENTS',
+    template: toolTemplate('openpaul:discuss'),
   },
   'openpaul:assumptions': {
     description: 'Capture OpenPAUL assumptions',
-    template: 'Run the OpenCode tool `openpaul:assumptions`. $ARGUMENTS',
+    template: toolTemplate('openpaul:assumptions'),
   },
   'openpaul:discover': {
     description: 'Run OpenPAUL discovery prompts',
-    template: 'Run the OpenCode tool `openpaul:discover`. $ARGUMENTS',
+    template: toolTemplate('openpaul:discover'),
   },
   'openpaul:consider-issues': {
     description: 'Review issues and risks',
-    template: 'Run the OpenCode tool `openpaul:consider-issues`. $ARGUMENTS',
+    template: toolTemplate('openpaul:consider-issues'),
   },
   'openpaul:research': {
     description: 'Start OpenPAUL research flow',
-    template: 'Run the OpenCode tool `openpaul:research`. $ARGUMENTS',
+    template: toolTemplate('openpaul:research'),
   },
   'openpaul:research-phase': {
     description: 'Research a specific OpenPAUL phase',
-    template: 'Run the OpenCode tool `openpaul:research-phase`. $ARGUMENTS',
+    template: toolTemplate('openpaul:research-phase'),
   },
   'openpaul:config': {
     description: 'Configure OpenPAUL settings',
-    template: 'Run the OpenCode tool `openpaul:config`. $ARGUMENTS',
+    template: toolTemplate('openpaul:config'),
   },
   'openpaul:flows': {
     description: 'List OpenPAUL workflow flows',
-    template: 'Run the OpenCode tool `openpaul:flows`. $ARGUMENTS',
+    template: toolTemplate('openpaul:flows'),
   },
   'openpaul:map-codebase': {
     description: 'Map the project codebase',
-    template: 'Run the OpenCode tool `openpaul:map-codebase`. $ARGUMENTS',
+    template: toolTemplate('openpaul:map-codebase'),
   },
   'openpaul:add-phase': {
     description: 'Add a new OpenPAUL phase',
-    template: 'Run the OpenCode tool `openpaul:add-phase`. $ARGUMENTS',
+    template: toolTemplate('openpaul:add-phase'),
   },
   'openpaul:remove-phase': {
     description: 'Remove an OpenPAUL phase',
-    template: 'Run the OpenCode tool `openpaul:remove-phase`. $ARGUMENTS',
+    template: toolTemplate('openpaul:remove-phase'),
   },
   'openpaul:verify': {
     description: 'Verify OpenPAUL phase completion',
-    template: 'Run the OpenCode tool `openpaul:verify`. $ARGUMENTS',
+    template: toolTemplate('openpaul:verify'),
   },
   'openpaul:plan-fix': {
     description: 'Fix a broken OpenPAUL plan',
-    template: 'Run the OpenCode tool `openpaul:plan-fix`. $ARGUMENTS',
+    template: toolTemplate('openpaul:plan-fix'),
   },
 }
+
+const OPENPAUL_TOOL_HANDLERS = {
+  'openpaul:init': openpaulInit,
+  'openpaul:plan': openpaulPlan,
+  'openpaul:apply': openpaulApply,
+  'openpaul:unify': openpaulUnify,
+  'openpaul:progress': openpaulProgress,
+  'openpaul:status': openpaulStatus,
+  'openpaul:help': openpaulHelp,
+  'openpaul:pause': openpaulPause,
+  'openpaul:resume': openpaulResume,
+  'openpaul:handoff': openpaulHandoff,
+  'openpaul:milestone': openpaulMilestone,
+  'openpaul:complete-milestone': openpaulCompleteMilestone,
+  'openpaul:discuss-milestone': openpaulDiscussMilestone,
+  'openpaul:discuss': openpaulDiscuss,
+  'openpaul:assumptions': openpaulAssumptions,
+  'openpaul:discover': openpaulDiscover,
+  'openpaul:consider-issues': openpaulConsiderIssues,
+  'openpaul:research': openpaulResearch,
+  'openpaul:research-phase': openpaulResearchPhase,
+  'openpaul:config': openpaulConfig,
+  'openpaul:flows': openpaulFlows,
+  'openpaul:map-codebase': openpaulMapCodebase,
+  'openpaul:add-phase': openpaulAddPhase,
+  'openpaul:remove-phase': openpaulRemovePhase,
+  'openpaul:verify': openpaulVerify,
+  'openpaul:plan-fix': openpaulPlanFix,
+}
+
+const OPENPAUL_TOOLS = Object.fromEntries(
+  Object.entries(OPENPAUL_TOOL_HANDLERS).map(([command, handler]) => [toToolName(command), handler]),
+)
 
 export const OpenPaulPlugin: Plugin = async ({ project, client, directory, worktree }) => {
   if (client?.app?.log) {
@@ -159,35 +195,8 @@ export const OpenPaulPlugin: Plugin = async ({ project, client, directory, workt
   }
   
   return {
-    // Register commands - openpaul: prefix only (clean break)
-    tool: {
-      'openpaul:init': openpaulInit,
-      'openpaul:plan': openpaulPlan,
-      'openpaul:apply': openpaulApply,
-      'openpaul:unify': openpaulUnify,
-      'openpaul:progress': openpaulProgress,
-      'openpaul:status': openpaulStatus,
-      'openpaul:help': openpaulHelp,
-      'openpaul:pause': openpaulPause,
-      'openpaul:resume': openpaulResume,
-      'openpaul:handoff': openpaulHandoff,
-      'openpaul:milestone': openpaulMilestone,
-      'openpaul:complete-milestone': openpaulCompleteMilestone,
-      'openpaul:discuss-milestone': openpaulDiscussMilestone,
-      'openpaul:discuss': openpaulDiscuss,
-      'openpaul:assumptions': openpaulAssumptions,
-      'openpaul:discover': openpaulDiscover,
-      'openpaul:consider-issues': openpaulConsiderIssues,
-      'openpaul:research': openpaulResearch,
-      'openpaul:research-phase': openpaulResearchPhase,
-      'openpaul:config': openpaulConfig,
-      'openpaul:flows': openpaulFlows,
-      'openpaul:map-codebase': openpaulMapCodebase,
-      'openpaul:add-phase': openpaulAddPhase,
-      'openpaul:remove-phase': openpaulRemovePhase,
-      'openpaul:verify': openpaulVerify,
-      'openpaul:plan-fix': openpaulPlanFix,
-    },
+    // Register tools (opencode tool names must be alphanumeric/underscore/dash)
+    tool: OPENPAUL_TOOLS,
     config: async (config) => {
       config.command = {
         ...(config.command ?? {}),

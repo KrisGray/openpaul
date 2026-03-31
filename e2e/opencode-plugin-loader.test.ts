@@ -68,32 +68,32 @@ describe('OpenCode plugin loader (npm)', () => {
     const configOutput = run(`${OPENCODE_BIN} debug config`, dir, { OPENCODE_CONFIG: configPath })
 
     const expectedTools = [
-      'openpaul:init',
-      'openpaul:plan',
-      'openpaul:apply',
-      'openpaul:unify',
-      'openpaul:progress',
-      'openpaul:status',
-      'openpaul:help',
-      'openpaul:pause',
-      'openpaul:resume',
-      'openpaul:handoff',
-      'openpaul:milestone',
-      'openpaul:complete-milestone',
-      'openpaul:discuss-milestone',
-      'openpaul:discuss',
-      'openpaul:assumptions',
-      'openpaul:discover',
-      'openpaul:consider-issues',
-      'openpaul:research',
-      'openpaul:research-phase',
-      'openpaul:config',
-      'openpaul:flows',
-      'openpaul:map-codebase',
-      'openpaul:add-phase',
-      'openpaul:remove-phase',
-      'openpaul:verify',
-      'openpaul:plan-fix',
+      'openpaul_init',
+      'openpaul_plan',
+      'openpaul_apply',
+      'openpaul_unify',
+      'openpaul_progress',
+      'openpaul_status',
+      'openpaul_help',
+      'openpaul_pause',
+      'openpaul_resume',
+      'openpaul_handoff',
+      'openpaul_milestone',
+      'openpaul_complete-milestone',
+      'openpaul_discuss-milestone',
+      'openpaul_discuss',
+      'openpaul_assumptions',
+      'openpaul_discover',
+      'openpaul_consider-issues',
+      'openpaul_research',
+      'openpaul_research-phase',
+      'openpaul_config',
+      'openpaul_flows',
+      'openpaul_map-codebase',
+      'openpaul_add-phase',
+      'openpaul_remove-phase',
+      'openpaul_verify',
+      'openpaul_plan-fix',
     ]
     const expectedSet = new Set(expectedTools)
 
@@ -101,7 +101,7 @@ describe('OpenCode plugin loader (npm)', () => {
     expect(cleanedConfigOutput).toContain('openpaul')
 
     const distIndex = readFileSync(resolve(__dirname, '../dist/index.js'), 'utf-8')
-    const matches = distIndex.match(/['"]openpaul:[^'"]+['"]/g) ?? []
+    const matches = distIndex.match(/['"]openpaul_[^'"]+['"]/g) ?? []
     const foundTools = new Set<string>(matches.map(match => match.slice(1, -1)))
 
     const missing = expectedTools.filter(toolName => !foundTools.has(toolName))
