@@ -106,6 +106,9 @@ const TUTORIAL_CRITERIA = [
   'all tests pass with 100% coverage of client code',
 ]
 
+const INIT_CORE_VALUE = 'Developers can look up gene metadata by HGNC ID in a single function call'
+const INIT_DESCRIPTION = 'A Python client library for querying the HGNC and NCBI Gene REST APIs'
+
 // ───────────────────────────────────────────────────────────────────────────
 
 describe('Tutorial Workflow E2E', () => {
@@ -154,25 +157,40 @@ describe('Tutorial Workflow E2E', () => {
     beforeEach(() => scaffold(dir))
 
     it('returns success message', async () => {
-      const result = await openpaulInit.execute({}, makeContext(dir))
+      const result = await openpaulInit.execute(
+        { coreValue: INIT_CORE_VALUE, description: INIT_DESCRIPTION },
+        makeContext(dir)
+      )
       expect(result).toContain('✅ OpenPAUL Initialized')
     })
 
     it('creates model-config.json', async () => {
-      await openpaulInit.execute({}, makeContext(dir))
+      await openpaulInit.execute(
+        { coreValue: INIT_CORE_VALUE, description: INIT_DESCRIPTION },
+        makeContext(dir)
+      )
       expect(existsSync(join(dir, '.openpaul', 'model-config.json'))).toBe(true)
     })
 
     it('creates state-phase-1.json', async () => {
-      await openpaulInit.execute({}, makeContext(dir))
+      await openpaulInit.execute(
+        { coreValue: INIT_CORE_VALUE, description: INIT_DESCRIPTION },
+        makeContext(dir)
+      )
       const inOpenPaul = existsSync(join(dir, '.openpaul', 'state-phase-1.json'))
       const inPaul = existsSync(join(dir, '.paul', 'state-phase-1.json'))
       expect(inOpenPaul || inPaul).toBe(true)
     })
 
     it('does not reinitialize without --force', async () => {
-      await openpaulInit.execute({}, makeContext(dir))
-      const result = await openpaulInit.execute({}, makeContext(dir))
+      await openpaulInit.execute(
+        { coreValue: INIT_CORE_VALUE, description: INIT_DESCRIPTION },
+        makeContext(dir)
+      )
+      const result = await openpaulInit.execute(
+        { coreValue: INIT_CORE_VALUE, description: INIT_DESCRIPTION },
+        makeContext(dir)
+      )
       expect(result).toContain('Already Initialized')
     })
   })
@@ -182,7 +200,10 @@ describe('Tutorial Workflow E2E', () => {
   describe('Step 3: /openpaul:plan creates JSON plan', () => {
     beforeEach(async () => {
       scaffold(dir)
-      await openpaulInit.execute({}, makeContext(dir))
+      await openpaulInit.execute(
+        { coreValue: INIT_CORE_VALUE, description: INIT_DESCRIPTION },
+        makeContext(dir)
+      )
     })
 
     it('returns success message with location', async () => {
@@ -237,7 +258,10 @@ describe('Tutorial Workflow E2E', () => {
   describe('Step 4: /openpaul:apply returns task list', () => {
     beforeEach(async () => {
       scaffold(dir)
-      await openpaulInit.execute({}, makeContext(dir))
+      await openpaulInit.execute(
+        { coreValue: INIT_CORE_VALUE, description: INIT_DESCRIPTION },
+        makeContext(dir)
+      )
       await openpaulPlan.execute(
         { phase: 1, plan: '01', criteria: TUTORIAL_CRITERIA, tasks: TUTORIAL_TASKS },
         makeContext(dir)
@@ -269,7 +293,10 @@ describe('Tutorial Workflow E2E', () => {
 
     beforeEach(async () => {
       scaffold(dir)
-      await openpaulInit.execute({}, makeContext(dir))
+      await openpaulInit.execute(
+        { coreValue: INIT_CORE_VALUE, description: INIT_DESCRIPTION },
+        makeContext(dir)
+      )
       await openpaulPlan.execute(
         { phase: 1, plan: '01', criteria: TUTORIAL_CRITERIA, tasks: TUTORIAL_TASKS },
         makeContext(dir)
@@ -321,7 +348,10 @@ describe('Tutorial Workflow E2E', () => {
     it('completes without error and leaves both PLAN.json and SUMMARY.json on disk', async () => {
       scaffold(dir, 'gene-api-client')
 
-      const initResult = await openpaulInit.execute({}, makeContext(dir))
+      const initResult = await openpaulInit.execute(
+        { coreValue: INIT_CORE_VALUE, description: INIT_DESCRIPTION },
+        makeContext(dir)
+      )
       expect(initResult).toContain('✅')
 
       const planResult = await openpaulPlan.execute(
