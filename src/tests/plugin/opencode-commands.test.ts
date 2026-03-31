@@ -68,9 +68,11 @@ describe('OpenPaulPlugin command injection', () => {
       'openpaul:plan-fix',
     ]
 
+    const toToolName = (command: string): string => command.replace(/:/g, '_')
+
     for (const command of expectedCommands) {
       expect(config.command?.[command]).toBeDefined()
-      expect(config.command?.[command].template).toContain(command)
+      expect(config.command?.[command].template).toContain(toToolName(command))
     }
 
     expect(config.command?.existing.template).toBe('keep-me')

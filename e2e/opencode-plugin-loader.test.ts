@@ -101,8 +101,8 @@ describe('OpenCode plugin loader (npm)', () => {
     expect(cleanedConfigOutput).toContain('openpaul')
 
     const distIndex = readFileSync(resolve(__dirname, '../dist/index.js'), 'utf-8')
-    const matches = distIndex.match(/['"]openpaul_[^'"]+['"]/g) ?? []
-    const foundTools = new Set<string>(matches.map(match => match.slice(1, -1)))
+    const matches = distIndex.match(/['"]openpaul:[^'"]+['"]/g) ?? []
+    const foundTools = new Set<string>(matches.map(match => match.slice(1, -1).replace(/:/g, '_')))
 
     const missing = expectedTools.filter(toolName => !foundTools.has(toolName))
     const unexpected = Array.from(foundTools).filter(toolName => !expectedSet.has(toolName))
