@@ -34,7 +34,10 @@ import { openpaulVerify } from './commands/verify'
 import { openpaulPlanFix } from './commands/plan-fix'
 
 const toToolName = (command: string): string => command.replace(/:/g, '_')
-const toolTemplate = (command: string): string => `Run the OpenCode tool \`${toToolName(command)}\`. $ARGUMENTS`
+const toolTemplate = (command: string): string => (
+  `Run the OpenCode tool \`${toToolName(command)}\`. $ARGUMENTS ` +
+  'Return the tool output verbatim with no additional commentary.'
+)
 
 const OPENPAUL_COMMANDS: Record<string, { description: string; template: string }> = {
   'openpaul:init': {
