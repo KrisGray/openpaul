@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, unlinkSync, rmdirSync, readdirSync } from 'fs'
+import { existsSync, readFileSync, unlinkSync, rmSync, readdirSync } from 'fs'
 import { join } from 'path'
 import { tmpdir } from 'os'
 import { z } from 'zod'
@@ -23,10 +23,10 @@ describe('atomicWrite', () => {
         const entries = readdirSync(testDir, { withFileTypes: true })
         entries.forEach(entry => {
           if (entry.isDirectory()) {
-            rmdirSync(join(testDir, entry.name), { recursive: true })
+            rmSync(join(testDir, entry.name), { recursive: true, force: true })
           }
         })
-        rmdirSync(testDir, { recursive: true })
+        rmSync(testDir, { recursive: true, force: true })
       } catch {
         // Ignore cleanup errors
       }
@@ -117,7 +117,7 @@ describe('atomicWriteValidated', () => {
         }
       })
       try {
-        rmdirSync(testDir, { recursive: true })
+        rmSync(testDir, { recursive: true, force: true })
       } catch {
         // Ignore cleanup errors
       }
