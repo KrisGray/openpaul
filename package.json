@@ -1,6 +1,6 @@
 {
   "name": "openpaul",
-  "version": "1.4.29",
+  "version": "1.4.30",
   "description": "OpenPAUL - Plan-Apply-Unify Loop plugin for OpenCode",
   "type": "module",
   "main": "plugin.cjs",

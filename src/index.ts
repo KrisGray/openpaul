@@ -36,7 +36,8 @@ import { openpaulPlanFix } from './commands/plan-fix'
 const toToolName = (command: string): string => command.replace(/:/g, '_')
 const toolTemplate = (command: string): string => (
   `Run the OpenCode tool \`${toToolName(command)}\`. $ARGUMENTS ` +
-  'Return the tool output verbatim with no additional commentary.'
+  'IMPORTANT: After the tool finishes, respond with ONLY the tool output, ' +
+  'verbatim. Do not add summaries, questions, or any extra text.'
 )
 
 const OPENPAUL_COMMANDS: Record<string, { description: string; template: string }> = {
