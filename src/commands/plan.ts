@@ -1,8 +1,7 @@
 import { existsSync } from 'fs'
 import { unlink } from 'fs/promises'
 import { join } from 'path'
-import { tool, type ToolContext } from '@opencode-ai/plugin'
-import { z } from 'zod'
+import { tool, type ToolContext, type ToolDefinition } from '@opencode-ai/plugin'
 import { FileManager } from '../storage/file-manager'
 import { StateManager } from '../state/state-manager'
 import { LoopEnforcer } from '../state/loop-enforcer'
@@ -46,44 +45,44 @@ type PlanArgs = {
   }>
   verbose?: boolean
 }
-
-const toolFactory = tool as unknown as (input: any) => any
-
-export const openpaulPlan = toolFactory({
-  name: 'openpaul:plan',
+export const openpaulPlan: ToolDefinition = tool({
   description: 'Create an executable plan with tasks, criteria, and boundaries',
-  parameters: z.object({
-    phase: z.number().int().positive().describe('Phase number'),
-    plan: z.string().describe('Plan identifier (e.g., "01", "02")'),
-    criteria: z.union([z.string(), z.array(z.string())]).optional().describe('Acceptance criteria for the plan'),
-    boundaries: z.union([z.string(), z.array(z.string())]).optional().describe('Boundaries and exclusions for the plan'),
-    requirements: z.array(z.string()).optional().describe('Requirement IDs satisfied by this plan'),
-    mustHaves: z.object({
-      truths: z.array(z.string()).optional(),
-      artifacts: z.array(z.object({
-        path: z.string(),
-        provides: z.string(),
-        must_contain: z.array(z.string()).optional(),
-        min_lines: z.number().int().positive().optional(),
+  args: {
+    phase: tool.schema.number().int().positive().describe('Phase number'),
+    plan: tool.schema.string().describe('Plan identifier (e.g., "01", "02")'),
+    criteria: tool.schema.union([tool.schema.string(), tool.schema.array(tool.schema.string())]).optional().describe('Acceptance criteria for the plan'),
+    boundaries: tool.schema.union([tool.schema.string(), tool.schema.array(tool.schema.string())]).optional().describe('Boundaries and exclusions for the plan'),
+    requirements: tool.schema.array(tool.schema.string()).optional().describe('Requirement IDs satisfied by this plan'),
+    mustHaves: tool.schema.object({
+      truths: tool.schema.array(tool.schema.string()).optional(),
+      artifacts: tool.schema.array(tool.schema.object({
+        path: tool.schema.string(),
+        provides: tool.schema.string(),
+        must_contain: tool.schema.array(tool.schema.string()).optional(),
+        min_lines: tool.schema.number().int().positive().optional(),
       })).optional(),
-      key_links: z.array(z.object({
-        from: z.string(),
-        to: z.string(),
-        via: z.string(),
-        pattern: z.string(),
+      key_links: tool.schema.array(tool.schema.object({
+        from: tool.schema.string(),
+        to: tool.schema.string(),
+        via: tool.schema.string(),
+        pattern: tool.schema.string(),
       })).optional(),
     }).optional().describe('Must-have validation criteria for goal-backward verification'),
-    tasks: z.array(z.object({
-      name: z.string().describe('Task name'),
-      files: z.array(z.string()).optional().describe('Files to create/modify'),
-      action: z.string().describe('Implementation instructions'),
-      verify: z.string().describe('How to test completion'),
-      done: z.string().describe('Acceptance criteria'),
+    tasks: tool.schema.array(tool.schema.object({
+      name: tool.schema.string().describe('Task name'),
+      files: tool.schema.array(tool.schema.string()).optional().describe('Files to create/modify'),
+      action: tool.schema.string().describe('Implementation instructions'),
+      verify: tool.schema.string().describe('How to test completion'),
+      done: tool.schema.string().describe('Acceptance criteria'),
     })).min(1).max(5).describe('Tasks to add (1-5 tasks per plan)'),
-    verbose: z.boolean().optional().describe('Show full task details'),
-  }),
+    verbose: tool.schema.boolean().optional().describe('Show full task details'),
+  },
   execute: async (args: PlanArgs, context: ToolContext) => {
     try {
+      if (!args || typeof args.phase !== 'number' || !args.plan || !Array.isArray(args.tasks) || args.tasks.length === 0) {
+        return formatPlanWizard()
+      }
+
       const fileManager = new FileManager(context.directory)
       const stateManager = new StateManager(context.directory)
       const loopEnforcer = new LoopEnforcer()
@@ -184,12 +183,22 @@ export const openpaulPlan = toolFactory({
       // Ensure phases directory exists
       fileManager.ensurePhasesDir()
 
-      const planPath = join(context.directory, '.paul', 'phases', `${args.phase}-${planId}-PLAN.json`)
+      const planPath = join(context.directory, '.openpaul', 'phases', `${args.phase}-${planId}-PLAN.json`)
+      const planMarkdownPath = join(context.directory, '.openpaul', 'phases', `${args.phase}-${planId}-PLAN.md`)
       let planWritten = false
+      let markdownWritten = false
 
       try {
         await retryWithBackoff(() => fileManager.writePlan(args.phase, planId, planObject))
         planWritten = true
+        const planMarkdown = formatPlanMarkdown({
+          planIdLabel: `${args.phase}-${planId}`,
+          criteria,
+          tasks,
+          structureLabel: getStructureLabel(tasks.length),
+        })
+        await retryWithBackoff(() => fileManager.writePlanMarkdown(args.phase, planId, planMarkdown))
+        markdownWritten = true
         await retryWithBackoff(() => stateManager.savePhaseState(args.phase, {
           phase: 'PLAN',
           phaseNumber: args.phase,
@@ -200,6 +209,9 @@ export const openpaulPlan = toolFactory({
       } catch (error) {
         if (planWritten) {
           await rollbackPlanFile(planPath)
+        }
+        if (markdownWritten) {
+          await rollbackPlanFile(planMarkdownPath)
         }
         const errorMessage = error instanceof Error ? error.message : 'Unknown filesystem error'
         return formatGuidedError({
@@ -274,6 +286,7 @@ export const openpaulPlan = toolFactory({
       output.push('')
       output.push(formatBold('Status:') + ' ✅ Plan created successfully')
       output.push(formatBold('Location:') + ` .openpaul/phases/${planIdLabel}-PLAN.json`)
+      output.push(formatBold('Markdown:') + ` .openpaul/phases/${planIdLabel}-PLAN.md`)
       output.push('')
       output.push(formatBold('Next action:') + ' Run /openpaul:apply to execute the plan')
       
@@ -381,6 +394,73 @@ function formatTaskSummary(task: Task, index: number, total: number): string {
 function truncateText(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text
   return `${text.slice(0, maxLength - 1)}…`
+}
+
+function formatPlanMarkdown({
+  planIdLabel,
+  criteria,
+  tasks,
+  structureLabel,
+}: {
+  planIdLabel: string
+  criteria: string[]
+  tasks: Task[]
+  structureLabel: string
+}): string {
+  const lines: string[] = [
+    `# 📋 Plan: ${planIdLabel}`,
+    '',
+    `Type: execute | Wave: 1 | Tasks: ${tasks.length}`,
+    `Structure: ${structureLabel}`,
+    '',
+  ]
+
+  if (criteria.length > 0) {
+    lines.push('## Criteria', '')
+    criteria.forEach((item) => {
+      lines.push(`- ${item}`)
+    })
+    lines.push('')
+  }
+
+  lines.push('## Tasks')
+  tasks.forEach((task, index) => {
+    const summary = formatTaskSummary(task, index, tasks.length)
+    lines.push(`${index + 1}. ${summary}`)
+  })
+
+  lines.push('')
+
+  return lines.join('\n')
+}
+
+function formatPlanWizard(): string {
+  const output: string[] = [
+    formatHeader(2, 'Plan Wizard (TDD)'),
+    '',
+    'To create a plan, provide the missing inputs in this order:',
+    '',
+    formatList([
+      'Phase number (e.g., 1)',
+      'Plan ID (e.g., 01)',
+      'Acceptance criteria (1-5 bullet points)',
+      'Tasks (1-5) in TDD order: failing test -> implementation -> edge/coverage tests',
+    ]),
+    '',
+    formatBold('TDD task template:'),
+    '',
+    formatList([
+      'Write failing test: test file exists and fails for the new behavior',
+      'Implement feature: behavior passes and errors handled',
+      'Add edge tests: not-found, error paths, malformed responses',
+    ]),
+    '',
+    formatBold('Example call:'),
+    '',
+    '/openpaul:plan',
+  ]
+
+  return output.join('\n')
 }
 
 const TRANSIENT_ERROR_CODES = new Set(['EBUSY', 'EMFILE', 'ENFILE', 'EIO', 'ETIMEDOUT'])

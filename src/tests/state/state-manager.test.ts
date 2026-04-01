@@ -51,8 +51,10 @@ describe('StateManager', () => {
       
       const stateFile = join(paulDir, 'state-phase-1.json')
       writeFileSync(stateFile, 'invalid json')
-      
+
+      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
       const loaded = stateManager.loadPhaseState(1)
+      consoleErrorSpy.mockRestore()
       expect(loaded).toBeNull()
     })
   })
@@ -115,8 +117,10 @@ describe('StateManager', () => {
       const openPaulDir = join(testDir, '.openpaul')
       mkdirSync(openPaulDir)
       writeFileSync(join(openPaulDir, 'state-phase-1.json'), 'invalid json')
-      
+
+      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
       const position = stateManager.getCurrentPosition()
+      consoleErrorSpy.mockRestore()
       expect(position).toBeUndefined()
     })
     

@@ -35,9 +35,22 @@ import { openpaulPlanFix } from './commands/plan-fix'
 
 const toToolName = (command: string): string => command.replace(/:/g, '_')
 const toolTemplate = (command: string): string => (
-  `Run the OpenCode tool \`${toToolName(command)}\`. $ARGUMENTS ` +
+  `Call the OpenCode tool \`${toToolName(command)}\` with a JSON argument object. ` +
+  'Convert CLI flags in $ARGUMENTS into tool arguments (e.g., --phase 1 -> {"phase": 1}). ' +
+  'If $ARGUMENTS is empty, pass {}. ' +
   'IMPORTANT: After the tool finishes, respond with ONLY the tool output, ' +
   'verbatim. Do not add summaries, questions, or any extra text.'
+)
+
+const planWizardTemplate = (): string => (
+  `Plan mode wizard for /openpaul:plan. Call the OpenCode tool \`${toToolName('openpaul:plan')}\` ` +
+  'with a JSON argument object when ready. ' +
+  'If $ARGUMENTS is present, convert CLI flags into JSON and call the tool. ' +
+  'If required arguments are missing, do NOT call the tool yet. ' +
+  'Instead, ask the user for: phase number, plan ID, acceptance criteria, and 1-5 tasks. ' +
+  'Use a TDD flow: (1) write failing test, (2) implement, (3) add edge/coverage tests. ' +
+  'Once all inputs are collected, call the tool with JSON arguments. ' +
+  'IMPORTANT: After the tool finishes, respond with ONLY the tool output, verbatim.'
 )
 
 const OPENPAUL_COMMANDS: Record<string, { description: string; template: string }> = {
@@ -47,7 +60,7 @@ const OPENPAUL_COMMANDS: Record<string, { description: string; template: string 
   },
   'openpaul:plan': {
     description: 'Create a structured OpenPAUL plan',
-    template: toolTemplate('openpaul:plan'),
+    template: planWizardTemplate(),
   },
   'openpaul:apply': {
     description: 'Apply the current OpenPAUL plan',

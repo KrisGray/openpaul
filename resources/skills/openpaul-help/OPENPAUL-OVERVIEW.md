@@ -116,6 +116,7 @@ For implementation, OpenPAUL keeps everything in-session.
 ├── HANDOFF.md           # Session handoff (/openpaul:pause)
 └── phases/
     ├── 1-01-PLAN.json
+    ├── 1-01-PLAN.md
     └── 1-01-SUMMARY.json
 ```
 

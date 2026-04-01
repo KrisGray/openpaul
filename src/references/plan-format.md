@@ -9,26 +9,14 @@ Plans are created via `/openpaul:plan` and stored as JSON at `.openpaul/phases/{
 ## Command
 
 ```
-/openpaul:plan --phase N --plan NN \
-  --criteria "AC-1: [expected behavior]" \
-  --boundaries "DO NOT change [protected areas]" \
-  --tasks '[{
-    "name": "Task name",
-    "files": ["path/to/file.ts"],
-    "action": "Specific implementation instructions",
-    "verify": "How to test completion",
-    "done": "AC-N satisfied"
-  }]'
+/openpaul:plan
 ```
 
-| Parameter | Required | Description |
-|-----------|----------|-------------|
-| `--phase` | Yes | Phase number (integer) |
-| `--plan` | Yes | Plan identifier (e.g., `01`, `02`) |
-| `--criteria` | No | Acceptance criterion — repeat for multiple |
-| `--boundaries` | No | What NOT to change — repeat for multiple |
-| `--tasks` | Yes | JSON array of 1–5 task objects |
-| `--requirements` | No | Requirement IDs satisfied by this plan |
+OpenPAUL runs a TDD wizard to collect:
+- Phase number and plan ID
+- Acceptance criteria
+- Boundaries (what NOT to change)
+- 1–5 tasks in TDD order (failing test -> implementation -> edge/coverage)
 
 ## Plan JSON Structure
 
@@ -107,7 +95,7 @@ Every task has four required fields:
 
 ## Acceptance Criteria Format
 
-Pass via `--criteria`. Use Given/When/Then (BDD) format:
+Provide criteria via the wizard. Use Given/When/Then (BDD) format:
 
 ```gherkin
 Given [precondition / initial state]
@@ -123,13 +111,7 @@ Then [expected outcome]
 
 ## Boundaries
 
-Pass via `--boundaries`. Prevents scope creep:
-
-```
-/openpaul:plan ... \
-  --boundaries "DO NOT change database/migrations/* — schema locked for this phase" \
-  --boundaries "DO NOT add new npm dependencies"
-```
+Provide boundaries via the wizard. Prevents scope creep:
 
 ## Specificity Levels
 

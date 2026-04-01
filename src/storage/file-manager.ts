@@ -230,6 +230,14 @@ export class FileManager {
     const filePath = this.getPlanWritePath(phaseNumber, planId)
     await this.writeJSON(filePath, plan, PlanSchema)
   }
+
+  /**
+   * Write plan markdown summary — always to .openpaul/phases/
+   */
+  async writePlanMarkdown(phaseNumber: number, planId: string, markdown: string): Promise<void> {
+    const filePath = join(this.openPaulDir, 'phases', `${phaseNumber}-${planId}-PLAN.md`)
+    await atomicWrite(filePath, markdown)
+  }
   
   /**
    * Check if plan exists

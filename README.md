@@ -566,7 +566,7 @@ OpenPAUL provides 26 commands organized by purpose. The plugin registers them as
 | Command                  | What it does                                     |
 | ------------------------ | ------------------------------------------------ |
 | `npx openpaul`           | Initialize OpenPAUL in a project (CLI)           |
-| `/openpaul:plan --phase N --plan NN` | Create an executable plan                        |
+| `/openpaul:plan`        | Create an executable plan (TDD wizard)            |
 | `/openpaul:apply --phase N --plan NN` | Execute an approved plan                         |
 | `/openpaul:unify --phase N --plan NN` | Reconcile and close the loop                     |
 | `/openpaul:help`         | Show command reference                           |
@@ -645,6 +645,7 @@ After `npx openpaul` + `/openpaul:init`:
 ├── HANDOFF.md             # Session handoff (/openpaul:pause)
 └── phases/
     ├── 1-01-PLAN.json     # Plan (/openpaul:plan)
+    ├── 1-01-PLAN.md       # Plan summary (/openpaul:plan)
     └── 1-01-SUMMARY.json  # Summary (/openpaul:unify)
 opencode.json              # OpenCode config (npx openpaul)
 .opencode/
@@ -667,22 +668,11 @@ When you resume work, `/openpaul:resume` loads your saved session from `.openpau
 
 ### Plan Structure
 
-Plans are created via `/openpaul:plan` and stored as JSON in `.openpaul/phases/`:
+Plans are created via `/openpaul:plan` and stored as JSON in `.openpaul/phases/`.
 
-```
-/openpaul:plan --phase 1 --plan 01 \
-  --criteria "AC-1: login returns 200" \
-  --boundaries "DO NOT change database/migrations/*" \
-  --tasks '[{
-    "name": "Create login endpoint",
-    "files": ["src/api/auth/login.ts"],
-    "action": "Implement POST /auth/login with JWT response",
-    "verify": "curl -X POST /auth/login returns 200",
-    "done": "AC-1 satisfied"
-  }]'
-```
+In the OpenCode TUI, use `/openpaul:plan` with no flags to run the TDD wizard. It will prompt for phase, plan ID, criteria, and tasks.
 
-Stored at `.openpaul/phases/1-01-PLAN.json`. Every task has: `files`, `action`, `verify`, `done`. If you can't specify all four, the task is too vague.
+Stored at `.openpaul/phases/1-01-PLAN.json` and `.openpaul/phases/1-01-PLAN.md`. Every task has: `files`, `action`, `verify`, `done`. If you can't specify all four, the task is too vague.
 
 ### OpenCARL Integration
 

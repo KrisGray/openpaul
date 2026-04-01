@@ -8,9 +8,15 @@ jest.mock('../../state/state-manager')
 jest.mock('../../state/loop-enforcer')
 jest.mock(
   '@opencode-ai/plugin',
-  () => ({
-    tool: (input: any) => input,
-  }),
+  () => {
+    const chainable = (): any => {
+      const fn: any = () => chainable()
+      return new Proxy(fn, { get: () => chainable() })
+    }
+    const tool: any = (input: any) => input
+    tool.schema = chainable()
+    return { tool }
+  },
   { virtual: true }
 )
 
@@ -22,6 +28,7 @@ describe('openpaulPlan command', () => {
     planExists: jest.Mock
     ensurePhasesDir: jest.Mock
     writePlan: jest.Mock
+    writePlanMarkdown: jest.Mock
   }
   let mockStateManager: {
     getCurrentPosition: jest.Mock
@@ -39,6 +46,7 @@ describe('openpaulPlan command', () => {
       planExists: jest.fn().mockReturnValue(false),
       ensurePhasesDir: jest.fn(),
       writePlan: jest.fn().mockResolvedValue(undefined),
+      writePlanMarkdown: jest.fn().mockResolvedValue(undefined),
     }
 
     mockStateManager = {

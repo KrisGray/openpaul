@@ -97,19 +97,7 @@ If you maintain a roadmap, create or edit `.openpaul/ROADMAP.md` now, or leave i
 
 ## Step 4: PLAN — Create First Plan
 
-Run the plan command with structured parameters. OpenPAUL stores the plan as a JSON file in `.openpaul/phases/`.
-
-```
-/openpaul:plan --phase 1 --plan 01 \
-  --criteria "fetch_by_hgnc_id returns gene data dict with symbol, name, entrez_id" \
-  --criteria "network errors raise RequestException with context" \
-  --criteria "all tests pass with 100% coverage of client code" \
-  --tasks '[
-    {"name": "Write failing test for HGNC fetch", "files": ["tests/test_hgnc_client.py"], "action": "Create TestHGNCClient class using mocker fixture to patch requests.get", "verify": "pytest tests/test_hgnc_client.py -v (expect failure)", "done": "Test file exists and test fails"},
-    {"name": "Implement HGNCClient", "files": ["src/hgnc_client.py"], "action": "Implement fetch_by_hgnc_id with proper headers, timeout, and error handling", "verify": "pytest tests/test_hgnc_client.py -v", "done": "AC-1 and AC-2 satisfied"},
-    {"name": "Add edge case tests", "files": ["tests/test_hgnc_client.py"], "action": "Test not-found (empty docs), network timeout, and malformed response", "verify": "pytest tests/test_hgnc_client.py --cov=src -v", "done": "AC-3 satisfied — 100% coverage"}
-  ]'
-```
+Use the TDD wizard in OpenCode. Enter `/openpaul:plan` with no flags and answer the prompts for phase, plan ID, criteria, and tasks.
 
 OpenPAUL stores the plan at `.openpaul/phases/1-01-PLAN.json` and outputs a summary:
 
@@ -131,6 +119,7 @@ Structure: simple
 
 Status: ✅ Plan created successfully
 Location: .openpaul/phases/1-01-PLAN.json
+Markdown: .openpaul/phases/1-01-PLAN.md
 Next action: Run /openpaul:apply to execute the plan
 ```
 
@@ -293,16 +282,11 @@ Run: /openpaul:plan to start planning the next phase
 
 ### Phase 2: NCBI Integration
 
-```
-/openpaul:plan --phase 2 --plan 01 \
-  --criteria "given an entrez_id, fetch_ncbi_gene returns gene details from NCBI" \
-  --criteria "given an HGNC ID, fetch_full_gene returns combined data from both APIs" \
-  --tasks '[
-    {"name": "Write NCBI client tests", "files": ["tests/test_ncbi_client.py"], "action": "Create tests with mocker-patched requests for NCBI Entrez efetch API", "verify": "pytest tests/test_ncbi_client.py -v (expect failure)", "done": "Tests exist and fail"},
-    {"name": "Implement NCBIClient", "files": ["src/ncbi_client.py"], "action": "Implement fetch_ncbi_gene using Entrez efetch API", "verify": "pytest tests/test_ncbi_client.py -v", "done": "AC-1 satisfied"},
-    {"name": "Add combined lookup", "files": ["src/gene_client.py"], "action": "Implement GeneClient.fetch_full_gene combining HGNC + NCBI", "verify": "pytest tests/ -v", "done": "AC-2 satisfied"}
-  ]'
-```
+Run `/openpaul:plan` and follow the TDD wizard prompts:
+- Phase: 2
+- Plan ID: 01
+- Criteria: "given an entrez_id, fetch_ncbi_gene returns gene details from NCBI"; "given an HGNC ID, fetch_full_gene returns combined data from both APIs"
+- Tasks (TDD order): write NCBI client tests, implement NCBIClient, add combined lookup
 
 Execute and close:
 
@@ -313,11 +297,11 @@ Execute and close:
 
 ### Phase 3: CLI Tool
 
-```
-/openpaul:plan --phase 3 --plan 01 \
-  --criteria "uv run gene-lookup HGNC:5 returns combined gene data" \
-  --tasks '[{"name": "Implement CLI entry point", "files": ["src/cli.py"], "action": "Create CLI with argparse accepting --gene and --format options", "verify": "uv run python -m src.cli --gene HGNC:5", "done": "CLI returns JSON gene data"}]'
-```
+Run `/openpaul:plan` and follow the TDD wizard prompts:
+- Phase: 3
+- Plan ID: 01
+- Criteria: "uv run gene-lookup HGNC:5 returns combined gene data"
+- Tasks (TDD order): implement CLI entry point
 ---
 
 ## Session Continuity
@@ -355,7 +339,7 @@ You've learned:
 1. **Scaffold** — `npx openpaul` creates `.openpaul/state.json` and `.opencode/` config
 2. **Install plugin** — add `"plugin": ["openpaul"]` to `opencode.json` and restart OpenCode
 3. **Initialize** — `/openpaul:init` sets up loop state files
-4. **Plan** — `/openpaul:plan` creates structured JSON plans with criteria and tasks
+4. **Plan** — `/openpaul:plan` runs the TDD wizard and creates structured JSON plans with criteria and tasks
 5. **Apply** — `/openpaul:apply` displays tasks for sequential execution with verification
 6. **Unify** — `/openpaul:unify` closes the loop and writes a JSON summary
 7. **Resume** — `/openpaul:resume` restores context after breaks

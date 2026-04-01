@@ -169,7 +169,11 @@ plan: "01"
       const phaseDir = join(testDir, '.planning', 'phases', '07-quality')
       writeFileSync(join(phaseDir, 'UAT.md'), '# UAT Results\n\n```json\ninvalid\n```')
 
+      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+
       const result = qualityManager.readUAT(phaseDir)
+
+      consoleErrorSpy.mockRestore()
       expect(result).toBeNull()
     })
   })
