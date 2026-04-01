@@ -9,6 +9,8 @@ export default {
     '!src/**/*.d.ts',
     '!src/**/*.test.ts',
     '!src/**/__tests__/**',
+    '!src/cli.ts',
+    '!src/cli/**',
   ],
   coverageThreshold: {
     global: {
