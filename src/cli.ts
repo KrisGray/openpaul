@@ -6,7 +6,7 @@ import { dirname, join, resolve } from 'path'
 import { input, confirm } from '@inquirer/prompts'
 import { success, step, info, setVerbosity, showBanner, notice } from './cli/output.js'
 import { handleCliError } from './cli/errors.js'
-import { getDefaultProjectName, createOpenPaulDir, generateStateJson, generatePresetFiles } from './cli/scaffold.js'
+import { getDefaultProjectName, createOpenPaulDir, generateStateJson, generatePresetFiles, ensureOpenCodePlugin } from './cli/scaffold.js'
 import { resolvePreset } from './cli/presets.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -110,6 +110,7 @@ Examples:
     await generateStateJson(openpaulDir, projectName, pkg.version)
     step('Creating .opencode/ preset files...')
     generatePresetFiles(targetPath, preset)
+    await ensureOpenCodePlugin(targetPath, 'openpaul')
     success('OpenPAUL initialized successfully!')
   })
 

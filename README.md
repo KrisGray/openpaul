@@ -670,7 +670,7 @@ When you resume work, `/openpaul:resume` loads your saved session from `.openpau
 
 Plans are created via `/openpaul:plan` and stored as JSON in `.openpaul/phases/`.
 
-In the OpenCode TUI, use `/openpaul:plan` with no flags to run the TDD wizard. It will prompt for phase, plan ID, criteria, and tasks.
+In the OpenCode TUI, use `/openpaul:plan` with no flags to run the TDD wizard. It prompts step-by-step for phase, plan ID, criteria, boundaries, and tasks.
 
 Stored at `.openpaul/phases/1-01-PLAN.json` and `.openpaul/phases/1-01-PLAN.md`. Every task has: `files`, `action`, `verify`, `done`. If you can't specify all four, the task is too vague.
 

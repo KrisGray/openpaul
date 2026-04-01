@@ -19,6 +19,9 @@ export * from './state'
 // Plan types
 export * from './plan'
 
+// Plan wizard types
+export * from './plan-wizard'
+
 // Command types
 export * from './command'
 

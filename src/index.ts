@@ -44,12 +44,10 @@ const toolTemplate = (command: string): string => (
 
 const planWizardTemplate = (): string => (
   `Plan mode wizard for /openpaul:plan. Call the OpenCode tool \`${toToolName('openpaul:plan')}\` ` +
-  'with a JSON argument object when ready. ' +
+  'with a JSON argument object. ' +
   'If $ARGUMENTS is present, convert CLI flags into JSON and call the tool. ' +
-  'If required arguments are missing, do NOT call the tool yet. ' +
-  'Instead, ask the user for: phase number, plan ID, acceptance criteria, and 1-5 tasks. ' +
-  'Use a TDD flow: (1) write failing test, (2) implement, (3) add edge/coverage tests. ' +
-  'Once all inputs are collected, call the tool with JSON arguments. ' +
+  'If the user replies to a wizard question, pass their response as {"wizardInput": "<response>"}. ' +
+  'Use a step-by-step flow: phase number, plan ID, acceptance criteria, boundaries, task count, then task details in TDD order. ' +
   'IMPORTANT: After the tool finishes, respond with ONLY the tool output, verbatim.'
 )
 

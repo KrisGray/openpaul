@@ -1,5 +1,5 @@
 import { resolve, basename, join, dirname } from 'path'
-import { existsSync, mkdirSync, writeFileSync } from 'fs'
+import { existsSync, mkdirSync, writeFileSync, readFileSync } from 'fs'
 import { atomicWrite } from '../storage/atomic-writes.js'
 import { step } from './output.js'
 import type { StateFile } from '../types/state-file.js'
@@ -81,4 +81,42 @@ export function generatePresetFiles(targetPath: string, preset: Preset): void {
     }
     writeFileSync(filePath, file.content)
   }
+}
+
+/**
+ * Ensure OpenCode config includes OpenPAUL plugin
+ */
+export async function ensureOpenCodePlugin(targetPath: string, pluginName: string): Promise<void> {
+  const configPath = join(targetPath, 'opencode.json')
+  let config: Record<string, unknown> = { $schema: 'https://opencode.ai/config.json' }
+
+  if (existsSync(configPath)) {
+    try {
+      const raw = readFileSync(configPath, 'utf-8')
+      const parsed = JSON.parse(raw)
+      if (parsed && typeof parsed === 'object') {
+        config = parsed as Record<string, unknown>
+      }
+    } catch {
+      // Fall back to default config
+    }
+  }
+
+  const existing = config.plugin
+  let plugins: string[] = []
+
+  if (Array.isArray(existing)) {
+    plugins = existing.filter((item): item is string => typeof item === 'string')
+  } else if (typeof existing === 'string') {
+    plugins = [existing]
+  }
+
+  if (!plugins.includes(pluginName)) {
+    plugins.push(pluginName)
+  }
+
+  config.plugin = plugins
+
+  step('Updating opencode.json...')
+  await atomicWrite(configPath, JSON.stringify(config, null, 2))
 }

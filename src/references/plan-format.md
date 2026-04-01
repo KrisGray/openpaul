@@ -12,7 +12,7 @@ Plans are created via `/openpaul:plan` and stored as JSON at `.openpaul/phases/{
 /openpaul:plan
 ```
 
-OpenPAUL runs a TDD wizard to collect:
+OpenPAUL runs a step-by-step TDD wizard to collect:
 - Phase number and plan ID
 - Acceptance criteria
 - Boundaries (what NOT to change)

@@ -1,4 +1,5 @@
 import { readFileSync, existsSync, mkdirSync } from 'fs'
+import { unlink } from 'fs/promises'
 import { join } from 'path'
 import { z } from 'zod'
 import { atomicWrite } from './atomic-writes'
@@ -8,6 +9,8 @@ import type { ModelConfigFile } from '../types/model-config'
 import { ModelConfigFileSchema } from '../types/model-config'
 import type { Plan } from '../types/plan'
 import { PlanSchema } from '../types/plan'
+import type { PlanWizardState } from '../types/plan-wizard'
+import { PlanWizardStateSchema } from '../types/plan-wizard'
 
 /**
  * Summary Task - Individual task summary
@@ -152,6 +155,36 @@ export class FileManager {
   ensurePaulDir(): void {
     if (!existsSync(this.openPaulDir)) {
       mkdirSync(this.openPaulDir, { recursive: true })
+    }
+  }
+
+  /**
+   * Read plan wizard state
+   */
+  readPlanWizardState(): PlanWizardState | null {
+    const filePath = join(this.openPaulDir, 'plan-wizard.json')
+    return this.readJSON(filePath, PlanWizardStateSchema)
+  }
+
+  /**
+   * Write plan wizard state
+   */
+  async writePlanWizardState(state: PlanWizardState): Promise<void> {
+    this.ensurePaulDir()
+    const filePath = join(this.openPaulDir, 'plan-wizard.json')
+    await this.writeJSON(filePath, state, PlanWizardStateSchema)
+  }
+
+  /**
+   * Clear plan wizard state
+   */
+  async clearPlanWizardState(): Promise<void> {
+    const filePath = join(this.openPaulDir, 'plan-wizard.json')
+    if (!existsSync(filePath)) return
+    try {
+      await unlink(filePath)
+    } catch {
+      // Ignore cleanup errors
     }
   }
   

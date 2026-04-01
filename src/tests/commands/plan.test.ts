@@ -29,6 +29,9 @@ describe('openpaulPlan command', () => {
     ensurePhasesDir: jest.Mock
     writePlan: jest.Mock
     writePlanMarkdown: jest.Mock
+    readPlanWizardState: jest.Mock
+    writePlanWizardState: jest.Mock
+    clearPlanWizardState: jest.Mock
   }
   let mockStateManager: {
     getCurrentPosition: jest.Mock
@@ -47,6 +50,9 @@ describe('openpaulPlan command', () => {
       ensurePhasesDir: jest.fn(),
       writePlan: jest.fn().mockResolvedValue(undefined),
       writePlanMarkdown: jest.fn().mockResolvedValue(undefined),
+      readPlanWizardState: jest.fn().mockReturnValue(null),
+      writePlanWizardState: jest.fn().mockResolvedValue(undefined),
+      clearPlanWizardState: jest.fn().mockResolvedValue(undefined),
     }
 
     mockStateManager = {
@@ -62,6 +68,13 @@ describe('openpaulPlan command', () => {
     ;(FileManager as jest.Mock).mockImplementation(() => mockFileManager)
     ;(StateManager as jest.Mock).mockImplementation(() => mockStateManager)
     ;(LoopEnforcer as jest.Mock).mockImplementation(() => mockLoopEnforcer)
+  })
+
+  it('returns step-by-step wizard prompt when args missing', async () => {
+    const result = await openpaulPlan.execute({} as any, toolContext)
+
+    expect(result).toContain('Plan Wizard (TDD)')
+    expect(result).toContain('**Next:** Phase number')
   })
 
   it('persists criteria, boundaries, and dependency graph', async () => {

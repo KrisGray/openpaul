@@ -97,7 +97,7 @@ If you maintain a roadmap, create or edit `.openpaul/ROADMAP.md` now, or leave i
 
 ## Step 4: PLAN — Create First Plan
 
-Use the TDD wizard in OpenCode. Enter `/openpaul:plan` with no flags and answer the prompts for phase, plan ID, criteria, and tasks.
+Use the TDD wizard in OpenCode. Enter `/openpaul:plan` with no flags and answer the step-by-step prompts for phase, plan ID, criteria, boundaries, and tasks.
 
 OpenPAUL stores the plan at `.openpaul/phases/1-01-PLAN.json` and outputs a summary:
 

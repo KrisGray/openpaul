@@ -13,7 +13,7 @@ export const minimalPreset: Preset = {
   files: [
     {
       path: 'opencode.json',
-      content: JSON.stringify({ $schema: 'https://opencode.ai/config.json' }, null, 2)
+      content: JSON.stringify({ $schema: 'https://opencode.ai/config.json', plugin: ['openpaul'] }, null, 2)
     },
     {
       path: '.opencode/package.json',
