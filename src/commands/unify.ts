@@ -213,10 +213,10 @@ ${formatBold('Error:')} Run /openpaul:init first to initialize OpenPAUL.`
         metadata: { summary },
       })
       
-      // Transition to PLAN for next phase (phase + 1)
+      // Transition to UNIFY for next phase (phase + 1)
       const nextPhaseNumber = phaseNumber + 1
       await stateManager.savePhaseState(nextPhaseNumber, {
-        phase: 'PLAN',
+        phase: 'UNIFY',
         phaseNumber: nextPhaseNumber,
         lastUpdated: Date.now(),
         metadata: {},
