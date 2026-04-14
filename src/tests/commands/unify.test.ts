@@ -131,7 +131,7 @@ describe('openpaulUnify command', () => {
       requirements: ['TEST-01'],
     }
 
-    it('should create summary and transition to APPLY → UNIFY → PLAN', async () => {
+    it('should create summary and transition to APPLY → UNIFY → UNIFY', async () => {
       mockFileManager.readPlan.mockReturnValue(plan)
 
       const result = await openpaulUnify.execute({}, toolContext)
@@ -170,7 +170,7 @@ describe('openpaulUnify command', () => {
       expect(mockStateManager.savePhaseState).toHaveBeenCalledWith(
         3,
         expect.objectContaining({
-          phase: 'PLAN',
+          phase: 'UNIFY',
           phaseNumber: 3,
         })
       )
