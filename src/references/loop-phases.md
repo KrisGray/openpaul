@@ -96,7 +96,7 @@ PLAN ──▶ APPLY ──▶ UNIFY
 2. Document what was built (files, lines)
 3. Record acceptance criteria results (PASS/FAIL)
 4. Note any deviations and why
-5. Advance `state-phase-N.json` to UNIFY, then ready next phase for PLAN
+5. Advance `state-phase-N.json` to UNIFY, then next phase created as UNIFY
 6. Update `STATE.md` if present
 7. Update ROADMAP.md if phase is complete
 
@@ -106,12 +106,12 @@ PLAN ──▶ APPLY ──▶ UNIFY
 **Exit Condition:**
 - `{phase}-{plan}-SUMMARY.json` created with results
 - `state-phase-N.json` advanced to UNIFY
-- Loop closed, ready for next PLAN
+- Loop closed, next phase created as UNIFY
 
 **Loop Position:**
 ```
 PLAN ──▶ APPLY ──▶ UNIFY
-  ✓        ✓        ✓     [Loop complete, ready for next PLAN]
+  ✓        ✓        ✓     [Loop complete, next phase at UNIFY]
 ```
 
 ## Loop Invariants

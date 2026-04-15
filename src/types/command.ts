@@ -11,7 +11,7 @@ import type { LoopPhase } from './loop'
  * - /openpaul:unify - Close the loop
  * - /openpaul:progress - View current status
  * - /openpaul:help - Command reference
- * - And 20 more commands from roadmap
+ * - And 10 more commands from roadmap
  */
 export type CommandType =
   | 'init'
@@ -23,21 +23,11 @@ export type CommandType =
   | 'pause'
   | 'resume'
   | 'handoff'
-  | 'status'
   | 'milestone'
   | 'complete-milestone'
-  | 'discuss-milestone'
   | 'map-codebase'
-  | 'discuss'
-  | 'assumptions'
-  | 'discover'
-  | 'consider-issues'
-  | 'research'
-  | 'research-phase'
   | 'verify'
   | 'plan-fix'
-  | 'add-phase'
-  | 'remove-phase'
   | 'flows'
   | 'config'
 
@@ -53,11 +43,9 @@ export interface CommandInput {
 export const CommandInputSchema = z.object({
   type: z.enum([
     'init', 'plan', 'apply', 'unify', 'progress', 'help',
-    'pause', 'resume', 'handoff', 'status',
-    'milestone', 'complete-milestone', 'discuss-milestone', 'map-codebase',
-    'discuss', 'assumptions', 'discover', 'consider-issues',
-    'research', 'research-phase', 'verify', 'plan-fix',
-    'add-phase', 'remove-phase', 'flows', 'config',
+    'pause', 'resume', 'handoff',
+    'milestone', 'complete-milestone', 'map-codebase',
+    'verify', 'plan-fix', 'flows', 'config',
   ]),
   args: z.array(z.string()),
   flags: z.record(z.string(), z.unknown()),

@@ -43,27 +43,14 @@ Running `npx openpaul` scaffolds:
 .openpaul/
 └── state.json           # Project registry (name, version, timestamps)
 
-opencode.json           # OpenCode config
-.opencode/              # OpenCode folders (commands, rules, skills, etc.)
+opencode.json            # OpenCode config (includes "plugin": ["openpaul"])
+.opencode/               # OpenCode folders (commands, rules, skills, etc.)
 
 ---
 
-## Install as OpenCode Plugin
+## Plugin Installation
 
-Add the `plugin` key to `opencode.json` in your project (created by `npx openpaul`). The `plugin` array is for npm packages (for example, `openpaul`). OpenPAUL registers its slash commands on load, so `/openpaul:*` should appear in the TUI command list after restart:
-
-If you scaffolded the project with `npx openpaul`, it already includes `.opencode/plugins/openpaul.ts` plus `.opencode/package.json` to load the npm package locally, so you can skip the `plugin` entry and just restart OpenCode.
-
-```json
-{
-  "$schema": "https://opencode.ai/config.json",
-  "plugin": [
-    "openpaul"
-  ]
-}
-```
-
-Restart OpenCode to load the plugin.
+`npx openpaul` automatically adds `"plugin": ["openpaul"]` to `opencode.json`. Just restart OpenCode after scaffolding to load the plugin. `/openpaul:*` commands will appear in the TUI command list.
 
 ---
 

@@ -191,7 +191,7 @@ OpenCARL can enforce loop discipline automatically:
 ### Research First
 
 ```
-/openpaul:research <topic>  # Explore options
+Research can be done by asking the assistant directly, or use the research CLI tool.
 [review findings]
 /openpaul:plan              # Create informed plan
 /openpaul:apply

@@ -44,27 +44,9 @@ It does **not** create loop state files — those are created in the next step.
 
 ---
 
-## Step 2: Install the OpenPAUL Plugin in OpenCode
+## Step 2: Verify Plugin Installation
 
-`npx openpaul` already created `opencode.json` in your project. Open it and add the `plugin` key:
-
-```json
-{
-  "$schema": "https://opencode.ai/config.json",
-  "plugin": [
-    "openpaul"
-  ]
-}
-```
-
-Restart OpenCode to load the plugin. The plugin registers slash commands on load, so `/openpaul:help` should autocomplete in the TUI.
-
-If you are working from a local checkout, load OpenPAUL via `.opencode/plugins/openpaul.ts`:
-
-```ts
-import plugin from "/absolute/path/to/openpaul/dist/index.js"
-export default plugin
-```
+`npx openpaul` automatically added `"plugin": ["openpaul"]` to `opencode.json`. Restart OpenCode to load the plugin. The plugin registers slash commands on load, so `/openpaul:help` should autocomplete in the TUI.
 
 ---
 
@@ -337,7 +319,7 @@ Next Action: Run /openpaul:apply to execute the plan
 
 You've learned:
 1. **Scaffold** — `npx openpaul` creates `.openpaul/state.json` and `.opencode/` config
-2. **Install plugin** — add `"plugin": ["openpaul"]` to `opencode.json` and restart OpenCode
+2. **Plugin installed** — `npx openpaul` automatically adds `"plugin": ["openpaul"]` to `opencode.json`; restart OpenCode to load
 3. **Initialize** — `/openpaul:init` sets up loop state files
 4. **Plan** — `/openpaul:plan` runs the TDD wizard and creates structured JSON plans with criteria and tasks
 5. **Apply** — `/openpaul:apply` displays tasks for sequential execution with verification

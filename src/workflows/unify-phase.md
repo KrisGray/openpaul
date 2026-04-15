@@ -11,7 +11,7 @@ Reconcile what was planned vs. what was built. Create SUMMARY.md documenting res
 <loop_context>
 Expected phase: UNIFY
 Prior phase: APPLY (execution complete)
-Next phase: PLAN (next plan or next phase)
+Next phase: UNIFY (next plan or next phase)
 </loop_context>
 
 <required_reading>
@@ -114,7 +114,7 @@ Next phase: PLAN (next plan or next phase)
    **Current Position:**
    - Phase: N of M - Complete (or In Progress if more plans)
    - Plan: complete
-   - Status: Ready for next PLAN
+   - Status: Ready for next phase (UNIFY)
    - Last activity: timestamp
 
    **Progress:**
@@ -124,7 +124,7 @@ Next phase: PLAN (next plan or next phase)
    **Loop Position:**
    ```
    PLAN ──▶ APPLY ──▶ UNIFY
-     ✓        ✓        ✓     [Loop complete - ready for next PLAN]
+     ✓        ✓        ✓     [Loop complete - next phase at UNIFY]
    ```
 
    **Session Continuity:**

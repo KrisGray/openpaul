@@ -103,11 +103,11 @@ npx openpaul --preset minimal          # Minimal template
 npx openpaul --preset full             # Full template with examples
 ```
 
-### Install as OpenCode Plugin (Optional)
+### Install as OpenCode Plugin
 
-To use OpenPAUL slash commands inside OpenCode (like `/openpaul:plan`), add the `plugin` key to `opencode.json` in your project (created by `npx openpaul`). The `plugin` array is for npm packages (for example, `openpaul`). OpenPAUL injects its commands into OpenCode on load, so `/openpaul:*` appears in the TUI command list once the plugin is loaded.
+`npx openpaul` automatically adds `"plugin": ["openpaul"]` to `opencode.json`. Just restart OpenCode after scaffolding to load the plugin. `/openpaul:*` commands will appear in the TUI command list.
 
-If you scaffolded the project with `npx openpaul`, it already includes `.opencode/plugins/openpaul.ts` plus `.opencode/package.json` to load the npm package locally, so you can skip the `plugin` entry and just restart OpenCode.
+If you need to add it manually, edit `opencode.json`:
 
 ```json
 {
@@ -117,8 +117,6 @@ If you scaffolded the project with `npx openpaul`, it already includes `.opencod
   ]
 }
 ```
-
-Restart OpenCode to load the plugin.
 
 ### Verify
 
@@ -287,8 +285,8 @@ Here's a complete workflow example showing OpenPAUL in action:
 │  - Plan vs actual comparison                                    │
 │  - Criteria results                                             │
 │                                                                 │
-│  Advances state-phase-N.json to UNIFY, then readies            │
-│  next phase for PLAN. Updates loop state (STATE.md if present).│
+│  Advances state-phase-N.json to UNIFY, then creates            │
+│  next phase state as UNIFY. Updates loop state (STATE.md if   │
 └─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -559,7 +557,7 @@ Close the loop (required!):
 
 ## Commands
 
-OpenPAUL provides 26 commands organized by purpose. The plugin registers them as OpenCode slash commands, so `/openpaul:*` appears in the TUI command list. Run `/openpaul:help` for the complete reference.
+OpenPAUL provides 16 commands organized by purpose. The plugin registers them as OpenCode slash commands, so `/openpaul:*` appears in the TUI command list. Run `/openpaul:help` for the complete reference.
 
 ### Core Loop
 
@@ -570,23 +568,15 @@ OpenPAUL provides 26 commands organized by purpose. The plugin registers them as
 | `/openpaul:apply --phase N --plan NN` | Execute an approved plan                         |
 | `/openpaul:unify --phase N --plan NN` | Reconcile and close the loop                     |
 | `/openpaul:help`         | Show command reference                           |
-| `/openpaul:status`       | Show loop position _(deprecated — use progress)_ |
 
 ### Session
 
 | Command                        | What it does                     |
 | ------------------------------ | -------------------------------- |
-| `/openpaul:pause [reason]`     | Create handoff for session break |
-| `/openpaul:resume [path]`      | Restore context and continue     |
-| `/openpaul:progress [context]` | Smart status + ONE next action   |
-| `/openpaul:handoff [context]`  | Generate comprehensive handoff   |
-
-### Roadmap
-
-| Command                      | What it does            |
-| ---------------------------- | ----------------------- |
-| `/openpaul:add-phase <desc>` | Append phase to roadmap |
-| `/openpaul:remove-phase <N>` | Remove future phase     |
+| `/openpaul:pause`              | Create handoff for session break |
+| `/openpaul:resume`             | Restore context and continue     |
+| `/openpaul:progress`           | Smart status + ONE next action   |
+| `/openpaul:handoff`            | Generate comprehensive handoff   |
 
 ### Milestone
 
@@ -594,23 +584,6 @@ OpenPAUL provides 26 commands organized by purpose. The plugin registers them as
 | ------------------------------ | --------------------------------- |
 | `/openpaul:milestone <name>`   | Create new milestone              |
 | `/openpaul:complete-milestone` | Archive and tag milestone         |
-| `/openpaul:discuss-milestone`  | Articulate vision before starting |
-
-### Pre-Planning
-
-| Command                         | What it does                      |
-| ------------------------------- | --------------------------------- |
-| `/openpaul:discuss <phase>`     | Capture decisions before planning |
-| `/openpaul:assumptions <phase>` | See Claude's intended approach    |
-| `/openpaul:discover <topic>`    | Explore options before planning   |
-| `/openpaul:consider-issues`     | Triage deferred issues            |
-
-### Research
-
-| Command                        | What it does                  |
-| ------------------------------ | ----------------------------- |
-| `/openpaul:research <topic>`   | Deploy research agents        |
-| `/openpaul:research-phase <N>` | Research unknowns for a phase |
 
 ### Specialized
 

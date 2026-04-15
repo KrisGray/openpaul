@@ -35,6 +35,8 @@ Research informs planning but doesn't gate it.
 ```
 Error: Topic required.
 
+Note: research is available via the CLI.
+
 Usage: /openpaul:research <topic> [--codebase | --web]
 Examples:
   /openpaul:research "nextjs app router patterns"

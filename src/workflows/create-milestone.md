@@ -4,7 +4,7 @@ Define a new milestone in the project. Creates milestone structure in ROADMAP.md
 
 <when_to_use>
 - User explicitly requests new milestone
-- Triggered after /openpaul:discuss-milestone (reads context)
+- Triggered after /openpaul:milestone (reads context)
 - Project completed previous milestone, needs next
 - Starting fresh project milestone planning
 </when_to_use>

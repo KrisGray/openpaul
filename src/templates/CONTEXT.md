@@ -2,7 +2,7 @@
 
 Template for `.openpaul/phases/{NN}-{name}/CONTEXT.md` - phase discussion context handoff.
 
-**Purpose:** Captures user's vision, goals, and approach before planning. Created by `/openpaul:discuss`, consumed by `/openpaul:plan`.
+**Purpose:** Captures user's vision, goals, and approach before planning. Context files can be created manually or via the CLI.
 
 ---
 
@@ -48,7 +48,8 @@ Template for `.openpaul/phases/{NN}-{name}/CONTEXT.md` - phase discussion contex
 ---
 
 *This file is temporary. It informs planning but is not required.*
-*Created by /openpaul:discuss, consumed by /openpaul:plan.*
+*Context files can be created manually or via the CLI.*
+*Consumed by /openpaul:plan.*
 ```
 
 ---
@@ -70,7 +71,7 @@ Template for `.openpaul/phases/{NN}-{name}/CONTEXT.md` - phase discussion contex
 
 ## Usage Pattern
 
-1. User runs `/openpaul:discuss <phase>`
+1. User creates context manually or via the CLI
 2. Discussion workflow explores goals and approach
 3. CONTEXT.md created in phase directory
 4. `/openpaul:plan` reads CONTEXT.md to inform planning

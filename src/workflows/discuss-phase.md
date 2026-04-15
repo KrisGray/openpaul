@@ -38,7 +38,7 @@ After discussion, routes to /openpaul:plan (plan-phase).
 Error: Phase number required.
 
 Usage: /openpaul:discuss <phase-number>
-Example: /openpaul:discuss 10
+Note: discuss is available via the CLI
 ```
 Exit workflow.
 
@@ -212,7 +212,7 @@ DO: Always write the file so /clear doesn't lose progress.
 
 **Duplicating assumptions workflow:**
 DON'T: Surface Claude's assumptions here.
-DO: Focus on user input. Use /openpaul:assumptions for Claude's analysis.
+DO: Focus on user input. Use /openpaul:assumptions via the CLI for Claude's analysis.
 </anti_patterns>
 
 <error_handling>

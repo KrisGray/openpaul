@@ -2,7 +2,7 @@
 
 Template for `.openpaul/research/{topic-slug}.md` - research findings from subagent discovery.
 
-**Purpose:** Captures research findings for main session review. Created by `/openpaul:research` or `/openpaul:research-phase`.
+**Purpose:** Captures research findings for main session review. Research is available via the CLI.
 
 ---
 
@@ -71,7 +71,7 @@ Template for `.openpaul/research/{topic-slug}.md` - research findings from subag
 
 ---
 
-*Created by /openpaul:research. Review before integrating.*
+*Research is available via the CLI. Review before integrating.*
 *Status should be updated when findings are reviewed or integrated.*
 ```
 
@@ -110,7 +110,7 @@ Draft ──▶ Reviewed ──▶ Integrated
 
 ## Usage Pattern
 
-1. User runs `/openpaul:research <topic>`
+1. User runs research via the CLI
 2. Workflow spawns appropriate subagent
 3. Subagent researches and returns findings
 4. RESEARCH.md created with status: Draft

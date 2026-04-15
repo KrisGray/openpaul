@@ -38,7 +38,7 @@ PLAN ──▶ APPLY ──▶ UNIFY
   ◉        ○        ○     [Planning]
   ✓        ◉        ○     [Applying]
   ✓        ✓        ◉     [Unifying]
-  ✓        ✓        ✓     [Complete - ready for next PLAN]
+   ✓        ✓        ✓     [Complete - next phase at UNIFY]
 ```
 
 ## Performance Metrics
@@ -136,7 +136,7 @@ Resume context: [Key information needed to continue]
 - Planning: PLAN active, APPLY/UNIFY pending
 - Applying: PLAN complete, APPLY active, UNIFY pending
 - Unifying: PLAN/APPLY complete, UNIFY active
-- Complete: Full loop done, ready for next PLAN
+- Complete: Full loop done, next phase at UNIFY
 
 **Update:** At each loop phase transition.
 

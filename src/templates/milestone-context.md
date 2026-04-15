@@ -66,7 +66,7 @@ Template for `.openpaul/MILESTONE-CONTEXT.md` — temporary handoff from discuss
 │                    MILESTONE CONTEXT LIFECYCLE                   │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
-│  1. /openpaul:discuss-milestone                                      │
+│  1. /openpaul:milestone                                      │
 │     └─> Explores features, scope, constraints                    │
 │     └─> Creates MILESTONE-CONTEXT.md at end                      │
 │                                                                  │

@@ -12,7 +12,7 @@ Mark a milestone complete after all phases are done. Creates permanent milestone
 
 <loop_context>
 N/A - This is a milestone transition workflow, not a loop phase.
-After completion, project is ready for /openpaul:discuss-milestone or /openpaul:milestone.
+After completion, project is ready for /openpaul:milestone.
 </loop_context>
 
 <required_reading>
@@ -216,7 +216,7 @@ Update ROADMAP.md to collapse completed milestone:
 2. **Add Next Milestone placeholder:**
    ```markdown
    ## Next Milestone
-    Run /openpaul:discuss-milestone or /openpaul:milestone to define.
+    Run /openpaul:milestone to define.
    ```
 
 3. **Move completed phases to Completed section:**
@@ -273,7 +273,7 @@ Update STATE.md for post-milestone state:
 
    Last session: {timestamp}
    Stopped at: Milestone {milestone_name} complete
-    Next action: /openpaul:discuss-milestone or /openpaul:milestone
+    Next action: /openpaul:milestone
     Resume file: .openpaul/MILESTONES.md
    ```
 </step>
@@ -414,7 +414,7 @@ Updated:
   STATE.md (cleared)    ✓
 
 ────────────────────────────────────────
-▶ NEXT: /openpaul:discuss-milestone
+▶ NEXT: /openpaul:milestone
   Define the scope for the next milestone
 ────────────────────────────────────────
 
