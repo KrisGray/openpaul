@@ -1,10 +1,11 @@
-import { existsSync } from 'fs'
+import { existsSync, readFileSync, writeFileSync } from 'fs'
 import { unlink } from 'fs/promises'
 import { join } from 'path'
 import { tool, type ToolContext, type ToolDefinition } from '@opencode-ai/plugin'
 import { FileManager } from '../storage/file-manager'
 import { StateManager } from '../state/state-manager'
 import { LoopEnforcer } from '../state/loop-enforcer'
+import { RoadmapManager } from '../roadmap/roadmap-manager'
 import { formatGuidedError } from '../output/error-formatter'
 import { formatHeader, formatBold, formatList, formatExecutionGraph } from '../output/formatter'
 import type { ExecutionGraph, Plan, Task, TaskDependencies } from '../types/plan'
@@ -268,6 +269,12 @@ async function createPlanFromArgs(
       lastUpdated: Date.now(),
       metadata: {},
     }))
+
+    const roadmapManager = new RoadmapManager(context.directory)
+    const phaseName = criteria.length > 0 ? criteria[0].substring(0, 60) : `Phase ${args.phase}`
+    roadmapManager.updatePhaseRow(args.phase, phaseName, planId, 'In progress')
+
+    updateProjectFile(context.directory, args.phase, planId, criteria, boundaries, tasks)
   } catch (error) {
     if (planWritten) {
       await rollbackPlanFile(planPath)
@@ -858,4 +865,42 @@ async function rollbackPlanFile(planPath: string): Promise<void> {
   } catch {
     // Ignore rollback errors to avoid masking the original failure
   }
+}
+
+function updateProjectFile(
+  directory: string,
+  phase: number,
+  planId: string,
+  criteria: string[],
+  boundaries: string[],
+  tasks: Task[]
+): void {
+  const projectPath = join(directory, '.openpaul', 'PROJECT.md')
+  if (!existsSync(projectPath)) return
+
+  let content = readFileSync(projectPath, 'utf-8')
+
+  const phaseSection = [
+    '',
+    `## Phase ${phase} — ${planId}`,
+    '',
+    '### Acceptance Criteria',
+    ...criteria.map(c => `- ${c}`),
+    '',
+    '### Boundaries',
+    ...(boundaries.length > 0 ? boundaries.map(b => `- ${b}`) : ['- Default boundaries']),
+    '',
+    '### Tasks',
+    ...tasks.map((t, i) => `${i + 1}. **${t.name}** — ${t.done}`),
+    '',
+  ].join('\n')
+
+  if (content.includes(`## Phase ${phase} —`)) {
+    const phaseRegex = new RegExp(`## Phase ${phase} —[\\s\\S]*?(?=## Phase|$)`)
+    content = content.replace(phaseRegex, phaseSection)
+  } else {
+    content = content.trimEnd() + '\n' + phaseSection
+  }
+
+  writeFileSync(projectPath, content, 'utf-8')
 }

@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { FileManager, type Summary, type SummaryTask } from '../storage/file-manager'
 import { StateManager } from '../state/state-manager'
 import { LoopEnforcer } from '../state/loop-enforcer'
+import { RoadmapManager } from '../roadmap/roadmap-manager'
 import {
   formatHeader,
   formatBold,
@@ -221,6 +222,10 @@ ${formatBold('Error:')} Run /openpaul:init first to initialize OpenPAUL.`
         lastUpdated: Date.now(),
         metadata: {},
       })
+
+      const roadmapManager = new RoadmapManager(context.directory)
+      const phaseName = plan.criteria?.[0]?.substring(0, 60) ?? `Phase ${phaseNumber}`
+      roadmapManager.updatePhaseRow(phaseNumber, phaseName, planId, 'Complete')
       
       // Format output
       return formatUnifyOutput(

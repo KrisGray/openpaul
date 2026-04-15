@@ -466,4 +466,28 @@ Plans:
       renumberedPhases,
     }
   }
+
+  updatePhaseRow(phaseNumber: number, name: string, planId: string, status: string): void {
+    const roadmapPath = this.resolveRoadmapPath()
+    if (!roadmapPath) return
+
+    let content = readFileSync(roadmapPath, 'utf-8')
+    const completed = status === 'Complete' ? new Date().toISOString().split('T')[0] : '-'
+
+    const tableRowRegex = new RegExp(
+      `\\|\\s*${phaseNumber}\\s*\\|[^\\n]+`,
+      'g'
+    )
+
+    const newRow = `| ${phaseNumber} | ${name} | ${planId} | ${status} | ${completed} |`
+
+    if (tableRowRegex.test(content)) {
+      content = content.replace(tableRowRegex, newRow)
+    } else {
+      const marker = '|-------|------|-------|--------|-----------|'
+      content = content.replace(marker, `${marker}\n${newRow}`)
+    }
+
+    writeFileSync(roadmapPath, content, 'utf-8')
+  }
 }
