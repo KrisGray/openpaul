@@ -442,7 +442,7 @@ describe('Plan-fix Command', () => {
       const toolContext = { directory: mockDirectory } as any
       const result = await openpaulPlanFix.execute({ phase: 7, issue: 1 }, toolContext)
 
-      expect(result).toContain('/gsd-execute-phase')
+      expect(result).toContain('/openpaul:apply')
       expect(result).toContain('--execute')
     })
   })

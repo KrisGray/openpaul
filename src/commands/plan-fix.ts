@@ -36,7 +36,7 @@ export const openpaulPlanFix = toolFactory({
   parameters: z.object({
     phase: z.number().int().positive().describe('Phase number to fix issues in'),
     issue: z.number().int().positive().optional().describe('Issue ID to fix (from UAT-ISSUES.md)'),
-    execute: z.boolean().optional().describe('Run execute-phase after creating plan'),
+    execute: z.boolean().optional().describe('Run /openpaul:apply after creating plan'),
     confirm: z.boolean().optional().describe('Confirm auto-execution when --execute is set'),
   }),
   execute: async (args: PlanFixArgs, context: ToolContext) => {
@@ -184,7 +184,7 @@ export const openpaulPlanFix = toolFactory({
       }
 
       if (args.execute && args.confirm) {
-        const executionCommand = `/gsd-execute-phase ${args.phase}`
+        const executionCommand = `/openpaul:apply --phase ${args.phase}`
         output += formatBold('Auto-execution:') + '\n'
 
         const executionResult = await tryExecutePhase(context, executionCommand)
@@ -199,7 +199,7 @@ export const openpaulPlanFix = toolFactory({
       }
 
       output += formatBold('Next:') + '\n'
-      output += 'Run `/gsd-execute-phase ' + args.phase + '` to implement the fix\n\n'
+      output += 'Run `/openpaul:apply --phase ' + args.phase + '` to implement the fix\n\n'
       output += formatBold('Or execute immediately with:') + '\n'
       output += `/openpaul:plan-fix --phase ${args.phase} --issue ${args.issue} --execute\n`
 

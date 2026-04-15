@@ -11,25 +11,15 @@ import { openpaulPlan } from './commands/plan'
 import { openpaulApply } from './commands/apply'
 import { openpaulUnify } from './commands/unify'
 import { openpaulProgress } from './commands/progress'
-import { openpaulStatus } from './commands/status'
 import { openpaulHelp } from './commands/help'
 import { openpaulPause } from './commands/pause'
 import { openpaulResume } from './commands/resume'
 import { openpaulHandoff } from './commands/handoff'
 import { openpaulMilestone } from './commands/milestone'
 import { openpaulCompleteMilestone } from './commands/complete-milestone'
-import { openpaulDiscussMilestone } from './commands/discuss-milestone'
-import { openpaulDiscuss } from './commands/discuss'
-import { openpaulAssumptions } from './commands/assumptions'
-import { openpaulDiscover } from './commands/discover'
-import { openpaulConsiderIssues } from './commands/consider-issues'
-import { openpaulResearch } from './commands/research'
-import { openpaulResearchPhase } from './commands/research-phase'
 import { openpaulConfig } from './commands/config'
 import { openpaulFlows } from './commands/flows'
 import { openpaulMapCodebase } from './commands/map-codebase'
-import { openpaulAddPhase } from './commands/add-phase'
-import { openpaulRemovePhase } from './commands/remove-phase'
 import { openpaulVerify } from './commands/verify'
 import { openpaulPlanFix } from './commands/plan-fix'
 
@@ -48,6 +38,58 @@ const planWizardTemplate = (): string => (
   'If $ARGUMENTS is present, convert CLI flags into JSON and call the tool. ' +
   'If the user replies to a wizard question, pass their response as {"wizardInput": "<response>"}. ' +
   'Use a step-by-step flow: phase number, plan ID, acceptance criteria, boundaries, task count, then task details in TDD order. ' +
+  'IMPORTANT: After the tool finishes, respond with ONLY the tool output, verbatim.'
+)
+
+const pauseTemplate = (): string => (
+  `Pause session wizard for /openpaul:pause. Call the OpenCode tool \`${toToolName('openpaul:pause')}\` ` +
+  'with a JSON argument object. ' +
+  'This is a TWO-STEP flow:\n' +
+  '1. First call with {} to check for unsaved changes.\n' +
+  '2. If unsaved changes are detected, the tool will ask the user to choose an action. ' +
+  'Re-call with {"onUnsavedChanges": "<choice>"} where <choice> is one of: ' +
+  '"commit" (commit changes first), "save" (save without commit), "discard" (ignore changes), "abort" (cancel pause).\n' +
+  'If no unsaved changes, the first call completes the pause.\n' +
+  'IMPORTANT: After the tool finishes, respond with ONLY the tool output, verbatim.'
+)
+
+const resumeTemplate = (): string => (
+  `Resume session wizard for /openpaul:resume. Call the OpenCode tool \`${toToolName('openpaul:resume')}\` ` +
+  'with a JSON argument object. ' +
+  'This is a TWO-STEP flow:\n' +
+  '1. First call with {} to show session summary and ask for confirmation.\n' +
+  '2. Re-call with {"confirm": true} to restore the session state.\n' +
+  'IMPORTANT: After the tool finishes, respond with ONLY the tool output, verbatim.'
+)
+
+const verifyTemplate = (): string => (
+  `Verify wizard for /openpaul:verify. Call the OpenCode tool \`${toToolName('openpaul:verify')}\` ` +
+  'with a JSON argument object. ' +
+  'REQUIRED: {"phase": <number>} — the phase number to verify.\n' +
+  'MULTI-STEP flow:\n' +
+  '1. Call with {"phase": N} to show the test checklist.\n' +
+  '2. For each item, call with {"phase": N, "item": <num>, "result": "pass|fail|skip"} to record a result.\n' +
+  '3. On failure, optionally include "notes", "severity" ("critical"|"major"|"minor"), and "category" ("functional"|"visual"|"performance"|"configuration").\n' +
+  'IMPORTANT: After the tool finishes, respond with ONLY the tool output, verbatim.'
+)
+
+const planFixTemplate = (): string => (
+  `Plan-fix wizard for /openpaul:plan-fix. Call the OpenCode tool \`${toToolName('openpaul:plan-fix')}\` ` +
+  'with a JSON argument object. ' +
+  'REQUIRED: {"phase": <number>} — the phase number with UAT issues.\n' +
+  'MULTI-STEP flow:\n' +
+  '1. Call with {"phase": N} to list open UAT issues.\n' +
+  '2. Call with {"phase": N, "issue": <num>} to create a fix plan for that issue.\n' +
+  '3. Optionally add {"execute": true, "confirm": true} to auto-execute the fix plan.\n' +
+  'IMPORTANT: After the tool finishes, respond with ONLY the tool output, verbatim.'
+)
+
+const completeMilestoneTemplate = (): string => (
+  `Complete-milestone wizard for /openpaul:complete-milestone. Call the OpenCode tool \`${toToolName('openpaul:complete-milestone')}\` ` +
+  'with a JSON argument object. ' +
+  'This is a TWO-STEP flow:\n' +
+  '1. First call with {} or {"name": "..."} to show milestone summary and ask for confirmation.\n' +
+  '2. Re-call with {"confirm": true} to complete the milestone. Optionally add {"name": "..."} and {"verbose": true}.\n' +
   'IMPORTANT: After the tool finishes, respond with ONLY the tool output, verbatim.'
 )
 
@@ -72,21 +114,17 @@ const OPENPAUL_COMMANDS: Record<string, { description: string; template: string 
     description: 'Show OpenPAUL progress summary',
     template: toolTemplate('openpaul:progress'),
   },
-  'openpaul:status': {
-    description: 'Show OpenPAUL current status',
-    template: toolTemplate('openpaul:status'),
-  },
   'openpaul:help': {
     description: 'Show OpenPAUL command reference',
     template: toolTemplate('openpaul:help'),
   },
   'openpaul:pause': {
     description: 'Pause the current OpenPAUL session',
-    template: toolTemplate('openpaul:pause'),
+    template: pauseTemplate(),
   },
   'openpaul:resume': {
     description: 'Resume the last OpenPAUL session',
-    template: toolTemplate('openpaul:resume'),
+    template: resumeTemplate(),
   },
   'openpaul:handoff': {
     description: 'Create an OpenPAUL handoff summary',
@@ -98,35 +136,7 @@ const OPENPAUL_COMMANDS: Record<string, { description: string; template: string 
   },
   'openpaul:complete-milestone': {
     description: 'Complete the current OpenPAUL milestone',
-    template: toolTemplate('openpaul:complete-milestone'),
-  },
-  'openpaul:discuss-milestone': {
-    description: 'Discuss the current OpenPAUL milestone',
-    template: toolTemplate('openpaul:discuss-milestone'),
-  },
-  'openpaul:discuss': {
-    description: 'Discuss the current OpenPAUL phase',
-    template: toolTemplate('openpaul:discuss'),
-  },
-  'openpaul:assumptions': {
-    description: 'Capture OpenPAUL assumptions',
-    template: toolTemplate('openpaul:assumptions'),
-  },
-  'openpaul:discover': {
-    description: 'Run OpenPAUL discovery prompts',
-    template: toolTemplate('openpaul:discover'),
-  },
-  'openpaul:consider-issues': {
-    description: 'Review issues and risks',
-    template: toolTemplate('openpaul:consider-issues'),
-  },
-  'openpaul:research': {
-    description: 'Start OpenPAUL research flow',
-    template: toolTemplate('openpaul:research'),
-  },
-  'openpaul:research-phase': {
-    description: 'Research a specific OpenPAUL phase',
-    template: toolTemplate('openpaul:research-phase'),
+    template: completeMilestoneTemplate(),
   },
   'openpaul:config': {
     description: 'Configure OpenPAUL settings',
@@ -140,21 +150,13 @@ const OPENPAUL_COMMANDS: Record<string, { description: string; template: string 
     description: 'Map the project codebase',
     template: toolTemplate('openpaul:map-codebase'),
   },
-  'openpaul:add-phase': {
-    description: 'Add a new OpenPAUL phase',
-    template: toolTemplate('openpaul:add-phase'),
-  },
-  'openpaul:remove-phase': {
-    description: 'Remove an OpenPAUL phase',
-    template: toolTemplate('openpaul:remove-phase'),
-  },
   'openpaul:verify': {
     description: 'Verify OpenPAUL phase completion',
-    template: toolTemplate('openpaul:verify'),
+    template: verifyTemplate(),
   },
   'openpaul:plan-fix': {
     description: 'Fix a broken OpenPAUL plan',
-    template: toolTemplate('openpaul:plan-fix'),
+    template: planFixTemplate(),
   },
 }
 
@@ -164,25 +166,15 @@ const OPENPAUL_TOOL_HANDLERS = {
   'openpaul:apply': openpaulApply,
   'openpaul:unify': openpaulUnify,
   'openpaul:progress': openpaulProgress,
-  'openpaul:status': openpaulStatus,
   'openpaul:help': openpaulHelp,
   'openpaul:pause': openpaulPause,
   'openpaul:resume': openpaulResume,
   'openpaul:handoff': openpaulHandoff,
   'openpaul:milestone': openpaulMilestone,
   'openpaul:complete-milestone': openpaulCompleteMilestone,
-  'openpaul:discuss-milestone': openpaulDiscussMilestone,
-  'openpaul:discuss': openpaulDiscuss,
-  'openpaul:assumptions': openpaulAssumptions,
-  'openpaul:discover': openpaulDiscover,
-  'openpaul:consider-issues': openpaulConsiderIssues,
-  'openpaul:research': openpaulResearch,
-  'openpaul:research-phase': openpaulResearchPhase,
   'openpaul:config': openpaulConfig,
   'openpaul:flows': openpaulFlows,
   'openpaul:map-codebase': openpaulMapCodebase,
-  'openpaul:add-phase': openpaulAddPhase,
-  'openpaul:remove-phase': openpaulRemovePhase,
   'openpaul:verify': openpaulVerify,
   'openpaul:plan-fix': openpaulPlanFix,
 }

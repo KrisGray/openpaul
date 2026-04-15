@@ -5,12 +5,12 @@ import type { CommandType } from '../types/command'
 /**
  * /openpaul:help Command
  * 
- * Show command reference for all 26 commands
+ * Show command reference for all registered commands
  * 
  * From CONTEXT.md:
  * - Lists all commands grouped by phase
  * - Provides detailed help for specific commands
- * - Output includes 📚 emoji and usage examples
+ * - Output includes usage examples
  */
 export const openpaulHelp: ToolDefinition = tool({
   description: 'Show command reference',
@@ -18,9 +18,7 @@ export const openpaulHelp: ToolDefinition = tool({
     command: tool.schema.string().optional().describe('Show help for specific command'),
   },
   execute: async ({ command }, context) => {
-    // Command reference organized by phase
     const COMMAND_REFERENCE: Record<string, { description: string; usage: string; phase?: string }> = {
-      // Core commands (Phase 2)
       init: {
         description: 'Initialize OpenPAUL in the current project',
         usage: '/openpaul:init [--force]',
@@ -48,15 +46,14 @@ export const openpaulHelp: ToolDefinition = tool({
         description: 'Show command reference',
         usage: '/openpaul:help [command]',
       },
-      // Session Management commands (Phase 3)
       pause: {
         description: 'Create session handoff',
-        usage: '/openpaul:pause',
+        usage: '/openpaul:pause [--onUnsavedChanges commit|save|discard|abort]',
         phase: '3',
       },
       resume: {
         description: 'Restore from paused session',
-        usage: '/openpaul:resume',
+        usage: '/openpaul:resume [--confirm]',
         phase: '3',
       },
       handoff: {
@@ -64,12 +61,6 @@ export const openpaulHelp: ToolDefinition = tool({
         usage: '/openpaul:handoff',
         phase: '3',
       },
-      status: {
-        description: '[DEPRECATED] Use /openpaul:progress instead',
-        usage: '/openpaul:status',
-        phase: '3',
-      },
-      // Milestone Management commands (Phase 5)
       milestone: {
         description: 'Create new milestone',
         usage: '/openpaul:milestone --name "..."',
@@ -77,66 +68,18 @@ export const openpaulHelp: ToolDefinition = tool({
       },
       'complete-milestone': {
         description: 'Mark milestone complete and archive',
-        usage: '/openpaul:complete-milestone --id ...',
+        usage: '/openpaul:complete-milestone [--confirm] [--name "..."]',
         phase: '5',
-      },
-      'discuss-milestone': {
-        description: 'Plan upcoming milestone',
-        usage: '/openpaul:discuss-milestone',
-        phase: '5',
-      },
-      // Planning Support commands (Phase 6)
-      discuss: {
-        description: 'Capture planning discussion',
-        usage: '/openpaul:discuss --topic "..."',
-        phase: '6',
-      },
-      assumptions: {
-        description: 'Review intended approach',
-        usage: '/openpaul:assumptions',
-        phase: '6',
-      },
-      discover: {
-        description: 'Explore options',
-        usage: '/openpaul:discover --query "..."',
-        phase: '6',
-      },
-      'consider-issues': {
-        description: 'Triage deferred issues',
-        usage: '/openpaul:consider-issues',
-        phase: '6',
-      },
-      // Research & Quality commands (Phase 7)
-      research: {
-        description: 'Deploy research agents',
-        usage: '/openpaul:research --question "..."',
-        phase: '7',
-      },
-      'research-phase': {
-        description: 'Research phase unknowns',
-        usage: '/openpaul:research-phase --phase N',
-        phase: '7',
       },
       verify: {
         description: 'Verify acceptance criteria',
-        usage: '/openpaul:verify',
+        usage: '/openpaul:verify --phase N [--item N --result pass|fail|skip]',
         phase: '7',
       },
       'plan-fix': {
         description: 'Plan UAT fixes',
-        usage: '/openpaul:plan-fix',
+        usage: '/openpaul:plan-fix --phase N [--issue N] [--execute] [--confirm]',
         phase: '7',
-      },
-      // Roadmap & Configuration commands (Phase 8)
-      'add-phase': {
-        description: 'Append new phase to roadmap',
-        usage: '/openpaul:add-phase --name "..."',
-        phase: '8',
-      },
-      'remove-phase': {
-        description: 'Remove future phase',
-        usage: '/openpaul:remove-phase --phase N',
-        phase: '8',
       },
       flows: {
         description: 'Configure skill requirements',
@@ -176,70 +119,27 @@ export const openpaulHelp: ToolDefinition = tool({
       return output
     }
     // Show all commands grouped by phase
-    let output = formatHeader(1, '📚 OpenPAUL Command Reference') + '\n\n'
-    // Core commands (no phase property)
-    output += '\n' + formatHeader(2, 'Core Commands') + '\n'
-    const coreCommands = Object.entries(COMMAND_REFERENCE)
-      .filter(([, cmd]) => !cmd.phase)
-      .map(([name, { description, usage }]) => {
+    const phaseSections: Array<{ title: string; phase: string | undefined }> = [
+      { title: 'Core Commands', phase: undefined },
+      { title: 'Core Loop Commands', phase: '2' },
+      { title: 'Session Management', phase: '3' },
+      { title: 'Milestones', phase: '5' },
+      { title: 'Quality & Verification', phase: '7' },
+      { title: 'Configuration', phase: '8' },
+    ]
+
+    let output = formatHeader(1, '📚 OpenPAUL Command Reference') + '\n'
+
+    for (const section of phaseSections) {
+      const commands = Object.entries(COMMAND_REFERENCE)
+        .filter(([, cmd]) => cmd.phase === section.phase)
+      if (commands.length === 0) continue
+      output += '\n' + formatHeader(2, section.title) + '\n'
+      output += commands.map(([name, { description, usage }]) => {
         return `- **/${name}** — ${description}\n  - Usage: \`${usage}\``
-      })
-      .join('\n')
-    output += coreCommands
-    // Core loop commands (Phase 2)
-    output += '\n' + formatHeader(2, 'Core Loop Commands (Phase 2)') + '\n'
-    const phase2Commands = Object.entries(COMMAND_REFERENCE)
-      .filter(([, cmd]) => cmd.phase === '2')
-      .map(([name, { description, usage }]) => {
-        return `- **/${name}** — ${description}\n  - Usage: \`${usage}\``
-      })
-      .join('\n')
-    output += phase2Commands
-    // Session Management commands (Phase 3)
-    output += '\n' + formatHeader(2, 'Session Management (Phase 3)') + '\n'
-    const sessionCommands = Object.entries(COMMAND_REFERENCE)
-      .filter(([, cmd]) => cmd.phase === '3')
-      .map(([name, { description, usage }]) => {
-        return `- **/${name}** — ${description}\n  - Usage: \`${usage}\``
-      })
-      .join('\n')
-    output += sessionCommands
-    // Project Management commands (Phase 4)
-    output += '\n' + formatHeader(2, 'Project Management (Phase 4)') + '\n'
-    const projectCommands = Object.entries(COMMAND_REFERENCE)
-      .filter(([, cmd]) => cmd.phase === '4')
-      .map(([name, { description, usage }]) => {
-        return `- **/${name}** — ${description}\n  - Usage: \`${usage}\``
-      })
-      .join('\n')
-    output += projectCommands
-    // Planning Support commands (Phase 5)
-    output += '\n' + formatHeader(2, 'Planning Support (Phase 5)') + '\n'
-    const planningCommands = Object.entries(COMMAND_REFERENCE)
-      .filter(([, cmd]) => cmd.phase === '5')
-      .map(([name, { description, usage }]) => {
-        return `- **/${name}** — ${description}\n  - Usage: \`${usage}\``
-      })
-      .join('\n')
-    output += planningCommands
-    // Research & Quality commands (Phase 6)
-    output += '\n' + formatHeader(2, 'Research & Quality (Phase 6)') + '\n'
-    const researchCommands = Object.entries(COMMAND_REFERENCE)
-      .filter(([, cmd]) => cmd.phase === '6')
-      .map(([name, { description, usage }]) => {
-        return `- **/${name}** — ${description}\n  - Usage: \`${usage}\``
-      })
-      .join('\n')
-    output += researchCommands
-    // Roadmap & Configuration commands (Phase 7)
-    output += '\n' + formatHeader(2, 'Roadmap & Configuration (Phase 7)') + '\n'
-    const roadmapCommands = Object.entries(COMMAND_REFERENCE)
-      .filter(([, cmd]) => cmd.phase === '7')
-      .map(([name, { description, usage }]) => {
-        return `- **/${name}** — ${description}\n  - Usage: \`${usage}\``
-      })
-      .join('\n')
-    output += roadmapCommands
+      }).join('\n')
+    }
+
     output += '\n\n' + formatBold('Tip:') + ' Run `/openpaul:help {command}` for detailed usage.'
     return output
   },

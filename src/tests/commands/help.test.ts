@@ -97,7 +97,7 @@ describe('Help Command Functionality', () => {
     it('should list Phase 2 commands in grouped output', async () => {
       const output = await openpaulHelp.execute({}, toolContext)
 
-      expect(output).toContain('Core Loop Commands (Phase 2)')
+      expect(output).toContain('Core Loop Commands')
       expect(output).toContain('/plan')
       expect(output).toContain('/apply')
       expect(output).toContain('/unify')
