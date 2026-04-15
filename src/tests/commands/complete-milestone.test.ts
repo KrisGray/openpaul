@@ -409,7 +409,7 @@ describe('Complete Milestone Command', () => {
       const result = await openpaulCompleteMilestone.execute({ confirm: true }, toolContext)
 
       expect(result).toContain('Next Steps')
-      expect(result).toContain('/openpaul:status')
+      expect(result).toContain('/openpaul:progress')
     })
 
     it('should include scope in summary display', async () => {

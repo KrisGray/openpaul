@@ -93,7 +93,7 @@ export const openpaulRemovePhase: ToolDefinition = tool({
         formatList([
           'Review ROADMAP.md to verify phase ordering',
           'Update any phase references in your documentation',
-          'Run `/openpaul:status` to check current position',
+          'Run `/openpaul:progress` to check current position',
         ])
       
       return output
@@ -105,7 +105,7 @@ export const openpaulRemovePhase: ToolDefinition = tool({
         formatList([
           'Check that ROADMAP.md exists and is readable',
           'Ensure phase number is valid',
-          'Try running /openpaul:status to check current state',
+          'Try running /openpaul:progress to check current state',
         ])
     }
   },

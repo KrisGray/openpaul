@@ -81,7 +81,7 @@ export const openpaulResume = toolFactory({
           formatHeader(3, 'What to do') + '\n' +
           formatList([
             'Resolve the issues above and retry `/openpaul:resume --confirm`',
-            'Run `/openpaul:status` to inspect project state',
+            'Run `/openpaul:progress` to inspect project state',
           ])
       }
 
@@ -142,7 +142,7 @@ export const openpaulResume = toolFactory({
       
       output += formatBold('Commands:') + '\n' +
         formatList([
-          'Run `/openpaul:status` for full project status',
+          'Run `/openpaul:progress` for full project status',
           'Run `/openpaul:progress` for detailed loop status',
         ])
       

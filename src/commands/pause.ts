@@ -103,7 +103,7 @@ export const openpaulPause = toolFactory({
           formatBold('Next Steps:') + '\n' +
           formatList([
             'Resolve your changes and re-run `/openpaul:pause` when ready',
-            'Run `/openpaul:status` to check your current position',
+            'Run `/openpaul:progress` to check your current position',
           ])
       }
 
@@ -183,7 +183,7 @@ export const openpaulPause = toolFactory({
       output += formatBold('Next Steps:') + '\n'
       output += formatList([
         'Run `/openpaul:resume` to continue this session',
-        'Run `/openpaul:status` to check your current position',
+        'Run `/openpaul:progress` to check your current position',
       ])
 
       return output

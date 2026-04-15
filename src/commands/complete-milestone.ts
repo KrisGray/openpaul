@@ -168,7 +168,7 @@ export const openpaulCompleteMilestone = toolFactory({
           formatBold('Troubleshooting:') + '\n' +
           formatList([
             'Check the milestone name in ROADMAP.md',
-            'Use /openpaul:status to see current milestone',
+            'Use /openpaul:progress to see current milestone',
           ])
       }
       
@@ -189,7 +189,7 @@ export const openpaulCompleteMilestone = toolFactory({
           'Ensure ROADMAP.md exists and is writable',
           'Check that milestone name is correct',
           'Verify milestone status is not already completed',
-          'Try running /openpaul:status to check current state',
+          'Try running /openpaul:progress to check current state',
         ])
     }
   },
@@ -264,8 +264,8 @@ function formatSuccessOutput(
   lines.push('')
   lines.push(formatBold('Next Steps:'))
   lines.push('  - Review the archived milestone in MILESTONE-ARCHIVE.md')
-  lines.push('  - Plan the next milestone with /openpaul:discuss-milestone')
-  lines.push('  - Check current state with /openpaul:status')
+  lines.push('  - Plan the next milestone with /openpaul:milestone')
+  lines.push('  - Check current state with /openpaul:progress')
   
   return lines.join('\n')
 }

@@ -323,7 +323,7 @@ describe('Remove Phase Command', () => {
       } as RemovePhaseResult)
       const toolContext = { directory: mockDirectory } as any
       const result = await openpaulRemovePhase.execute({ phase: 6 }, toolContext)
-      expect(result).toContain('/openpaul:status')
+      expect(result).toContain('/openpaul:progress')
       expect(result).toContain('ROADMAP.md')
     })
   })

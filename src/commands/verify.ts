@@ -57,10 +57,10 @@ export const openpaulVerify = toolFactory({
       // Check if SUMMARY.md exists
       if (!qualityManager.summaryExists(phaseDir)) {
         return formatHeader(2, 'Cannot Verify') + '\n\n' +
-          'SUMMARY.md not found. Run /gsd-execute-phase first to generate it.\n\n' +
+          'SUMMARY.md not found. Run /openpaul:unify first to generate it.\n\n' +
           formatBold('What to do:') + '\n' +
           formatList([
-            'Run `/gsd-execute-phase` to execute the plan',
+            'Run `/openpaul:unify` to close the loop and generate SUMMARY.md',
             'Then re-run `/openpaul:verify`',
           ])
       }
@@ -273,7 +273,7 @@ export const openpaulVerify = toolFactory({
         formatList([
           'Ensure SUMMARY.md exists with valid must_haves.truths',
           'Check that the phase directory is writable',
-          'Try running /openpaul:status to check project state',
+          'Try running /openpaul:progress to check project state',
         ])
     }
   },

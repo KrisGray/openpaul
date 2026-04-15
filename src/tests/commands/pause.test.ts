@@ -116,7 +116,7 @@ describe('openpaulPause command', () => {
       expect(result).toContain('Loop position')
       expect(result).toContain('HANDOFF.md')
       expect(result).toContain('/openpaul:resume')
-      expect(result).toContain('/openpaul:status')
+      expect(result).toContain('/openpaul:progress')
     })
 
     it('should include next steps in output', async () => {
@@ -124,7 +124,7 @@ describe('openpaulPause command', () => {
 
       expect(result).toContain('Next Steps')
       expect(result).toContain('/openpaul:resume')
-      expect(result).toContain('/openpaul:status')
+      expect(result).toContain('/openpaul:progress')
     })
 
     it('should capture correct loop position (phase, phaseNumber)', async () => {
