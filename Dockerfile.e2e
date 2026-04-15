@@ -42,4 +42,4 @@ COPY --from=builder /app/tsconfig.e2e.json ./
 ENV NODE_ENV=test
 ENV OPENPAUL_E2E=true
 
-ENTRYPOINT ["npm", "run", "test:e2e"]
+ENTRYPOINT ["npx", "jest", "--config", "jest.config.e2e.js"]
