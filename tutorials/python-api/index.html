@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Python API Tutorial | OpenPAUL</title>
+  <meta name="description" content="OpenPAUL - Plan-Apply-Unify Loop for structured AI-assisted development">
+  <style>
+:root {
+  --bg: #ffffff;
+  --fg: #1f2328;
+  --muted: #656d76;
+  --accent: #0969da;
+  --accent-hover: #0550ae;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --card-bg: #f6f8fa;
+  --success: #1a7f37;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d1117;
+    --fg: #e6edf3;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --accent-hover: #79c0ff;
+    --border: #30363d;
+    --code-bg: #161b22;
+    --card-bg: #161b22;
+    --success: #3fb950;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif;
+  line-height: 1.6;
+  color: var(--fg);
+  background: var(--bg);
+}
+.container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+header {
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 100;
+}
+header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.logo { font-size: 1.5rem; font-weight: 700; }
+.logo a { color: var(--fg); text-decoration: none; }
+nav { display: flex; gap: 1.5rem; align-items: center; }
+nav a { color: var(--muted); text-decoration: none; font-size: 0.95rem; }
+nav a:hover, nav a.active { color: var(--accent); }
+
+main { padding: 3rem 0; }
+
+.page-title {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.page-title h1 { font-size: 2rem; }
+
+.content h2 { font-size: 1.5rem; margin: 2rem 0 1rem; }
+.content h3 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; }
+.content h4 { font-size: 1.1rem; margin: 1.25rem 0 0.5rem; }
+.content p { margin-bottom: 1rem; }
+.content ul, .content ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+.content li { margin-bottom: 0.5rem; }
+.content a { color: var(--accent); }
+
+pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  overflow-x: auto;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+code {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  font-size: 0.9em;
+}
+pre code { background: none; padding: 0; font-size: inherit; }
+:not(pre) > code {
+  background: var(--code-bg);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+th, td {
+  border: 1px solid var(--border);
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+th { background: var(--card-bg); font-weight: 600; }
+
+blockquote {
+  border-left: 4px solid var(--accent);
+  padding-left: 1rem;
+  margin: 1rem 0;
+  color: var(--muted);
+}
+
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem 0;
+  text-align: center;
+  color: var(--muted);
+}
+footer a { color: var(--accent); }
+
+.pill {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+}
+
+.hero {
+  text-align: center;
+  padding: 3rem 0;
+}
+.hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+.hero .tagline {
+  font-size: 1.25rem;
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+.hero .cta {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.hero .cta a {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+}
+.hero .cta .primary {
+  background: var(--accent);
+  color: #fff;
+}
+.hero .cta .secondary {
+  border: 1px solid var(--border);
+  color: var(--fg);
+}
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 3rem 0;
+}
+.feature {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+.feature h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+.feature p {
+  margin-bottom: 0;
+  color: var(--muted);
+}
+</style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo"><a href="../../">OpenPAUL</a></div>
+      <nav>
+        <a href="../../#quick-start">Quick Start</a>
+        <a href="../../guides/">Guides</a>
+        <a href="../../tutorials/" class="active">Tutorials</a>
+        <a href="https://github.com/KrisGray/openpaul">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-title">
+      <h1>Python API Tutorial</h1>
+    </div>
+    <div class="content">
+      <h1>Python API Project Tutorial</h1>
+<p>Learn OpenPAUL by building a real project: a Python client that fetches gene information from the HGNC and NCBI Gene APIs using test-driven development.</p>
+<p><strong>What you&#39;ll build:</strong></p>
+<ul>
+<li>Python client for HGNC REST API (<code>rest.genenames.org</code>)</li>
+<li>NCBI Gene API integration</li>
+<li>Full pytest test suite with pytest-mock</li>
+<li>Test-driven development workflow with structured planning</li>
+</ul>
+<p><strong>Prerequisites:</strong></p>
+<ul>
+<li>Python 3.10+</li>
+<li><a href="https://docs.astral.sh/uv/">uv</a> package manager</li>
+<li>OpenCode (for running <code>/openpaul:</code> commands)</li>
+<li>Basic understanding of REST APIs</li>
+</ul>
+<hr>
+<h2>Step 1: Initialize the Project</h2>
+<pre><code class="language-bash"># Create and initialize the project
+mkdir gene-api-client
+cd gene-api-client
+uv init
+
+# Add dependencies
+uv add pytest pytest-mock requests
+
+# Scaffold OpenPAUL
+npx openpaul
+</code></pre>
+<p><code>npx openpaul</code> creates two things:</p>
+<ul>
+<li><code>.openpaul/state.json</code> — project registry (name, version, timestamps)</li>
+<li><code>.opencode/</code> — OpenCode configuration and preset files</li>
+</ul>
+<p>It does <strong>not</strong> create loop state files — those are created in the next step.</p>
+<hr>
+<h2>Step 2: Install the OpenPAUL Plugin in OpenCode</h2>
+    <p><code>npx openpaul</code> already created <code>opencode.json</code> in your project. Open it and add the <code>plugin</code> key:</p>
+<pre><code class="language-json">{
+  &quot;$schema&quot;: &quot;https://opencode.ai/config.json&quot;,
+  &quot;plugin&quot;: [
+    &quot;openpaul&quot;
+  ]
+}
+</code></pre>
+<p>Restart OpenCode to load the plugin. The plugin registers slash commands on load, so <code>/openpaul:help</code> should autocomplete in the TUI.</p>
+<p>If you are working from a local checkout, load OpenPAUL via <code>.opencode/plugins/openpaul.ts</code>:</p>
+<pre><code class="language-ts">import plugin from "/absolute/path/to/openpaul/dist/index.js"
+export default plugin
+</code></pre>
+<hr>
+<h2>Step 3: Initialize the Project in OpenCode</h2>
+<p>Open the project in OpenCode, then run:</p>
+<pre><code>/openpaul:init
+</code></pre>
+<p>This initializes the loop state and starts a brief conversation. OpenPAUL asks two questions:</p>
+<blockquote>
+<p>&quot;What&#39;s the core value this project delivers?&quot;</p>
+<p>&quot;What are you building? (1-2 sentences)&quot;</p>
+</blockquote>
+<p>Example answers:</p>
+<ul>
+<li>Core value: &quot;Developers can look up gene metadata by HGNC ID in a single function call&quot;</li>
+<li>Description: &quot;A Python client library for querying the HGNC and NCBI Gene REST APIs&quot;</li>
+</ul>
+<p>After the conversation, OpenPAUL creates:</p>
+<ul>
+<li><code>.openpaul/model-config.json</code> — model configuration</li>
+<li><code>.openpaul/state-phase-1.json</code> — initial loop state</li>
+<li><code>.openpaul/phases/</code> — directory for plans and summaries (created when you plan)</li>
+</ul>
+<p>If you maintain a roadmap, create or edit <code>.openpaul/ROADMAP.md</code> now, or leave it for later.</p>
+<hr>
+<h2>Step 4: PLAN — Create First Plan</h2>
+<p>Run the plan command with structured parameters. OpenPAUL stores the plan as a JSON file in <code>.openpaul/phases/</code>.</p>
+<pre><code>/openpaul:plan --phase 1 --plan 01 \
+  --criteria &quot;fetch_by_hgnc_id returns gene data dict with symbol, name, entrez_id&quot; \
+  --criteria &quot;network errors raise RequestException with context&quot; \
+  --criteria &quot;all tests pass with 100% coverage of client code&quot; \
+  --tasks &#39;[
+    {&quot;name&quot;: &quot;Write failing test for HGNC fetch&quot;, &quot;files&quot;: [&quot;tests/test_hgnc_client.py&quot;], &quot;action&quot;: &quot;Create TestHGNCClient class using mocker fixture to patch requests.get&quot;, &quot;verify&quot;: &quot;pytest tests/test_hgnc_client.py -v (expect failure — no implementation yet)&quot;, &quot;done&quot;: &quot;Test file exists and test fails&quot;},
+    {&quot;name&quot;: &quot;Implement HGNCClient&quot;, &quot;files&quot;: [&quot;src/hgnc_client.py&quot;], &quot;action&quot;: &quot;Implement fetch_by_hgnc_id with proper headers, timeout, and error handling&quot;, &quot;verify&quot;: &quot;pytest tests/test_hgnc_client.py -v&quot;, &quot;done&quot;: &quot;AC-1 and AC-2 satisfied&quot;},
+    {&quot;name&quot;: &quot;Add edge case tests&quot;, &quot;files&quot;: [&quot;tests/test_hgnc_client.py&quot;], &quot;action&quot;: &quot;Test not-found (empty docs), network timeout, and malformed response&quot;, &quot;verify&quot;: &quot;pytest tests/test_hgnc_client.py --cov=src -v&quot;, &quot;done&quot;: &quot;AC-3 satisfied — 100% coverage&quot;}
+  ]&#39;
+</code></pre>
+<p>OpenPAUL stores the plan at <code>.openpaul/phases/1-01-PLAN.json</code> and outputs a summary:</p>
+<pre><code># 📋 Plan: 1-01
+
+Type: execute | Wave: 1 | Tasks: 3
+Structure: simple
+
+## Criteria
+- fetch_by_hgnc_id returns gene data dict with symbol, name, entrez_id
+- network errors raise RequestException with context
+- all tests pass with 100% coverage of client code
+
+## Tasks
+1. Write failing test for HGNC fetch: Test file exists and test fails
+2. Implement HGNCClient: AC-1 and AC-2 satisfied
+3. Add edge case tests: AC-3 satisfied — 100% coverage
+
+Status: ✅ Plan created successfully
+Location: .openpaul/phases/1-01-PLAN.json
+Next action: Run /openpaul:apply to execute the plan
+</code></pre>
+<hr>
+<h2>Step 5: APPLY — Execute the Plan</h2>
+<pre><code>/openpaul:apply
+</code></pre>
+<p>OpenPAUL displays each task in sequence with its action, verification step, and done criteria. Execute them one by one.</p>
+<h3>Task 1: Write Failing Test</h3>
+<pre><code class="language-python"># tests/test_hgnc_client.py
+import pytest
+import requests
+from hgnc_client import HGNCClient
+
+
+class TestHGNCClient:
+    def test_fetch_gene_by_id_success(self, mocker):
+        &quot;&quot;&quot;Test successful gene fetch by HGNC ID.&quot;&quot;&quot;
+        mock_response = {
+            &quot;responseHeader&quot;: {&quot;status&quot;: 0},
+            &quot;response&quot;: {
+                &quot;docs&quot;: [{
+                    &quot;hgnc_id&quot;: &quot;HGNC:5&quot;,
+                    &quot;symbol&quot;: &quot;A1BG&quot;,
+                    &quot;name&quot;: &quot;alpha-1-B glycoprotein&quot;,
+                    &quot;entrez_id&quot;: &quot;1&quot;
+                }]
+            }
+        }
+        mock_get = mocker.patch(&quot;requests.get&quot;)
+        mock_get.return_value = mocker.Mock(
+            status_code=200,
+            json=lambda: mock_response,
+        )
+
+        client = HGNCClient()
+        result = client.fetch_by_hgnc_id(&quot;HGNC:5&quot;)
+
+        assert result[&quot;symbol&quot;] == &quot;A1BG&quot;
+        assert result[&quot;entrez_id&quot;] == &quot;1&quot;
+        mock_get.assert_called_once_with(
+            &quot;https://rest.genenames.org/fetch/hgnc_id/HGNC:5&quot;,
+            headers={&quot;Accept&quot;: &quot;application/json&quot;},
+            timeout=30,
+        )
+</code></pre>
+<p>Verify: <code>pytest tests/test_hgnc_client.py -v</code> — test should fail (no implementation yet). ✓</p>
+<h3>Task 2: Implement HGNCClient</h3>
+<pre><code class="language-python"># src/hgnc_client.py
+import requests
+from typing import Optional, Dict, Any
+
+
+class HGNCClient:
+    BASE_URL = &quot;https://rest.genenames.org&quot;
+
+    def __init__(self, timeout: int = 30):
+        self.timeout = timeout
+        self.headers = {&quot;Accept&quot;: &quot;application/json&quot;}
+
+    def fetch_by_hgnc_id(self, hgnc_id: str) -&gt; Optional[Dict[str, Any]]:
+        &quot;&quot;&quot;Fetch gene data by HGNC ID.
+
+        Args:
+            hgnc_id: HGNC identifier (e.g., &quot;HGNC:5&quot;)
+
+        Returns:
+            Gene data dictionary or None if not found
+
+        Raises:
+            requests.RequestException: On network errors
+        &quot;&quot;&quot;
+        url = f&quot;{self.BASE_URL}/fetch/hgnc_id/{hgnc_id}&quot;
+
+        try:
+            response = requests.get(url, headers=self.headers, timeout=self.timeout)
+            response.raise_for_status()
+            docs = response.json().get(&quot;response&quot;, {}).get(&quot;docs&quot;, [])
+            return docs[0] if docs else None
+
+        except requests.RequestException as e:
+            raise requests.RequestException(f&quot;Failed to fetch {hgnc_id}: {e}&quot;)
+</code></pre>
+<p>Verify: <code>pytest tests/test_hgnc_client.py -v</code> — AC-1 and AC-2 satisfied. ✓</p>
+<h3>Task 3: Edge Case Tests</h3>
+<pre><code class="language-python"># tests/test_hgnc_client.py (continued)
+
+    def test_fetch_gene_not_found(self, mocker):
+        &quot;&quot;&quot;Test gene not found returns None.&quot;&quot;&quot;
+        mock_get = mocker.patch(&quot;requests.get&quot;)
+        mock_get.return_value = mocker.Mock(
+            status_code=200,
+            json=lambda: {&quot;responseHeader&quot;: {&quot;status&quot;: 0}, &quot;response&quot;: {&quot;docs&quot;: []}},
+        )
+        client = HGNCClient()
+        assert client.fetch_by_hgnc_id(&quot;HGNC:999999&quot;) is None
+
+    def test_fetch_network_error(self, mocker):
+        &quot;&quot;&quot;Test network error raises exception.&quot;&quot;&quot;
+        mock_get = mocker.patch(&quot;requests.get&quot;)
+        mock_get.side_effect = requests.ConnectionError(&quot;Network error&quot;)
+        client = HGNCClient()
+        with pytest.raises(requests.RequestException):
+            client.fetch_by_hgnc_id(&quot;HGNC:5&quot;)
+</code></pre>
+<p>Verify: <code>pytest tests/test_hgnc_client.py --cov=src -v</code> — AC-3 satisfied. ✓</p>
+<hr>
+<h2>Step 6: UNIFY — Close the Loop</h2>
+<pre><code>/openpaul:unify --status success \
+  --actuals &#39;[
+    {&quot;name&quot;: &quot;Write failing test for HGNC fetch&quot;, &quot;status&quot;: &quot;completed&quot;},
+    {&quot;name&quot;: &quot;Implement HGNCClient&quot;, &quot;status&quot;: &quot;completed&quot;},
+    {&quot;name&quot;: &quot;Add edge case tests&quot;, &quot;status&quot;: &quot;completed&quot;}
+  ]&#39;
+</code></pre>
+<p>OpenPAUL closes the loop, writes <code>.openpaul/phases/1-01-SUMMARY.json</code>, and advances state ready for the next plan. Output:</p>
+<pre><code># 🔗 Loop Closed: 1-01
+
+## Summary
+Status: ✅ success
+Tasks: ████████████ completed
+
+### Tasks Completed
+1. ✅ Write failing test for HGNC fetch
+2. ✅ Implement HGNCClient
+3. ✅ Add edge case tests
+
+## Next Steps
+✅ Loop successfully closed
+Ready for: Next loop iteration
+Run: /openpaul:plan to start planning the next phase
+</code></pre>
+<hr>
+<h2>Step 7: Continue Development</h2>
+<h3>Phase 2: NCBI Integration</h3>
+<pre><code>/openpaul:plan --phase 2 --plan 01 \
+  --criteria &quot;given an entrez_id, fetch_ncbi_gene returns gene details from NCBI&quot; \
+  --criteria &quot;given an HGNC ID, fetch_full_gene returns combined data from both APIs&quot; \
+  --tasks &#39;[
+    {&quot;name&quot;: &quot;Write NCBI client tests&quot;, &quot;files&quot;: [&quot;tests/test_ncbi_client.py&quot;], &quot;action&quot;: &quot;Create tests with mocker-patched requests for NCBI Entrez efetch API&quot;, &quot;verify&quot;: &quot;pytest tests/test_ncbi_client.py -v (expect failure)&quot;, &quot;done&quot;: &quot;Tests exist and fail&quot;},
+    {&quot;name&quot;: &quot;Implement NCBIClient&quot;, &quot;files&quot;: [&quot;src/ncbi_client.py&quot;], &quot;action&quot;: &quot;Implement fetch_ncbi_gene using Entrez efetch API&quot;, &quot;verify&quot;: &quot;pytest tests/test_ncbi_client.py -v&quot;, &quot;done&quot;: &quot;AC-1 satisfied&quot;},
+    {&quot;name&quot;: &quot;Add combined lookup&quot;, &quot;files&quot;: [&quot;src/gene_client.py&quot;], &quot;action&quot;: &quot;Implement GeneClient.fetch_full_gene combining HGNC + NCBI&quot;, &quot;verify&quot;: &quot;pytest tests/ -v&quot;, &quot;done&quot;: &quot;AC-2 satisfied&quot;}
+  ]&#39;
+</code></pre>
+<p>Execute and close:</p>
+<pre><code>/openpaul:apply
+/openpaul:unify
+</code></pre>
+<h3>Phase 3: CLI Tool</h3>
+<pre><code>/openpaul:plan --phase 3 --plan 01 \
+  --criteria &quot;uv run gene-lookup HGNC:5 returns combined gene data&quot; \
+  --tasks &#39;[{&quot;name&quot;: &quot;Implement CLI entry point&quot;, &quot;files&quot;: [&quot;src/cli.py&quot;], &quot;action&quot;: &quot;Create CLI with argparse accepting --gene and --format options&quot;, &quot;verify&quot;: &quot;uv run python -m src.cli --gene HGNC:5&quot;, &quot;done&quot;: &quot;CLI returns JSON gene data&quot;}]&#39;
+</code></pre>
+<hr>
+<h2>Session Continuity</h2>
+<p>After a break:</p>
+<pre><code>/openpaul:resume
+</code></pre>
+<p>OpenPAUL loads your saved session, shows any file changes since you paused, and tells you exactly what to do next:</p>
+<pre><code>## 📋 Session Resume
+
+Session ID: sess-...
+Paused: 2024-01-15T14:30:00.000Z
+Current Phase: 2 - APPLY
+
+Work in Progress:
+- Implementing NCBIClient.fetch_ncbi_gene
+
+Next Steps:
+- Resume task 2/3: Implement NCBIClient
+
+📍 Loop: ✓ PLAN → ◉ APPLY → ○ UNIFY
+
+Next Action: Run /openpaul:apply to execute the plan
+</code></pre>
+<hr>
+<h2>Summary</h2>
+<p>You&#39;ve learned:</p>
+<ol>
+<li><strong>Scaffold</strong> — <code>npx openpaul</code> creates <code>.openpaul/state.json</code> and <code>.opencode/</code> config</li>
+<li><strong>Install plugin</strong> — add <code>&quot;plugin&quot;: [&quot;openpaul&quot;]</code> to <code>opencode.json</code> and restart OpenCode</li>
+<li><strong>Initialize</strong> — <code>/openpaul:init</code> sets up loop state files</li>
+<li><strong>Plan</strong> — <code>/openpaul:plan</code> creates structured JSON plans with criteria and tasks</li>
+<li><strong>Apply</strong> — <code>/openpaul:apply</code> displays tasks for sequential execution with verification</li>
+<li><strong>Unify</strong> — <code>/openpaul:unify</code> closes the loop and writes a JSON summary</li>
+<li><strong>Resume</strong> — <code>/openpaul:resume</code> restores context after breaks</li>
+</ol>
+<p>The loop ensures:</p>
+<ul>
+<li>Every unit of work is planned with acceptance criteria</li>
+<li>Execution stays bounded by task verification</li>
+<li>State persists across sessions as JSON</li>
+<li>Decisions and summaries are logged</li>
+<li>No orphan plans</li>
+</ul>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>
+        <a href="https://github.com/KrisGray/openpaul">OpenPAUL</a> — 
+        Plan-Apply-Unify Loop for structured AI development.
+      </p>
+      <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+        Created by <a href="https://github.com/KrisGray">Kris Gray</a>
+      </p>
+    </div>
+  </footer>
+</body>
+</html>

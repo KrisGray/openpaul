@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Installation Guide | OpenPAUL</title>
+  <meta name="description" content="OpenPAUL - Plan-Apply-Unify Loop for structured AI-assisted development">
+  <style>
+:root {
+  --bg: #ffffff;
+  --fg: #1f2328;
+  --muted: #656d76;
+  --accent: #0969da;
+  --accent-hover: #0550ae;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --card-bg: #f6f8fa;
+  --success: #1a7f37;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d1117;
+    --fg: #e6edf3;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --accent-hover: #79c0ff;
+    --border: #30363d;
+    --code-bg: #161b22;
+    --card-bg: #161b22;
+    --success: #3fb950;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif;
+  line-height: 1.6;
+  color: var(--fg);
+  background: var(--bg);
+}
+.container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+header {
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 100;
+}
+header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.logo { font-size: 1.5rem; font-weight: 700; }
+.logo a { color: var(--fg); text-decoration: none; }
+nav { display: flex; gap: 1.5rem; align-items: center; }
+nav a { color: var(--muted); text-decoration: none; font-size: 0.95rem; }
+nav a:hover, nav a.active { color: var(--accent); }
+
+main { padding: 3rem 0; }
+
+.page-title {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.page-title h1 { font-size: 2rem; }
+
+.content h2 { font-size: 1.5rem; margin: 2rem 0 1rem; }
+.content h3 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; }
+.content h4 { font-size: 1.1rem; margin: 1.25rem 0 0.5rem; }
+.content p { margin-bottom: 1rem; }
+.content ul, .content ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+.content li { margin-bottom: 0.5rem; }
+.content a { color: var(--accent); }
+
+pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  overflow-x: auto;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+code {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  font-size: 0.9em;
+}
+pre code { background: none; padding: 0; font-size: inherit; }
+:not(pre) > code {
+  background: var(--code-bg);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+th, td {
+  border: 1px solid var(--border);
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+th { background: var(--card-bg); font-weight: 600; }
+
+blockquote {
+  border-left: 4px solid var(--accent);
+  padding-left: 1rem;
+  margin: 1rem 0;
+  color: var(--muted);
+}
+
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem 0;
+  text-align: center;
+  color: var(--muted);
+}
+footer a { color: var(--accent); }
+
+.pill {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+}
+
+.hero {
+  text-align: center;
+  padding: 3rem 0;
+}
+.hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+.hero .tagline {
+  font-size: 1.25rem;
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+.hero .cta {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.hero .cta a {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+}
+.hero .cta .primary {
+  background: var(--accent);
+  color: #fff;
+}
+.hero .cta .secondary {
+  border: 1px solid var(--border);
+  color: var(--fg);
+}
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 3rem 0;
+}
+.feature {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+.feature h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+.feature p {
+  margin-bottom: 0;
+  color: var(--muted);
+}
+</style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo"><a href="../">OpenPAUL</a></div>
+      <nav>
+        <a href="../#quick-start">Quick Start</a>
+        <a href="../guides/">Guides</a>
+        <a href="../tutorials/">Tutorials</a>
+        <a href="https://github.com/KrisGray/openpaul">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-title">
+      <h1>Installation Guide</h1>
+    </div>
+    <div class="content">
+      <h1>Installation Guide</h1>
+<p>Get OpenPAUL running in your project.</p>
+<h2>Quick Start</h2>
+<pre><code class="language-bash">npx openpaul
+</code></pre>
+<p>This scaffolds the .openpaul/ directory with everything you need.</p>
+<hr>
+<h2>CLI Options</h2>
+<ul>
+<li>-n, --name <name> - Project name (defaults to directory name)</li>
+<li>-p, --path <path> - Target directory (default: current)</li>
+<li>--preset <preset> - Template preset: minimal or full</li>
+<li>-f, --force - Skip prompts and overwrite existing files</li>
+<li>-i, --interactive - Force interactive mode</li>
+<li>-v, --verbose - Enable verbose output</li>
+</ul>
+<hr>
+<h2>Examples</h2>
+<pre><code class="language-bash">npx openpaul                           # Interactive mode
+npx openpaul --name my-project         # Skip name prompt
+npx openpaul --path ./app              # Target directory
+npx openpaul -n my-project -p ./app    # Combined options
+npx openpaul --preset minimal          # Minimal template
+npx openpaul --preset full             # Full template
+</code></pre>
+<hr>
+<h2>What Gets Created</h2>
+<p>After <code>npx openpaul</code>:</p>
+<pre><code>.openpaul/
+└── state.json       # Project registry (name, version, timestamps)
+.opencode/
+├── opencode.json    # OpenCode schema reference
+└── (preset files)   # Commands, rules, agents — varies by preset
+</code></pre>
+<p>After <code>/openpaul:init</code> in OpenCode (initializes loop state):</p>
+<pre><code>.openpaul/
+├── state.json           # Project registry
+├── model-config.json    # Model configuration
+└── state-phase-1.json   # Initial loop state
+</code></pre>
+<p>Plans and summaries are created when you run <code>/openpaul:plan</code> and <code>/openpaul:unify</code>:</p>
+<pre><code>.openpaul/
+└── phases/
+    ├── 1-01-PLAN.json
+    └── 1-01-SUMMARY.json
+</code></pre>
+<hr>
+<h2>Install as OpenCode Plugin</h2>
+<p>Add the <code>plugin</code> key to <code>opencode.json</code> in your project (created by <code>npx openpaul</code>). The <code>plugin</code> array is for npm packages (for example, <code>openpaul</code>). OpenPAUL registers its slash commands on load, so <code>/openpaul:*</code> should appear in the TUI command list after restart:</p>
+<p>If you scaffolded the project with <code>npx openpaul</code>, it already includes <code>.opencode/plugins/openpaul.ts</code> plus <code>.opencode/package.json</code> to load the npm package locally, so you can skip the <code>plugin</code> entry and just restart OpenCode.</p>
+<pre><code class="language-json">{
+  &quot;$schema&quot;: &quot;https://opencode.ai/config.json&quot;,
+  &quot;plugin&quot;: [
+    &quot;openpaul&quot;
+  ]
+}
+</code></pre>
+<p>Restart OpenCode to load the plugin.</p>
+<hr>
+<h2>Verify Installation</h2>
+<ul>
+<li>CLI: Run npx openpaul --version</li>
+<li>Plugin: Run /openpaul:help inside OpenCode (it should autocomplete)</li>
+</ul>
+<hr>
+<h2>Local development (from source)</h2>
+<p>If you are working on OpenPAUL locally, add a local plugin file under <code>.opencode/plugins/</code>:</p>
+<pre><code>.opencode/plugins/openpaul.ts
+</code></pre>
+<pre><code class="language-ts">import plugin from "/absolute/path/to/openpaul/dist/index.js"
+export default plugin
+</code></pre>
+<h2>With OpenCARL (Recommended)</h2>
+<p>For the best experience, use OpenPAUL with OpenCARL:</p>
+<pre><code class="language-bash"># Initialize OpenPAUL
+npx openpaul
+
+# Initialize OpenCARL
+npx opencarl --local   # Current project only
+npx opencarl --global  # All projects
+</code></pre>
+<p>OpenCARL auto-loads OpenPAUL rules when it detects .openpaul/ directory.</p>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>
+        <a href="https://github.com/KrisGray/openpaul">OpenPAUL</a> — 
+        Plan-Apply-Unify Loop for structured AI development.
+      </p>
+      <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+        Created by <a href="https://github.com/KrisGray">Kris Gray</a>
+      </p>
+    </div>
+  </footer>
+</body>
+</html>
